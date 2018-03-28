@@ -33,11 +33,13 @@ var (
 
 var Config struct {
 	Enable              bool   //网络模块是否开启
-	MaxConnNum			int
+	MaxConnNum          int
 	WSAddr              string //
 	TCPAddr             string //
-	SecretKey	        string
+	SecretKey           string
 	MessageChannelLimit int
+	AuthTimeout         float64
+	HeartbeatTimeout    float64
 }
 
 func init() {

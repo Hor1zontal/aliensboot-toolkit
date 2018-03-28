@@ -3,17 +3,14 @@ package internal
 import (
 	"github.com/name5566/leaf/gate"
 	"reflect"
-	"aliens/module/gate/conf"
 	"aliens/protocol/service1"
 	"aliens/protocol/service2"
 	"aliens/cluster/message"
 	"github.com/name5566/leaf/network/protobuf"
 	"aliens/module/cluster"
-	"aliens/log"
 	"aliens/cluster/center"
 	"google.golang.org/grpc"
 	"aliens/protocol/scene"
-	"time"
 )
 
 var router = make(map[reflect.Type]message.IMessageService)
@@ -59,35 +56,6 @@ func RegisterRouter(requestID uint16, request interface{}, responseID uint16, re
 	skeleton.RegisterChanRPC(requestType, handleMessage)
 }
 
-func newNetwork(outerChannel message.IMessageChannel) *network {
-	network := &network{createTime:time.Now()}
-	network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
-	return network
-}
-
-type network struct {
-	*message.ChannelMessageHandler
-	auth bool //是否校验通过
-	createTime time.Time //创建时间
-
-}
-
-func (this *network) HandleMessage(request interface{}) interface{} {
-	requestType := reflect.TypeOf(request)
-	messageService := router[requestType]
-	if messageService == nil {
-		log.Debug("unexpect request : %v", request)
-		//TODO 返回错误信息，或者T人
-		return nil
-	}
-	//response := reflect.NewTimeWheel(responseType).Elem().Interface()
-	response, error := messageService.HandleMessage(request)
-	if error != nil {
-		log.Debug("handle service error : %v", error)
-		//TODO 返回错误信息，或者T人
-	}
-	return response
-}
 
 
 func handleMessage(args []interface{}) {
