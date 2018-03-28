@@ -1,0 +1,10 @@
+{
+	"Enable":true,
+	"DBHost":"127.0.0.1",
+	"DBPort":27017,
+	"DBName":"t08_passport",
+	"RedisAddress":"127.0.0.1:20102",
+	"RedisPassword":"aliens",
+	"DefaultChannelPWD" : "11111111",
+	"RPCPort": 12000
+}

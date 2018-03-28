@@ -1,0 +1,7 @@
+{
+  "Enable":true,
+  "LogRoot": "/odpsLogs",
+  "Prefix": "log_",
+  "Suffix": ".txt",
+  "RPCPort": 12234
+}

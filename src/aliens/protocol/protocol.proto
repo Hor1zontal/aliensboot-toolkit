@@ -1,0 +1,32 @@
+syntax = "proto2";
+package protocol;
+
+
+//message
+message Request {
+    optional int32 no = 1;       //消息编号
+    optional int32 session = 2;  //消息序号
+
+    //消息内容
+    optional string message1 = 5;
+
+}
+
+message Response {
+    optional int32 no = 1;
+    optional int32 session = 2;
+
+    //消息内容
+    optional string message1 = 5;
+
+}
+
+message Notify {
+    optional int32 no = 1; //通知序号
+}
+
+
+//rpc 服务间转发
+service RPCService {
+    rpc request (Request) returns (Response) {}
+}

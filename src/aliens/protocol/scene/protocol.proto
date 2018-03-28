@@ -1,0 +1,41 @@
+syntax = "proto2";
+package scene;
+
+import "scene.proto";
+
+message SceneRequest {
+    optional int32 sequence = 1;       //消息编号
+    optional int32 session = 2;  //消息序号
+
+    optional int32 clientID = 3; //发送场景请求的客户端id
+
+
+    optional space_move spaceMove = 5;
+    optional space_enter spaceEnter = 6;
+    optional space_leave spaceLeave = 7;
+    optional get_state getState = 8;
+}
+
+message SceneResponse {
+    optional int32 sequence = 1;
+    optional int32 session = 2;
+
+    optional space_move_ret spaceMoveRet = 5;
+    optional space_enter_ret spaceEnterRet = 6;
+    optional space_leave_ret spaceLeaveRet = 7;
+    optional get_state_ret getStateRet = 8;
+}
+
+
+message ScenePush {
+
+}
+
+//rpc 服务间转发
+service RPCService {
+    rpc request (SceneRequest) returns (SceneResponse) {}
+}
+
+service RPCPush {
+    rpc push (stream ScenePush)  returns (SceneResponse) {}
+}

@@ -1,0 +1,9 @@
+{
+	"Enable":true,
+	"MaxConnNum": 20000,
+	"TCPAddr": ":3568",
+	"WSAddr": ":28208",
+	"SecretKey": "",
+	"HeartbeatTimeout": 60,
+	"MessageChannelLimit":5
+}

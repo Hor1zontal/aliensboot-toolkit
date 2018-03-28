@@ -1,0 +1,55 @@
+syntax = "proto2";
+
+message Vector {
+    optional float x = 1;
+    optional float y = 2;
+    optional float z = 3;
+}
+
+message Entity {
+    optional int32 id = 1;  //实体id
+    optional Vector position = 2; //玩家的位置
+    optional Vector direction = 3; //玩家的向量
+    optional string data = 4;  //实体数据 json
+}
+
+message space_enter {
+    optional int32 spaceID = 1; //空间ID
+    optional Vector position = 2; //移动的位置
+    optional Vector direction = 3; //玩家的向量
+}
+
+message space_enter_ret {
+    optional int32 entityID = 1;
+}
+
+message space_move {
+    optional int32 spaceID = 1;
+    optional int32 entityID = 2;
+    optional Vector position = 3; //玩家的位置
+    optional Vector direction = 4; //玩家的向量
+}
+
+message space_move_ret {
+
+}
+
+message space_leave {
+    optional int32 spaceID = 1; //空间id
+    optional int32 entityID = 2; //实体id
+}
+
+message space_leave_ret {
+
+}
+
+message get_state {
+    optional int32 spaceID = 1;
+    optional int32 entityID = 2;
+}
+
+message get_state_ret {
+    repeated Entity neighbors = 1; //周围的玩家信息
+}
+
+

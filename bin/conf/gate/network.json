@@ -1,0 +1,12 @@
+{
+	"Enable":true,
+	"LogLevel": "debug",
+	"LogPath": "",
+	"MaxConnNum": 20000,
+	"TCPAddr": ":3568",
+	"WSAddr": ":28108",
+	"SecretKey": "",
+	"HeartbeatTimeout": 60,
+	"PublicWSAddress": "127.0.0.1:28108",
+	"MessageChannelLimit":5
+}

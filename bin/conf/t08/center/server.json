@@ -1,0 +1,23 @@
+{
+	"Enable":true,
+	"HTTPAddress": ":8710",
+	"ZKServers": [
+		"server.alienidea.com:2181"
+	],
+	"ZKName": "t08",
+	"DBHost":"127.0.0.1",
+	"DBPort":27017,
+	"DBName":"t08_center",
+	"RedisAddress":"127.0.0.1:20102",
+	"RedisPassword":"aliens",
+	"GMCKey":"Woobest_bbcgame_2017!",
+	"CenterKey":"Woobest_bbcgame_2017!",
+	"SDKKey":"ab40f0b5dfbf87eb8908cfd481a38592",
+	"RecoupExpire":2592000,
+	"OAuthURL": "http://sdk.jzyx.com/api/User/LoginOauth/",
+	"PrivateKey" : "05C88FCDC9F52CA68C2B384678569B24",
+	"EnhancedKey" : "http://oauth.anysdk.com/api/User/LoginOauth/",
+	"SkipIps" : [
+		"127.0.0.1"
+	]
+}
