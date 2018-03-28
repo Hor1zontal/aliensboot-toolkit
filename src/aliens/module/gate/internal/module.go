@@ -27,6 +27,8 @@ type Module struct {
 }
 
 func (m *Module) IsEnable() bool {
+	//server := chanrpc.NewServer(conf.ChanRPCLen)
+	//server.Call1()
 	return conf.Config.Enable
 }
 

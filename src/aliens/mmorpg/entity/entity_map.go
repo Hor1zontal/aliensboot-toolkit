@@ -31,7 +31,7 @@ func (em EntityMap) Get(id int32) *Entity {
 	return em[id]
 }
 
-// EntitySet is the data structure for a set of entities
+// EntitySet is the data structure for a collection of entities
 type EntitySet map[*Entity]struct{}
 
 // Add adds an entity to the EntitySet
@@ -66,7 +66,7 @@ func (es EntitySet) String() string {
 	return b.String()
 }
 
-// EntityIDSet is the data structure for a set of entity IDs
+// EntityIDSet is the data structure for a collection of entity IDs
 type EntityIDSet map[int32]struct{}
 
 // Add adds an entity id to EntityIDSet

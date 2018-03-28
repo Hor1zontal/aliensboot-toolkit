@@ -23,14 +23,14 @@ type IMessageChannel interface {
 }
 
 type IMessageHandler interface {
-	HandleMessage(msg interface{}) //处理消息
+	HandleMessage(msg interface{}) interface{} //处理
 }
 
 type MessageChannel struct {
 	channel        chan interface{} //管道
 	open           bool
 	messageLimit   int
-	messageHandler IMessageHandler //消息处理handler
+	messageHandler *ChannelMessageHandler //消息处理handler
 	userdata       interface{}
 }
 
@@ -72,7 +72,6 @@ func (this *MessageChannel) Open() {
 				break
 			}
 			this.messageHandler.HandleMessage(message)
-
 		}
 		this.Close()
 	}()

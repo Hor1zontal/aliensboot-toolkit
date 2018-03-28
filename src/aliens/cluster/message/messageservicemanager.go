@@ -14,7 +14,7 @@ package message
 //	"aliens/log"
 //	"errors"
 //)
-//var invalidServiceError error = errors.New("invalid service")
+//var invalidServiceError error = errors.NewTimeWheel("invalid service")
 //
 //var ServiceManager = initMessageServiceManager()
 //

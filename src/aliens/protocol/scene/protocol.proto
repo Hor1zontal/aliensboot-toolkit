@@ -27,8 +27,13 @@ message SceneResponse {
 }
 
 
+
 message ScenePush {
 
+}
+
+message PushResult {
+    optional int32 clientID = 1; //
 }
 
 //rpc 服务间转发
@@ -37,5 +42,5 @@ service RPCService {
 }
 
 service RPCPush {
-    rpc push (stream ScenePush)  returns (SceneResponse) {}
+    rpc push (stream ScenePush)  returns (PushResult) {}
 }

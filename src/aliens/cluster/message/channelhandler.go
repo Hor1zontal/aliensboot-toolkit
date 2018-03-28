@@ -10,68 +10,65 @@
 package message
 
 import (
-	//"aliens/game/command"
-	"github.com/name5566/leaf/gate"
 	"aliens/common/util"
 )
 
-func OpenChannelHandler(networkChannel IMessageChannel, handler IMessageHandler, maxMessage int) *ChannelHandler {
-	channelHandler := &ChannelHandler{
-		networkChannel: networkChannel,
-		handler:        handler,
+func OpenChannelHandler(outerChannel IMessageChannel, handler IMessageHandler, maxMessage int) *ChannelMessageHandler {
+	channelHandler := &ChannelMessageHandler{
+		outerChannel: outerChannel,
+		handler:      handler,
 	}
 	channelHandler.OpenInnerChannel(maxMessage)
 	return channelHandler
 }
 
-type IChannelHandler interface {
-	AcceptMessage(message interface{}) //接收消息
-	GateClose(gate gate.Agent)         //关闭网关
+type IChannelMessageHandler interface {
+	AcceptMessage(request interface{})
 }
 
-type ChannelHandler struct {
-	networkChannel IMessageChannel //往外写的消息管道
-	innerChannel   IMessageChannel //往内写的消息管道
-	handler        IMessageHandler //服务处理容器
+type ChannelMessageHandler struct {
+	outerChannel IMessageChannel //往外写的消息管道
+	innerChannel IMessageChannel //往内写的消息管道
+	handler      IMessageHandler //服务处理类
 }
 
 //收取系统消息
-func (this *ChannelHandler) SetHandler(handler IMessageHandler) {
+func (this *ChannelMessageHandler) SetHandler(handler IMessageHandler) {
 	this.handler = handler
 }
 
-func (this *ChannelHandler) GetNetworkChannel() IMessageChannel {
-	return this.networkChannel
+func (this *ChannelMessageHandler) GetOuterChannel() IMessageChannel {
+	return this.outerChannel
 }
 
-func (this *ChannelHandler) SetNetworkChannel(networkChannel IMessageChannel) {
-	this.networkChannel = networkChannel
+func (this *ChannelMessageHandler) SetOuterChannel(outerChannel IMessageChannel) {
+	this.outerChannel = outerChannel
 }
 
-func (this *ChannelHandler) GateClose(gate gate.Agent) {
-	this.Close()
-}
+//func (this *ChannelMessageHandler) GateClose(gate gate.Agent) {
+//	this.Close()
+//}
 
 //收取消息
-func (this *ChannelHandler) AcceptMessage(message interface{}) {
+func (this *ChannelMessageHandler) AcceptMessage(message interface{}) {
 	if this.innerChannel != nil {
 		this.innerChannel.WriteMsg(message)
 	}
 }
 
 //往连接客户端写消息
-func (this *ChannelHandler) SendMessage(message interface{}) {
-	if this.networkChannel != nil {
-		this.networkChannel.WriteMsg(message)
+func (this *ChannelMessageHandler) SendMessage(message interface{}) {
+	if this.outerChannel != nil {
+		this.outerChannel.WriteMsg(message)
 	}
 }
 
 //是否在线
-func (this *ChannelHandler) IsOnline() bool {
-	return this.networkChannel != nil
+func (this *ChannelMessageHandler) IsOnline() bool {
+	return this.outerChannel != nil
 }
 
-func (this *ChannelHandler) HandleMessage(msg interface{}) {
+func (this *ChannelMessageHandler) HandleMessage(msg interface{}) {
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -80,12 +77,15 @@ func (this *ChannelHandler) HandleMessage(msg interface{}) {
 		}
 	}()
 	if this.handler != nil {
-		this.handler.HandleMessage(msg)
+		response := this.handler.HandleMessage(msg)
+		if this.outerChannel != nil {
+			this.outerChannel.WriteMsg(response)
+		}
 	}
 }
 
 //打开收消息管道
-func (this *ChannelHandler) OpenInnerChannel(maxMessage int) {
+func (this *ChannelMessageHandler) OpenInnerChannel(maxMessage int) {
 	if this.innerChannel != nil {
 		return
 	}
@@ -98,7 +98,7 @@ func (this *ChannelHandler) OpenInnerChannel(maxMessage int) {
 }
 
 //关闭收消息管道
-func (this *ChannelHandler) CloseInnerChannel() {
+func (this *ChannelMessageHandler) CloseInnerChannel() {
 	if this.innerChannel != nil {
 		this.innerChannel.Close()
 		this.innerChannel = nil
@@ -106,15 +106,15 @@ func (this *ChannelHandler) CloseInnerChannel() {
 }
 
 //关闭收消息管道
-func (this *ChannelHandler) CloseNetworkChannel() {
-	if this.networkChannel != nil {
-		this.networkChannel.Close()
-		this.networkChannel = nil
+func (this *ChannelMessageHandler) CloseOuterChannel() {
+	if this.outerChannel != nil {
+		this.outerChannel.Close()
+		this.outerChannel = nil
 	}
 }
 
 //关闭所有管道
-func (this *ChannelHandler) Close() {
+func (this *ChannelMessageHandler) Close() {
 	this.CloseInnerChannel()
-	this.CloseNetworkChannel()
+	this.CloseOuterChannel()
 }

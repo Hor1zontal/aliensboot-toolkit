@@ -13,6 +13,7 @@ import (
 	"aliens/cluster/center"
 	"google.golang.org/grpc"
 	"aliens/protocol/scene"
+	"time"
 )
 
 var router = make(map[reflect.Type]message.IMessageService)
@@ -21,8 +22,7 @@ var router = make(map[reflect.Type]message.IMessageService)
 var Processor = protobuf.NewProcessor()
 
 func Init() {
-	skeleton.RegisterChanRPC("NewAgent", rpcNewAgent)
-	skeleton.RegisterChanRPC("CloseAgent", rpcCloseAgent)
+
 	Processor.SetByteOrder(true)
 
 	//TODO register router
@@ -48,40 +48,47 @@ func Service2Factory(cc *grpc.ClientConn) interface{} {
 //注册消息和服务映射关系
 func RegisterRouter(requestID uint16, request interface{}, responseID uint16, response interface{},
 				serviceID string, clientFactory func(cc *grpc.ClientConn) interface{}) {
-	requestNo := Processor.Register(requestID, request)
-	responseNo := Processor.Register(responseID, response)
+	Processor.Register(requestID, request)
+	Processor.Register(responseID, response)
 	requestType := reflect.TypeOf(request)
-	responseType := reflect.TypeOf(response)
+	//responseType := reflect.TypeOf(response)
 
-	log.Debug("register request %v-%v  response %v-%v", requestNo, requestType, responseNo, responseType)
+	//log.Debug("register request %v-%v  response %v-%v", requestNo, requestType, responseNo, responseType)
 	center.RegisterRPCClientFactory(serviceID, clientFactory)
-
 	router[requestType] = message.NewRemoteService(serviceID)
 	skeleton.RegisterChanRPC(requestType, handleMessage)
 }
 
-type NetworkMessageHandler struct {
-	networkChannel message.IMessageChannel
+func newNetwork(outerChannel message.IMessageChannel) *network {
+	network := &network{createTime:time.Now()}
+	network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
+	return network
 }
 
-func (this *NetworkMessageHandler) HandleMessage(request interface{}) {
+type network struct {
+	*message.ChannelMessageHandler
+	auth bool //是否校验通过
+	createTime time.Time //创建时间
+
+}
+
+func (this *network) HandleMessage(request interface{}) interface{} {
 	requestType := reflect.TypeOf(request)
 	messageService := router[requestType]
 	if messageService == nil {
 		log.Debug("unexpect request : %v", request)
 		//TODO 返回错误信息，或者T人
-		return
+		return nil
 	}
-	//response := reflect.New(responseType).Elem().Interface()
+	//response := reflect.NewTimeWheel(responseType).Elem().Interface()
 	response, error := messageService.HandleMessage(request)
 	if error != nil {
 		log.Debug("handle service error : %v", error)
 		//TODO 返回错误信息，或者T人
-		return
 	}
-	//log.Debug("service %v request : %v response : %v",messageService.GetType(), request, response)
-	this.networkChannel.WriteMsg(response)
+	return response
 }
+
 
 func handleMessage(args []interface{}) {
 	request := args[0]
@@ -89,37 +96,13 @@ func handleMessage(args []interface{}) {
 	gateAgent := args[1].(gate.Agent)
 	userdata := gateAgent.UserData()
 	switch userdata.(type) {
-	case message.IChannelHandler:
-		userdata.(message.IChannelHandler).AcceptMessage(request)
+	case message.IChannelMessageHandler:
+		userdata.(message.IChannelMessageHandler).AcceptMessage(request)
 		break
 	default:
 		//打开缓存大小为5的收消息管道
-		channelHandler := message.OpenChannelHandler(gateAgent, &NetworkMessageHandler{gateAgent}, conf.Config.MessageChannelLimit)
+		channelHandler := newNetwork(gateAgent)
 		gateAgent.SetUserData(channelHandler)
 		channelHandler.AcceptMessage(request)
 	}
 }
-
-func rpcNewAgent(args []interface{}) {
-	a := args[0].(gate.Agent)
-	_ = a
-}
-
-func rpcCloseAgent(args []interface{}) {
-	a := args[0].(gate.Agent)
-	userdata := a.UserData()
-	//userdata.(message.IChannelHandler).AcceptMessage(&scene.SceneRequest{
-	//	SpaceLeave:&scene.SpaceLeave{
-	//		SpaceID:proto.Int32(),
-	//		EntityID:
-	//	},
-	//})
-	a.SetUserData(nil)
-	switch userdata.(type) {
-	case message.IChannelHandler:
-		userdata.(message.IChannelHandler).GateClose(a)
-		break
-	}
-	_ = a
-}
-
