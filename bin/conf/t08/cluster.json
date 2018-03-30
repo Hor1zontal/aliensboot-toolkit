@@ -1,8 +1,0 @@
-{
-	"ZKServers": [
-		"server.alienidea.com:2181"
-	],
-	"ZKName": "t08-hjl1-test-cluster",
-	"LBS" : "polling",
-	"LBSComment" : "负载均衡策略，目前支持 polling(轮询)"
-}

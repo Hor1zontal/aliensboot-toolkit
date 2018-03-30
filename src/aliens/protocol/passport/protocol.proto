@@ -1,0 +1,36 @@
+syntax = "proto2";
+package passport;
+
+import "passport.proto";
+
+
+//C2GS为客户端发给服务端的通讯协议
+//GS2C为服务端发给客户端的通讯协议
+message PassportRequest {
+    optional int32 session = 1;     //消息序号
+    optional int32 sequence = 2;    //消息序列
+
+    //-----------------登录模块接口---------------
+    optional login_register loginRegister = 6;
+    optional login_login loginLogin = 7;
+
+
+
+}
+
+message PassportResponse {
+    optional int32 session = 1;
+    optional int32 sequence = 2;
+
+    optional int32 authID = 3; //验证成功后的用户id
+
+    //-----------------登录服接口---------------
+    optional login_register_ret loginRegisterRet = 6;
+    optional login_login_ret loginLoginRet = 7;
+
+}
+
+//rpc 服务间转发
+service RPCService {
+    rpc request(PassportRequest) returns(PassportResponse);  //
+}

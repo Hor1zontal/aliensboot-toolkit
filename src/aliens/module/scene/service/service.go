@@ -8,9 +8,11 @@ import (
 	"aliens/protocol/scene"
 	"aliens/mmorpg"
 	"aliens/module/scene/entity"
-	"github.com/gogo/protobuf/proto"
 	"aliens/module/scene/util"
 	"golang.org/x/net/context"
+	"aliens/protocol"
+	"github.com/gogo/protobuf/types"
+	"github.com/gogo/protobuf/proto"
 )
 
 //var Test1RPCService *center.gRPCService = nil
@@ -22,17 +24,35 @@ type SceneService struct {
 }
 
 
+func (this *SceneService) Request(ctx context.Context,request *types.Any) (*types.Any, error) {
 
-func (this *SceneService)Request(ctx context.Context,request *scene.SceneRequest) (*scene.SceneResponse, error) {
+	requestProxy := &scene.SceneRequest{}
+	//request.TypeUrl = "aliens/scene.SceneRequest"
 
+	error := proto.Unmarshal(request.Value, requestProxy)
+	if error != nil {
+		return nil, error
+	}
+	//types.UnmarshalAny(request, requestProxy)
+	response, error := this.HandleRequest(ctx, requestProxy)
+	//responseProxy, _ := types.MarshalAny(response)
+	data, _ := proto.Marshal(response)
+	responseProxy := &types.Any{TypeUrl:"", Value:data}
+	return responseProxy, error
+
+}
+
+func (this *SceneService)HandleRequest(ctx context.Context,request *scene.SceneRequest) (*scene.SceneResponse, error) {
 	response := &scene.SceneResponse{
 		Session:request.Session,
 	}
+	//types.MarshalAny(&scene.SceneResponse)
+
 	if request.GetSpaceEnter() != nil {
 		message := request.GetSpaceEnter()
 		entity := mmorpg.SpaceManager.CreateEntity(message.GetSpaceID(), &entity.PlayerEntity{}, util.TransVector(message.GetPosition()), util.TransVector(message.GetDirection()))
 		response.SpaceEnterRet = &scene.SpaceEnterRet{
-			EntityID:proto.Int32(entity.GetID()),
+			EntityID:entity.GetID(),
 		}
 	} else if request.GetSpaceLeave() != nil {
 		message := request.GetSpaceLeave()
@@ -62,7 +82,9 @@ func (this *SceneService)Request(ctx context.Context,request *scene.SceneRequest
 
 func Init() {
 	server := grpc.NewServer()
-	scene.RegisterRPCServiceServer(server, &SceneService{})
+
+	protocol.RegisterRPCServiceServer(server,  &SceneService{} )
+	//scene.RegisterRPCServiceServer(server, &SceneService{})
 
 	//s.RegisterService(&_RPCService_serviceDesc, srv)
 	center.PublicRPCService(cluster.SERVICE_SCENE, conf.Config.RPCPort, server)

@@ -11,9 +11,7 @@ package conf
 
 import (
 	"time"
-	"io/ioutil"
-	"encoding/json"
-	"aliens/log"
+	"aliens/config"
 )
 
 var (
@@ -43,13 +41,5 @@ var Config struct {
 }
 
 func init() {
-	data, err := ioutil.ReadFile("conf/aliens/gate.json")
-	if err != nil {
-		return
-	}
-	err = json.Unmarshal(data, &Config)
-	if err != nil {
-		log.Critical("%v", err)
-	}
-	log.Debug("json init %v", Config)
+	config.LoadConfig(&Config, "conf/aliens/gate/server.json")
 }

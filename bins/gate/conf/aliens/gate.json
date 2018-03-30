@@ -5,6 +5,6 @@
 	"WSAddr": ":28208",
 	"SecretKey": "",
 	"HeartbeatTimeout": 60,
-	"AuthTimeout": 120,
+	"AuthTimeout": 10,
 	"MessageChannelLimit":5
 }

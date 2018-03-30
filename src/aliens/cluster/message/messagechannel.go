@@ -49,7 +49,7 @@ func (this *MessageChannel) WriteMsg(message interface{}) {
 }
 
 //打开用户消息管道
-func (this *MessageChannel) Open() {
+func (this *MessageChannel) EnsureOpen() {
 	if this.channel != nil {
 		return
 	}

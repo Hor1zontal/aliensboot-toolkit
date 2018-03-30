@@ -10,9 +10,7 @@
 package conf
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"aliens/log"
+	"aliens/config"
 )
 
 var Config struct {
@@ -23,12 +21,5 @@ var Config struct {
 }
 
 func init() {
-	data, err := ioutil.ReadFile("conf/aliens/cluster.json")
-	if err != nil {
-		log.Critical("%v", err)
-	}
-	err = json.Unmarshal(data, &Config)
-	if err != nil {
-		log.Critical("%v", err)
-	}
+	config.LoadConfig(&Config, "conf/aliens/cluster.json")
 }

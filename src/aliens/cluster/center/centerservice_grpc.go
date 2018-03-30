@@ -17,17 +17,18 @@ import (
 	"aliens/log"
 	"golang.org/x/net/context"
 	"aliens/common/util"
-	"reflect"
+	"aliens/protocol"
+	"github.com/gogo/protobuf/types"
 )
 
-var rpcClientFactories = make(map[string]func(cc *grpc.ClientConn) interface{})
+//var rpcClientFactories = make(map[string]func(cc *grpc.ClientConn) interface{})
 
-const method = "Request"
+//const method = "Request"
 
 
-func RegisterRPCClientFactory(serviceType string, clientFactory func(cc *grpc.ClientConn) interface{}) {
-	rpcClientFactories[serviceType] = clientFactory
-}
+//func RegisterRPCClientFactory(serviceType string, clientFactory func(cc *grpc.ClientConn) interface{}) {
+//	rpcClientFactories[serviceType] = clientFactory
+//}
 
 func PublicRPCService(serviceType string, port int, server *grpc.Server) *gRPCService {
 	if !ClusterCenter.IsConnect() {
@@ -60,7 +61,7 @@ type gRPCService struct {
 
 	//调用服务参数
 	client *grpc.ClientConn
-	caller reflect.Value
+	caller protocol.RPCServiceClient
 
 	//启动服务参数
 	port    int
@@ -108,11 +109,11 @@ func (this *gRPCService) Start() bool {
 
 //连接服务
 func (this *gRPCService) Connect() bool {
-	rpc := rpcClientFactories[this.serviceType]
-	if rpc == nil {
-		log.Error("grpc mapping not register %v", this.serviceType)
-		return false
-	}
+	//rpc := rpcClientFactories[this.serviceType]
+	//if rpc == nil {
+	//	log.Error("grpc mapping not register %v", this.serviceType)
+	//	return false
+	//}
 
 	conn, err := grpc.Dial(this.Address, grpc.WithInsecure())
 	if err != nil {
@@ -120,15 +121,15 @@ func (this *gRPCService) Connect() bool {
 		return false
 	}
 	this.client = conn
-
-	caller := rpc(this.client)
-	mutable := reflect.ValueOf(caller).Elem()
-	this.caller = mutable.Addr().MethodByName(method)
-	if !this.caller.IsValid() {
-		log.Error("grpc %v request method not found", this.serviceType)
-		this.client.Close()
-		return false
-	}
+	this.caller = protocol.NewRPCServiceClient(this.client)
+	//rpc(this.client)
+	//mutable := reflect.ValueOf(caller).Elem()
+	//this.caller = mutable.Addr().MethodByName(method)
+	//if !this.caller.IsValid() {
+	//	log.Error("grpc %v request method not found", this.serviceType)
+	//	this.client.Close()
+	//	return false
+	//}
 	return true
 }
 
@@ -164,14 +165,15 @@ func (this *gRPCService) Request(request interface{}) (interface{}, error) {
 	if this.client == nil {
 		return nil, errors.New("service is not initial")
 	}
-	params := make([]reflect.Value, 2)
-	params[0] = reflect.ValueOf(context.Background())
-	params[1] = reflect.ValueOf(request)
-	results := this.caller.Call(params)
-
-	response := results[0].Interface()
-	/*if len(results) == 2 {
-		return response, re
-	}*/
-	return response, nil
+	//params := make([]reflect.Value, 2)
+	//params[0] = reflect.ValueOf(context.Background())
+	//params[1] = reflect.ValueOf(request)
+	//results := this.caller.Call(params)
+	//
+	//response := results[0].Interface()
+	requestAny, error := request.(*types.Any)
+	if !error {
+		return nil, errors.New("invalid request type")
+	}
+	return this.caller.Request(context.Background(), requestAny)
 }

@@ -1,9 +1,7 @@
 package conf
 
 import (
-	"io/ioutil"
-	"encoding/json"
-	"aliens/log"
+	"aliens/config"
 )
 
 var Config struct {
@@ -13,17 +11,5 @@ var Config struct {
 
 
 func init() {
-	data, err := ioutil.ReadFile("conf/aliens/service1/server.json")
-	if err != nil {
-		//log.Fatal("%v", err)
-		return
-	}
-	err = json.Unmarshal(data, &Config)
-	if err != nil {
-		log.Critical("%v", err)
-	}
-	//if Config.RPCAddress != "" {
-	//	return
-	//}
-	//Config.RPCAddress = util.GetAddress(Config.RPCPort)
+	config.LoadConfig(&Config, "conf/aliens/service1/server.json")
 }

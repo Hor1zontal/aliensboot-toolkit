@@ -1,1 +1,1 @@
- protoc --gofast_out=plugins=grpc:. *.proto
+protoc --gogo_out=plugins=grpc:. *.proto

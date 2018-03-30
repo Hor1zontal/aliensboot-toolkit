@@ -12,7 +12,6 @@ package util
 import (
 	"aliens/mmorpg/entity"
 	"aliens/protocol/scene"
-	"github.com/gogo/protobuf/proto"
 )
 
 
@@ -26,7 +25,7 @@ func BuildEntities(entitySet entity.EntitySet) []*scene.Entity {
 
 func BuildEntityProtocol(entity *entity.Entity) *scene.Entity {
 	return &scene.Entity{
-		Id:        proto.Int32(entity.GetID()),
+		Id:        entity.GetID(),
 		Position:  BuildVector(entity.GetPosition()),
 		Direction: BuildVector(entity.GetDirection()),
 	}
@@ -34,9 +33,9 @@ func BuildEntityProtocol(entity *entity.Entity) *scene.Entity {
 
 func BuildVector(vector entity.Vector3) *scene.Vector {
 	return &scene.Vector{
-		X: proto.Float32(vector.X),
-		Y: proto.Float32(vector.Y),
-		Z: proto.Float32(vector.Z),
+		X: vector.X,
+		Y: vector.Y,
+		Z: vector.Z,
 	}
 }
 

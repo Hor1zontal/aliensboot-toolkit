@@ -1,0 +1,15 @@
+{
+	"Enable":true,
+	"MaxConnNum": 20000,
+	"TCPAddr": ":3568",
+	"WSAddr": ":28208",
+	"SecretKey": "",
+	"HeartbeatTimeout": 60,
+	"AuthTimeout": 10,
+	"MessageChannelLimit":5,
+	"Route": [
+		{"url":"scene.Request1", "service":"scene", "requestID":0, "responseID":1},
+		{"url":"service1.Request1", "service":"service1", "requestID":2, "responseID":3},
+		{"url":"service2.Request2", "service":"service2", "requestID":4, "responseID":5}
+	]
+}

@@ -12,9 +12,11 @@ package internal
 import (
 	"aliens/cluster/message"
 	"time"
-	"reflect"
 	"aliens/log"
 	"aliens/module/gate/conf"
+	"github.com/name5566/leaf/gate"
+	"net"
+	"github.com/gogo/protobuf/types"
 )
 
 func newNetwork(outerChannel message.IMessageChannel) *network {
@@ -30,21 +32,40 @@ type network struct {
 	heartbeatTime time.Time //上次的心跳时间
 }
 
+type IAuthMessage interface {
+	GetID() int32
+}
+
 func (this *network) HandleMessage(request interface{}) interface{} {
-	requestType := reflect.TypeOf(request)
-	messageService := router[requestType]
+	//requestType := reflect.TypeOf(request)
+	messageService := router[0]
 	if messageService == nil {
 		log.Debug("unexpect request : %v", request)
 		//TODO 返回错误信息，或者T人
 		return nil
 	}
+
+	request.(*types.Any).TypeUrl = "0"
+	//any, _ := types.MarshalAny(request.(proto.Message))
+	//log.Debug(any.GetTypeUrl())
 	//response := reflect.NewTimeWheel(responseType).Elem().Interface()
 	response, error := messageService.HandleMessage(request)
+	//any.Marshal()
+	//sceneResponse := &scene.SceneResponse{}
+	//types.UnmarshalAny(response.(*types.Any), sceneResponse)
 	if error != nil {
 		log.Debug("handle service error : %v", error)
 		//TODO 返回错误信息，或者T人
 	}
 	return response
+}
+
+func (this *network) GetRemoteAddr() net.Addr {
+	channel := this.GetOuterChannel()
+	if channel == nil {
+		return nil
+	}
+	return channel.(gate.Agent).RemoteAddr()
 }
 
 func (this *network) IsAuth() bool {
@@ -53,7 +74,7 @@ func (this *network) IsAuth() bool {
 
 //是否没有验权超时 释放多余的空连接
 func (this *network) IsAuthTimeout() bool {
-	return !this.IsAuth() && time.Now().Sub(this.createTime).Seconds() >= conf.Config.HeartbeatTimeout
+	return !this.IsAuth() && time.Now().Sub(this.createTime).Seconds() >= conf.Config.AuthTimeout
 }
 
 //是否心跳超时

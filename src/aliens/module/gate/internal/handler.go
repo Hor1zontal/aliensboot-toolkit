@@ -2,60 +2,76 @@ package internal
 
 import (
 	"github.com/name5566/leaf/gate"
-	"reflect"
-	"aliens/protocol/service1"
-	"aliens/protocol/service2"
 	"aliens/cluster/message"
-	"github.com/name5566/leaf/network/protobuf"
 	"aliens/module/cluster"
-	"aliens/cluster/center"
-	"google.golang.org/grpc"
-	"aliens/protocol/scene"
+	"aliens/module/gate/msg"
+	"reflect"
+	"github.com/gogo/protobuf/types"
 )
 
-var router = make(map[reflect.Type]message.IMessageService)
-//消息路由列表
+var router = make(map[uint16]message.IMessageService)
 
-var Processor = protobuf.NewProcessor()
+var Processor = msg.NewMsgProcessor() //protobuf.NewProcessor()
 
 func Init() {
+	skeleton.RegisterChanRPC("NewAgent", rpcNewAgent)
+	skeleton.RegisterChanRPC("CloseAgent", rpcCloseAgent)
+	skeleton.RegisterChanRPC(reflect.TypeOf(&types.Any{}), handleMessage)
 
+	Processor.Register(0, "aliens/scene.SceneRequest")
+	Processor.Register(1, "aliens/scene.SceneResponse")
+
+	//types.UnmarshalAny()
 	Processor.SetByteOrder(true)
 
+	//types.UnmarshalAny()
+
+
+	//&types.Any{TypeUrl: "type.googleapis.com/scene.SceneRequest", Value:   }, nil
+
 	//TODO register router
-	RegisterRouter(0, &scene.SceneRequest{}, 1, &scene.SceneResponse{}, cluster.SERVICE_SCENE, SceneFactory)
-	RegisterRouter(2, &service1.Request1{}, 3, &service1.Response1{}, cluster.SERVICE_1, Service1Factory)
-	RegisterRouter(4, &service2.Request2{}, 5, &service2.Response2{}, cluster.SERVICE_2, Service2Factory)
+	RegisterRouter(0, 1, cluster.SERVICE_SCENE)
+	//RegisterRouter(2,3, cluster.SERVICE_1)
+	//RegisterRouter(4, 5,  cluster.SERVICE_2)
 	//RegisterRouter(0, &mmorpg.Request1{}, 1, &mmorpg.Response1{}, message.NewRemoteService(cluster.SERVICE_1))
 	//RegisterRouter(2, &service2.Request2{}, 3, &service2.Response2{}, message.NewRemoteService(cluster.SERVICE_2))
 }
 
-func SceneFactory(cc *grpc.ClientConn) interface{} {
-	return scene.NewRPCServiceClient(cc)
-}
-
-func Service1Factory(cc *grpc.ClientConn) interface{} {
-	return service1.NewRPCServiceClient(cc)
-}
-
-func Service2Factory(cc *grpc.ClientConn) interface{} {
-	return service2.NewRPCServiceClient(cc)
-}
-
 //注册消息和服务映射关系
-func RegisterRouter(requestID uint16, request interface{}, responseID uint16, response interface{},
-				serviceID string, clientFactory func(cc *grpc.ClientConn) interface{}) {
-	Processor.Register(requestID, request)
-	Processor.Register(responseID, response)
-	requestType := reflect.TypeOf(request)
+func RegisterRouter(requestID uint16, responseID uint16, serviceID string) {
+	//Processor.Register(responseID, &any.Any{})
+	//requestType := reflect.TypeOf(request)
 	//responseType := reflect.TypeOf(response)
 
 	//log.Debug("register request %v-%v  response %v-%v", requestNo, requestType, responseNo, responseType)
-	center.RegisterRPCClientFactory(serviceID, clientFactory)
-	router[requestType] = message.NewRemoteService(serviceID)
-	skeleton.RegisterChanRPC(requestType, handleMessage)
+	//center.RegisterRPCClientFactory(serviceID, clientFactory)
+
+
+	//"type.googleapis.com/scene.SceneRequest"
+	router[requestID] = message.NewRemoteService(serviceID)
+
 }
 
+
+func rpcNewAgent(args []interface{}) {
+	agent := args[0].(gate.Agent)
+	if agent.UserData() == nil {
+		//打开缓存大小为5的收消息管道
+		network := newNetwork(agent)
+		agent.SetUserData(network)
+		networkManager.AddNetwork(network)
+	}
+
+	_ = agent
+}
+
+func rpcCloseAgent(args []interface{}) {
+	a := args[0].(gate.Agent)
+	networkManager.RemoveNetwork(a.UserData().(*network))
+	//userdata := a.UserData()
+	//a.SetUserData(nil)
+	_ = a
+}
 
 
 func handleMessage(args []interface{}) {
@@ -64,13 +80,8 @@ func handleMessage(args []interface{}) {
 	gateAgent := args[1].(gate.Agent)
 	userdata := gateAgent.UserData()
 	switch userdata.(type) {
-	case message.IChannelMessageHandler:
-		userdata.(message.IChannelMessageHandler).AcceptMessage(request)
-		break
-	default:
-		//打开缓存大小为5的收消息管道
-		channelHandler := newNetwork(gateAgent)
-		gateAgent.SetUserData(channelHandler)
-		channelHandler.AcceptMessage(request)
+		case *network:
+			userdata.(*network).AcceptMessage(request)
+			break
 	}
 }

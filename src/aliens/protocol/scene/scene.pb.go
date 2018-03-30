@@ -3,11 +3,9 @@
 
 package scene
 
-import proto "github.com/golang/protobuf/proto"
+import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-
-import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -15,10 +13,9 @@ var _ = fmt.Errorf
 var _ = math.Inf
 
 type Vector struct {
-	X                *float32 `protobuf:"fixed32,1,opt,name=x" json:"x,omitempty"`
-	Y                *float32 `protobuf:"fixed32,2,opt,name=y" json:"y,omitempty"`
-	Z                *float32 `protobuf:"fixed32,3,opt,name=z" json:"z,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	X float32 `protobuf:"fixed32,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y float32 `protobuf:"fixed32,2,opt,name=y,proto3" json:"y,omitempty"`
+	Z float32 `protobuf:"fixed32,3,opt,name=z,proto3" json:"z,omitempty"`
 }
 
 func (m *Vector) Reset()                    { *m = Vector{} }
@@ -27,32 +24,31 @@ func (*Vector) ProtoMessage()               {}
 func (*Vector) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{0} }
 
 func (m *Vector) GetX() float32 {
-	if m != nil && m.X != nil {
-		return *m.X
+	if m != nil {
+		return m.X
 	}
 	return 0
 }
 
 func (m *Vector) GetY() float32 {
-	if m != nil && m.Y != nil {
-		return *m.Y
+	if m != nil {
+		return m.Y
 	}
 	return 0
 }
 
 func (m *Vector) GetZ() float32 {
-	if m != nil && m.Z != nil {
-		return *m.Z
+	if m != nil {
+		return m.Z
 	}
 	return 0
 }
 
 type Entity struct {
-	Id               *int32  `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
-	Position         *Vector `protobuf:"bytes,2,opt,name=position" json:"position,omitempty"`
-	Direction        *Vector `protobuf:"bytes,3,opt,name=direction" json:"direction,omitempty"`
-	Data             *string `protobuf:"bytes,4,opt,name=data" json:"data,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Id        int32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Position  *Vector `protobuf:"bytes,2,opt,name=position" json:"position,omitempty"`
+	Direction *Vector `protobuf:"bytes,3,opt,name=direction" json:"direction,omitempty"`
+	Data      string  `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *Entity) Reset()                    { *m = Entity{} }
@@ -61,8 +57,8 @@ func (*Entity) ProtoMessage()               {}
 func (*Entity) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{1} }
 
 func (m *Entity) GetId() int32 {
-	if m != nil && m.Id != nil {
-		return *m.Id
+	if m != nil {
+		return m.Id
 	}
 	return 0
 }
@@ -82,17 +78,16 @@ func (m *Entity) GetDirection() *Vector {
 }
 
 func (m *Entity) GetData() string {
-	if m != nil && m.Data != nil {
-		return *m.Data
+	if m != nil {
+		return m.Data
 	}
 	return ""
 }
 
 type SpaceEnter struct {
-	SpaceID          *int32  `protobuf:"varint,1,opt,name=spaceID" json:"spaceID,omitempty"`
-	Position         *Vector `protobuf:"bytes,2,opt,name=position" json:"position,omitempty"`
-	Direction        *Vector `protobuf:"bytes,3,opt,name=direction" json:"direction,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SpaceID   int32   `protobuf:"varint,1,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
+	Position  *Vector `protobuf:"bytes,2,opt,name=position" json:"position,omitempty"`
+	Direction *Vector `protobuf:"bytes,3,opt,name=direction" json:"direction,omitempty"`
 }
 
 func (m *SpaceEnter) Reset()                    { *m = SpaceEnter{} }
@@ -101,8 +96,8 @@ func (*SpaceEnter) ProtoMessage()               {}
 func (*SpaceEnter) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{2} }
 
 func (m *SpaceEnter) GetSpaceID() int32 {
-	if m != nil && m.SpaceID != nil {
-		return *m.SpaceID
+	if m != nil {
+		return m.SpaceID
 	}
 	return 0
 }
@@ -122,8 +117,7 @@ func (m *SpaceEnter) GetDirection() *Vector {
 }
 
 type SpaceEnterRet struct {
-	EntityID         *int32 `protobuf:"varint,1,opt,name=entityID" json:"entityID,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	EntityID int32 `protobuf:"varint,1,opt,name=entityID,proto3" json:"entityID,omitempty"`
 }
 
 func (m *SpaceEnterRet) Reset()                    { *m = SpaceEnterRet{} }
@@ -132,18 +126,17 @@ func (*SpaceEnterRet) ProtoMessage()               {}
 func (*SpaceEnterRet) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{3} }
 
 func (m *SpaceEnterRet) GetEntityID() int32 {
-	if m != nil && m.EntityID != nil {
-		return *m.EntityID
+	if m != nil {
+		return m.EntityID
 	}
 	return 0
 }
 
 type SpaceMove struct {
-	SpaceID          *int32  `protobuf:"varint,1,opt,name=spaceID" json:"spaceID,omitempty"`
-	EntityID         *int32  `protobuf:"varint,2,opt,name=entityID" json:"entityID,omitempty"`
-	Position         *Vector `protobuf:"bytes,3,opt,name=position" json:"position,omitempty"`
-	Direction        *Vector `protobuf:"bytes,4,opt,name=direction" json:"direction,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SpaceID   int32   `protobuf:"varint,1,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
+	EntityID  int32   `protobuf:"varint,2,opt,name=entityID,proto3" json:"entityID,omitempty"`
+	Position  *Vector `protobuf:"bytes,3,opt,name=position" json:"position,omitempty"`
+	Direction *Vector `protobuf:"bytes,4,opt,name=direction" json:"direction,omitempty"`
 }
 
 func (m *SpaceMove) Reset()                    { *m = SpaceMove{} }
@@ -152,15 +145,15 @@ func (*SpaceMove) ProtoMessage()               {}
 func (*SpaceMove) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{4} }
 
 func (m *SpaceMove) GetSpaceID() int32 {
-	if m != nil && m.SpaceID != nil {
-		return *m.SpaceID
+	if m != nil {
+		return m.SpaceID
 	}
 	return 0
 }
 
 func (m *SpaceMove) GetEntityID() int32 {
-	if m != nil && m.EntityID != nil {
-		return *m.EntityID
+	if m != nil {
+		return m.EntityID
 	}
 	return 0
 }
@@ -180,7 +173,6 @@ func (m *SpaceMove) GetDirection() *Vector {
 }
 
 type SpaceMoveRet struct {
-	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *SpaceMoveRet) Reset()                    { *m = SpaceMoveRet{} }
@@ -189,9 +181,8 @@ func (*SpaceMoveRet) ProtoMessage()               {}
 func (*SpaceMoveRet) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{5} }
 
 type SpaceLeave struct {
-	SpaceID          *int32 `protobuf:"varint,1,opt,name=spaceID" json:"spaceID,omitempty"`
-	EntityID         *int32 `protobuf:"varint,2,opt,name=entityID" json:"entityID,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	SpaceID  int32 `protobuf:"varint,1,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
+	EntityID int32 `protobuf:"varint,2,opt,name=entityID,proto3" json:"entityID,omitempty"`
 }
 
 func (m *SpaceLeave) Reset()                    { *m = SpaceLeave{} }
@@ -200,21 +191,20 @@ func (*SpaceLeave) ProtoMessage()               {}
 func (*SpaceLeave) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{6} }
 
 func (m *SpaceLeave) GetSpaceID() int32 {
-	if m != nil && m.SpaceID != nil {
-		return *m.SpaceID
+	if m != nil {
+		return m.SpaceID
 	}
 	return 0
 }
 
 func (m *SpaceLeave) GetEntityID() int32 {
-	if m != nil && m.EntityID != nil {
-		return *m.EntityID
+	if m != nil {
+		return m.EntityID
 	}
 	return 0
 }
 
 type SpaceLeaveRet struct {
-	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *SpaceLeaveRet) Reset()                    { *m = SpaceLeaveRet{} }
@@ -223,9 +213,8 @@ func (*SpaceLeaveRet) ProtoMessage()               {}
 func (*SpaceLeaveRet) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{7} }
 
 type GetState struct {
-	SpaceID          *int32 `protobuf:"varint,1,opt,name=spaceID" json:"spaceID,omitempty"`
-	EntityID         *int32 `protobuf:"varint,2,opt,name=entityID" json:"entityID,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	SpaceID  int32 `protobuf:"varint,1,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
+	EntityID int32 `protobuf:"varint,2,opt,name=entityID,proto3" json:"entityID,omitempty"`
 }
 
 func (m *GetState) Reset()                    { *m = GetState{} }
@@ -234,22 +223,21 @@ func (*GetState) ProtoMessage()               {}
 func (*GetState) Descriptor() ([]byte, []int) { return fileDescriptorScene, []int{8} }
 
 func (m *GetState) GetSpaceID() int32 {
-	if m != nil && m.SpaceID != nil {
-		return *m.SpaceID
+	if m != nil {
+		return m.SpaceID
 	}
 	return 0
 }
 
 func (m *GetState) GetEntityID() int32 {
-	if m != nil && m.EntityID != nil {
-		return *m.EntityID
+	if m != nil {
+		return m.EntityID
 	}
 	return 0
 }
 
 type GetStateRet struct {
-	Neighbors        []*Entity `protobuf:"bytes,1,rep,name=neighbors" json:"neighbors,omitempty"`
-	XXX_unrecognized []byte    `json:"-"`
+	Neighbors []*Entity `protobuf:"bytes,1,rep,name=neighbors" json:"neighbors,omitempty"`
 }
 
 func (m *GetStateRet) Reset()                    { *m = GetStateRet{} }
@@ -276,1675 +264,28 @@ func init() {
 	proto.RegisterType((*GetState)(nil), "get_state")
 	proto.RegisterType((*GetStateRet)(nil), "get_state_ret")
 }
-func (m *Vector) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Vector) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.X != nil {
-		dAtA[i] = 0xd
-		i++
-		i = encodeFixed32Scene(dAtA, i, uint32(math.Float32bits(float32(*m.X))))
-	}
-	if m.Y != nil {
-		dAtA[i] = 0x15
-		i++
-		i = encodeFixed32Scene(dAtA, i, uint32(math.Float32bits(float32(*m.Y))))
-	}
-	if m.Z != nil {
-		dAtA[i] = 0x1d
-		i++
-		i = encodeFixed32Scene(dAtA, i, uint32(math.Float32bits(float32(*m.Z))))
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *Entity) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Entity) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Id != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.Id))
-	}
-	if m.Position != nil {
-		dAtA[i] = 0x12
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Position.Size()))
-		n1, err := m.Position.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n1
-	}
-	if m.Direction != nil {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Direction.Size()))
-		n2, err := m.Direction.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n2
-	}
-	if m.Data != nil {
-		dAtA[i] = 0x22
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(len(*m.Data)))
-		i += copy(dAtA[i:], *m.Data)
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceEnter) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceEnter) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.SpaceID))
-	}
-	if m.Position != nil {
-		dAtA[i] = 0x12
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Position.Size()))
-		n3, err := m.Position.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n3
-	}
-	if m.Direction != nil {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Direction.Size()))
-		n4, err := m.Direction.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n4
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceEnterRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceEnterRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.EntityID != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceMove) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceMove) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.EntityID))
-	}
-	if m.Position != nil {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Position.Size()))
-		n5, err := m.Position.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n5
-	}
-	if m.Direction != nil {
-		dAtA[i] = 0x22
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(m.Direction.Size()))
-		n6, err := m.Direction.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n6
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceMoveRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceMoveRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceLeave) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceLeave) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *SpaceLeaveRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *SpaceLeaveRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *GetState) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GetState) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintScene(dAtA, i, uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *GetStateRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GetStateRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.Neighbors) > 0 {
-		for _, msg := range m.Neighbors {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintScene(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func encodeFixed64Scene(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
-}
-func encodeFixed32Scene(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
-}
-func encodeVarintScene(dAtA []byte, offset int, v uint64) int {
-	for v >= 1<<7 {
-		dAtA[offset] = uint8(v&0x7f | 0x80)
-		v >>= 7
-		offset++
-	}
-	dAtA[offset] = uint8(v)
-	return offset + 1
-}
-func (m *Vector) Size() (n int) {
-	var l int
-	_ = l
-	if m.X != nil {
-		n += 5
-	}
-	if m.Y != nil {
-		n += 5
-	}
-	if m.Z != nil {
-		n += 5
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *Entity) Size() (n int) {
-	var l int
-	_ = l
-	if m.Id != nil {
-		n += 1 + sovScene(uint64(*m.Id))
-	}
-	if m.Position != nil {
-		l = m.Position.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.Direction != nil {
-		l = m.Direction.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.Data != nil {
-		l = len(*m.Data)
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceEnter) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		n += 1 + sovScene(uint64(*m.SpaceID))
-	}
-	if m.Position != nil {
-		l = m.Position.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.Direction != nil {
-		l = m.Direction.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceEnterRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.EntityID != nil {
-		n += 1 + sovScene(uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceMove) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		n += 1 + sovScene(uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		n += 1 + sovScene(uint64(*m.EntityID))
-	}
-	if m.Position != nil {
-		l = m.Position.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.Direction != nil {
-		l = m.Direction.Size()
-		n += 1 + l + sovScene(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceMoveRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceLeave) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		n += 1 + sovScene(uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		n += 1 + sovScene(uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *SpaceLeaveRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *GetState) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceID != nil {
-		n += 1 + sovScene(uint64(*m.SpaceID))
-	}
-	if m.EntityID != nil {
-		n += 1 + sovScene(uint64(*m.EntityID))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *GetStateRet) Size() (n int) {
-	var l int
-	_ = l
-	if len(m.Neighbors) > 0 {
-		for _, e := range m.Neighbors {
-			l = e.Size()
-			n += 1 + l + sovScene(uint64(l))
-		}
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func sovScene(x uint64) (n int) {
-	for {
-		n++
-		x >>= 7
-		if x == 0 {
-			break
-		}
-	}
-	return n
-}
-func sozScene(x uint64) (n int) {
-	return sovScene(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *Vector) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Vector: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Vector: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 5 {
-				return fmt.Errorf("proto: wrong wireType = %d for field X", wireType)
-			}
-			var v uint32
-			if (iNdEx + 4) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += 4
-			v = uint32(dAtA[iNdEx-4])
-			v |= uint32(dAtA[iNdEx-3]) << 8
-			v |= uint32(dAtA[iNdEx-2]) << 16
-			v |= uint32(dAtA[iNdEx-1]) << 24
-			v2 := float32(math.Float32frombits(v))
-			m.X = &v2
-		case 2:
-			if wireType != 5 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Y", wireType)
-			}
-			var v uint32
-			if (iNdEx + 4) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += 4
-			v = uint32(dAtA[iNdEx-4])
-			v |= uint32(dAtA[iNdEx-3]) << 8
-			v |= uint32(dAtA[iNdEx-2]) << 16
-			v |= uint32(dAtA[iNdEx-1]) << 24
-			v2 := float32(math.Float32frombits(v))
-			m.Y = &v2
-		case 3:
-			if wireType != 5 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Z", wireType)
-			}
-			var v uint32
-			if (iNdEx + 4) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += 4
-			v = uint32(dAtA[iNdEx-4])
-			v |= uint32(dAtA[iNdEx-3]) << 8
-			v |= uint32(dAtA[iNdEx-2]) << 16
-			v |= uint32(dAtA[iNdEx-1]) << 24
-			v2 := float32(math.Float32frombits(v))
-			m.Z = &v2
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *Entity) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Entity: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Entity: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Id = &v
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Position", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Position == nil {
-				m.Position = &Vector{}
-			}
-			if err := m.Position.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Direction", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Direction == nil {
-				m.Direction = &Vector{}
-			}
-			if err := m.Direction.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			s := string(dAtA[iNdEx:postIndex])
-			m.Data = &s
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceEnter) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_enter: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_enter: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.SpaceID = &v
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Position", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Position == nil {
-				m.Position = &Vector{}
-			}
-			if err := m.Position.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Direction", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Direction == nil {
-				m.Direction = &Vector{}
-			}
-			if err := m.Direction.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceEnterRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_enter_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_enter_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EntityID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.EntityID = &v
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceMove) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_move: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_move: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.SpaceID = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EntityID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.EntityID = &v
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Position", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Position == nil {
-				m.Position = &Vector{}
-			}
-			if err := m.Position.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Direction", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Direction == nil {
-				m.Direction = &Vector{}
-			}
-			if err := m.Direction.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceMoveRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_move_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_move_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceLeave) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_leave: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_leave: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.SpaceID = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EntityID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.EntityID = &v
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *SpaceLeaveRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: space_leave_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: space_leave_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *GetState) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: get_state: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: get_state: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.SpaceID = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EntityID", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.EntityID = &v
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *GetStateRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: get_state_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: get_state_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Neighbors", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthScene
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Neighbors = append(m.Neighbors, &Entity{})
-			if err := m.Neighbors[len(m.Neighbors)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipScene(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthScene
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func skipScene(dAtA []byte) (n int, err error) {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return 0, ErrIntOverflowScene
-			}
-			if iNdEx >= l {
-				return 0, io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		wireType := int(wire & 0x7)
-		switch wireType {
-		case 0:
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return 0, ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return 0, io.ErrUnexpectedEOF
-				}
-				iNdEx++
-				if dAtA[iNdEx-1] < 0x80 {
-					break
-				}
-			}
-			return iNdEx, nil
-		case 1:
-			iNdEx += 8
-			return iNdEx, nil
-		case 2:
-			var length int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return 0, ErrIntOverflowScene
-				}
-				if iNdEx >= l {
-					return 0, io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				length |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			iNdEx += length
-			if length < 0 {
-				return 0, ErrInvalidLengthScene
-			}
-			return iNdEx, nil
-		case 3:
-			for {
-				var innerWire uint64
-				var start int = iNdEx
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return 0, ErrIntOverflowScene
-					}
-					if iNdEx >= l {
-						return 0, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					innerWire |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				innerWireType := int(innerWire & 0x7)
-				if innerWireType == 4 {
-					break
-				}
-				next, err := skipScene(dAtA[start:])
-				if err != nil {
-					return 0, err
-				}
-				iNdEx = start + next
-			}
-			return iNdEx, nil
-		case 4:
-			return iNdEx, nil
-		case 5:
-			iNdEx += 4
-			return iNdEx, nil
-		default:
-			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
-		}
-	}
-	panic("unreachable")
-}
-
-var (
-	ErrInvalidLengthScene = fmt.Errorf("proto: negative length found during unmarshaling")
-	ErrIntOverflowScene   = fmt.Errorf("proto: integer overflow")
-)
 
 func init() { proto.RegisterFile("scene.proto", fileDescriptorScene) }
 
 var fileDescriptorScene = []byte{
-	// 316 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xac, 0x92, 0xbd, 0x4e, 0xc3, 0x30,
-	0x14, 0x85, 0x71, 0x52, 0xda, 0xe6, 0x16, 0x4a, 0xf1, 0x64, 0x31, 0x44, 0x95, 0x51, 0xa5, 0x2e,
-	0x74, 0xe8, 0xc0, 0xce, 0xdf, 0xc0, 0x9a, 0x81, 0xb5, 0x0a, 0xc9, 0x55, 0xb1, 0x04, 0x71, 0x64,
-	0x5b, 0x28, 0xe9, 0x43, 0x30, 0xf3, 0x48, 0x8c, 0x3c, 0x02, 0x0a, 0x2f, 0x82, 0xe2, 0x90, 0xa4,
-	0x19, 0x40, 0xa8, 0x62, 0xcb, 0xd1, 0xbd, 0xfe, 0xfc, 0xe5, 0xc8, 0x30, 0xd2, 0x11, 0x26, 0xb8,
-	0x48, 0x95, 0x34, 0x92, 0x2f, 0xa1, 0x7f, 0x87, 0x91, 0x91, 0x8a, 0x1e, 0x00, 0xc9, 0x18, 0x99,
-	0x92, 0xb9, 0x13, 0x90, 0xac, 0x4c, 0x39, 0x73, 0xaa, 0x94, 0x97, 0x69, 0xc3, 0xdc, 0x2a, 0x6d,
-	0x78, 0x06, 0xfd, 0x9b, 0xc4, 0x08, 0x93, 0xd3, 0x31, 0x38, 0x22, 0xb6, 0x87, 0xf6, 0x03, 0x47,
-	0xc4, 0xf4, 0x14, 0x86, 0xa9, 0xd4, 0xc2, 0x08, 0x99, 0xd8, 0xc3, 0xa3, 0xe5, 0x60, 0x51, 0xe1,
-	0x83, 0x66, 0x40, 0x67, 0xe0, 0xc5, 0x42, 0x61, 0x64, 0xb7, 0xdc, 0xee, 0x56, 0x3b, 0xa1, 0x14,
-	0x7a, 0x71, 0x68, 0x42, 0xd6, 0x9b, 0x92, 0xb9, 0x17, 0xd8, 0x6f, 0xae, 0x61, 0xa4, 0xd3, 0x30,
-	0xc2, 0x15, 0x26, 0x06, 0x15, 0x65, 0x30, 0xb0, 0xf1, 0xf6, 0xfa, 0xdb, 0xa1, 0x8e, 0xff, 0x29,
-	0xc2, 0xcf, 0xe0, 0x68, 0xeb, 0xd2, 0x95, 0x42, 0x43, 0x4f, 0x60, 0x88, 0xb6, 0x81, 0xe6, 0xe6,
-	0x26, 0xf3, 0x17, 0x02, 0x50, 0xed, 0x3f, 0xc9, 0x67, 0xfc, 0xc5, 0x71, 0x1b, 0xe2, 0x74, 0x21,
-	0x1d, 0x7f, 0xf7, 0x4f, 0xfe, 0xbd, 0x1f, 0xfd, 0x27, 0x30, 0x6e, 0x7d, 0x4a, 0x7d, 0x7e, 0x55,
-	0xd7, 0xf8, 0x88, 0xe1, 0xae, 0x8a, 0xfc, 0xb8, 0xae, 0xc5, 0x42, 0x2c, 0xf7, 0x02, 0xbc, 0x35,
-	0x9a, 0x95, 0x36, 0xa1, 0xd9, 0x95, 0x7a, 0x0e, 0x87, 0x0d, 0xc2, 0x56, 0x3d, 0x03, 0x2f, 0x41,
-	0xb1, 0x7e, 0xb8, 0x97, 0x4a, 0x33, 0x32, 0x75, 0xed, 0x4f, 0x56, 0xcf, 0x2f, 0x68, 0x27, 0x97,
-	0x93, 0xb7, 0xc2, 0x27, 0xef, 0x85, 0x4f, 0x3e, 0x0a, 0x9f, 0xbc, 0x7e, 0xfa, 0x7b, 0x5f, 0x01,
-	0x00, 0x00, 0xff, 0xff, 0x3b, 0x2b, 0x32, 0xaa, 0xe7, 0x02, 0x00, 0x00,
+	// 297 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xac, 0x92, 0x41, 0x4b, 0xc3, 0x40,
+	0x10, 0x85, 0xd9, 0xa4, 0xb6, 0xcd, 0x44, 0xab, 0xee, 0x69, 0xf1, 0x14, 0x56, 0x0a, 0xbd, 0xd8,
+	0x43, 0x05, 0xef, 0xa2, 0x1e, 0xbc, 0xe6, 0xe0, 0x35, 0xa4, 0xc9, 0x50, 0x17, 0x34, 0x1b, 0x76,
+	0x17, 0x49, 0xfa, 0x23, 0xfc, 0xcd, 0x92, 0x89, 0x49, 0x9a, 0x83, 0x22, 0xc5, 0xdb, 0x3e, 0x66,
+	0xe6, 0xcd, 0xb7, 0x8f, 0x81, 0xd0, 0x66, 0x58, 0xe0, 0xba, 0x34, 0xda, 0x69, 0xb9, 0x81, 0xe9,
+	0x0b, 0x66, 0x4e, 0x1b, 0x7e, 0x0a, 0xac, 0x12, 0x2c, 0x62, 0x2b, 0x2f, 0x66, 0x55, 0xa3, 0x6a,
+	0xe1, 0xb5, 0xaa, 0x6e, 0xd4, 0x5e, 0xf8, 0xad, 0xda, 0xcb, 0x0a, 0xa6, 0x4f, 0x85, 0x53, 0xae,
+	0xe6, 0x0b, 0xf0, 0x54, 0x4e, 0x43, 0x27, 0xb1, 0xa7, 0x72, 0x7e, 0x0d, 0xf3, 0x52, 0x5b, 0xe5,
+	0x94, 0x2e, 0x68, 0x38, 0xdc, 0xcc, 0xd6, 0xad, 0x7d, 0xdc, 0x17, 0xf8, 0x12, 0x82, 0x5c, 0x19,
+	0xcc, 0xa8, 0xcb, 0x1f, 0x77, 0x0d, 0x15, 0xce, 0x61, 0x92, 0xa7, 0x2e, 0x15, 0x93, 0x88, 0xad,
+	0x82, 0x98, 0xde, 0xd2, 0x42, 0x68, 0xcb, 0x34, 0xc3, 0x04, 0x0b, 0x87, 0x86, 0x0b, 0x98, 0x91,
+	0x7c, 0x7e, 0xfc, 0x66, 0xe8, 0xe4, 0x7f, 0x82, 0xc8, 0x1b, 0x38, 0x3f, 0x58, 0x9a, 0x18, 0x74,
+	0xfc, 0x0a, 0xe6, 0x48, 0x09, 0xf4, 0x9b, 0x7b, 0x2d, 0x3f, 0x19, 0x40, 0xdb, 0xff, 0xae, 0x3f,
+	0xf0, 0x17, 0xc6, 0x43, 0x13, 0x6f, 0x6c, 0x32, 0xe2, 0xf7, 0xff, 0xc4, 0x3f, 0xf9, 0x91, 0xff,
+	0x02, 0x16, 0x03, 0x4f, 0x83, 0x2f, 0x1f, 0xba, 0x18, 0xdf, 0x30, 0x3d, 0x16, 0x51, 0x5e, 0x76,
+	0xb1, 0x90, 0x09, 0xf9, 0xde, 0x43, 0xb0, 0x43, 0x97, 0x58, 0x97, 0xba, 0x63, 0x5d, 0xef, 0xe0,
+	0xac, 0xb7, 0xa0, 0xa8, 0x97, 0x10, 0x14, 0xa8, 0x76, 0xaf, 0x5b, 0x6d, 0xac, 0x60, 0x91, 0x4f,
+	0x9f, 0x6c, 0xcf, 0x2f, 0x1e, 0x2a, 0xdb, 0x29, 0x9d, 0xf3, 0xed, 0x57, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x82, 0xfb, 0x26, 0x38, 0xdd, 0x02, 0x00, 0x00,
 }

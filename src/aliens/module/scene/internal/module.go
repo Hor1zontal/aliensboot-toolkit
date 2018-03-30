@@ -3,7 +3,6 @@ package internal
 import (
 	"aliens/module/scene/entity"
 	"aliens/module/scene/service"
-	"aliens/module/scene/conf"
 )
 
 
@@ -11,7 +10,7 @@ type Module struct {
 }
 
 func (m *Module) IsEnable() bool {
-	return conf.Config.Enable
+	return true
 }
 
 func (m *Module) OnInit() {

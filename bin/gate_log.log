@@ -1,0 +1,10 @@
+[2018/03/29 11:22:54 CST] [DEBG] (aliens/module/gate/internal.(*NetworkManager).dealAuthTimeout:63) network auth timeout : 192.168.0.104:55672
+[2018/03/29 19:10:11 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:52) type.googleapis.com/scene.SceneRequest
+[2018/03/29 19:26:56 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:56) handle service error : invalid request type
+[2018/03/30 10:13:45 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : invalid service
+[2018/03/30 10:13:52 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : invalid service
+[2018/03/30 10:14:21 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : invalid service
+[2018/03/30 10:14:42 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : invalid service
+[2018/03/30 10:19:15 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : rpc error: code = Internal desc = transport is closing
+[2018/03/30 11:39:23 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:57) handle service error : invalid service
+[2018/03/30 11:43:27 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:57) handle service error : invalid service

@@ -10,25 +10,14 @@
 package conf
 
 import (
-	"io/ioutil"
-	"encoding/json"
-	"aliens/log"
+	"aliens/config"
 )
 
 
 var Config struct {
-	Enable              bool   //场景模块是否开启
 	RPCPort				int    //rpc端口
 }
 
 func init() {
-	data, err := ioutil.ReadFile("conf/aliens/scene/server.json")
-	if err != nil {
-		return
-	}
-	err = json.Unmarshal(data, &Config)
-	if err != nil {
-		log.Critical("%v", err)
-	}
-	log.Debug("json init %v", Config)
+	config.LoadConfig(&Config, "conf/aliens/scene/server.json")
 }

@@ -18,7 +18,7 @@ func OpenChannelHandler(outerChannel IMessageChannel, handler IMessageHandler, m
 		outerChannel: outerChannel,
 		handler:      handler,
 	}
-	channelHandler.OpenInnerChannel(maxMessage)
+	channelHandler.InitInnerChannel(maxMessage)
 	return channelHandler
 }
 
@@ -28,7 +28,7 @@ type IChannelMessageHandler interface {
 
 type ChannelMessageHandler struct {
 	outerChannel IMessageChannel //往外写的消息管道
-	innerChannel IMessageChannel //往内写的消息管道
+	innerChannel *MessageChannel //往内写的消息管道
 	handler      IMessageHandler //服务处理类
 }
 
@@ -52,6 +52,7 @@ func (this *ChannelMessageHandler) SetOuterChannel(outerChannel IMessageChannel)
 //收取消息
 func (this *ChannelMessageHandler) AcceptMessage(message interface{}) {
 	if this.innerChannel != nil {
+		this.innerChannel.EnsureOpen()
 		this.innerChannel.WriteMsg(message)
 	}
 }
@@ -78,14 +79,14 @@ func (this *ChannelMessageHandler) HandleMessage(msg interface{}) {
 	}()
 	if this.handler != nil {
 		response := this.handler.HandleMessage(msg)
-		if this.outerChannel != nil {
+		if this.outerChannel != nil && response != nil {
 			this.outerChannel.WriteMsg(response)
 		}
 	}
 }
 
 //打开收消息管道
-func (this *ChannelMessageHandler) OpenInnerChannel(maxMessage int) {
+func (this *ChannelMessageHandler) InitInnerChannel(maxMessage int) {
 	if this.innerChannel != nil {
 		return
 	}
@@ -93,7 +94,6 @@ func (this *ChannelMessageHandler) OpenInnerChannel(maxMessage int) {
 		messageLimit:   maxMessage,
 		messageHandler: this,
 	}
-	channel.Open()
 	this.innerChannel = channel
 }
 
