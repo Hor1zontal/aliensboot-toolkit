@@ -9,10 +9,13 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/scene"
+import (
+	"aliens/protocol/scene"
+	"aliens/mmorpg"
+)
 
 
 //
 func handleSpaceLeave(request *scene.SpaceLeave, response *scene.SpaceLeaveRet) {
-
+	mmorpg.SpaceManager.LeaveEntity(request.GetSpaceID(), request.GetEntityID())
 }

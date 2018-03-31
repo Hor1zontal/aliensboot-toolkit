@@ -9,10 +9,15 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/scene"
+import (
+	"aliens/protocol/scene"
+	"aliens/mmorpg"
+	"aliens/module/scene/util"
+)
 
 
 //
 func handleGetState(request *scene.GetState, response *scene.GetStateRet) {
-
+	neighbors := mmorpg.SpaceManager.GetEntityState(request.GetSpaceID(), request.GetEntityID())
+	response.Neighbors = util.BuildEntities(neighbors);
 }

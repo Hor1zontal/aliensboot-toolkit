@@ -9,10 +9,14 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/scene"
+import (
+	"aliens/protocol/scene"
+	"aliens/mmorpg"
+	"aliens/module/scene/entity"
+	"aliens/module/scene/util"
+)
 
-
-//
 func handleSpaceEnter(request *scene.SpaceEnter, response *scene.SpaceEnterRet) {
-
+	entity := mmorpg.SpaceManager.CreateEntity(request.GetSpaceID(), &entity.PlayerEntity{}, util.TransVector(request.GetPosition()), util.TransVector(request.GetDirection()))
+	response.EntityID = entity.GetID()
 }

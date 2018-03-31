@@ -11,6 +11,7 @@ package conf
 
 import (
 	"aliens/config"
+	"fmt"
 )
 
 
@@ -21,4 +22,5 @@ var Config struct {
 
 func init() {
 	config.LoadConfig(&Config, "conf/aliens/scene/server.json")
+	fmt.Println(Config)
 }

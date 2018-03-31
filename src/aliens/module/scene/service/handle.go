@@ -39,8 +39,7 @@ func (this *sceneService) Request(ctx context.Context,request *types.Any) (*type
 }
 
 func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
-	response := &scene.SceneResponse{}
-
+	response := &scene.SceneResponse{Session:request.GetSession()}
 	
 	if request.GetSpaceMove() != nil {
 		messageRet := &scene.SpaceMoveRet{}

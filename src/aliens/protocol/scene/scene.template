@@ -39,7 +39,7 @@ func (this *${package}Service) Request(ctx context.Context,request *types.Any) (
 }
 
 func handleRequest(request *${package}.${request}) (*${package}.${response}, error) {
-	response := &${package}.${response}{}
+	response := &${package}.${response}{Session:request.GetSession()}
 
 	<message>
 	if request.Get${o_request}() != nil {
