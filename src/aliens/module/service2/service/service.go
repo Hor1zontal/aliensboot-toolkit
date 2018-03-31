@@ -28,7 +28,7 @@ func (this *Service)Request(ctx context.Context, request *service2.Request2) (*s
 func Init() {
 	server := grpc.NewServer()
 	service2.RegisterRPCServiceServer(server, &Service{})
-	center.PublicRPCService(cluster.SERVICE_2, conf.Config.RPCPort, server)
+	center.PublicGRPCService(cluster.SERVICE_2, conf.Config.RPCPort, server)
 }
 
 func Close() {

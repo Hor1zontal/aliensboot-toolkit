@@ -14,6 +14,7 @@ const (
 	WEBSOCKET string = "websocket"
 	HTTP string = "http"
 	GRPC string = "grpc"
+	GATE string = "gate"
 )
 
 

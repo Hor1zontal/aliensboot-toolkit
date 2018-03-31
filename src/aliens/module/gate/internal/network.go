@@ -12,11 +12,11 @@ package internal
 import (
 	"aliens/cluster/message"
 	"time"
-	"aliens/log"
 	"aliens/module/gate/conf"
 	"github.com/name5566/leaf/gate"
 	"net"
-	"github.com/gogo/protobuf/types"
+	"aliens/module/gate/route"
+	"aliens/log"
 )
 
 func newNetwork(outerChannel message.IMessageChannel) *network {
@@ -37,25 +37,10 @@ type IAuthMessage interface {
 }
 
 func (this *network) HandleMessage(request interface{}) interface{} {
-	//requestType := reflect.TypeOf(request)
-	messageService := router[0]
-	if messageService == nil {
-		log.Debug("unexpect request : %v", request)
-		//TODO 返回错误信息，或者T人
-		return nil
-	}
-
-	request.(*types.Any).TypeUrl = "0"
-	//any, _ := types.MarshalAny(request.(proto.Message))
-	//log.Debug(any.GetTypeUrl())
-	//response := reflect.NewTimeWheel(responseType).Elem().Interface()
-	response, error := messageService.HandleMessage(request)
-	//any.Marshal()
-	//sceneResponse := &scene.SceneResponse{}
-	//types.UnmarshalAny(response.(*types.Any), sceneResponse)
+	response, error := route.HandleMessage(request)
+	//TODO 返回服务不可用 或 嘿嘿嘿
 	if error != nil {
-		log.Debug("handle service error : %v", error)
-		//TODO 返回错误信息，或者T人
+		log.Debug(error.Error())
 	}
 	return response
 }

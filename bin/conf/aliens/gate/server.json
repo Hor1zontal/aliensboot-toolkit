@@ -8,8 +8,8 @@
 	"AuthTimeout": 10,
 	"MessageChannelLimit":5,
 	"Route": [
-		{"url":"scene.Request1", "service":"scene", "requestID":0, "responseID":1},
-		{"url":"service1.Request1", "service":"service1", "requestID":2, "responseID":3},
-		{"url":"service2.Request2", "service":"service2", "requestID":4, "responseID":5}
+		{"service":"scene", "requestID":0, "responseID":1},
+		{"service":"service1", "requestID":2, "responseID":3},
+		{"service":"service2", "requestID":4, "responseID":5}
 	]
 }

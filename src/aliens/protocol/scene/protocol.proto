@@ -5,16 +5,17 @@ import "scene.proto";
 //import "google/protobuf/any.proto";
 
 message SceneRequest {
-    int32 sequence = 1;       //消息编号
-    int32 session = 2;  //消息序号
+    int32 session = 1;  //消息序号
 
-    int32 clientID = 3; //发送场景请go install github.com/gogo/protobuf/gogoproto求的客户端id
+    int32 clientID = 3; //发送场景
 
+    oneof request {
+        space_move spaceMove = 5;
+        space_enter spaceEnter = 6;
+        space_leave spaceLeave = 7;
+        get_state getState = 8;
+    }
 
-    space_move spaceMove = 5;
-    space_enter spaceEnter = 6;
-    space_leave spaceLeave = 7;
-    get_state getState = 8;
 //    oneof Message {
 //
 //    }
@@ -22,16 +23,17 @@ message SceneRequest {
 
 //    map<int32, int32> map = 9; // 定义Map对象
 //    repeated google.protobuf.Any any = 10; // Any对象
-
 }
 
 
 message SceneResponse {
-    int32 sequence = 1;
-    int32 session = 2;
+    int32 session = 1;
 
-    space_move_ret spaceMoveRet = 5;
-    space_enter_ret spaceEnterRet = 6;
-    space_leave_ret spaceLeaveRet = 7;
-    get_state_ret getStateRet = 8;
+    oneof response {
+        //ignore d s
+        space_move_ret spaceMoveRet = 5;
+        space_enter_ret spaceEnterRet = 6;
+        space_leave_ret spaceLeaveRet = 7;
+        get_state_ret getStateRet = 8;
+    }
 }

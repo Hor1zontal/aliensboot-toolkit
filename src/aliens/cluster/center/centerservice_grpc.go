@@ -21,20 +21,15 @@ import (
 	"github.com/gogo/protobuf/types"
 )
 
-//var rpcClientFactories = make(map[string]func(cc *grpc.ClientConn) interface{})
-
-//const method = "Request"
-
-
-//func RegisterRPCClientFactory(serviceType string, clientFactory func(cc *grpc.ClientConn) interface{}) {
-//	rpcClientFactories[serviceType] = clientFactory
-//}
-
-func PublicRPCService(serviceType string, port int, server *grpc.Server) *gRPCService {
+func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceServer) *gRPCService {
 	if !ClusterCenter.IsConnect() {
 		panic(serviceType + " cluster center is not connected")
 		return nil
 	}
+
+	server := grpc.NewServer()
+	protocol.RegisterRPCServiceServer(server,  handle)
+
 	service := &gRPCService{
 		centerService: &centerService{
 			id:          GetServerNode(),

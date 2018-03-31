@@ -8,3 +8,9 @@
 [2018/03/30 10:19:15 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:54) handle service error : rpc error: code = Internal desc = transport is closing
 [2018/03/30 11:39:23 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:57) handle service error : invalid service
 [2018/03/30 11:43:27 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:57) handle service error : invalid service
+[2018/03/30 15:11:14 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc42000c080
+[2018/03/30 15:13:35 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc4200785a0
+[2018/03/30 15:27:36 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc4200785a0
+[2018/03/30 16:13:36 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc4200785a0
+[2018/03/30 16:14:22 CST] [DEBG] (aliens/module/gate/internal.(*network).HandleMessage:43) rpc error: code = Internal desc = transport is closing
+[2018/03/31 09:39:18 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc42000c080

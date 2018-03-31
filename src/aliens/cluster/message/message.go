@@ -10,11 +10,12 @@ type IMessageService interface {
 	HandleMessage(request interface{}) (interface{}, error) //阻塞调用消息服务接口
 }
 
-type IRemoteService interface {
-	BroadcastAll(message interface{}) bool //广播所有消息服务
-	HandleRemoteMessage(serviceID string, request interface{}) (interface{}, error)      //阻塞调用指定服务ID接口，
-	HandlePriorityRemoteMessage(serviceID string, request interface{}) (interface{}, error) //阻塞调用指定服务接口,优先发送到serviceID节点，没有会分配一个节点处理
-}
+//type IRemoteService interface {
+//	GetType() string                          //获取消息服务类型
+//	BroadcastAll(message interface{}) //广播所有消息服务
+//	HandleRemoteMessage(serviceID string, request interface{}) (interface{}, error)      //阻塞调用指定服务ID接口，
+//	HandlePriorityRemoteMessage(serviceID string, request interface{}) (interface{}, error) //阻塞调用指定服务接口,优先发送到serviceID节点，没有会分配一个节点处理
+//}
 
 type ISeqMessage interface {
 	GetID() int32  //获取消息id

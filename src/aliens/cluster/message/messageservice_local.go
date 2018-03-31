@@ -24,7 +24,7 @@ func NewLocalService(serviceType string) *LocalService {
 		dealTotal:   0,
 		serviceType: serviceType,
 		handlers:    make(map[int32]IServiceHandler),
-		writeBack:   true,
+		//writeBack:   true,
 	}
 	return service
 }
@@ -36,7 +36,7 @@ type LocalService struct {
 	dealTotal   int64 //当前处理中的消息数量
 	serviceType string
 	handlers    map[int32]IServiceHandler
-	writeBack   bool //是否回写消息管道
+	//writeBack   bool //是否回写消息管道
 }
 
 func (this *LocalService) GetType() string {
@@ -44,9 +44,9 @@ func (this *LocalService) GetType() string {
 }
 
 //服务是否将相应消息回写
-func (this *LocalService) SetWriteBack(writeBack bool) {
-	this.writeBack = writeBack
-}
+//func (this *LocalService) SetWriteBack(writeBack bool) {
+//	this.writeBack = writeBack
+//}
 
 //注册消息服务处理句柄
 func (this *LocalService) RegisterHandler(seq int32, service IServiceHandler) {

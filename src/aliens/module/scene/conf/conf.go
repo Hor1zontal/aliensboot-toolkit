@@ -15,6 +15,7 @@ import (
 
 
 var Config struct {
+	Service				string //服务名
 	RPCPort				int    //rpc端口
 }
 

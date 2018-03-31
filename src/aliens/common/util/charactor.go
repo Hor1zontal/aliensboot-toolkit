@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"strconv"
 	"time"
+	"strings"
 )
 
 var RANDOM_ARRAY []byte = []byte("0123456789abcdefghijklmnopqrstuvwxyz")
@@ -110,4 +111,25 @@ func Int32Min(a int32, b int32) int32 {
 
 func Int64Min(a int64, b int64) int64 {
 	return int64(math.Min(float64(a), float64(b)))
+}
+
+func FirstToUpper(str string) string {
+	length := len(str)
+	return strings.ToUpper(str[0:1]) + str[1:length]
+	//temp := strings.Split(str, "_")
+	//var upperStr string
+	//for y := 0; y < len(temp); y++ {
+	//	vv := []rune(temp[y])
+	//	if y != 0 {
+	//		for i := 0; i < len(vv); i++ {
+	//			if i == 0 {
+	//				vv[i] -= 32
+	//				upperStr += string(vv[i]) // + string(vv[i+1])
+	//			} else {
+	//				upperStr += string(vv[i])
+	//			}
+	//		}
+	//	}
+	//}
+	//return temp[0] + upperStr
 }

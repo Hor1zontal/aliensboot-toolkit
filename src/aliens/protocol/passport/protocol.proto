@@ -3,7 +3,6 @@ package passport;
 
 import "passport.proto";
 
-
 //C2GS为客户端发给服务端的通讯协议
 //GS2C为服务端发给客户端的通讯协议
 message PassportRequest {

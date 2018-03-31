@@ -32,6 +32,7 @@ func (m *Module) IsEnable() bool {
 
 
 func (m *Module) OnInit() {
+	conf.Init()
 	m.Gate = &gate.Gate{
 		MaxConnNum:      conf.Config.MaxConnNum,
 		PendingWriteNum: conf.PendingWriteNum,

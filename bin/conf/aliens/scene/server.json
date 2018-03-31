@@ -1,4 +1,4 @@
 {
-  "Enable":true,
+  "Service":"scene",
   "RPCPort":10108
 }

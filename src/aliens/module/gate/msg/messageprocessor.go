@@ -14,23 +14,15 @@ import (
 	"errors"
 	"github.com/gogo/protobuf/types"
 	"encoding/binary"
-	"reflect"
 )
 
 type MessageProcessor struct {
 	littleEndian bool
 	msgRouter     *chanrpc.Server
-
-	urlIDMapping map[string]uint16
-	idURLMapping map[uint16]string
-
 }
 
 func NewMsgProcessor() *MessageProcessor {
-	return &MessageProcessor{
-		urlIDMapping:make(map[string]uint16),
-		idURLMapping:make(map[uint16]string),
-	}
+	return &MessageProcessor{}
 }
 
 // It's dangerous to call the method on routing or marshaling (unmarshaling)
@@ -38,16 +30,10 @@ func (p *MessageProcessor) SetByteOrder(littleEndian bool) {
 	p.littleEndian = littleEndian
 }
 
-func (this *MessageProcessor) Register(id uint16, url string) uint16 {
-	this.urlIDMapping[url] = id
-	this.idURLMapping[id] = url
-	return id
-}
-
-func (this *MessageProcessor) Route(msg interface{}, userData interface{}) error {
-	this.msgRouter.Go(reflect.TypeOf(&types.Any{}), msg, userData)
-	return nil
-}
+//func (this *MessageProcessor) Route(msg interface{}, userData interface{}) error {
+//	this.msgRouter.Go(reflect.TypeOf(&types.Any{}), msg, userData)
+//	return nil
+//}
 
 // must goroutine safe
 func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
@@ -61,11 +47,7 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 	} else {
 		id = binary.BigEndian.Uint16(data)
 	}
-	url, ok := this.idURLMapping[id]
-	if !ok {
-
-	}
-	return &types.Any{TypeUrl:url, Value:data[2:]}, nil
+	return &types.Any{ID:id, Value:data[2:]}, nil
 }
 
 // must goroutine safe
@@ -74,12 +56,11 @@ func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
 	if !ok {
 		return nil, errors.New("invalid any type")
 	}
-	msgID := this.urlIDMapping[any.TypeUrl]
 	id := make([]byte, 2)
 	if this.littleEndian {
-		binary.LittleEndian.PutUint16(id, msgID)
+		binary.LittleEndian.PutUint16(id, any.ID)
 	} else {
-		binary.BigEndian.PutUint16(id, msgID)
+		binary.BigEndian.PutUint16(id, any.ID)
 	}
 	return [][]byte{id, any.Value}, nil
 }

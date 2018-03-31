@@ -12,6 +12,7 @@ package conf
 import (
 	"time"
 	"aliens/config"
+	"aliens/module/gate/route"
 )
 
 var (
@@ -38,8 +39,10 @@ var Config struct {
 	MessageChannelLimit int
 	AuthTimeout         float64
 	HeartbeatTimeout    float64
+	Route	[]route.Route   //路由配置
 }
 
-func init() {
+func Init() {
 	config.LoadConfig(&Config, "conf/aliens/gate/server.json")
+	route.LoadRoute(Config.Route)
 }
