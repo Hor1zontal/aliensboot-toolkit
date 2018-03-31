@@ -2,44 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e085cfb8-e2ea-4a4f-9d34-5433d530c54a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/protoparser.go" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/bin/conf/aliens/gate/server.json" afterPath="$PROJECT_DIR$/bin/conf/aliens/gate/server.json" />
-      <change beforePath="$PROJECT_DIR$/bin/conf/aliens/scene/server.json" afterPath="$PROJECT_DIR$/bin/conf/aliens/scene/server.json" />
-      <change beforePath="$PROJECT_DIR$/bin/gate_log.log" afterPath="$PROJECT_DIR$/bin/gate_log.log" />
-      <change beforePath="$PROJECT_DIR$/bins/scene/service1_log.log" afterPath="$PROJECT_DIR$/bins/scene/service1_log.log" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/center.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/center.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/message.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/message.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/common/util.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/common/util.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/conf.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/conf.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/internal.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/internal.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/msg.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/msg.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/conf.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/conf.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/internal.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/internal.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/service.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/service.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol.a" />
-      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol/scene.a" afterPath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol/scene.a" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/cluster/center/centerservice.go" afterPath="$PROJECT_DIR$/src/aliens/cluster/center/centerservice.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/cluster/center/centerservice_grpc.go" afterPath="$PROJECT_DIR$/src/aliens/cluster/center/centerservice_grpc.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/cluster/message/message.go" afterPath="$PROJECT_DIR$/src/aliens/cluster/message/message.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/cluster/message/messageservice_local.go" afterPath="$PROJECT_DIR$/src/aliens/cluster/message/messageservice_local.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/common/util/charactor.go" afterPath="$PROJECT_DIR$/src/aliens/common/util/charactor.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/conf/conf.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/conf/conf.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/internal/handler.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/internal/handler.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/internal/module.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/internal/module.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/internal/network.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/internal/network.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/msg/messageprocessor.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/msg/messageprocessor.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/passport/conf/conf.go" afterPath="$PROJECT_DIR$/src/aliens/module/passport/conf/conf.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/scene/conf/conf.go" afterPath="$PROJECT_DIR$/src/aliens/module/scene/conf/conf.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/scene/service/service.go" afterPath="$PROJECT_DIR$/src/aliens/module/scene/service/service.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/service1/service/service.go" afterPath="$PROJECT_DIR$/src/aliens/module/service1/service/service.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/service2/service/service.go" afterPath="$PROJECT_DIR$/src/aliens/module/service2/service/service.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" afterPath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go" afterPath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" afterPath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/center.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/center/lbs.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/cluster/message.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/common/cipher/xxtea.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/common/collection.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/common/util.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/config.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/log.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/mmorpg.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/mmorpg/aoi.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/mmorpg/entity.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/cluster.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/cluster/conf.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/cluster/internal.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/conf.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/internal.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/gate/msg.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/conf.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/entity.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/internal.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/service.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/scene/util.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service1.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service1/conf.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service1/internal.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service1/service.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service2.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service2/conf.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service2/internal.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/module/service2/service.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol/scene.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol/service1.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/protocol/service2.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/scene.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/scene/aoi.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/aliens/scene/entity.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/test/protobuf_client/base.a" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/pkg/darwin_amd64/test/protobuf_client/object.a" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -66,7 +69,7 @@
         <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/service.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="656">
-              <caret line="48" column="3" lean-forward="true" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
+              <caret line="48" column="3" lean-forward="false" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
               <folding>
                 <element signature="e#17#80#0" expanded="true" />
               </folding>
@@ -160,7 +163,7 @@
         <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="555">
-              <caret line="37" column="49" lean-forward="true" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
+              <caret line="37" column="49" lean-forward="false" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
               <folding>
                 <element signature="e#429#476#0" expanded="true" />
               </folding>
@@ -353,48 +356,6 @@
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
               <item name="kylin" type="462c0819:PsiDirectoryNode" />
               <item name="bin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="service1" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="service2" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="pkg" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
@@ -763,7 +724,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1474" y="23" width="1725" height="1038" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.49756986" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32745314" sideWeight="0.53594774" order="7" side_tool="true" content_ui="tabs" />
@@ -772,7 +732,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32661718" sideWeight="0.4640523" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4369035" sideWeight="0.77837193" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2596554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2596554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34676564" sideWeight="0.5157457" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1077,7 +1037,7 @@
         <state relative-caret-position="351">
           <caret line="64" column="9" lean-forward="true" selection-start-line="64" selection-start-column="9" selection-end-line="64" selection-end-column="9" />
           <folding>
-            <element signature="e#428#497#0" expanded="true" />
+            <element signature="e#428#497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1191,7 +1151,7 @@
     <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
-          <caret line="37" column="49" lean-forward="true" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
+          <caret line="37" column="49" lean-forward="false" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
           <folding>
             <element signature="e#429#476#0" expanded="true" />
           </folding>
@@ -1209,7 +1169,7 @@
     <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/service.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="656">
-          <caret line="48" column="3" lean-forward="true" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
+          <caret line="48" column="3" lean-forward="false" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
           <folding>
             <element signature="e#17#80#0" expanded="true" />
           </folding>
