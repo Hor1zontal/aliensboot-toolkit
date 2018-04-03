@@ -21,6 +21,15 @@ type sceneService struct {
 }
 
 func (this *sceneService) Request(ctx context.Context,request *types.Any) (*types.Any, error) {
+	isJSONRequest := request.TypeUrl != ""
+	if isJSONRequest {
+		data, error := handleJsonRequest(request.TypeUrl, request.Value)
+		if error != nil {
+			return nil, error
+		}
+		return &types.Any{TypeUrl:"", Value:data}, nil
+	}
+
 	requestProxy := &scene.SceneRequest{}
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
@@ -28,7 +37,6 @@ func (this *sceneService) Request(ctx context.Context,request *types.Any) (*type
 	}
 	//response, error := this.HandleRequest(ctx, requestProxy)
 	response, error := handleRequest(requestProxy)
-
 
 	if response == nil {
 		return nil, error
@@ -40,13 +48,7 @@ func (this *sceneService) Request(ctx context.Context,request *types.Any) (*type
 
 func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 	response := &scene.SceneResponse{Session:request.GetSession()}
-	
-	if request.GetSpaceMove() != nil {
-		messageRet := &scene.SpaceMoveRet{}
-		handleSpaceMove(request.GetSpaceMove(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
-		return response, nil
-	}
+
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &scene.SpaceEnterRet{}
@@ -66,6 +68,13 @@ func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 		messageRet := &scene.GetStateRet{}
 		handleGetState(request.GetGetState(), messageRet)
 		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
+		return response, nil
+	}
+	
+	if request.GetSpaceMove() != nil {
+		messageRet := &scene.SpaceMoveRet{}
+		handleSpaceMove(request.GetSpaceMove(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
 		return response, nil
 	}
 	

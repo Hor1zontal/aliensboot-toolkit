@@ -21,15 +21,6 @@ type ${package}Service struct {
 }
 
 func (this *${package}Service) Request(ctx context.Context,request *types.Any) (*types.Any, error) {
-	isJSONRequest := request.TypeUrl != ""
-	if isJSONRequest {
-		data, error := handleJsonRequest(request.TypeUrl, request.Value)
-		if error != nil {
-			return nil, error
-		}
-		return &types.Any{TypeUrl:"", Value:data}, nil
-	}
-
 	requestProxy := &${package}.${request}{}
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
@@ -37,6 +28,7 @@ func (this *${package}Service) Request(ctx context.Context,request *types.Any) (
 	}
 	//response, error := this.HandleRequest(ctx, requestProxy)
 	response, error := handleRequest(requestProxy)
+
 
 	if response == nil {
 		return nil, error

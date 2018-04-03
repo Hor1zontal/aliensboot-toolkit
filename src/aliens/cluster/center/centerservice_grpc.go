@@ -21,7 +21,7 @@ import (
 	"github.com/gogo/protobuf/types"
 )
 
-func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceServer) *gRPCService {
+func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceServer) *GRPCService {
 	if !ClusterCenter.IsConnect() {
 		panic(serviceType + " cluster center is not connected")
 		return nil
@@ -30,7 +30,7 @@ func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceS
 	server := grpc.NewServer()
 	protocol.RegisterRPCServiceServer(server,  handle)
 
-	service := &gRPCService{
+	service := &GRPCService{
 		centerService: &centerService{
 			id:          GetServerNode(),
 			serviceType: serviceType,
@@ -51,7 +51,7 @@ func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceS
 }
 
 
-type gRPCService struct {
+type GRPCService struct {
 	*centerService
 
 	//调用服务参数
@@ -63,28 +63,28 @@ type gRPCService struct {
 	server  *grpc.Server      //
 }
 
-func (this *gRPCService) GetDesc() string {
+func (this *GRPCService) GetDesc() string {
 	return "rpc service"
 }
 
-func (this *gRPCService) GetID() string {
+func (this *GRPCService) GetID() string {
 	return this.id
 }
 
-func (this *gRPCService) GetType() string {
+func (this *GRPCService) GetType() string {
 	return this.serviceType
 }
 
-func (this *gRPCService) SetID(id string) {
+func (this *GRPCService) SetID(id string) {
 	this.id = id
 }
 
-func (this *gRPCService) SetType(serviceType string) {
+func (this *GRPCService) SetType(serviceType string) {
 	this.serviceType = serviceType
 }
 
 //启动服务
-func (this *gRPCService) Start() bool {
+func (this *GRPCService) Start() bool {
 	if this.server == nil {
 		log.Error("invalid service param")
 		return false
@@ -103,7 +103,7 @@ func (this *gRPCService) Start() bool {
 }
 
 //连接服务
-func (this *gRPCService) Connect() bool {
+func (this *GRPCService) Connect() bool {
 	//rpc := rpcClientFactories[this.serviceType]
 	//if rpc == nil {
 	//	log.Error("grpc mapping not register %v", this.serviceType)
@@ -129,8 +129,8 @@ func (this *gRPCService) Connect() bool {
 }
 
 //比较服务是否冲突
-func (this *gRPCService) Equals(other IService) bool {
-	otherService, ok := other.(*gRPCService)
+func (this *GRPCService) Equals(other IService) bool {
+	otherService, ok := other.(*GRPCService)
 	if !ok {
 		return false
 	}
@@ -138,12 +138,12 @@ func (this *gRPCService) Equals(other IService) bool {
 }
 
 //服务是否本进程启动的
-func (this *gRPCService) IsLocal() bool {
+func (this *GRPCService) IsLocal() bool {
 	return this.server != nil
 }
 
 //关闭服务
-func (this *gRPCService) Close() {
+func (this *GRPCService) Close() {
 	if this.server != nil {
 		this.server.Stop()
 		this.server = nil
@@ -155,7 +155,7 @@ func (this *gRPCService) Close() {
 }
 
 //向服务请求消息
-func (this *gRPCService) Request(request interface{}) (interface{}, error) {
+func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	//服务为本机，直接处理
 	if this.client == nil {
 		return nil, errors.New("service is not initial")

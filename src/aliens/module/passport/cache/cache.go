@@ -30,7 +30,7 @@ func Init() {
 func Close() {
 
 	//清除所有缓存数据
-	UserCache.Close()
+	//UserCache.Close()
 }
 
 /**

@@ -1,27 +1,22 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
- *     2018/3/29
+ *     2018/3/30
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package handler
+package service
 
-import "aliens/protocol/passport"
+import (
+	"aliens/protocol/passport"
+	"aliens/protocol"
+)
 
-type PassportLoginServiceProxy struct {
 
-}
-
-//登录账号服务器请求
-type PassportLoginService struct {
-}
-
-func (service *PassportLoginService) Handle(request *passport.LoginLogin, response *passport.LoginLoginRet) error {
-
-	request.GetLoginLogin
+//
+func handleLoginLogin(request *passport.LoginLogin, response *passport.LoginLoginRet) {
 	//message := request.GetLoginLogin()
 	//username := message.GetUsername()
 	//passwd := message.GetPassword()
@@ -56,5 +51,4 @@ func (service *PassportLoginService) Handle(request *passport.LoginLogin, respon
 	//result.Token = proto.String(token)
 	//result.GameServer = proto.String(gameServer)
 	//result.Result = Enum(protocol.Login_Result_loginSuccess)
-	return nil
 }

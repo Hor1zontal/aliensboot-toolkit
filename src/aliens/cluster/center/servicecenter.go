@@ -206,7 +206,7 @@ func loadService(data []byte) IService {
 	json.Unmarshal(data, centerService)
 	switch centerService.Protocol {
 	case GRPC:
-		return &gRPCService{centerService : centerService}
+		return &GRPCService{centerService : centerService}
 	case WEBSOCKET:
 		return &wbService{centerService : centerService}
 	case HTTP:

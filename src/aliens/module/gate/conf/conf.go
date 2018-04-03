@@ -35,6 +35,7 @@ var Config struct {
 	MaxConnNum          int
 	WSAddr              string //
 	TCPAddr             string //
+	HTTPAddr			string //
 	SecretKey           string
 	MessageChannelLimit int
 	AuthTimeout         float64

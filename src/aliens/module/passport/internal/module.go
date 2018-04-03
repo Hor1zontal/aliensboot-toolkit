@@ -1,29 +1,25 @@
 package internal
 
 import (
-	"gok/passportserver/cache"
-	"gok/passportserver/conf"
-	"gok/passportserver/db"
-	"gok/passportserver/service"
-	"gok/passportserver/service/http"
+	"aliens/module/passport/cache"
+	"aliens/module/passport/db"
+	"aliens/module/passport/service"
 )
 
 type Module struct {
 }
 
 func (m *Module) IsEnable() bool {
-	return conf.Server.Enable
+	return true
 }
 
 func (m *Module) OnInit() {
 	db.Init()
 	cache.Init()
 	service.Init()
-	http.Init()
 }
 
 func (m *Module) OnDestroy() {
-	http.Close()
 	service.Close()
 	db.Close()
 	cache.Close()

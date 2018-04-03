@@ -1,0 +1,12 @@
+{
+  "Service": "passport",
+  "RPCPort": 10109,
+  "DBHost":"127.0.0.1",
+  "DBPort":27017,
+  "HttpPort":8070,
+  "DBName":"gok_passport",
+  "RedisAddress":"127.0.0.1:20101",
+  "DefaultChannelPWD" : "11111111",
+  "HTTPAddress": ":8711",
+  "AppKey":"e434e639ff7247aea5622f339b383c"
+}

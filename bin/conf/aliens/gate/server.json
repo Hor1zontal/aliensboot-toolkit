@@ -3,13 +3,15 @@
 	"MaxConnNum": 20000,
 	"TCPAddr": ":3568",
 	"WSAddr": ":28208",
+	"HTTPAddr" : ":28308",
 	"SecretKey": "",
 	"HeartbeatTimeout": 60,
 	"AuthTimeout": 10,
 	"MessageChannelLimit":5,
 	"Route": [
 		{"service":"scene", "requestID":0, "responseID":1},
-		{"service":"service1", "requestID":2, "responseID":3},
-		{"service":"service2", "requestID":4, "responseID":5}
+        {"service":"passport", "requestID":2, "responseID":3},
+		{"service":"service1", "requestID":4, "responseID":5},
+		{"service":"service2", "requestID":6, "responseID":7}
 	]
 }

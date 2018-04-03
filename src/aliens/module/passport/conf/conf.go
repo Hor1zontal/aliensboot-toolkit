@@ -1,17 +1,13 @@
 package conf
 
 import (
-	"encoding/json"
-	//"gok/log"
-	"aliens/log"
-	"io/ioutil"
 	"time"
 	"aliens/common/util"
 	"aliens/config"
 )
 
 var Config struct {
-	Enable            bool
+	Service 		  string
 	DBHost            string
 	DBPort            int
 	DBName            string

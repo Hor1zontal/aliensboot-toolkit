@@ -7,11 +7,6 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import (
-	context "golang.org/x/net/context"
-	grpc "google.golang.org/grpc"
-)
-
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -22,12 +17,13 @@ var _ = math.Inf
 // C2GS为客户端发给服务端的通讯协议
 // GS2C为服务端发给客户端的通讯协议
 type PassportRequest struct {
-	Session  *int32 `protobuf:"varint,1,opt,name=session" json:"session,omitempty"`
-	Sequence *int32 `protobuf:"varint,2,opt,name=sequence" json:"sequence,omitempty"`
+	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
 	// -----------------登录模块接口---------------
-	LoginRegister    *LoginRegister `protobuf:"bytes,6,opt,name=loginRegister" json:"loginRegister,omitempty"`
-	LoginLogin       *LoginLogin    `protobuf:"bytes,7,opt,name=loginLogin" json:"loginLogin,omitempty"`
-	XXX_unrecognized []byte         `json:"-"`
+	//
+	// Types that are valid to be assigned to Request:
+	//	*PassportRequest_LoginRegister
+	//	*PassportRequest_LoginLogin
+	Request isPassportRequest_Request `protobuf_oneof:"request"`
 }
 
 func (m *PassportRequest) Reset()                    { *m = PassportRequest{} }
@@ -35,42 +31,133 @@ func (m *PassportRequest) String() string            { return proto.CompactTextS
 func (*PassportRequest) ProtoMessage()               {}
 func (*PassportRequest) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{0} }
 
-func (m *PassportRequest) GetSession() int32 {
-	if m != nil && m.Session != nil {
-		return *m.Session
-	}
-	return 0
+type isPassportRequest_Request interface {
+	isPassportRequest_Request()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 
-func (m *PassportRequest) GetSequence() int32 {
-	if m != nil && m.Sequence != nil {
-		return *m.Sequence
+type PassportRequest_LoginRegister struct {
+	LoginRegister *LoginRegister `protobuf:"bytes,6,opt,name=loginRegister,oneof"`
+}
+type PassportRequest_LoginLogin struct {
+	LoginLogin *LoginLogin `protobuf:"bytes,7,opt,name=loginLogin,oneof"`
+}
+
+func (*PassportRequest_LoginRegister) isPassportRequest_Request() {}
+func (*PassportRequest_LoginLogin) isPassportRequest_Request()    {}
+
+func (m *PassportRequest) GetRequest() isPassportRequest_Request {
+	if m != nil {
+		return m.Request
+	}
+	return nil
+}
+
+func (m *PassportRequest) GetSession() int32 {
+	if m != nil {
+		return m.Session
 	}
 	return 0
 }
 
 func (m *PassportRequest) GetLoginRegister() *LoginRegister {
-	if m != nil {
-		return m.LoginRegister
+	if x, ok := m.GetRequest().(*PassportRequest_LoginRegister); ok {
+		return x.LoginRegister
 	}
 	return nil
 }
 
 func (m *PassportRequest) GetLoginLogin() *LoginLogin {
-	if m != nil {
-		return m.LoginLogin
+	if x, ok := m.GetRequest().(*PassportRequest_LoginLogin); ok {
+		return x.LoginLogin
 	}
 	return nil
 }
 
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*PassportRequest) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _PassportRequest_OneofMarshaler, _PassportRequest_OneofUnmarshaler, _PassportRequest_OneofSizer, []interface{}{
+		(*PassportRequest_LoginRegister)(nil),
+		(*PassportRequest_LoginLogin)(nil),
+	}
+}
+
+func _PassportRequest_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*PassportRequest)
+	// request
+	switch x := m.Request.(type) {
+	case *PassportRequest_LoginRegister:
+		_ = b.EncodeVarint(6<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LoginRegister); err != nil {
+			return err
+		}
+	case *PassportRequest_LoginLogin:
+		_ = b.EncodeVarint(7<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LoginLogin); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("PassportRequest.Request has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _PassportRequest_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*PassportRequest)
+	switch tag {
+	case 6: // request.loginRegister
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(LoginRegister)
+		err := b.DecodeMessage(msg)
+		m.Request = &PassportRequest_LoginRegister{msg}
+		return true, err
+	case 7: // request.loginLogin
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(LoginLogin)
+		err := b.DecodeMessage(msg)
+		m.Request = &PassportRequest_LoginLogin{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _PassportRequest_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*PassportRequest)
+	// request
+	switch x := m.Request.(type) {
+	case *PassportRequest_LoginRegister:
+		s := proto.Size(x.LoginRegister)
+		n += proto.SizeVarint(6<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *PassportRequest_LoginLogin:
+		s := proto.Size(x.LoginLogin)
+		n += proto.SizeVarint(7<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
 type PassportResponse struct {
-	Session  *int32 `protobuf:"varint,1,opt,name=session" json:"session,omitempty"`
-	Sequence *int32 `protobuf:"varint,2,opt,name=sequence" json:"sequence,omitempty"`
-	AuthID   *int32 `protobuf:"varint,3,opt,name=authID" json:"authID,omitempty"`
+	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
+	AuthID  int32 `protobuf:"varint,3,opt,name=authID,proto3" json:"authID,omitempty"`
 	// -----------------登录服接口---------------
-	LoginRegisterRet *LoginRegisterRet `protobuf:"bytes,6,opt,name=loginRegisterRet" json:"loginRegisterRet,omitempty"`
-	LoginLoginRet    *LoginLoginRet    `protobuf:"bytes,7,opt,name=loginLoginRet" json:"loginLoginRet,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
+	//
+	// Types that are valid to be assigned to Response:
+	//	*PassportResponse_LoginRegisterRet
+	//	*PassportResponse_LoginLoginRet
+	Response isPassportResponse_Response `protobuf_oneof:"response"`
 }
 
 func (m *PassportResponse) Reset()                    { *m = PassportResponse{} }
@@ -78,118 +165,135 @@ func (m *PassportResponse) String() string            { return proto.CompactText
 func (*PassportResponse) ProtoMessage()               {}
 func (*PassportResponse) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{1} }
 
-func (m *PassportResponse) GetSession() int32 {
-	if m != nil && m.Session != nil {
-		return *m.Session
-	}
-	return 0
+type isPassportResponse_Response interface {
+	isPassportResponse_Response()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 
-func (m *PassportResponse) GetSequence() int32 {
-	if m != nil && m.Sequence != nil {
-		return *m.Sequence
+type PassportResponse_LoginRegisterRet struct {
+	LoginRegisterRet *LoginRegisterRet `protobuf:"bytes,6,opt,name=loginRegisterRet,oneof"`
+}
+type PassportResponse_LoginLoginRet struct {
+	LoginLoginRet *LoginLoginRet `protobuf:"bytes,7,opt,name=loginLoginRet,oneof"`
+}
+
+func (*PassportResponse_LoginRegisterRet) isPassportResponse_Response() {}
+func (*PassportResponse_LoginLoginRet) isPassportResponse_Response()    {}
+
+func (m *PassportResponse) GetResponse() isPassportResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *PassportResponse) GetSession() int32 {
+	if m != nil {
+		return m.Session
 	}
 	return 0
 }
 
 func (m *PassportResponse) GetAuthID() int32 {
-	if m != nil && m.AuthID != nil {
-		return *m.AuthID
+	if m != nil {
+		return m.AuthID
 	}
 	return 0
 }
 
 func (m *PassportResponse) GetLoginRegisterRet() *LoginRegisterRet {
-	if m != nil {
-		return m.LoginRegisterRet
+	if x, ok := m.GetResponse().(*PassportResponse_LoginRegisterRet); ok {
+		return x.LoginRegisterRet
 	}
 	return nil
 }
 
 func (m *PassportResponse) GetLoginLoginRet() *LoginLoginRet {
-	if m != nil {
-		return m.LoginLoginRet
+	if x, ok := m.GetResponse().(*PassportResponse_LoginLoginRet); ok {
+		return x.LoginLoginRet
 	}
 	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*PassportResponse) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _PassportResponse_OneofMarshaler, _PassportResponse_OneofUnmarshaler, _PassportResponse_OneofSizer, []interface{}{
+		(*PassportResponse_LoginRegisterRet)(nil),
+		(*PassportResponse_LoginLoginRet)(nil),
+	}
+}
+
+func _PassportResponse_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*PassportResponse)
+	// response
+	switch x := m.Response.(type) {
+	case *PassportResponse_LoginRegisterRet:
+		_ = b.EncodeVarint(6<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LoginRegisterRet); err != nil {
+			return err
+		}
+	case *PassportResponse_LoginLoginRet:
+		_ = b.EncodeVarint(7<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LoginLoginRet); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("PassportResponse.Response has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _PassportResponse_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*PassportResponse)
+	switch tag {
+	case 6: // response.loginRegisterRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(LoginRegisterRet)
+		err := b.DecodeMessage(msg)
+		m.Response = &PassportResponse_LoginRegisterRet{msg}
+		return true, err
+	case 7: // response.loginLoginRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(LoginLoginRet)
+		err := b.DecodeMessage(msg)
+		m.Response = &PassportResponse_LoginLoginRet{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _PassportResponse_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*PassportResponse)
+	// response
+	switch x := m.Response.(type) {
+	case *PassportResponse_LoginRegisterRet:
+		s := proto.Size(x.LoginRegisterRet)
+		n += proto.SizeVarint(6<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *PassportResponse_LoginLoginRet:
+		s := proto.Size(x.LoginLoginRet)
+		n += proto.SizeVarint(7<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
 }
 
 func init() {
 	proto.RegisterType((*PassportRequest)(nil), "passport.PassportRequest")
 	proto.RegisterType((*PassportResponse)(nil), "passport.PassportResponse")
 }
-
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
-
-// Client API for RPCService service
-
-type RPCServiceClient interface {
-	Request(ctx context.Context, in *PassportRequest, opts ...grpc.CallOption) (*PassportResponse, error)
-}
-
-type rPCServiceClient struct {
-	cc *grpc.ClientConn
-}
-
-func NewRPCServiceClient(cc *grpc.ClientConn) RPCServiceClient {
-	return &rPCServiceClient{cc}
-}
-
-func (c *rPCServiceClient) Request(ctx context.Context, in *PassportRequest, opts ...grpc.CallOption) (*PassportResponse, error) {
-	out := new(PassportResponse)
-	err := grpc.Invoke(ctx, "/passport.RPCService/request", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Server API for RPCService service
-
-type RPCServiceServer interface {
-	Request(context.Context, *PassportRequest) (*PassportResponse, error)
-}
-
-func RegisterRPCServiceServer(s *grpc.Server, srv RPCServiceServer) {
-	s.RegisterService(&_RPCService_serviceDesc, srv)
-}
-
-func _RPCService_Request_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PassportRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServiceServer).Request(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/passport.RPCService/Request",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).Request(ctx, req.(*PassportRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _RPCService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "passport.RPCService",
-	HandlerType: (*RPCServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "request",
-			Handler:    _RPCService_Request_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "protocol.proto",
-}
-
 func (m *PassportRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -205,42 +309,49 @@ func (m *PassportRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Session != nil {
+	if m.Session != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(*m.Session))
+		i = encodeVarintProtocol(dAtA, i, uint64(m.Session))
 	}
-	if m.Sequence != nil {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(*m.Sequence))
+	if m.Request != nil {
+		nn1, err := m.Request.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn1
 	}
+	return i, nil
+}
+
+func (m *PassportRequest_LoginRegister) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
 	if m.LoginRegister != nil {
 		dAtA[i] = 0x32
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRegister.Size()))
-		n1, err := m.LoginRegister.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n1
-	}
-	if m.LoginLogin != nil {
-		dAtA[i] = 0x3a
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginLogin.Size()))
-		n2, err := m.LoginLogin.MarshalTo(dAtA[i:])
+		n2, err := m.LoginRegister.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
 		i += n2
 	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
+	return i, nil
+}
+func (m *PassportRequest_LoginLogin) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.LoginLogin != nil {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginLogin.Size()))
+		n3, err := m.LoginLogin.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n3
 	}
 	return i, nil
 }
-
 func (m *PassportResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -256,64 +367,53 @@ func (m *PassportResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Session != nil {
+	if m.Session != 0 {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(*m.Session))
+		i = encodeVarintProtocol(dAtA, i, uint64(m.Session))
 	}
-	if m.Sequence != nil {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(*m.Sequence))
-	}
-	if m.AuthID != nil {
+	if m.AuthID != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(*m.AuthID))
+		i = encodeVarintProtocol(dAtA, i, uint64(m.AuthID))
 	}
-	if m.LoginRegisterRet != nil {
-		dAtA[i] = 0x32
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRegisterRet.Size()))
-		n3, err := m.LoginRegisterRet.MarshalTo(dAtA[i:])
+	if m.Response != nil {
+		nn4, err := m.Response.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n3
-	}
-	if m.LoginLoginRet != nil {
-		dAtA[i] = 0x3a
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginLoginRet.Size()))
-		n4, err := m.LoginLoginRet.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n4
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
+		i += nn4
 	}
 	return i, nil
 }
 
-func encodeFixed64Protocol(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
+func (m *PassportResponse_LoginRegisterRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.LoginRegisterRet != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRegisterRet.Size()))
+		n5, err := m.LoginRegisterRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	return i, nil
 }
-func encodeFixed32Protocol(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
+func (m *PassportResponse_LoginLoginRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.LoginLoginRet != nil {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginLoginRet.Size()))
+		n6, err := m.LoginLoginRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n6
+	}
+	return i, nil
 }
 func encodeVarintProtocol(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
@@ -327,48 +427,63 @@ func encodeVarintProtocol(dAtA []byte, offset int, v uint64) int {
 func (m *PassportRequest) Size() (n int) {
 	var l int
 	_ = l
-	if m.Session != nil {
-		n += 1 + sovProtocol(uint64(*m.Session))
+	if m.Session != 0 {
+		n += 1 + sovProtocol(uint64(m.Session))
 	}
-	if m.Sequence != nil {
-		n += 1 + sovProtocol(uint64(*m.Sequence))
-	}
-	if m.LoginRegister != nil {
-		l = m.LoginRegister.Size()
-		n += 1 + l + sovProtocol(uint64(l))
-	}
-	if m.LoginLogin != nil {
-		l = m.LoginLogin.Size()
-		n += 1 + l + sovProtocol(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
+	if m.Request != nil {
+		n += m.Request.Size()
 	}
 	return n
 }
 
+func (m *PassportRequest_LoginRegister) Size() (n int) {
+	var l int
+	_ = l
+	if m.LoginRegister != nil {
+		l = m.LoginRegister.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *PassportRequest_LoginLogin) Size() (n int) {
+	var l int
+	_ = l
+	if m.LoginLogin != nil {
+		l = m.LoginLogin.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
 func (m *PassportResponse) Size() (n int) {
 	var l int
 	_ = l
-	if m.Session != nil {
-		n += 1 + sovProtocol(uint64(*m.Session))
+	if m.Session != 0 {
+		n += 1 + sovProtocol(uint64(m.Session))
 	}
-	if m.Sequence != nil {
-		n += 1 + sovProtocol(uint64(*m.Sequence))
+	if m.AuthID != 0 {
+		n += 1 + sovProtocol(uint64(m.AuthID))
 	}
-	if m.AuthID != nil {
-		n += 1 + sovProtocol(uint64(*m.AuthID))
+	if m.Response != nil {
+		n += m.Response.Size()
 	}
+	return n
+}
+
+func (m *PassportResponse_LoginRegisterRet) Size() (n int) {
+	var l int
+	_ = l
 	if m.LoginRegisterRet != nil {
 		l = m.LoginRegisterRet.Size()
 		n += 1 + l + sovProtocol(uint64(l))
 	}
+	return n
+}
+func (m *PassportResponse_LoginLoginRet) Size() (n int) {
+	var l int
+	_ = l
 	if m.LoginLoginRet != nil {
 		l = m.LoginLoginRet.Size()
 		n += 1 + l + sovProtocol(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
 	}
 	return n
 }
@@ -419,7 +534,7 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
 			}
-			var v int32
+			m.Session = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowProtocol
@@ -429,32 +544,11 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Session |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Session = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sequence", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Sequence = &v
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LoginRegister", wireType)
@@ -481,12 +575,11 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.LoginRegister == nil {
-				m.LoginRegister = &LoginRegister{}
-			}
-			if err := m.LoginRegister.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			v := &LoginRegister{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			m.Request = &PassportRequest_LoginRegister{v}
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
@@ -514,12 +607,11 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.LoginLogin == nil {
-				m.LoginLogin = &LoginLogin{}
-			}
-			if err := m.LoginLogin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			v := &LoginLogin{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			m.Request = &PassportRequest_LoginLogin{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -533,7 +625,6 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
@@ -576,7 +667,7 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
 			}
-			var v int32
+			m.Session = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowProtocol
@@ -586,37 +677,16 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.Session |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Session = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sequence", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Sequence = &v
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AuthID", wireType)
 			}
-			var v int32
+			m.AuthID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowProtocol
@@ -626,12 +696,11 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int32(b) & 0x7F) << shift
+				m.AuthID |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.AuthID = &v
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LoginRegisterRet", wireType)
@@ -658,12 +727,11 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.LoginRegisterRet == nil {
-				m.LoginRegisterRet = &LoginRegisterRet{}
-			}
-			if err := m.LoginRegisterRet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			v := &LoginRegisterRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			m.Response = &PassportResponse_LoginRegisterRet{v}
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
@@ -691,12 +759,11 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.LoginLoginRet == nil {
-				m.LoginLoginRet = &LoginLoginRet{}
-			}
-			if err := m.LoginLoginRet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			v := &LoginLoginRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			m.Response = &PassportResponse_LoginLoginRet{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -710,7 +777,6 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
@@ -828,23 +894,22 @@ var (
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 282 bytes of a gzipped FileDescriptorProto
+	// 260 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0x28, 0xca, 0x2f,
 	0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x03, 0x33, 0x84, 0x38, 0x0a, 0x12, 0x8b, 0x8b, 0x0b, 0xf2, 0x8b,
-	0x4a, 0xa4, 0xf8, 0x60, 0x2c, 0x88, 0x8c, 0xd2, 0x3e, 0x46, 0x2e, 0xfe, 0x00, 0xa8, 0x50, 0x50,
+	0x4a, 0xa4, 0xf8, 0x60, 0x2c, 0x88, 0x8c, 0xd2, 0x46, 0x46, 0x2e, 0xfe, 0x00, 0xa8, 0x50, 0x50,
 	0x6a, 0x61, 0x69, 0x6a, 0x71, 0x89, 0x90, 0x04, 0x17, 0x7b, 0x71, 0x6a, 0x71, 0x71, 0x66, 0x7e,
-	0x9e, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x6b, 0x10, 0x8c, 0x2b, 0x24, 0xc5, 0xc5, 0x51, 0x0c, 0x52,
-	0x94, 0x97, 0x9c, 0x2a, 0xc1, 0x04, 0x96, 0x82, 0xf3, 0x85, 0xec, 0xb8, 0x78, 0x73, 0xf2, 0xd3,
-	0x33, 0xf3, 0x82, 0x52, 0xd3, 0x33, 0x8b, 0x4b, 0x52, 0x8b, 0x24, 0xd8, 0x14, 0x18, 0x35, 0xb8,
-	0x8d, 0x24, 0xf4, 0xe0, 0x36, 0x82, 0xa5, 0xe3, 0x8b, 0xa0, 0xf2, 0x41, 0xa8, 0xca, 0x85, 0x4c,
-	0xb9, 0xb8, 0xc0, 0x02, 0x3e, 0x20, 0x42, 0x82, 0x1d, 0xac, 0x59, 0x14, 0x5d, 0x33, 0x44, 0x0b,
-	0x92, 0x42, 0xa5, 0xd7, 0x8c, 0x5c, 0x02, 0x08, 0x0f, 0x14, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x92,
-	0xe9, 0x03, 0x31, 0x2e, 0xb6, 0xc4, 0xd2, 0x92, 0x0c, 0x4f, 0x17, 0x09, 0x66, 0xb0, 0x0c, 0x94,
-	0x27, 0xe4, 0xc1, 0x25, 0x80, 0xe2, 0xd4, 0xa0, 0xd4, 0x12, 0xa8, 0xe7, 0x64, 0x70, 0x79, 0x2e,
-	0xbe, 0x28, 0xb5, 0x24, 0x08, 0x43, 0x97, 0x90, 0x3d, 0x34, 0x8c, 0x7c, 0x20, 0x12, 0x25, 0x50,
-	0x6f, 0x4a, 0x62, 0xf5, 0x26, 0xd8, 0x0c, 0x54, 0xf5, 0x46, 0x7e, 0x5c, 0x5c, 0x41, 0x01, 0xce,
-	0xc1, 0xa9, 0x45, 0x65, 0x99, 0xc9, 0xa9, 0x42, 0x0e, 0x5c, 0xec, 0x45, 0xd0, 0x38, 0x43, 0x32,
-	0x02, 0x2d, 0x3a, 0xa5, 0xa4, 0xb0, 0x49, 0x41, 0x02, 0xca, 0x49, 0xe0, 0xc4, 0x23, 0x39, 0xc6,
-	0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf1, 0x58, 0x8e, 0x01, 0x10, 0x00, 0x00,
-	0xff, 0xff, 0xc9, 0xef, 0x09, 0x22, 0x3b, 0x02, 0x00, 0x00,
+	0x9e, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x6b, 0x10, 0x8c, 0x2b, 0xe4, 0xc0, 0xc5, 0x9b, 0x93, 0x9f,
+	0x9e, 0x99, 0x17, 0x94, 0x9a, 0x9e, 0x59, 0x5c, 0x92, 0x5a, 0x24, 0xc1, 0xa6, 0xc0, 0xa8, 0xc1,
+	0x6d, 0x24, 0xa1, 0x07, 0x37, 0x15, 0x2c, 0x1d, 0x5f, 0x04, 0x95, 0xf7, 0x60, 0x08, 0x42, 0xd5,
+	0x20, 0x64, 0xce, 0xc5, 0x05, 0x16, 0xf0, 0x01, 0x11, 0x12, 0xec, 0x60, 0xed, 0xa2, 0xe8, 0xda,
+	0xc1, 0xa4, 0x07, 0x43, 0x10, 0x92, 0x52, 0x27, 0x4e, 0x2e, 0xf6, 0x22, 0x88, 0xfb, 0x94, 0xee,
+	0x33, 0x72, 0x09, 0x20, 0xdc, 0x5c, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x8a, 0xc7, 0xd1, 0x62, 0x5c,
+	0x6c, 0x89, 0xa5, 0x25, 0x19, 0x9e, 0x2e, 0x12, 0xcc, 0x60, 0x09, 0x28, 0x4f, 0xc8, 0x8b, 0x4b,
+	0x00, 0xc5, 0x6d, 0x41, 0xa9, 0x25, 0x50, 0xff, 0xc8, 0xe0, 0xf2, 0x4f, 0x7c, 0x51, 0x6a, 0x89,
+	0x07, 0x43, 0x10, 0x86, 0x3e, 0x21, 0x47, 0x68, 0xc0, 0xf8, 0x40, 0x24, 0x4a, 0xa0, 0x3e, 0x93,
+	0xc4, 0xea, 0x33, 0xa8, 0x29, 0xa8, 0x3a, 0x9c, 0xb8, 0xb8, 0x38, 0x8a, 0xa0, 0x9e, 0x71, 0x12,
+	0x38, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x67, 0x3c, 0x96,
+	0x63, 0x48, 0x62, 0x03, 0x47, 0x97, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xba, 0xeb, 0x1f, 0xe2,
+	0xda, 0x01, 0x00, 0x00,
 }

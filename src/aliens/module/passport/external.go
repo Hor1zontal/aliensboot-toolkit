@@ -1,6 +1,6 @@
 package passport
 
-import "gok/passportserver/internal"
+import "aliens/module/passport/internal"
 
 var (
 	Module = new(internal.Module)

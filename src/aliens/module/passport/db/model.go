@@ -38,18 +38,18 @@ func (this *DBUser) GetID() interface{} {
 }
 
 
-type DBOrder struct {
-	ID         string    `bson:"_id"`        //订单id
-	UserID     int32     `bson:"userid"`     //用户id
-	ProductID  int32     `bson:"productid"`  //充值商品id
-	Amount     float64   `bson:"amount"`     //充值金额
-	CreateTime time.Time `bson:"createTime"` //订单创建时间
-}
-
-func (this *DBOrder) Name() string {
-	return "order"
-}
-
-func (this *DBOrder) GetID() interface{} {
-	return this.ID
-}
+//type DBOrder struct {
+//	ID         string    `bson:"_id"`        //订单id
+//	UserID     int32     `bson:"userid"`     //用户id
+//	ProductID  int32     `bson:"productid"`  //充值商品id
+//	Amount     float64   `bson:"amount"`     //充值金额
+//	CreateTime time.Time `bson:"createTime"` //订单创建时间
+//}
+//
+//func (this *DBOrder) Name() string {
+//	return "order"
+//}
+//
+//func (this *DBOrder) GetID() interface{} {
+//	return this.ID
+//}

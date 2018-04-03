@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package internal
+package socket
 
 import (
 	"aliens/cluster/message"
@@ -33,7 +33,7 @@ type network struct {
 }
 
 type IAuthMessage interface {
-	GetID() int32
+	GetUserID() int32
 }
 
 func (this *network) HandleMessage(request interface{}) interface{} {
