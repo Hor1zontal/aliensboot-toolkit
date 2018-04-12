@@ -38,8 +38,8 @@ func (space *Space) Init(proxy ISpace, minX, maxX, minY, maxY float32, towerRang
 func (space *Space) EntityEnter(entity *Entity, pos Vector3) {
 	entity.space = space
 	space.entities.Add(entity)
-	space.proxy.OnEntityEnter(entity)
 	space.aoiMgr.Enter(entity.aoi, pos.X, pos.Y)
+	space.proxy.OnEntityEnter(entity)
 }
 
 func (space *Space) EntityLeave(entityID int32) *Entity {
@@ -50,8 +50,8 @@ func (space *Space) EntityLeave(entityID int32) *Entity {
 	// remove from space entities
 	entity.space = nil
 	space.entities.Del(entity.GetID())
-	space.proxy.OnEntityLeave(entity)
 	space.aoiMgr.Leave(entity.aoi)
+	space.proxy.OnEntityLeave(entity)
 	return entity
 }
 
@@ -63,6 +63,10 @@ func (space *Space) EntityMove(entityID int32, newPos Vector3, direction Vector3
 	entity.position = newPos
 	entity.direction = direction
 	space.aoiMgr.Moved(entity.aoi, newPos.X, newPos.Y)
+
+	for neighbor, _ := range entity.neighbors {
+		neighbor.proxy.OnEntityMove(entity)
+	}
 	return entity
 }
 

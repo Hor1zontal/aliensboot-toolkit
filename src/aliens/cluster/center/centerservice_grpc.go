@@ -18,7 +18,7 @@ import (
 	"golang.org/x/net/context"
 	"aliens/common/util"
 	"aliens/protocol"
-	"github.com/gogo/protobuf/types"
+
 )
 
 func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceServer) *GRPCService {
@@ -32,7 +32,7 @@ func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceS
 
 	service := &GRPCService{
 		centerService: &centerService{
-			id:          GetServerNode(),
+			id:          ClusterCenter.GetNodeID(),
 			serviceType: serviceType,
 			Address:     util.GetAddress(port),
 			Protocol: GRPC,
@@ -166,7 +166,7 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	//results := this.caller.Call(params)
 	//
 	//response := results[0].Interface()
-	requestAny, error := request.(*types.Any)
+	requestAny, error := request.(*protocol.Any)
 	if !error {
 		return nil, errors.New("invalid request type")
 	}

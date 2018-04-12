@@ -62,7 +62,9 @@ func (e *Entity) OnEnterAOI(otherAoi *aoi.AOI) {
 }
 
 func (e *Entity) OnLeaveAOI(otherAoi *aoi.AOI) {
-	e.neighbors.Del(otherAoi.Data.(*Entity))
+	otherEntity := otherAoi.Data.(*Entity)
+	e.neighbors.Del(otherEntity)
+	e.proxy.OnEntityLeave(otherEntity)
 }
 
 // IsNeighbor checks if other entity is a neighbor

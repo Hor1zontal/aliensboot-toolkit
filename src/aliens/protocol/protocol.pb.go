@@ -8,13 +8,13 @@ It is generated from these files:
 	protocol.proto
 
 It has these top-level messages:
+	Any
 */
 package protocol
 
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import google_protobuf "github.com/gogo/protobuf/types"
 
 import context "golang.org/x/net/context"
 import grpc "google.golang.org/grpc"
@@ -30,6 +30,52 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+type Any struct {
+	Id uint16 `protobuf:"-"`
+	MessageId uint32 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	TypeUrl   string `protobuf:"bytes,3,opt,name=type_url,json=typeUrl,proto3" json:"type_url,omitempty"`
+	// Must be a valid serialized protocol buffer of the above specified type.
+	Value []byte `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (m *Any) Reset()                    { *m = Any{} }
+func (m *Any) String() string            { return proto.CompactTextString(m) }
+func (*Any) ProtoMessage()               {}
+func (*Any) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{0} }
+
+func (m *Any) GetMessageId() uint32 {
+	if m != nil {
+		return m.MessageId
+	}
+	return 0
+}
+
+func (m *Any) GetSessionId() string {
+	if m != nil {
+		return m.SessionId
+	}
+	return ""
+}
+
+func (m *Any) GetTypeUrl() string {
+	if m != nil {
+		return m.TypeUrl
+	}
+	return ""
+}
+
+func (m *Any) GetValue() []byte {
+	if m != nil {
+		return m.Value
+	}
+	return nil
+}
+
+func init() {
+	proto.RegisterType((*Any)(nil), "protocol.Any")
+}
+
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
 var _ grpc.ClientConn
@@ -41,7 +87,8 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for RPCService service
 
 type RPCServiceClient interface {
-	Request(ctx context.Context, in *google_protobuf.Any, opts ...grpc.CallOption) (*google_protobuf.Any, error)
+	// rpc request (google.protobuf.Any) returns (google.protobuf.Any) {}
+	Request(ctx context.Context, in *Any, opts ...grpc.CallOption) (*Any, error)
 }
 
 type rPCServiceClient struct {
@@ -52,8 +99,8 @@ func NewRPCServiceClient(cc *grpc.ClientConn) RPCServiceClient {
 	return &rPCServiceClient{cc}
 }
 
-func (c *rPCServiceClient) Request(ctx context.Context, in *google_protobuf.Any, opts ...grpc.CallOption) (*google_protobuf.Any, error) {
-	out := new(google_protobuf.Any)
+func (c *rPCServiceClient) Request(ctx context.Context, in *Any, opts ...grpc.CallOption) (*Any, error) {
+	out := new(Any)
 	err := grpc.Invoke(ctx, "/protocol.RPCService/request", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -64,7 +111,8 @@ func (c *rPCServiceClient) Request(ctx context.Context, in *google_protobuf.Any,
 // Server API for RPCService service
 
 type RPCServiceServer interface {
-	Request(context.Context, *google_protobuf.Any) (*google_protobuf.Any, error)
+	// rpc request (google.protobuf.Any) returns (google.protobuf.Any) {}
+	Request(context.Context, *Any) (*Any, error)
 }
 
 func RegisterRPCServiceServer(s *grpc.Server, srv RPCServiceServer) {
@@ -72,7 +120,7 @@ func RegisterRPCServiceServer(s *grpc.Server, srv RPCServiceServer) {
 }
 
 func _RPCService_Request_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(google_protobuf.Any)
+	in := new(Any)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -84,7 +132,7 @@ func _RPCService_Request_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/protocol.RPCService/Request",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).Request(ctx, req.(*google_protobuf.Any))
+		return srv.(RPCServiceServer).Request(ctx, req.(*Any))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -105,12 +153,17 @@ var _RPCService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 107 bytes of a gzipped FileDescriptorProto
+	// 177 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0x28, 0xca, 0x2f,
-	0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x03, 0x33, 0x84, 0x38, 0x60, 0x7c, 0x29, 0xc9, 0xf4, 0xfc, 0xfc,
-	0xf4, 0x9c, 0x54, 0x7d, 0xb0, 0x40, 0x52, 0x69, 0x9a, 0x7e, 0x62, 0x5e, 0x25, 0x44, 0x91, 0x91,
-	0x2b, 0x17, 0x57, 0x50, 0x80, 0x73, 0x70, 0x6a, 0x51, 0x59, 0x66, 0x72, 0xaa, 0x90, 0x39, 0x17,
-	0x7b, 0x51, 0x6a, 0x61, 0x69, 0x6a, 0x71, 0x89, 0x90, 0x88, 0x1e, 0x44, 0x93, 0x1e, 0x4c, 0x93,
-	0x9e, 0x63, 0x5e, 0xa5, 0x14, 0x56, 0x51, 0x25, 0x86, 0x24, 0x36, 0x30, 0xdf, 0x18, 0x10, 0x00,
-	0x00, 0xff, 0xff, 0x58, 0xc1, 0x6e, 0x36, 0x84, 0x00, 0x00, 0x00,
+	0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x03, 0x33, 0x84, 0x38, 0x60, 0x7c, 0xa5, 0x12, 0x2e, 0x66, 0xc7,
+	0xbc, 0x4a, 0x21, 0x59, 0x2e, 0xae, 0xdc, 0xd4, 0xe2, 0xe2, 0xc4, 0xf4, 0xd4, 0xf8, 0xcc, 0x14,
+	0x09, 0x46, 0x05, 0x46, 0x0d, 0xde, 0x20, 0x4e, 0xa8, 0x88, 0x67, 0x0a, 0x48, 0xba, 0x38, 0xb5,
+	0xb8, 0x38, 0x33, 0x3f, 0x0f, 0x24, 0xcd, 0xa4, 0xc0, 0xa8, 0xc1, 0x19, 0xc4, 0x09, 0x15, 0xf1,
+	0x4c, 0x11, 0x92, 0xe4, 0xe2, 0x28, 0xa9, 0x2c, 0x48, 0x8d, 0x2f, 0x2d, 0xca, 0x91, 0x60, 0x06,
+	0x4b, 0xb2, 0x83, 0xf8, 0xa1, 0x45, 0x39, 0x42, 0x22, 0x5c, 0xac, 0x65, 0x89, 0x39, 0xa5, 0xa9,
+	0x12, 0x2c, 0x0a, 0x8c, 0x1a, 0x3c, 0x41, 0x10, 0x8e, 0x91, 0x39, 0x17, 0x57, 0x50, 0x80, 0x73,
+	0x70, 0x6a, 0x51, 0x59, 0x66, 0x72, 0xaa, 0x90, 0x26, 0x17, 0x7b, 0x51, 0x6a, 0x61, 0x69, 0x6a,
+	0x71, 0x89, 0x10, 0xaf, 0x1e, 0xdc, 0xa5, 0x8e, 0x79, 0x95, 0x52, 0xa8, 0x5c, 0x25, 0x86, 0x24,
+	0x36, 0x30, 0xdf, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x6a, 0x21, 0xe4, 0x90, 0xd1, 0x00, 0x00,
+	0x00,
 }

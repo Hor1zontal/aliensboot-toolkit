@@ -1,5 +1,6 @@
 {
-	"Enable":true,
+	"Service" : "gate",
+	"RPCPort": 10107,
 	"MaxConnNum": 20000,
 	"TCPAddr": ":3568",
 	"WSAddr": ":28208",
@@ -9,9 +10,9 @@
 	"AuthTimeout": 10,
 	"MessageChannelLimit":5,
 	"Route": [
-		{"service":"scene", "requestID":0, "responseID":1},
-        {"service":"passport", "requestID":2, "responseID":3},
-		{"service":"service1", "requestID":4, "responseID":5},
-		{"service":"service2", "requestID":6, "responseID":7}
+		{"service":"scene", "requestID":0, "responseID":1, "session":true},
+        {"service":"passport", "requestID":2, "responseID":3 },
+		{"service":"service1", "requestID":4, "responseID":5 },
+		{"service":"service2", "requestID":6, "responseID":7 }
 	]
 }

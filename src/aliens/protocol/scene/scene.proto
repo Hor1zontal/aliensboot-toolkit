@@ -52,4 +52,9 @@ message get_state_ret {
     repeated Entity neighbors = 1; //周围的玩家信息
 }
 
+//场景信息变更推送
+message space_push {
+    repeated Entity neighbors = 1; //周围的变更玩家信息
+}
+
 

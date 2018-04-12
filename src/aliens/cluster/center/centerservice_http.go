@@ -17,7 +17,7 @@ func PublicHTTPService(serviceType string, address string) *httpService {
 	}
 	service := &httpService{
 		&centerService{
-			id:          GetServerNode(),
+			id:          ClusterCenter.GetNodeID(),
 			serviceType: serviceType,
 			Address:     address,
 			Protocol: HTTP,

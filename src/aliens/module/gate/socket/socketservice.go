@@ -17,7 +17,7 @@ import (
 	"time"
 	"aliens/module/gate/msg"
 	"reflect"
-	"github.com/gogo/protobuf/types"
+	"aliens/protocol"
 )
 
 var GateProxy *gate.Gate = nil
@@ -45,7 +45,7 @@ func Init() {
 	Processor.SetByteOrder(true)
 	Skeleton.RegisterChanRPC("NewAgent", rpcNewAgent)
 	Skeleton.RegisterChanRPC("CloseAgent", rpcCloseAgent)
-	Skeleton.RegisterChanRPC(reflect.TypeOf(&types.Any{}), handleMessage)
+	Skeleton.RegisterChanRPC(reflect.TypeOf(&protocol.Any{}), handleMessage)
 }
 
 func NewSkeleton() *module.Skeleton {

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-//var UserCache = basecache.NewUserCacheManager()
+var UserCache = cacheManager{}
 
 func Init() {
 	//UserCache.Init1(conf.Server.RedisAddress, conf.Server.RedisPassword,

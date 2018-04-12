@@ -12,8 +12,8 @@ package msg
 import (
 	"github.com/name5566/leaf/chanrpc"
 	"errors"
-	"github.com/gogo/protobuf/types"
 	"encoding/binary"
+	"aliens/protocol"
 )
 
 type MessageProcessor struct {
@@ -31,7 +31,7 @@ func (p *MessageProcessor) SetByteOrder(littleEndian bool) {
 }
 
 //func (this *MessageProcessor) Route(msg interface{}, userData interface{}) error {
-//	this.msgRouter.Go(reflect.TypeOf(&types.Any{}), msg, userData)
+//	this.msgRouter.Go(reflect.TypeOf(&protocol.Any{}), msg, userData)
 //	return nil
 //}
 
@@ -47,20 +47,20 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 	} else {
 		id = binary.BigEndian.Uint16(data)
 	}
-	return &types.Any{ID:id, Value:data[2:]}, nil
+	return &protocol.Any{Id:id, Value:data[2:]}, nil
 }
 
 // must goroutine safe
 func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
-	any, ok := msg.(*types.Any)
+	any, ok := msg.(*protocol.Any)
 	if !ok {
 		return nil, errors.New("invalid any type")
 	}
 	id := make([]byte, 2)
 	if this.littleEndian {
-		binary.LittleEndian.PutUint16(id, any.ID)
+		binary.LittleEndian.PutUint16(id, any.Id)
 	} else {
-		binary.BigEndian.PutUint16(id, any.ID)
+		binary.BigEndian.PutUint16(id, any.Id)
 	}
 	return [][]byte{id, any.Value}, nil
 }

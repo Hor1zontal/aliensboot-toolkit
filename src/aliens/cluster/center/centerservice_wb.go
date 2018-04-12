@@ -17,7 +17,7 @@ func PublicWBService(serviceType string, address string) *wbService {
 	}
 	service := &wbService{
 		&centerService{
-			id:          GetServerNode(),
+			id:          ClusterCenter.GetNodeID(),
 			serviceType: serviceType,
 			Address:     address,
 			Protocol: WEBSOCKET,

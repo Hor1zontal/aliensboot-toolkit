@@ -17,27 +17,45 @@ import (
 	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
+	"aliens/module/cluster"
+	"aliens/common/util"
 )
 
+var id int64 = 0
+
+func genClientID() string {
+	id ++
+	return cluster.GetID() + util.Int64ToString(id)
+}
+
 func newNetwork(outerChannel message.IMessageChannel) *network {
-	network := &network{createTime:time.Now(), heartbeatTime:time.Now()}
+	network := &network{id: genClientID(), createTime:time.Now(), heartbeatTime:time.Now()}
 	network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
 	return network
 }
 
 type network struct {
 	*message.ChannelMessageHandler
-	id int32 //验证通过的用户id 没有验证通过为0
-	createTime time.Time //创建时间
+	id string 				//clientID
+	authID        uint32    //验证通过的用户id 没有验证通过为0
+	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 }
 
 type IAuthMessage interface {
-	GetUserID() int32
+	GetUserID() uint32
+}
+
+func (this *network) GetID() string {
+	return this.id
 }
 
 func (this *network) HandleMessage(request interface{}) interface{} {
-	response, error := route.HandleMessage(request)
+	sessionID := ""
+	if !this.IsAuth() {
+		sessionID = this.id
+	}
+	response, error := route.HandleMessage(request, sessionID)
 	//TODO 返回服务不可用 或 嘿嘿嘿
 	if error != nil {
 		log.Debug(error.Error())
@@ -54,7 +72,12 @@ func (this *network) GetRemoteAddr() net.Addr {
 }
 
 func (this *network) IsAuth() bool {
-	return this.id != 0
+	return this.authID != 0
+}
+
+func (this *network) Auth(id uint32) {
+	this.authID = id
+	networkManager.Auth(this)
 }
 
 //是否没有验权超时 释放多余的空连接

@@ -31,7 +31,9 @@ var (
 )
 
 var Config struct {
-	Enable              bool   //网络模块是否开启
+	//Enable              bool   //网络模块是否开启
+	Service 			string
+	RPCPort				int
 	MaxConnNum          int
 	WSAddr              string //
 	TCPAddr             string //

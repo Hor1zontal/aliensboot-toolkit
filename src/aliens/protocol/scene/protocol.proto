@@ -2,8 +2,8 @@ syntax = "proto3";
 package scene;
 
 import "scene.proto";
-//import "google/protobuf/any.proto";
 
+//request
 message SceneRequest {
     int32 session = 1;  //消息序号
 
@@ -16,16 +16,10 @@ message SceneRequest {
         get_state getState = 8;
     }
 
-//    oneof Message {
-//
-//    }
-
-
-//    map<int32, int32> map = 9; // 定义Map对象
-//    repeated google.protobuf.Any any = 10; // Any对象
 }
 
 
+//response
 message SceneResponse {
     int32 session = 1;
 
@@ -36,4 +30,9 @@ message SceneResponse {
         space_leave_ret spaceLeaveRet = 7;
         get_state_ret getStateRet = 8;
     }
+}
+
+//push
+message ScenePush {
+    space_push spacePush = 1;
 }

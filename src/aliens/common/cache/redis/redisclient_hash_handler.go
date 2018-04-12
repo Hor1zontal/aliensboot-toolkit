@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package cache
+package redis
 
 import (
 	"fmt"

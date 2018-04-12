@@ -9,11 +9,17 @@
  *******************************************************************************/
 package entity
 
-import "aliens/mmorpg/entity"
+import (
+	"aliens/mmorpg/entity"
+	"aliens/log"
+	"aliens/module/cluster/dispatch"
+)
 
 //玩家实体
 type PlayerEntity struct {
-
+	clientID string //客户端ID
+	gateID string //网关ID
+	uid uint32 //用户id
 }
 
 
@@ -24,16 +30,20 @@ func (this * PlayerEntity) GetDist() float32 {
 
 
 func (this * PlayerEntity) OnEntityEnter(entity *entity.Entity) {
+	log.Debug("entity enter %v", entity.GetID())
 
+	//dispatch.GatePush(this.clientID, )
 }
 
 
 func (this * PlayerEntity) OnEntityLeave(entity *entity.Entity) {
+	log.Debug("entity leave %v", entity.GetID())
 
+	//dispatch.GatePush(this.clientID, )
 }
 
 
 func (this * PlayerEntity) OnEntityMove(entity *entity.Entity) {
-
+	log.Debug("entity move %v", entity.GetID())
 
 }

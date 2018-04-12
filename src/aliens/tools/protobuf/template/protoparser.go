@@ -13,6 +13,13 @@ import (
 	"os"
 	"aliens/tools/protobuf/proto"
 	"aliens/common/util"
+	"strings"
+)
+
+const (
+	REQUEST_TAG = "request"
+	RESPONSE_TAG = "response"
+	PUSH_TAG = "push"
 )
 
 var message = &ProtoMessage{}
@@ -33,12 +40,18 @@ func ParseProto(protoPath string) *ProtoMessage {
 				//fmt.Println()
 				break;
 			case *proto.Message:
-				if message.RequestName == "" {
-					message.RequestName = element.(*proto.Message).Name
-				} else {
-					message.ResponseName = element.(*proto.Message).Name
+				comment := element.(*proto.Message).Doc()
+				if comment == nil {
+					break
 				}
-				break;
+				tag := strings.TrimSpace(comment.Message())
+				if tag == REQUEST_TAG {
+					message.RequestName = element.(*proto.Message).Name
+				} else if tag == RESPONSE_TAG {
+					message.ResponseName = element.(*proto.Message).Name
+				} else if tag == PUSH_TAG {
+					message.PushName = element.(*proto.Message).Name
+				}
 		}
 	}
 	proto.Walk(definition,
@@ -49,7 +62,10 @@ func ParseProto(protoPath string) *ProtoMessage {
 
 func handleMessage(m *proto.Oneof) {
 	for _, visitee := range m.Elements {
-		field := visitee.(*proto.OneOfField)
+		field, ok := visitee.(*proto.OneOfField)
+		if !ok {
+			continue
+		}
 		handler := message.Handlers[field.Sequence]
 		if handler == nil {
 			handler = &ProtoHandler{}

@@ -31,16 +31,25 @@ type ServiceCenter struct {
 	serviceRoot      string
 	serviceContainer map[string]*serviceCategory //服务容器 key 服务名
 
+	nodeId  string //当前集群节点的id
 	lbs string //default polling
 }
 
-//启动服务中心客户端
-func (this *ServiceCenter) Connect(address string, timeout int, zkName string) {
-	this.ConnectCluster([]string{address}, timeout, zkName)
+func (this *ServiceCenter) GetNodeID() string {
+	return this.nodeId
 }
 
-func (this *ServiceCenter) ConnectCluster(addressArray []string, timeout int, zkName string) {
+//启动服务中心客户端
+func (this *ServiceCenter) Connect(address string, timeout int, zkName string, nodeID string) {
+	this.ConnectCluster([]string{address}, timeout, zkName, nodeID)
+}
+
+func (this *ServiceCenter) ConnectCluster(addressArray []string, timeout int, zkName string, nodeID string) {
+	if nodeID == "" {
+		panic("cluster nodeID can not be empty")
+	}
 	this.zkName = zkName
+	this.nodeId = nodeID
 	//this.serviceFactory = serviceFactory
 	c, _, err := zk.Connect(addressArray, time.Duration(timeout)*time.Second)
 	if err != nil {

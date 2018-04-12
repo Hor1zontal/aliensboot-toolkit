@@ -13,14 +13,14 @@ import (
 	"aliens/protocol/passport"
 	"github.com/gogo/protobuf/proto"
 	"golang.org/x/net/context"
-	"github.com/gogo/protobuf/types"
 	"github.com/pkg/errors"
+	"aliens/protocol"
 )
 
 type passportService struct {
 }
 
-func (this *passportService) Request(ctx context.Context,request *types.Any) (*types.Any, error) {
+func (this *passportService) Request(ctx context.Context,request *protocol.Any) (*protocol.Any, error) {
 	requestProxy := &passport.PassportRequest{}
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
@@ -34,7 +34,7 @@ func (this *passportService) Request(ctx context.Context,request *types.Any) (*t
 		return nil, error
 	}
 	data, _ := proto.Marshal(response)
-	responseProxy := &types.Any{TypeUrl:"", Value:data}
+	responseProxy := &protocol.Any{TypeUrl:"", Value:data}
 	return responseProxy, error
 }
 

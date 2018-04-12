@@ -13,21 +13,21 @@ import (
 	"aliens/protocol/scene"
 	"github.com/gogo/protobuf/proto"
 	"golang.org/x/net/context"
-	"github.com/gogo/protobuf/types"
 	"github.com/pkg/errors"
+	"aliens/protocol"
 )
 
 type sceneService struct {
 }
 
-func (this *sceneService) Request(ctx context.Context,request *types.Any) (*types.Any, error) {
+func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (*protocol.Any, error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
 		if error != nil {
 			return nil, error
 		}
-		return &types.Any{TypeUrl:"", Value:data}, nil
+		return &protocol.Any{TypeUrl:"", Value:data}, nil
 	}
 
 	requestProxy := &scene.SceneRequest{}
@@ -42,20 +42,13 @@ func (this *sceneService) Request(ctx context.Context,request *types.Any) (*type
 		return nil, error
 	}
 	data, _ := proto.Marshal(response)
-	responseProxy := &types.Any{TypeUrl:"", Value:data}
+	responseProxy := &protocol.Any{TypeUrl:"", Value:data}
 	return responseProxy, error
 }
 
 func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 	response := &scene.SceneResponse{Session:request.GetSession()}
 
-	
-	if request.GetSpaceEnter() != nil {
-		messageRet := &scene.SpaceEnterRet{}
-		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
-		return response, nil
-	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
@@ -75,6 +68,13 @@ func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
+		return response, nil
+	}
+	
+	if request.GetSpaceEnter() != nil {
+		messageRet := &scene.SpaceEnterRet{}
+		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
 		return response, nil
 	}
 	

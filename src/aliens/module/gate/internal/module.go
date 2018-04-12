@@ -29,6 +29,6 @@ func (m *Module) OnDestroy() {
 
 func (s *Module) Run(closeSig chan bool) {
 	go socket.Skeleton.Run(closeSig)
-	socket.GateProxy.Run(closeSig)
+	go socket.GateProxy.Run(closeSig)
 }
 
