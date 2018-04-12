@@ -4,6 +4,7 @@ import (
 	"aliens/common/database"
 	"github.com/name5566/leaf/db/mongodb"
 	"gopkg.in/mgo.v2"
+	"aliens/common/database/dbconfig"
 )
 
 //type DatabaseFactory struct {
@@ -24,15 +25,18 @@ type Database struct {
 }
 
 //初始化连接数据库
-func (this *Database) Init(host string, port int, dbName string) error {
-	this.dbName = dbName
-	c, err := mongodb.Dial(host, 100)
+func (this *Database) Init(config dbconfig.DBConfig) error {
+	this.dbName = config.Name
+	if config.MaxSession == 0 {
+		config.MaxSession = 100
+	}
+	c, err := mongodb.Dial(config.Address, int(config.MaxSession))
 	if err != nil {
 		return err
 	}
 	this.dbContext = c
 	this.dbSession = this.dbContext.Ref()
-	this.database = this.dbSession.DB(dbName)
+	this.database = this.dbSession.DB(config.Name)
 	//if (this.auth != nil) {
 	//	return this.database.Login(this.auth.Username, this.auth.Password)
 	//}
@@ -40,11 +44,11 @@ func (this *Database) Init(host string, port int, dbName string) error {
 }
 
 //初始化账号密码信息
-func (this *Database) Auth(username string, password string) {
-	if username != "" {
-		this.auth = &database.Authority{username, password}
-	}
-}
+//func (this *Database) Auth(username string, password string) {
+//	if username != "" {
+//		this.auth = &database.Authority{username, password}
+//	}
+//}
 
 func (this *Database) validateConnection() {
 	if !this.isConnect() {

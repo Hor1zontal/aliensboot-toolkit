@@ -2,37 +2,29 @@ package conf
 
 import (
 	"time"
-	"aliens/common/util"
 	"aliens/config"
+	"aliens/common/cache/redis"
+	"aliens/common/database/dbconfig"
+	"aliens/cluster/center"
 )
 
+
+var configPath = "conf/aliens/passport/server.json"
+
 var Config struct {
-	Service 		  string
-	DBHost            string
-	DBPort            int
-	DBName            string
-	DBUsername        string
-	DBPassword        string
-	RedisAddress      string
-	RedisPassword     string
-	RedisMaxActive    int
-	RedisMaxIdle      int
-	RedisIdleTimeout  int
+	Service  center.ServiceConfig
+	Cache 	 redis.CacheConfig
+	Database dbconfig.DBConfig
+
 	DefaultChannelPWD string
 	TokenExpireTime   int64
 	HTTPAddress       string
 	AppKey            string
-
-	RPCAddress        string //提供RPC服务的地址,信息需要注册到中心服务器供其他服务调用
-	RPCPort           int    //提供RPC服务的端口，本地启动RPC需要指定此端口启动
 }
 
 
 func init() {
-	config.LoadConfig(&Config, "conf/aliens/passport/server.json")
-	if Config.RPCAddress == "" {
-		Config.RPCAddress = util.GetAddress(Config.RPCPort)
-	}
+	config.LoadConfig(&Config, configPath) //加载服务器配置
 	if Config.TokenExpireTime <= 0 {
 		//默认过期时间一个月
 		Config.TokenExpireTime = int64(30 * 24 *time.Hour)

@@ -10,15 +10,15 @@
 package center
 
 
-func PublicWBService(serviceType string, address string) *wbService {
+func PublicWBService(config ServiceConfig, address string) *wbService {
 	if !ClusterCenter.IsConnect() {
-		panic(serviceType + " cluster center is not connected")
+		panic(config.Name + " cluster center is not connected")
 		return nil
 	}
 	service := &wbService{
 		&centerService{
 			id:          ClusterCenter.GetNodeID(),
-			serviceType: serviceType,
+			serviceType: config.Name,
 			Address:     address,
 			Protocol: WEBSOCKET,
 		},

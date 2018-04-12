@@ -16,6 +16,7 @@ import (
 	"sync"
 	"time"
 	"aliens/cluster/center/lbs"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const NODE_SPLIT string = "/"
@@ -40,18 +41,24 @@ func (this *ServiceCenter) GetNodeID() string {
 }
 
 //启动服务中心客户端
-func (this *ServiceCenter) Connect(address string, timeout int, zkName string, nodeID string) {
-	this.ConnectCluster([]string{address}, timeout, zkName, nodeID)
-}
+//func (this *ServiceCenter) Connect(address string, timeout int, zkName string, nodeID string) {
+//	this.ConnectCluster([]string{address}, timeout, zkName, nodeID)
+//}
 
-func (this *ServiceCenter) ConnectCluster(addressArray []string, timeout int, zkName string, nodeID string) {
-	if nodeID == "" {
-		panic("cluster nodeID can not be empty")
+func (this *ServiceCenter) ConnectCluster(config ClusterConfig) {
+	if config.ID == "" {
+		config.ID = bson.NewObjectId().Hex()
+		//config.ID =
+		//panic("cluster nodeID can not be empty")
 	}
-	this.zkName = zkName
-	this.nodeId = nodeID
+	if config.Timeout == 0 {
+		config.Timeout = 10
+	}
+	this.lbs = config.LBS
+	this.zkName = config.Name
+	this.nodeId = config.ID
 	//this.serviceFactory = serviceFactory
-	c, _, err := zk.Connect(addressArray, time.Duration(timeout)*time.Second)
+	c, _, err := zk.Connect(config.Servers, time.Duration(config.Timeout)*time.Second)
 	if err != nil {
 		panic(err)
 	}
@@ -61,10 +68,10 @@ func (this *ServiceCenter) ConnectCluster(addressArray []string, timeout int, zk
 	this.confirmNode(NODE_SPLIT + this.zkName)
 	this.confirmNode(this.serviceRoot)
 }
-
-func (this *ServiceCenter) SetLBS(lbs string) {
-	this.lbs = lbs
-}
+//
+//func (this *ServiceCenter) SetLBS(lbs string) {
+//	this.lbs = lbs
+//}
 
 func (this *ServiceCenter) IsConnect() bool {
 	return this.zkCon != nil

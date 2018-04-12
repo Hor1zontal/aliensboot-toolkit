@@ -11,24 +11,19 @@ package conf
 
 import (
 	"aliens/config"
-	"gopkg.in/mgo.v2/bson"
+	"aliens/common/cache/redis"
+	"aliens/cluster/center"
 )
 
-var Config struct {
-	ID 		  string   //节点id
-	ZKServers []string //集群中心服务器地址
-	ZKName    string   //集群名称，不用业务使用不同的集群
-	LBS       string   //负载均衡策略  polling 轮询
-	RedisAddress string //集群缓存服务器地址
-}
+var configPath = "conf/aliens/cluster.json"
 
-var NodeName = bson.NewObjectId().Hex()
+var Config struct {
+	Cluster center.ClusterConfig
+	Cache   redis.CacheConfig
+}
 
 
 func init() {
-	config.LoadConfig(&Config, "conf/aliens/cluster.json")
-	if Config.ID != "" {
-		NodeName = Config.ID
-	}
+	config.LoadConfig(&Config, configPath)
 }
 

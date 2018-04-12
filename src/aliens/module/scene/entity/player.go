@@ -12,7 +12,6 @@ package entity
 import (
 	"aliens/mmorpg/entity"
 	"aliens/log"
-	"aliens/module/cluster/dispatch"
 )
 
 //玩家实体

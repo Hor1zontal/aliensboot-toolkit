@@ -85,6 +85,28 @@ type RedisCacheClient struct {
 
 //redis.pool.maxWait=3000    #最大等待时间：单位ms
 
+
+func NewRedisClient(config CacheConfig)  *RedisCacheClient {
+	if config.MaxActive == 0 {
+		config.MaxActive = 5000
+	}
+	if config.MaxIdle == 0 {
+		config.MaxIdle = 2000
+	}
+	if config.IdleTimeout == 0 {
+		config.IdleTimeout = 120
+	}
+
+	redisClient := &RedisCacheClient{
+		MaxIdle:     config.MaxIdle,
+		MaxActive:   config.MaxActive,
+		Address:     config.Address,
+		Password:    config.Password,
+		IdleTimeout: time.Duration(config.IdleTimeout) * time.Second,
+	}
+	return redisClient
+}
+
 //启动缓存客户端
 func (this *RedisCacheClient) Start() {
 	this.pool = &redis.Pool{

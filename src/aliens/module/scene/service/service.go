@@ -8,7 +8,7 @@ import (
 var sceneRPCService *center.GRPCService = nil
 
 func Init() {
-	sceneRPCService = center.PublicGRPCService(conf.Config.Service, conf.Config.RPCPort, &sceneService{})
+	sceneRPCService = center.PublicGRPCService(conf.Config.Service, &sceneService{})
 }
 
 func Close() {

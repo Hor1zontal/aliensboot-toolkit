@@ -5,7 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"strconv"
+	"aliens/common/database/dbconfig"
 )
 
 type Database struct {
@@ -22,18 +22,17 @@ func (this *Database) getAuthorityString() string {
 }
 
 //初始化账号密码信息
-func (this *Database) Auth(username string, password string) {
-	if username != "" {
-		this.Authority = &database.Authority{username, password}
-	}
-}
+//func (this *Database) Auth(username string, password string) {
+//	if username != "" {
+//		this.Authority = &database.Authority{username, password}
+//	}
+//}
 
 //初始化连接数据库
-func (this *Database) Init(host string, port int, dbName string) error {
-	this.dbName = dbName
-	dbHost := host + ":" + strconv.Itoa(port)
+func (this *Database) Init(config dbconfig.DBConfig) error {
+	this.dbName = config.Name
 	db, err := gorm.Open("mysql",
-		fmt.Sprintf(this.getAuthorityString()+"@tcp(%v)/%v?charset=utf8&parseTime=True&loc=Local", dbHost, dbName))
+		fmt.Sprintf(this.getAuthorityString()+"@tcp(%v)/%v?charset=utf8&parseTime=True&loc=Local", config.Address, config.Name))
 	if err == nil {
 		this.db = db
 	}

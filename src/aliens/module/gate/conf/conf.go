@@ -13,9 +13,12 @@ import (
 	"time"
 	"aliens/config"
 	"aliens/module/gate/route"
+	"aliens/cluster/center"
 )
 
 var (
+
+	configPath = "conf/aliens/gate/server.json"
 	// skeleton conf
 	GoLen              = 10000
 	TimerDispatcherLen = 10000
@@ -32,8 +35,8 @@ var (
 
 var Config struct {
 	//Enable              bool   //网络模块是否开启
-	Service 			string
-	RPCPort				int
+	Service 			center.ServiceConfig
+
 	MaxConnNum          int
 	WSAddr              string //
 	TCPAddr             string //
@@ -46,6 +49,6 @@ var Config struct {
 }
 
 func Init() {
-	config.LoadConfig(&Config, "conf/aliens/gate/server.json")
+	config.LoadConfig(&Config, configPath)
 	route.LoadRoute(Config.Route)
 }

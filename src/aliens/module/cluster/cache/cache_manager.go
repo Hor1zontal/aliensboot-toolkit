@@ -10,7 +10,6 @@
 package cache
 
 import (
-	"time"
 	"aliens/common/cache/redis"
 	"aliens/module/cluster/conf"
 )
@@ -22,34 +21,15 @@ type cacheManager struct {
 }
 
 func Init() {
-	ClusterCache.Init(conf.Config.RedisAddress)
+	ClusterCache.Init(conf.Config.Cache)
 }
 
 func Close() {
 	ClusterCache.Close()
 }
 
-func (this *cacheManager) Init(redisAddress string) {
-	this.Init1(redisAddress, "", 0, 0, 0)
-}
-
-func (this *cacheManager) Init1(redisAddress string, password string, maxActive int, maxIdle int, idleTimeout int) {
-	if maxActive == 0 {
-		maxActive = 5000
-	}
-	if maxIdle == 0 {
-		maxIdle = 2000
-	}
-	if idleTimeout == 0 {
-		idleTimeout = 120
-	}
-	this.redisClient = &redis.RedisCacheClient{
-		MaxIdle:     maxIdle,
-		MaxActive:   maxActive,
-		Address:     redisAddress,
-		Password:    password,
-		IdleTimeout: time.Duration(idleTimeout) * time.Second,
-	}
+func (this *cacheManager) Init(config redis.CacheConfig) {
+	this.redisClient = redis.NewRedisClient(config)
 	this.redisClient.Start()
 }
 

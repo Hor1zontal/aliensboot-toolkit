@@ -20,8 +20,5 @@ func main() {
 	leaf.Run(
 		cluster.Module,
 		gate.Module,
-		//service1.Module,
-		//service2.Module,
-		//scene.Module,
 	)
 }

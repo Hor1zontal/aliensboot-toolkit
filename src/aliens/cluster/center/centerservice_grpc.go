@@ -21,23 +21,27 @@ import (
 
 )
 
-func PublicGRPCService(serviceType string, port int, handle protocol.RPCServiceServer) *GRPCService {
+func PublicGRPCService(config ServiceConfig, handle protocol.RPCServiceServer) *GRPCService {
 	if !ClusterCenter.IsConnect() {
-		panic(serviceType + " cluster center is not connected")
+		panic(config.Name + " cluster center is not connected")
 		return nil
 	}
 
 	server := grpc.NewServer()
 	protocol.RegisterRPCServiceServer(server,  handle)
 
+	if config.Address == "" {
+		config.Address = util.GetAddress(config.Port)
+	}
+
 	service := &GRPCService{
 		centerService: &centerService{
 			id:          ClusterCenter.GetNodeID(),
-			serviceType: serviceType,
-			Address:     util.GetAddress(port),
+			serviceType: config.Name,
+			Address:     config.Address,
 			Protocol: GRPC,
 		},
-		port: port,
+		port: config.Port,
 		server : server,
 	}
 	if !service.Start() {

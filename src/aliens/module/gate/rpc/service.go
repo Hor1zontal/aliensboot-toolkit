@@ -8,15 +8,15 @@ import (
 	"aliens/module/gate/conf"
 )
 
-var sceneRPCService *center.GRPCService = nil
+var gateRPCService *center.GRPCService = nil
 
 func Init() {
-	sceneRPCService = center.PublicGRPCService(conf.Config.Service, conf.Config.RPCPort, &gateService{})
+	gateRPCService = center.PublicGRPCService(conf.Config.Service, &gateService{})
 }
 
 func Close() {
-	if sceneRPCService != nil {
-		sceneRPCService.Close()
+	if gateRPCService != nil {
+		gateRPCService.Close()
 	}
 }
 

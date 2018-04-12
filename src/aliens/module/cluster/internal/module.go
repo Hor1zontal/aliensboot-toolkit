@@ -16,8 +16,7 @@ func (m *Module) IsEnable() bool {
 
 func (m *Module) OnInit() {
 	cache.Init()
-	center.ClusterCenter.SetLBS(conf.Config.LBS)
-	center.ClusterCenter.ConnectCluster(conf.Config.ZKServers, 10, conf.Config.ZKName, conf.NodeName)
+	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
 }
 
 func (m *Module) OnDestroy() {

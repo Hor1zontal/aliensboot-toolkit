@@ -1,4 +1,8 @@
 {
-  "Service":"scene",
-  "RPCPort":10108
+  "Service" : {
+    "Name":"scene",
+    "Port":10108,
+    "Address":""
+  }
+
 }

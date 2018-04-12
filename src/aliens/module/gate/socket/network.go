@@ -17,15 +17,15 @@ import (
 	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
-	"aliens/module/cluster"
 	"aliens/common/util"
+	"aliens/cluster/center"
 )
 
 var id int64 = 0
 
 func genClientID() string {
 	id ++
-	return cluster.GetID() + util.Int64ToString(id)
+	return center.ClusterCenter.GetNodeID() + util.Int64ToString(id)
 }
 
 func newNetwork(outerChannel message.IMessageChannel) *network {

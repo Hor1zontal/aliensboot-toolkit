@@ -17,7 +17,7 @@ import (
 var passportRPCService *center.GRPCService = nil
 
 func Init() {
-	passportRPCService = center.PublicGRPCService(conf.Config.Service, conf.Config.RPCPort, &passportService{})
+	passportRPCService = center.PublicGRPCService(conf.Config.Service, &passportService{})
 }
 
 func Close() {

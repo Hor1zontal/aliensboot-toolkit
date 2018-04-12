@@ -10,8 +10,8 @@ var Database database.IDatabase = &mongo.Database{}
 var DatabaseHandler = Database.GetHandler()
 
 func Init() {
-	Database.Auth(conf.Config.DBUsername, conf.Config.DBPassword)
-	err := Database.Init(conf.Config.DBHost, conf.Config.DBPort, conf.Config.DBName)
+	//Database.Auth(conf.Config.DBUsername, conf.Config.DBPassword)
+	err := Database.Init(conf.Config.Database)
 	if err != nil {
 		panic(err)
 	}

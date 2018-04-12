@@ -10,15 +10,15 @@
 package center
 
 
-func PublicHTTPService(serviceType string, address string) *httpService {
+func PublicHTTPService(config ServiceConfig, address string) *httpService {
 	if !ClusterCenter.IsConnect() {
-		panic(serviceType + " cluster center is not connected")
+		panic(config.Name + " cluster center is not connected")
 		return nil
 	}
 	service := &httpService{
 		&centerService{
 			id:          ClusterCenter.GetNodeID(),
-			serviceType: serviceType,
+			serviceType: config.Name,
 			Address:     address,
 			Protocol: HTTP,
 		},

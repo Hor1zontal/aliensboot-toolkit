@@ -10,11 +10,11 @@
 package database
 
 import (
-	"aliens/common/character"
 	"aliens/common/task"
 	"github.com/name5566/leaf/log"
 	"sync"
 	"time"
+	"aliens/common/util"
 )
 
 //数据库操作枚举
@@ -149,7 +149,7 @@ func getDataKey(data IData) string {
 		key = key + id.(string)
 		break
 	case int32:
-		key = key + character.Int32ToString(id.(int32))
+		key = key + util.Int32ToString(id.(int32))
 		break
 	}
 	return key
