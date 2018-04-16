@@ -15,12 +15,32 @@ import (
 	"golang.org/x/net/context"
 	"github.com/pkg/errors"
 	"aliens/protocol"
+	"aliens/exception"
+    "fmt"
+    "aliens/common/util"
+    "runtime"
+    "aliens/log"
 )
 
 type sceneService struct {
 }
 
-func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (*protocol.Any, error) {
+func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (any *protocol.Any,err error) {
+    defer func() {
+		//处理消息异常
+		if err := recover(); err != nil {
+			switch err.(type) {
+			case exception.GameCode:
+				any = nil
+				err = errors.New(util.Int32ToString(int32(err.(exception.GameCode))))
+				break
+			default:
+				buf := make([]byte, 2048)
+				n := runtime.Stack(buf, false)
+				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+			}
+		}
+	}()
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
@@ -50,6 +70,13 @@ func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 	response := &scene.SceneResponse{Session:request.GetSession()}
 
 	
+	if request.GetSpaceEnter() != nil {
+		messageRet := &scene.SpaceEnterRet{}
+		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
+		return response, nil
+	}
+	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
 		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
@@ -68,13 +95,6 @@ func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
-		return response, nil
-	}
-	
-	if request.GetSpaceEnter() != nil {
-		messageRet := &scene.SpaceEnterRet{}
-		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
 		return response, nil
 	}
 	

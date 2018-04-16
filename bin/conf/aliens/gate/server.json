@@ -15,9 +15,7 @@
 	"AuthTimeout": 10,
 	"MessageChannelLimit":5,
 	"Route": [
-		{"service":"scene", "requestID":0, "responseID":1, "session":true},
-        {"service":"passport", "requestID":2, "responseID":3 },
-		{"service":"service1", "requestID":4, "responseID":5 },
-		{"service":"service2", "requestID":6, "responseID":7 }
+		{"service":"scene", "alias": "s","requestID":0, "responseID":1, "pushID":2},
+        {"service":"passport", "alias": "p", "requestID":5, "responseID":6, "pushID":7}
 	]
 }

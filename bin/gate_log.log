@@ -19418,3 +19418,46 @@
 [2018/04/12 17:20:48 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-2
 [2018/04/12 17:20:48 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-3
 [2018/04/12 18:10:51 CST] [INFO] (aliens/cluster/center.(*GRPCService).Start.func1:104) rpc service passport stop
+[2018/04/12 19:21:51 CST] [INFO] (aliens/cluster/center.(*GRPCService).Start.func1:104) rpc service passport stop
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-0
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-1
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-2
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-3
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-0
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-1
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-2
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-3
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-0
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-1
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-2
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-3
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-0
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-1
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-2
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-3
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-0
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-1
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-2
+[2018/04/13 16:37:50 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-3
+[2018/04/13 17:50:07 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc4201700e0
+[2018/04/13 17:52:14 CST] [INFO] (aliens/cluster/center.(*GRPCService).Start.func1:104) rpc service gate stop
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-0
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-1
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-2
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-3
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-0
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-1
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-2
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-3
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-0
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-1
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-2
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-3
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-0
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-1
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-2
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-3
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-0
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-1
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-2
+[2018/04/13 17:52:29 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-3

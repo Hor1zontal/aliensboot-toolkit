@@ -15,12 +15,41 @@ import (
 	"golang.org/x/net/context"
 	"github.com/pkg/errors"
 	"aliens/protocol"
+	"aliens/exception"
+    "fmt"
+    "aliens/common/util"
+    "runtime"
+    "aliens/log"
 )
 
 type passportService struct {
 }
 
-func (this *passportService) Request(ctx context.Context,request *protocol.Any) (*protocol.Any, error) {
+func (this *passportService) Request(ctx context.Context,request *protocol.Any) (any *protocol.Any,err error) {
+    defer func() {
+		//处理消息异常
+		if err := recover(); err != nil {
+			switch err.(type) {
+			case exception.GameCode:
+				any = nil
+				err = errors.New(util.Int32ToString(int32(err.(exception.GameCode))))
+				break
+			default:
+				buf := make([]byte, 2048)
+				n := runtime.Stack(buf, false)
+				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+			}
+		}
+	}()
+	isJSONRequest := request.TypeUrl != ""
+	if isJSONRequest {
+		data, error := handleJsonRequest(request.TypeUrl, request.Value)
+		if error != nil {
+			return nil, error
+		}
+		return &protocol.Any{TypeUrl:"", Value:data}, nil
+	}
+
 	requestProxy := &passport.PassportRequest{}
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
@@ -28,7 +57,6 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
 	}
 	//response, error := this.HandleRequest(ctx, requestProxy)
 	response, error := handleRequest(requestProxy)
-
 
 	if response == nil {
 		return nil, error

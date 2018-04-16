@@ -6,6 +6,7 @@ import (
 	"aliens/module/gate/socket"
 	"aliens/protocol"
 	"aliens/module/gate/conf"
+	"aliens/module/gate/route"
 )
 
 var gateRPCService *center.GRPCService = nil
@@ -27,7 +28,7 @@ type gateService struct {
 func (this *gateService) Request(ctx context.Context,request *protocol.Any) (*protocol.Any, error) {
 	//处理推送
 	if request.SessionId != "" {
-		request.Id = uint16(request.MessageId)
+		request.Id = route.GetPushID(request.TypeUrl)
 		socket.Push(request.SessionId, request)
 	}
 	return nil, nil

@@ -7,8 +7,6 @@ import "scene.proto";
 message SceneRequest {
     int32 session = 1;  //消息序号
 
-    int32 clientID = 3; //发送场景
-
     oneof request {
         space_move spaceMove = 5;
         space_enter spaceEnter = 6;
@@ -34,5 +32,7 @@ message SceneResponse {
 
 //push
 message ScenePush {
-    space_push spacePush = 1;
+    int32 session = 1;  //消息序号
+
+    space_push spacePush = 2;
 }

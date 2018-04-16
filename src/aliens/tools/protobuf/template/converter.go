@@ -67,6 +67,7 @@ func writeFile(filePath string, content string, overwrite bool) {
 		//文件存在不允许覆盖
 		_, err := os.Stat(filePath)
 		if err == nil {
+			fmt.Println("file " + filePath + " alread exist, skip it!")
 			return
 		}
 	}
@@ -81,6 +82,7 @@ func writeFile(filePath string, content string, overwrite bool) {
 		fmt.Errorf(err1.Error())
 		return
 	}
+	fmt.Println("gen code file " + filePath + " success!")
 }
 
 

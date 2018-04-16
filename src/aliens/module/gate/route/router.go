@@ -17,16 +17,21 @@ import (
 )
 
 //requestID - service
-var RequestServiceMapping = make(map[uint16]string)
+var requestServiceMapping = make(map[uint16]string)
+
+//service/alias - pushID
+var servicePushMapping = make(map[string]uint16)
 
 //requestID - responseID
-var ResponseMapping = make(map[uint16]uint16)
+var responseMapping = make(map[uint16]uint16)
 
 type Route struct
 {
 	RequestID uint16 `json:"requestID"`
 	ResponseID uint16 `json:"responseID"`
+	PushID uint16 `json:"pushID"`
 	Service string `json:"service"`
+	Alias string `json:"alias"`
 }
 
 func LoadRoute(routes []Route) {
@@ -34,8 +39,9 @@ func LoadRoute(routes []Route) {
 		if route.Service == "" {
 			continue
 		}
-		RequestServiceMapping[route.RequestID] = route.Service
-		ResponseMapping[route.RequestID] = route.ResponseID
+		requestServiceMapping[route.RequestID] = route.Service
+		responseMapping[route.RequestID] = route.ResponseID
+		servicePushMapping[route.Alias] = route.PushID
 	}
 }
 
@@ -58,10 +64,14 @@ func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
 	return responseProxy.Value, nil
 }
 
+func GetPushID(service string) uint16 {
+	return servicePushMapping[service]
+}
+
 
 func HandleMessage(request interface{}, sessionID string) (interface{}, error) {
 	any, _ := request.(*protocol.Any)
-	serviceID, ok := RequestServiceMapping[any.Id]
+	serviceID, ok := requestServiceMapping[any.Id]
 	if !ok {
 		return nil, errors.New("unexpect requestID")
 	}
@@ -76,6 +86,6 @@ func HandleMessage(request interface{}, sessionID string) (interface{}, error) {
 	if !ok {
 		return nil, errors.New("unexpect response type")
 	}
-	responseProxy.Id = ResponseMapping[any.Id]
+	responseProxy.Id = responseMapping[any.Id]
 	return responseProxy, nil
 }

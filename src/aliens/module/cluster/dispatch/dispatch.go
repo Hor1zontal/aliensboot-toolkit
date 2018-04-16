@@ -22,14 +22,13 @@ import (
 //url - service
 var serviceMapping = make(map[string]*message.RemoteService)
 
-
 //网关推送信息
-func GatePush(clientID string, messageID uint32, message proto.Message) error {
+func GatePush(serviceType string, clientID string, message proto.Message) error {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return err
 	}
-	request := &protocol.Any{SessionId:clientID, MessageId: messageID, Value:data}
+	request := &protocol.Any{TypeUrl:serviceType, SessionId:clientID, Value:data}
 	return push(clientID, request)
 }
 

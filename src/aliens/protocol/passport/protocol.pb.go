@@ -14,8 +14,7 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// C2GS为客户端发给服务端的通讯协议
-// GS2C为服务端发给客户端的通讯协议
+// request
 type PassportRequest struct {
 	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
 	// -----------------登录模块接口---------------
@@ -149,6 +148,7 @@ func _PassportRequest_OneofSizer(msg proto.Message) (n int) {
 	return n
 }
 
+// response
 type PassportResponse struct {
 	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
 	AuthID  int32 `protobuf:"varint,3,opt,name=authID,proto3" json:"authID,omitempty"`
@@ -290,9 +290,26 @@ func _PassportResponse_OneofSizer(msg proto.Message) (n int) {
 	return n
 }
 
+type PassportPush struct {
+	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
+}
+
+func (m *PassportPush) Reset()                    { *m = PassportPush{} }
+func (m *PassportPush) String() string            { return proto.CompactTextString(m) }
+func (*PassportPush) ProtoMessage()               {}
+func (*PassportPush) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{2} }
+
+func (m *PassportPush) GetSession() int32 {
+	if m != nil {
+		return m.Session
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*PassportRequest)(nil), "passport.PassportRequest")
 	proto.RegisterType((*PassportResponse)(nil), "passport.PassportResponse")
+	proto.RegisterType((*PassportPush)(nil), "passport.PassportPush")
 }
 func (m *PassportRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -415,6 +432,29 @@ func (m *PassportResponse_LoginLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
+func (m *PassportPush) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PassportPush) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Session != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.Session))
+	}
+	return i, nil
+}
+
 func encodeVarintProtocol(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -484,6 +524,14 @@ func (m *PassportResponse_LoginLoginRet) Size() (n int) {
 	if m.LoginLoginRet != nil {
 		l = m.LoginLoginRet.Size()
 		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *PassportPush) Size() (n int) {
+	var l int
+	_ = l
+	if m.Session != 0 {
+		n += 1 + sovProtocol(uint64(m.Session))
 	}
 	return n
 }
@@ -786,6 +834,75 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *PassportPush) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowProtocol
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PassportPush: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PassportPush: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			m.Session = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Session |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipProtocol(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipProtocol(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -894,7 +1011,7 @@ var (
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 260 bytes of a gzipped FileDescriptorProto
+	// 273 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0x28, 0xca, 0x2f,
 	0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x03, 0x33, 0x84, 0x38, 0x0a, 0x12, 0x8b, 0x8b, 0x0b, 0xf2, 0x8b,
 	0x4a, 0xa4, 0xf8, 0x60, 0x2c, 0x88, 0x8c, 0xd2, 0x46, 0x46, 0x2e, 0xfe, 0x00, 0xa8, 0x50, 0x50,
@@ -908,8 +1025,9 @@ var fileDescriptorProtocol = []byte{
 	0x6c, 0x89, 0xa5, 0x25, 0x19, 0x9e, 0x2e, 0x12, 0xcc, 0x60, 0x09, 0x28, 0x4f, 0xc8, 0x8b, 0x4b,
 	0x00, 0xc5, 0x6d, 0x41, 0xa9, 0x25, 0x50, 0xff, 0xc8, 0xe0, 0xf2, 0x4f, 0x7c, 0x51, 0x6a, 0x89,
 	0x07, 0x43, 0x10, 0x86, 0x3e, 0x21, 0x47, 0x68, 0xc0, 0xf8, 0x40, 0x24, 0x4a, 0xa0, 0x3e, 0x93,
-	0xc4, 0xea, 0x33, 0xa8, 0x29, 0xa8, 0x3a, 0x9c, 0xb8, 0xb8, 0x38, 0x8a, 0xa0, 0x9e, 0x71, 0x12,
-	0x38, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x67, 0x3c, 0x96,
-	0x63, 0x48, 0x62, 0x03, 0x47, 0x97, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xba, 0xeb, 0x1f, 0xe2,
-	0xda, 0x01, 0x00, 0x00,
+	0xc4, 0xea, 0x33, 0xa8, 0x29, 0xa8, 0x3a, 0x9c, 0xb8, 0xb8, 0x38, 0x8a, 0xa0, 0x9e, 0x51, 0xd2,
+	0xe0, 0xe2, 0x81, 0x79, 0x30, 0xa0, 0xb4, 0x38, 0x03, 0xb7, 0xe7, 0x9c, 0x04, 0x4e, 0x3c, 0x92,
+	0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x19, 0x8f, 0xe5, 0x18, 0x92, 0xd8,
+	0xc0, 0x11, 0x6b, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0xb8, 0xce, 0x7f, 0xb4, 0x04, 0x02, 0x00,
+	0x00,
 }
