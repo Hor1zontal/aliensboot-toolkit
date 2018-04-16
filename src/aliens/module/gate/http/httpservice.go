@@ -33,7 +33,7 @@ func Close() {
 
 //添加弹幕信息
 func httpHandle(w http.ResponseWriter, r *http.Request) {
-	//r.ParseForm()
+	r.ParseForm()
 	body, _ := ioutil.ReadAll(r.Body)
 	response, error := route.HandleUrlMessage(r.RequestURI, body)
 	if error != nil {
