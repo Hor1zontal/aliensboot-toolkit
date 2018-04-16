@@ -19,16 +19,6 @@ import (
 func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 	switch requestUrl {
 	    
-		case "SpaceLeave" :
-			request := &scene.SpaceLeave{}
-			response := &scene.SpaceLeaveRet{}
-			error := json.Unmarshal(data, request)
-			if error != nil {
-				return nil, error
-			}
-			handleSpaceLeave(request, response)
-			return json.Marshal(response)
-		
 		case "GetState" :
 			request := &scene.GetState{}
 			response := &scene.GetStateRet{}
@@ -57,6 +47,16 @@ func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 				return nil, error
 			}
 			handleSpaceEnter(request, response)
+			return json.Marshal(response)
+		
+		case "SpaceLeave" :
+			request := &scene.SpaceLeave{}
+			response := &scene.SpaceLeaveRet{}
+			error := json.Unmarshal(data, request)
+			if error != nil {
+				return nil, error
+			}
+			handleSpaceLeave(request, response)
 			return json.Marshal(response)
 		
 		default:

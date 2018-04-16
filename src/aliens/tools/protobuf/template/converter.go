@@ -45,6 +45,9 @@ func Convert(protoPath string, templatePath string, outputPath string, filePrefi
 	content := ""
 	for _, handler := range message.Handlers {
 		handleStr := replaceMessage(results[1], message)
+		if !handler.IsValid() {
+			continue
+		}
 		handleStr = replaceHandle(handleStr, handler)
 		if filePrefix != "" {
 			filePath := outputPath + "/" + strings.Replace(filePrefix, "${}", strings.ToLower(handler.ORequest), -1)

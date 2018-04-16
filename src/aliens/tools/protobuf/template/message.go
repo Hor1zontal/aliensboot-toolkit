@@ -27,3 +27,7 @@ type ProtoHandler struct {
 	ORequest string
 	OResponse string
 }
+
+func (this *ProtoHandler) IsValid() bool {
+	return this.ORequest != "" && this.OResponse != ""
+}

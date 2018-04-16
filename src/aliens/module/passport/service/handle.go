@@ -17,7 +17,6 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
     "fmt"
-    "aliens/common/util"
     "runtime"
     "aliens/log"
 )
@@ -25,22 +24,7 @@ import (
 type passportService struct {
 }
 
-func (this *passportService) Request(ctx context.Context,request *protocol.Any) (any *protocol.Any,err error) {
-    defer func() {
-		//处理消息异常
-		if err := recover(); err != nil {
-			switch err.(type) {
-			case exception.GameCode:
-				any = nil
-				err = errors.New(util.Int32ToString(int32(err.(exception.GameCode))))
-				break
-			default:
-				buf := make([]byte, 2048)
-				n := runtime.Stack(buf, false)
-				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
-			}
-		}
-	}()
+func (this *passportService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
@@ -55,36 +39,49 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
 	if error != nil {
 		return nil, error
 	}
-	//response, error := this.HandleRequest(ctx, requestProxy)
-	response, error := handleRequest(requestProxy)
+	responseProxy := &passport.PassportResponse{Session:requestProxy.GetSession()}
 
-	if response == nil {
-		return nil, error
-	}
-	data, _ := proto.Marshal(response)
-	responseProxy := &protocol.Any{TypeUrl:"", Value:data}
-	return responseProxy, error
+     defer func() {
+    		//处理消息异常
+    		if err := recover(); err != nil {
+    			switch err.(type) {
+    			case exception.GameCode:
+    				responseProxy.Response = &passport.PassportResponse_Exception{Exception:uint32(err.(exception.GameCode))}
+    				break
+    			default:
+    				buf := make([]byte, 2048)
+    				n := runtime.Stack(buf, false)
+    				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+    				//未知异常不需要回数据
+                    response = nil
+                    return
+    			}
+    		}
+
+    		data, _ := proto.Marshal(response)
+            response = &protocol.Any{TypeUrl:"", Value:data}
+    	}()
+	err = handleRequest(requestProxy, responseProxy)
+    return
 }
 
-func handleRequest(request *passport.PassportRequest) (*passport.PassportResponse, error) {
-	response := &passport.PassportResponse{Session:request.GetSession()}
-
+func handleRequest(request *passport.PassportRequest, response *passport.PassportResponse) error {
 	
 	if request.GetLoginRegister() != nil {
 		messageRet := &passport.LoginRegisterRet{}
 		handleLoginRegister(request.GetLoginRegister(), messageRet)
 		response.Response = &passport.PassportResponse_LoginRegisterRet{messageRet}
-		return response, nil
+		return nil
 	}
 	
 	if request.GetLoginLogin() != nil {
 		messageRet := &passport.LoginLoginRet{}
 		handleLoginLogin(request.GetLoginLogin(), messageRet)
 		response.Response = &passport.PassportResponse_LoginLoginRet{messageRet}
-		return response, nil
+		return nil
 	}
 	
-	return nil, errors.New("unexpect request")
+	return errors.New("unexpect request")
 
 }
 

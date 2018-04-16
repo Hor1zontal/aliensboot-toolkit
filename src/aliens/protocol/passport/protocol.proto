@@ -22,10 +22,12 @@ message PassportRequest {
 message PassportResponse {
     int32 session = 1;
 
-    int32 authID = 3; //验证成功后的用户id
+    int32 authID = 2; //验证成功后的用户id
 
     //-----------------登录服接口---------------
     oneof response {
+
+        uint32 exception = 3;
         login_register_ret loginRegisterRet = 6;
         login_login_ret loginLoginRet = 7;   
     }

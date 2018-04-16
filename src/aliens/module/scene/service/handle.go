@@ -17,7 +17,6 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
     "fmt"
-    "aliens/common/util"
     "runtime"
     "aliens/log"
 )
@@ -25,22 +24,7 @@ import (
 type sceneService struct {
 }
 
-func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (any *protocol.Any,err error) {
-    defer func() {
-		//处理消息异常
-		if err := recover(); err != nil {
-			switch err.(type) {
-			case exception.GameCode:
-				any = nil
-				err = errors.New(util.Int32ToString(int32(err.(exception.GameCode))))
-				break
-			default:
-				buf := make([]byte, 2048)
-				n := runtime.Stack(buf, false)
-				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
-			}
-		}
-	}()
+func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
@@ -55,50 +39,63 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (an
 	if error != nil {
 		return nil, error
 	}
-	//response, error := this.HandleRequest(ctx, requestProxy)
-	response, error := handleRequest(requestProxy)
+	responseProxy := &scene.SceneResponse{Session:requestProxy.GetSession()}
 
-	if response == nil {
-		return nil, error
-	}
-	data, _ := proto.Marshal(response)
-	responseProxy := &protocol.Any{TypeUrl:"", Value:data}
-	return responseProxy, error
+     defer func() {
+    		//处理消息异常
+    		if err := recover(); err != nil {
+    			switch err.(type) {
+    			case exception.GameCode:
+    				responseProxy.Response = &scene.SceneResponse_Exception{Exception:uint32(err.(exception.GameCode))}
+    				break
+    			default:
+    				buf := make([]byte, 2048)
+    				n := runtime.Stack(buf, false)
+    				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+    				//未知异常不需要回数据
+                    response = nil
+                    return
+    			}
+    		}
+
+    		data, _ := proto.Marshal(response)
+            response = &protocol.Any{TypeUrl:"", Value:data}
+    	}()
+	err = handleRequest(requestProxy, responseProxy)
+    return
 }
 
-func handleRequest(request *scene.SceneRequest) (*scene.SceneResponse, error) {
-	response := &scene.SceneResponse{Session:request.GetSession()}
-
+func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) error {
+	
+	if request.GetSpaceMove() != nil {
+		messageRet := &scene.SpaceMoveRet{}
+		handleSpaceMove(request.GetSpaceMove(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
+		return nil
+	}
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &scene.SpaceEnterRet{}
 		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
-		return response, nil
+		return nil
 	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
 		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceLeaveRet{messageRet}
-		return response, nil
+		return nil
 	}
 	
 	if request.GetGetState() != nil {
 		messageRet := &scene.GetStateRet{}
 		handleGetState(request.GetGetState(), messageRet)
 		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
-		return response, nil
+		return nil
 	}
 	
-	if request.GetSpaceMove() != nil {
-		messageRet := &scene.SpaceMoveRet{}
-		handleSpaceMove(request.GetSpaceMove(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
-		return response, nil
-	}
-	
-	return nil, errors.New("unexpect request")
+	return errors.New("unexpect request")
 
 }
 

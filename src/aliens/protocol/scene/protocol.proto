@@ -23,6 +23,7 @@ message SceneResponse {
 
     oneof response {
         //ignore d s
+        uint32 exception = 3;
         space_move_ret spaceMoveRet = 5;
         space_enter_ret spaceEnterRet = 6;
         space_leave_ret spaceLeaveRet = 7;

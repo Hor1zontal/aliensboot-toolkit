@@ -19482,3 +19482,25 @@
 [2018/04/16 11:08:53 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-2
 [2018/04/16 11:08:53 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-3
 [2018/04/16 11:09:41 CST] [DEBG] (aliens/config.LoadConfig:27) json init 0xc420156050
+[2018/04/16 13:55:36 CST] [INFO] (aliens/cluster/center.(*GRPCService).Start.func1:104) rpc service gate stop
+[2018/04/16 14:07:15 CST] [INFO] (aliens/cluster/center.(*GRPCService).Start.func1:104) rpc service passport stop
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-0
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-1
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-2
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 0-3
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-0
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-1
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-2
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 1-3
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-0
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-1
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-2
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 2-3
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-0
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-1
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-2
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 3-3
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-0
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-1
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-2
+[2018/04/16 14:07:28 CST] [INFO] (aliens/mmorpg/aoi.(*tower).init:17) tower init 4-3

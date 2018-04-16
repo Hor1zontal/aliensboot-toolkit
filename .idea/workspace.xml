@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e085cfb8-e2ea-4a4f-9d34-5433d530c54a" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/bin/gate_log.log" afterPath="$PROJECT_DIR$/bin/gate_log.log" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/http/httpservice.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/http/httpservice.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/protocol.pb.go" afterPath="$PROJECT_DIR$/src/aliens/protocol/protocol.pb.go" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/gate/conf/aliens/cluster.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/gate/conf/aliens/gate.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/gate/conf/aliens/log.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service1/conf/aliens/cluster.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service1/conf/aliens/log.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service1/conf/aliens/service1/server.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service2/conf/aliens/cluster.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service2/conf/aliens/log.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/test_config/bins/service2/conf/aliens/service2/server.json" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/module/passport/service/handle.go" afterPath="$PROJECT_DIR$/src/aliens/module/passport/service/handle.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" afterPath="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/module/scene/service/handlejson.go" afterPath="$PROJECT_DIR$/src/aliens/module/scene/service/handlejson.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/codegen" afterPath="$PROJECT_DIR$/src/aliens/protocol/codegen" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/common.template" afterPath="$PROJECT_DIR$/src/aliens/protocol/common.template" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.pb.go" afterPath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.pb.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" afterPath="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go" afterPath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" afterPath="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go" afterPath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go" />
+      <change beforePath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go" afterPath="$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,101 +37,83 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="message_processor.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/msg/message_processor.go">
+      <file leaf-file-name="protocol.proto" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="54" column="32" lean-forward="false" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
+            <state relative-caret-position="267">
+              <caret line="18" column="1" lean-forward="false" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="service.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/rpc/service.go">
+      <file leaf-file-name="handle.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="30" column="27" lean-forward="false" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
+            <state relative-caret-position="319">
+              <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
+              <folding>
+                <element signature="e#428#630#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="protocol.pb.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="81" column="23" lean-forward="false" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="router.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/route/router.go">
+      <file leaf-file-name="conf.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/conf/conf.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="66" column="7" lean-forward="false" selection-start-line="66" selection-start-column="7" selection-end-line="66" selection-end-column="7" />
+            <state relative-caret-position="255">
+              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="35" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="network.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/socket/network.go">
+      <file leaf-file-name="protocol.proto" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="57" column="29" lean-forward="false" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
+            <state relative-caret-position="301">
+              <caret line="25" column="8" lean-forward="false" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="29" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/conf/aliens/gate/server.json">
+      <file leaf-file-name="passport.proto" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/passport.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+            <state relative-caret-position="15">
+              <caret line="3" column="2" lean-forward="false" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/conf/aliens/scene/server.json">
+      <file leaf-file-name="common.template" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/protocol/common.template">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="110">
+              <caret line="53" column="80" lean-forward="false" selection-start-line="53" selection-start-column="80" selection-end-line="53" selection-end-column="80" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configcenter.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/config/configcenter.go">
+      <file leaf-file-name="handle.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/handle.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="configlistener.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/aliens/config/configlistener.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="httpservice.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/http/httpservice.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="35" column="17" lean-forward="false" selection-start-line="35" selection-start-column="17" selection-end-line="35" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="formdata.go" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/Cellar/go/1.10/libexec/src/mime/multipart/formdata.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="117" column="5" lean-forward="false" selection-start-line="117" selection-start-column="5" selection-end-line="117" selection-end-column="5" />
+            <state relative-caret-position="170">
+              <caret line="47" column="40" lean-forward="false" selection-start-line="47" selection-start-column="40" selection-end-line="47" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -147,8 +130,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>SceneRequest_SpaceMove</find>
-      <find>SpaceEnterRet</find>
       <find>SpaceEnter</find>
       <find>SceneRequest</find>
       <find>scene</find>
@@ -161,7 +142,6 @@
       <find>getid</find>
       <find>uint32</find>
       <find>types.</find>
-      <find>any</find>
       <find>int64</find>
       <find>uid</find>
       <find>marshal</find>
@@ -177,6 +157,9 @@
       <find>int32</find>
       <find>responseProxy</find>
       <find>protoPath</find>
+      <find>handleRequest</find>
+      <find>any</find>
+      <find>request</find>
     </findStrings>
     <replaceStrings>
       <replace>request</replace>
@@ -230,7 +213,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/aliens/module/gate/conf/conf.go" />
         <option value="$PROJECT_DIR$/src/aliens/module/gate/internal/module.go" />
         <option value="$PROJECT_DIR$/bin/conf/aliens/scene/server.json" />
         <option value="$PROJECT_DIR$/src/aliens/module/cluster/cache/cache_manager.go" />
@@ -257,11 +239,9 @@
         <option value="$PROJECT_DIR$/src/public/gate.go" />
         <option value="$PROJECT_DIR$/src/public/scene.go" />
         <option value="$PROJECT_DIR$/src/aliens/protocol/exception/exception.go" />
-        <option value="$PROJECT_DIR$/src/aliens/protocol/common.template" />
         <option value="$PROJECT_DIR$/src/aliens/module/passport/service/handle.go" />
         <option value="$PROJECT_DIR$/src/aliens/cluster/center/centerservice_grpc.go" />
         <option value="$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch.go" />
-        <option value="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" />
         <option value="$PROJECT_DIR$/src/aliens/module/gate/rpc/service.go" />
         <option value="$PROJECT_DIR$/bin/conf/aliens/gate/server.json" />
         <option value="$PROJECT_DIR$/src/aliens/module/gate/route/router.go" />
@@ -271,16 +251,19 @@
         <option value="$PROJECT_DIR$/src/aliens/tools/zookeeper/build.sh" />
         <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/main/main.go" />
         <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/build.sh" />
-        <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go" />
         <option value="$PROJECT_DIR$/src/aliens/module/scene/service/handlejson.go" />
-        <option value="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" />
         <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/build/build.sh" />
         <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/build/main.go" />
-        <option value="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" />
         <option value="$PROJECT_DIR$/src/aliens/protocol/scene/build.sh" />
         <option value="$PROJECT_DIR$/src/aliens/protocol/passport/build.sh" />
         <option value="$PROJECT_DIR$/src/aliens/protocol/protocol.pb.go" />
         <option value="$PROJECT_DIR$/src/aliens/module/gate/http/httpservice.go" />
+        <option value="$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto" />
+        <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go" />
+        <option value="$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go" />
+        <option value="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" />
+        <option value="$PROJECT_DIR$/src/aliens/protocol/common.template" />
+        <option value="$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto" />
       </list>
     </option>
   </component>
@@ -291,8 +274,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1546" />
-    <option name="y" value="63" />
+    <option name="x" value="1488" />
+    <option name="y" value="34" />
     <option name="width" value="1672" />
     <option name="height" value="1010" />
   </component>
@@ -371,6 +354,100 @@
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
               <item name="kylin" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+              <item name="scene" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+              <item name="scene" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="protocol" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="protocol" type="462c0819:PsiDirectoryNode" />
+              <item name="passport" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="protocol" type="462c0819:PsiDirectoryNode" />
+              <item name="scene" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+              <item name="protobuf" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+              <item name="protobuf" type="462c0819:PsiDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+              <item name="protobuf" type="462c0819:PsiDirectoryNode" />
+              <item name="template" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="aliens" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+              <item name="zookeeper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kylin" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -399,7 +476,7 @@
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="handlejson&#9;null&#9;null&#10;rpc&#9;null&#9;null&#10;gate&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/gate.go&#10;dbconf&#9;null&#9;null&#10;rediscon&#9;null&#9;null&#10;dbconfi&#9;null&#9;null&#10;play&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/entity/player.go&#10;scenen&#9;null&#9;null&#10;route&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;scener&#9;null&#9;null&#10;sessionid&#9;null&#9;null&#10;disp&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/cluster/dispatch/dispatch.go&#10;rou&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;protocol&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto&#10;service.&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;rout&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;netwo&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/socket/network.go&#10;any.pro&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;servic&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;scene&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/types/any.pb.go&#10;service&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;scene.pro&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;scen&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/scene.go&#10;gat&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/gate.go&#10;grpcs&#9;null&#9;null&#10;sceneser&#9;null&#9;null&#10;network&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/socket/network.go&#10;ga&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/gate/gate.go&#10;han&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handle.go&#10;handler&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;handle&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;grpc&#9;null&#9;null&#10;handl&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;servi&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;sce&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;ser&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/cluster/services.go&#10;scenep&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;scenepro&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any.proto&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;proce&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/processor.go&#10;protobuf&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/protobuf/protobuf.go&#10;serv&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;grpcser&#9;null&#9;null&#10;process&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/processor.go&#10;any.&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;proto&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any.go&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/golang/protobuf/ptypes/any.go&#10;rpcutil&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/google.golang.org/grpc/rpc_util.go&#10;DoubleValue&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="route&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;rout&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;handlejson&#9;null&#9;null&#10;rpc&#9;null&#9;null&#10;gate&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/gate.go&#10;dbconf&#9;null&#9;null&#10;rediscon&#9;null&#9;null&#10;dbconfi&#9;null&#9;null&#10;play&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/entity/player.go&#10;scenen&#9;null&#9;null&#10;scener&#9;null&#9;null&#10;sessionid&#9;null&#9;null&#10;disp&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/cluster/dispatch/dispatch.go&#10;rou&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/route/router.go&#10;protocol&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto&#10;service.&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;netwo&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/socket/network.go&#10;any.pro&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;servic&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;scene&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/types/any.pb.go&#10;service&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;scene.pro&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;scen&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/scene.go&#10;gat&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/public/gate.go&#10;grpcs&#9;null&#9;null&#10;sceneser&#9;null&#9;null&#10;network&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/socket/network.go&#10;ga&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/gate/gate.go&#10;han&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handle.go&#10;handler&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;handle&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;grpc&#9;null&#9;null&#10;handl&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/gate/internal/handler.go&#10;servi&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;sce&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;ser&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/cluster/services.go&#10;scenep&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;scenepro&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any.proto&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;proce&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/processor.go&#10;protobuf&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/protobuf/protobuf.go&#10;serv&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/module/scene/service/service.go&#10;grpcser&#9;null&#9;null&#10;process&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/name5566/leaf/network/processor.go&#10;any.&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/gogo/protobuf/protobuf/google/protobuf/any.proto&#10;proto&#9;FILE&#9;file:///Users/hejialin/git/server/kylin/src/aliens/protocol/scene/scene.proto&#10;any.go&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/github.com/golang/protobuf/ptypes/any.go&#10;rpcutil&#9;FILE&#9;file:///Users/hejialin/git/server/alienslib/src/google.golang.org/grpc/rpc_util.go&#10;DoubleValue&#9;null&#9;null" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
   </component>
   <component name="RecentsManager">
@@ -430,7 +507,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.gate">
+  <component name="RunManager" selected="Go Build.scene">
     <configuration name="gate" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="kylin" />
       <working_directory value="$PROJECT_DIR$/bin" />
@@ -438,6 +515,14 @@
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/src/public/gate.go" />
       <package value="aliens" />
+      <directory value="$PROJECT_DIR$/" />
+    </configuration>
+    <configuration name="go build handle.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
+      <module name="kylin" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <go_parameters value="-i" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" />
       <directory value="$PROJECT_DIR$/" />
     </configuration>
     <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application">
@@ -542,7 +627,7 @@
       <package value="aliens/tools/proto" />
       <pattern value="^TestWalkGoogleApisDLP$" />
     </configuration>
-    <list size="13">
+    <list size="14">
       <item index="0" class="java.lang.String" itemvalue="Go Build.scene" />
       <item index="1" class="java.lang.String" itemvalue="Go Build.gate" />
       <item index="2" class="java.lang.String" itemvalue="Go Build.service1" />
@@ -556,12 +641,14 @@
       <item index="10" class="java.lang.String" itemvalue="Go Build.go build main.go (2)" />
       <item index="11" class="java.lang.String" itemvalue="Go Build.go build testkafka.go" />
       <item index="12" class="java.lang.String" itemvalue="Go Build.go build main.go (3)" />
+      <item index="13" class="java.lang.String" itemvalue="Go Build.go build handle.go" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Go Build.go build main.go (3)" />
-        <item index="1" class="java.lang.String" itemvalue="Go Build.go build main.go (2)" />
-        <item index="2" class="java.lang.String" itemvalue="Go Build.go build testkafka.go" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Go Build.go build handle.go" />
+        <item index="1" class="java.lang.String" itemvalue="Go Build.go build main.go (3)" />
+        <item index="2" class="java.lang.String" itemvalue="Go Build.go build main.go (2)" />
+        <item index="3" class="java.lang.String" itemvalue="Go Build.go build testkafka.go" />
       </list>
     </recent_temporary>
   </component>
@@ -583,20 +670,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1546" y="63" width="1672" height="1010" extended-state="0" />
+    <frame x="1488" y="34" width="1672" height="1010" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.4953864" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33770493" sideWeight="0.5552147" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33661202" sideWeight="0.42515337" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Redis Servers" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0797546" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3411371" sideWeight="0.4152249" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32947975" sideWeight="0.49411765" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33989072" sideWeight="0.66871166" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2220859" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33989072" sideWeight="0.65337425" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2220859" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33770493" sideWeight="0.44478527" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33770493" sideWeight="0.44233128" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24971165" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33661202" sideWeight="0.58711654" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33661202" sideWeight="0.5748466" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -615,14 +703,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/aliens/tools/protobuf/build/main.go</url>
-          <line>50</line>
-          <properties />
-          <option name="timeStamp" value="106" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -631,38 +711,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/service.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="19" column="83" lean-forward="false" selection-start-line="19" selection-start-column="83" selection-end-line="19" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/common_handle.template">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/common_json.template">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="29" lean-forward="true" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/common.template">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="22" lean-forward="false" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/handle_loginregister.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
@@ -687,14 +735,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/passport.proto">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468">
-          <caret line="3" column="2" lean-forward="true" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
@@ -702,22 +742,6 @@
           <folding>
             <element signature="e#429#606#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/conf/conf.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="20" column="28" lean-forward="false" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -729,14 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/tools/zookeeper/data_transfer.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
@@ -744,14 +760,6 @@
           <folding>
             <element signature="e#429#516#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/protobuf_client/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -787,28 +795,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="59" column="61" lean-forward="false" selection-start-line="59" selection-start-column="61" selection-end-line="59" selection-end-column="61" />
-          <folding>
-            <element signature="e#429#476#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/Cellar/go/1.10/libexec/src/flag/flag.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
           <caret line="587" column="5" lean-forward="false" selection-start-line="587" selection-start-column="5" selection-end-line="587" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/build/build.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="25" lean-forward="false" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
           <folding />
         </state>
       </provider>
@@ -837,28 +827,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/build/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="38" column="64" lean-forward="false" selection-start-line="38" selection-start-column="64" selection-end-line="38" selection-end-column="64" />
-          <folding>
-            <element signature="e#425#484#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/scene.proto">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="15" column="10" lean-forward="false" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -895,14 +867,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/handlejson.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -924,24 +888,6 @@
         <state relative-caret-position="180">
           <caret line="12" column="30" lean-forward="false" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/handle.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="34" column="16" lean-forward="true" selection-start-line="34" selection-start-column="16" selection-end-line="34" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="47" column="29" lean-forward="true" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
-          <folding>
-            <element signature="e#428#655#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -993,30 +939,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/socket/network.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="57" column="29" lean-forward="false" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/route/router.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="66" column="7" lean-forward="false" selection-start-line="66" selection-start-column="7" selection-end-line="66" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/rpc/service.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="30" column="27" lean-forward="false" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/conf/aliens/gate/server.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1043,8 +965,162 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/config/configlistener.go">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/rpc/service.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="30" column="53" lean-forward="true" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/route/router.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="71" column="13" lean-forward="false" selection-start-line="71" selection-start-column="13" selection-end-line="71" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/gate/socket/network.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="111">
+          <caret line="52" column="29" lean-forward="false" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/protobuf_client/main.go">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/build/build.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="25" lean-forward="false" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/protoparser.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="77" column="25" lean-forward="false" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/build/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="41" column="15" lean-forward="false" selection-start-line="41" selection-start-column="15" selection-end-line="41" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/message.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="446">
+          <caret line="30" column="33" lean-forward="false" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/tools/protobuf/template/converter.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="49" column="9" lean-forward="false" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle_exception.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle_spaceenter.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/conf/conf.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="35" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/common.template">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="53" column="80" lean-forward="false" selection-start-line="53" selection-start-column="80" selection-end-line="53" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/passport/service/handle.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="47" column="40" lean-forward="false" selection-start-line="47" selection-start-column="40" selection-end-line="47" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.proto">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="25" column="8" lean-forward="false" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/passport.proto">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="3" column="2" lean-forward="false" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/passport/protocol.proto">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="18" column="1" lean-forward="false" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
+          <folding>
+            <element signature="e#428#630#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aliens/protocol/scene/protocol.pb.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="81" column="23" lean-forward="false" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
           <folding />
         </state>
       </provider>
