@@ -1,0 +1,22 @@
+{
+  "Service" : {
+    "Address":"",
+    "Name":"passport",
+    "Port":10109
+  },
+
+  "Database" : {
+    "Address":"127.0.0.1",
+    "Name":"gok_passport"
+  },
+
+  "Cache" : {
+    "Address":"127.0.0.1:20101"
+  },
+
+  "HTTPAddress": ":8711",
+
+
+  "DefaultChannelPWD" : "11111111",
+  "AppKey":"e434e639ff7247aea5622f339b383c"
+}

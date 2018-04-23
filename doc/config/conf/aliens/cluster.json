@@ -1,0 +1,21 @@
+{
+	"Cluster" : {
+		"ID": "1",
+		"Servers": [
+			"127.0.0.1:2181"
+		],
+		"Name": "kylin-test-cluster",
+		"LBS" : "polling",
+		"LBSComment" : "负载均衡策略，目前支持 polling(轮询)"
+	},
+
+	"Cache" : {
+		"Address":"127.0.0.1:20101"
+	},
+
+	"MQ" : {
+		"Address": [
+			"127.0.0.1:9092"
+		]
+	}
+}

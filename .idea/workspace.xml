@@ -2,21 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e085cfb8-e2ea-4a4f-9d34-5433d530c54a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/bin/conf/aliens/gate/server.json" afterPath="$PROJECT_DIR$/bin/conf/aliens/gate/server.json" />
-      <change beforePath="$PROJECT_DIR$/bin/gate_log.log" afterPath="$PROJECT_DIR$/bin/gate_log.log" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/common/util/exception.go" afterPath="$PROJECT_DIR$/src/aliens/common/util/exception.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/config/serviceconfig.go" afterPath="$PROJECT_DIR$/src/aliens/config/serviceconfig.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/log/logger.go" afterPath="$PROJECT_DIR$/src/aliens/log/logger.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch.go" afterPath="$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch_grpc.go" afterPath="$PROJECT_DIR$/src/aliens/module/cluster/dispatch/dispatch_grpc.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/gate/route/router.go" afterPath="$PROJECT_DIR$/src/aliens/module/gate/route/router.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" afterPath="$PROJECT_DIR$/src/aliens/module/scene/service/handle.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/mq/kafka/consumer.go" afterPath="$PROJECT_DIR$/src/aliens/mq/kafka/consumer.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/mq/kafka/main/main.go" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/mq/kafka/producer.go" afterPath="$PROJECT_DIR$/src/aliens/mq/kafka/producer.go" />
-      <change beforePath="$PROJECT_DIR$/src/aliens/protocol/common.template" afterPath="$PROJECT_DIR$/src/aliens/protocol/common.template" />
-      <change beforePath="$PROJECT_DIR$/src/public/gate.go" afterPath="$PROJECT_DIR$/src/public/gate.go" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/doc/config/conf/aliens/cluster.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/doc/config/conf/aliens/gate/server.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/doc/config/conf/aliens/log.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/doc/config/conf/aliens/passport/server.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/doc/config/conf/aliens/scene/server.json" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -111,11 +101,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="handle.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="handle.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/aliens/module/scene/service/handle.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
               <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/doc/config/conf/aliens/gate/server.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -126,16 +126,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="267">
               <caret line="26" column="5" lean-forward="false" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/conf/aliens/gate/server.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="1" lean-forward="false" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -332,140 +322,17 @@
             <path>
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
               <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
+              <item name="bins" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
               <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="gate" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
+              <item name="doc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
               <item name="kylin" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="exception" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="log" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="cluster" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="gate" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="gate" type="462c0819:PsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="passport" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="mq" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="aliens" type="462c0819:PsiDirectoryNode" />
-              <item name="protocol" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kylin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kylin" type="b2602c69:ProjectViewProjectNode" />
@@ -510,11 +377,11 @@
       <recent name="$PROJECT_DIR$/src/aliens" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/doc/config" />
       <recent name="$PROJECT_DIR$/src/aliens/cluster/center" />
       <recent name="$PROJECT_DIR$/src/aliens/protocol" />
       <recent name="$PROJECT_DIR$/src/aliens/tools/protobuf" />
       <recent name="$PROJECT_DIR$/src/aliens/tools/zookeeper" />
-      <recent name="$PROJECT_DIR$/src/aliens/tools/zookeeper/main" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -703,7 +570,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1469" y="32" width="1680" height="954" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.4953864" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40861467" sideWeight="0.44993895" order="7" side_tool="true" content_ui="tabs" />
@@ -712,12 +578,12 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32947975" sideWeight="0.49411765" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38649592" sideWeight="0.64102566" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1892552" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1892552" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="ZooKeeper" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35855645" sideWeight="0.41697192" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24971165" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40861467" sideWeight="0.55006105" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40861467" sideWeight="0.55006105" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -751,14 +617,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/aliens/cluster/center/clustercenter.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="4" lean-forward="false" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aliens/cluster/center/centerservice_http.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -1167,6 +1025,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/config/conf/aliens/gate/server.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
