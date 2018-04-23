@@ -1,31 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2017/8/4
+ *     2018/4/22
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package conf
+package mq
 
-import (
-	"aliens/config"
-	"aliens/common/cache/redis"
-	"aliens/cluster/center"
-	"aliens/mq"
-)
 
-var configPath = "conf/aliens/cluster.json"
-
-var Config struct {
-	Cluster center.ClusterConfig
-	Cache   redis.CacheConfig
-	MQ mq.Config
+type Config struct {
+	Address []string //集群地址
+	Timeout int //发送超时时间
 }
-
-
-func init() {
-	config.LoadConfig(&Config, configPath)
-}
-

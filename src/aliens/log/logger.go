@@ -12,6 +12,7 @@ package log
 
 import (
 	"github.com/alecthomas/log4go"
+	"os"
 )
 
 //<!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) -->
@@ -57,5 +58,7 @@ func Error(arg0 interface{}, args ...interface{}) {
 
 func Critical(arg0 interface{}, args ...interface{}) {
 	logger.Critical(arg0, args...)
+	//
+	os.Exit(1)
 }
 

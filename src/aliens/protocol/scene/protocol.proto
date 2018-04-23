@@ -28,12 +28,11 @@ message SceneResponse {
         space_enter_ret spaceEnterRet = 6;
         space_leave_ret spaceLeaveRet = 7;
         get_state_ret getStateRet = 8;
+
+
+
+
+
+        int32 testPush = 500; //测试推送信息
     }
-}
-
-//push
-message ScenePush {
-    int32 session = 1;  //消息序号
-
-    space_push spacePush = 2;
 }

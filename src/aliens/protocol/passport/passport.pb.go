@@ -17,7 +17,6 @@
 		ChannelLoginRet
 		PassportRequest
 		PassportResponse
-		PassportPush
 */
 package passport
 

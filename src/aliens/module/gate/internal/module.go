@@ -4,7 +4,7 @@ import (
 	"aliens/module/gate/socket"
 	"aliens/module/gate/http"
 	"aliens/module/gate/conf"
-	"aliens/module/gate/rpc"
+	"aliens/module/gate/service"
 )
 
 
@@ -20,14 +20,14 @@ func (m *Module) IsEnable() bool {
 
 func (m *Module) OnInit() {
 	conf.Init()
-	rpc.Init()
 	socket.Init()
+	service.Init()
 	http.Init()
 }
 
 func (m *Module) OnDestroy() {
-	rpc.Close()
 	http.Close()
+	service.Close()
 }
 
 func (s *Module) Run(closeSig chan bool) {

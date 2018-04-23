@@ -1,9 +1,8 @@
 package internal
 
 import (
-	"aliens/cluster/center"
-	"aliens/module/cluster/conf"
 	"aliens/module/cluster/cache"
+	"aliens/module/cluster/dispatch"
 )
 
 
@@ -16,11 +15,12 @@ func (m *Module) IsEnable() bool {
 
 func (m *Module) OnInit() {
 	cache.Init()
-	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
+	dispatch.Init()
+
 }
 
 func (m *Module) OnDestroy() {
-	center.ClusterCenter.Close()
+	dispatch.Close()
 	cache.Close()
 }
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
- *     2018/4/12
+ *     2018/4/23
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
@@ -10,71 +10,101 @@
 package dispatch
 
 import (
-	"aliens/cluster/message"
-	"aliens/module/cluster/cache"
-	"github.com/pkg/errors"
-	"fmt"
-	"aliens/module/cluster"
-	"github.com/gogo/protobuf/proto"
 	"aliens/protocol"
+	"fmt"
+	"aliens/mq"
+	"aliens/module/cluster/conf"
+	"aliens/log"
+	"github.com/gogo/protobuf/proto"
+	"aliens/module/cluster/cache"
+	"errors"
+	//"aliens/module/cluster"
+	"aliens/cluster/center"
+	"aliens/module/cluster/constant"
 )
 
-//url - service
-var serviceMapping = make(map[string]*message.RemoteService)
+//消息生产者
+var mqProducer mq.IProducer = nil
 
-//网关推送信息
+//消息消费者
+var mqConsumer = make(map[string]mq.IConsumer)
+
+
+func Init() {
+	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
+	handler, err := mq.NewProducer(mq.TYPE_KAFKA, conf.Config.MQ)
+	if err != nil {
+		log.Critical("%v", err)
+	} else {
+		mqProducer = handler
+	}
+}
+
+func Close() {
+	center.ClusterCenter.Close()
+}
+
+//注册消息队列消费者 一般用来处理推送消息
+func RegisterConsumer(serviceType string, handle func(data *protocol.Any) error) {
+	consumerID := serviceType + center.ClusterCenter.GetNodeID()
+	consumer := mqConsumer[consumerID]
+	if consumer != nil {
+		log.Warn("consumer %v already register", consumerID)
+		return
+	}
+
+	handleProxy := NewProtobufHandler(handle).HandleMessage
+	consumer, err := mq.NewConsumer(mq.TYPE_KAFKA, conf.Config.MQ, serviceType, center.ClusterCenter.GetNodeID(), handleProxy)
+	if err != nil {
+		log.Error("%v", err)
+	} else {
+		mqConsumer[consumerID] = consumer
+	}
+}
+
+//注销消费者
+func UnregisterConsumer(serviceType string) {
+	consumerID := serviceType + center.ClusterCenter.GetNodeID()
+	consumer := mqConsumer[consumerID]
+	if consumer != nil {
+		err := consumer.Close()
+		if err != nil {
+			log.Error("%v", err)
+		}
+	}
+}
+
+//网关异步推送信息给指定用户
 func GatePush(serviceType string, clientID string, message proto.Message) error {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return err
 	}
-	request := &protocol.Any{TypeUrl:serviceType, SessionId:clientID, Value:data}
-	return push(clientID, request)
-}
-
-func MessageRequest(serviceType string, message proto.Message) (interface{}, error) {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return nil, err
-	}
-	request := &protocol.Any{Value:data}
-	return Request(serviceType, request)
-}
-
-func MessageRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error) {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return nil, err
-	}
-	request := &protocol.Any{Value:data}
-	return RequestNode(serviceType, serviceID, request)
-}
-
-func Request(serviceType string, message interface{}) (interface{}, error) {
-	service := allocService(serviceType)
-	return service.HandleMessage(message)
-}
-
-func RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error) {
-	service := allocService(serviceType)
-	return service.HandleRemoteMessage(serviceID, message)
-}
-
-//网关推送消息
-func push(clientID string, message interface{}) error {
+	request := &protocol.Any{TypeUrl: serviceType, SessionId: clientID, Value: data}
 	gateID := cache.ClusterCache.GetClientGateID(clientID)
 	if gateID == "" {
 		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", clientID))
 	}
-	_, err := RequestNode(cluster.SERVICE_GATE, gateID, message)
-	return err
+	return AsyncPush(constant.SERVICE_GATE, gateID, request)
 }
 
-func allocService(serviceID string) *message.RemoteService {
-	service := serviceMapping[serviceID]
-	if service == nil {
-		service = message.NewRemoteService(serviceID)
-		serviceMapping[serviceID] = service
+//消息异步推送 - 推送到指定服务节点
+func AsyncPush(serviceType string, serviceID string, message proto.Message) error {
+	data, err := proto.Marshal(message)
+	if err != nil {
+		return err
 	}
-	return service
+	mqProducer.SendMessage(serviceType, serviceID, data)
+	return nil
 }
+
+//消息异步推送 - 广播所有对应服务节点
+func AsyncBroadcast(serviceType string, message proto.Message) error {
+	data, err := proto.Marshal(message)
+	if err != nil {
+		return err
+	}
+	mqProducer.Broadcast(serviceType, data)
+	return nil
+}
+

@@ -33,9 +33,3 @@ message PassportResponse {
     }
 
 }
-
-
-message PassportPush {
-    int32 session = 1;  //消息序号
-
-}

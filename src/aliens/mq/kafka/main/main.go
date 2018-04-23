@@ -1,31 +1,23 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2017/8/4
+ *     2018/4/21
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package conf
+package main
 
 import (
-	"aliens/config"
-	"aliens/common/cache/redis"
-	"aliens/cluster/center"
-	"aliens/mq"
+	"aliens/log"
+	"aliens/mq/kafka"
 )
 
-var configPath = "conf/aliens/cluster.json"
+func main() {
+	log.Init("conf/aliens/log.xml")
+	//kafka.Consumer("group1")
+	kafka.AsyncProducer()
 
-var Config struct {
-	Cluster center.ClusterConfig
-	Cache   redis.CacheConfig
-	MQ mq.Config
+	kafka.AsyncProducer()
 }
-
-
-func init() {
-	config.LoadConfig(&Config, configPath)
-}
-
