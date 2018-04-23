@@ -12,11 +12,17 @@ package log
 
 import (
 	"github.com/alecthomas/log4go"
-	"os"
+	//"os"
+	"github.com/name5566/leaf/log"
 )
 
 //<!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) -->
 var logger = log4go.NewLogger()
+
+
+func init() {
+	Init("conf/aliens/log.xml")
+}
 
 func Init(configPath string) {
 	logger.LoadConfiguration(configPath)
@@ -58,7 +64,12 @@ func Error(arg0 interface{}, args ...interface{}) {
 
 func Critical(arg0 interface{}, args ...interface{}) {
 	logger.Critical(arg0, args...)
+}
+
+func Fatal(arg0 interface{}, args ...interface{}) {
+	log.Fatal(arg0.(string), args...)
+	//logger.Error(arg0, args...)
 	//
-	os.Exit(1)
+	//os.Exit(1)
 }
 

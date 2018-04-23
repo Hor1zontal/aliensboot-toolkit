@@ -34,10 +34,11 @@ func Init() {
 	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
 	handler, err := mq.NewProducer(mq.TYPE_KAFKA, conf.Config.MQ)
 	if err != nil {
-		log.Critical("%v", err)
+		log.Fatal("%v", err)
 	} else {
 		mqProducer = handler
 	}
+	log.Info("init message producer success")
 }
 
 func Close() {
@@ -56,9 +57,10 @@ func RegisterConsumer(serviceType string, handle func(data *protocol.Any) error)
 	handleProxy := NewProtobufHandler(handle).HandleMessage
 	consumer, err := mq.NewConsumer(mq.TYPE_KAFKA, conf.Config.MQ, serviceType, center.ClusterCenter.GetNodeID(), handleProxy)
 	if err != nil {
-		log.Error("%v", err)
+		log.Fatal("%v", err)
 	} else {
 		mqConsumer[consumerID] = consumer
+		log.Info("register consumer %v success", consumerID)
 	}
 }
 

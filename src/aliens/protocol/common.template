@@ -16,9 +16,7 @@ import (
 	"github.com/pkg/errors"
 	"aliens/protocol"
 	"aliens/exception"
-    "fmt"
-    "runtime"
-    "aliens/log"
+	"aliens/common/util"
 )
 
 type ${package}Service struct {
@@ -49,9 +47,7 @@ func (this *${package}Service) Request(ctx context.Context,request *protocol.Any
     				responseProxy.Response = &${package}.${response}_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
-    				buf := make([]byte, 2048)
-    				n := runtime.Stack(buf, false)
-    				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+    				util.PrintStackDetail()
     				//未知异常不需要回数据
                     response = nil
                     return

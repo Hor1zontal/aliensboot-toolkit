@@ -43,7 +43,10 @@ func (this *Producer) Init(address []string, timeout int) error {
 				if err != nil {
 					log.Error(err)
 				}
-			case <-success:
+			case succ := <-success:
+				if succ != nil {
+					log.Debug(succ)
+				}
 			}
 		}
 	}(this.proxy)

@@ -38,23 +38,23 @@ func SyncRequestNode(serviceType string, serviceID string, message proto.Message
 	return RequestNode(serviceType, serviceID, request)
 }
 
-//同步推送
-func SyncPush(serviceType string, serviceID string, message proto.Message) error {
-	_, err := SyncRequestNode(serviceType, serviceID, message)
-	return err
-}
-
-//同步阻塞广播
-func SyncBroadcast(serviceType string, message proto.Message) error {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return err
-	}
-	request := &protocol.Any{Value: data}
-	service := allocService(serviceType)
-	service.BroadcastAll(request)
-	return nil
-}
+////同步推送
+//func SyncPush(serviceType string, serviceID string, message proto.Message) error {
+//	_, err := SyncRequestNode(serviceType, serviceID, message)
+//	return err
+//}
+//
+////同步阻塞广播
+//func SyncBroadcast(serviceType string, message proto.Message) error {
+//	data, err := proto.Marshal(message)
+//	if err != nil {
+//		return err
+//	}
+//	request := &protocol.Any{Value: data}
+//	service := allocService(serviceType)
+//	service.BroadcastAll(request)
+//	return nil
+//}
 
 func Request(serviceType string, message interface{}) (interface{}, error) {
 	service := allocService(serviceType)

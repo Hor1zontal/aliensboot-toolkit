@@ -22,7 +22,7 @@ func LoadConfig(config interface{}, path string) {
 	}
 	err = json.Unmarshal(data, config)
 	if err != nil {
-		log.Critical("%v", err)
+		log.Fatal("%v", err)
 	}
-	log.Debug("json init %v", &config)
+	//log.Debug("json init success %v", config)
 }

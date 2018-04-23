@@ -11,5 +11,4 @@ func PrintStackDetail() {
 	n := runtime.Stack(buf, false)
 	stackInfo := fmt.Sprintf("%s", buf[:n])
 	log.Error("panic stack info %s", stackInfo)
-
 }

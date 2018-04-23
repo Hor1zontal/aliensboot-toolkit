@@ -30,7 +30,6 @@ type Route struct
 	RequestID uint16 `json:"requestID"`
 	ResponseID uint16 `json:"responseID"`
 	Service string `json:"service"`
-	Alias string `json:"alias"`
 }
 
 func LoadRoute(routes []Route) {
@@ -40,7 +39,7 @@ func LoadRoute(routes []Route) {
 		}
 		requestServiceMapping[route.RequestID] = route.Service
 		responseMapping[route.RequestID] = route.ResponseID
-		servicePushMapping[route.Alias] = route.ResponseID
+		servicePushMapping[route.Service] = route.ResponseID
 	}
 }
 

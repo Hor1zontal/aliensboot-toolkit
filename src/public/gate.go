@@ -15,7 +15,7 @@ func init() {
 
 func main() {
 	defer log.Close()
-	log.Init("conf/aliens/log.xml")
+	//log.Init("conf/aliens/log.xml")
 	rand.Seed(time.Now().UnixNano())
 	leaf.Run(
 		cluster.Module,

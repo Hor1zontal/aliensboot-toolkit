@@ -38,9 +38,13 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 		for {
 			select {
 			case err := <-errors:
-				log.Error(err)
-			case <-noti:
-
+				if err != nil {
+					log.Error(err)
+				}
+			case notify := <-noti:
+				if notify != nil {
+					log.Debug(notify)
+				}
 			}
 		}
 	}(c)
@@ -52,6 +56,7 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 			//fmt.Fprintf(os.Stdout, "%s %s/%d/%d\t%s\n",groupID, msg.Topic, msg.Partition, msg.Offset, msg.Value)
 			c.MarkOffset(msg, "") //MarkOffset 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
 		}
+		//log.Error("consumer close!")
 	} ()
 
 	return nil

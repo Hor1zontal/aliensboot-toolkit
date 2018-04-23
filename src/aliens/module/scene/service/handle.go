@@ -16,9 +16,7 @@ import (
 	"github.com/pkg/errors"
 	"aliens/protocol"
 	"aliens/exception"
-    "fmt"
-    "runtime"
-    "aliens/log"
+	"aliens/common/util"
 )
 
 type sceneService struct {
@@ -49,9 +47,7 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
     				responseProxy.Response = &scene.SceneResponse_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
-    				buf := make([]byte, 2048)
-    				n := runtime.Stack(buf, false)
-    				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+    				util.PrintStackDetail()
     				//未知异常不需要回数据
                     response = nil
                     return
@@ -66,6 +62,13 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
 }
 
 func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) error {
+	
+	if request.GetSpaceEnter() != nil {
+		messageRet := &scene.SpaceEnterRet{}
+		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
+		return nil
+	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
@@ -85,13 +88,6 @@ func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) e
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
-		return nil
-	}
-	
-	if request.GetSpaceEnter() != nil {
-		messageRet := &scene.SpaceEnterRet{}
-		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
 		return nil
 	}
 	
