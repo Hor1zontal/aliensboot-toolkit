@@ -67,14 +67,14 @@ func GetPushID(service string) uint16 {
 }
 
 
-func HandleMessage(request interface{}, sessionID string) (interface{}, error) {
+func HandleMessage(request interface{}, clientID string) (interface{}, error) {
 	any, _ := request.(*protocol.Any)
 	serviceID, ok := requestServiceMapping[any.Id]
 	if !ok {
 		return nil, errors.New("unexpect requestID")
 	}
-	if sessionID != "" {
-		any.SessionId = sessionID
+	if clientID != "" {
+		any.ClientId = clientID
 	}
 	response, error := dispatch.Request(serviceID, request)
 	if error != nil {

@@ -33,6 +33,6 @@ message SceneResponse {
 
 
 
-        int32 testPush = 500; //测试推送信息
+        string scenePush = 500; //测试推送信息
     }
 }

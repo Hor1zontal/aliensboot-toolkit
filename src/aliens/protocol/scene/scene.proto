@@ -14,9 +14,10 @@ message Entity {
 }
 
 message space_enter {
-    int32 spaceID = 1; //空间ID
-    Vector position = 2; //移动的位置
-    Vector direction = 3; //玩家的向量
+    int32 clientID = 1; //
+    int32 spaceID = 2; //空间ID
+    Vector position = 3; //移动的位置
+    Vector direction = 4; //玩家的向量
 }
 
 message space_enter_ret {

@@ -82,7 +82,7 @@ func GatePush(serviceType string, clientID string, message proto.Message) error 
 	if err != nil {
 		return err
 	}
-	request := &protocol.Any{TypeUrl: serviceType, SessionId: clientID, Value: data}
+	request := &protocol.Any{TypeUrl: serviceType, ClientId: clientID, Value: data}
 	gateID := cache.ClusterCache.GetClientGateID(clientID)
 	if gateID == "" {
 		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", clientID))

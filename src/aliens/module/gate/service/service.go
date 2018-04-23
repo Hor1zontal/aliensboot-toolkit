@@ -21,9 +21,9 @@ func Close() {
 
 //只处理推送消息
 func HandlePush(request *protocol.Any) error {
-	if request.SessionId != "" {
+	if request.ClientId != "" {
 		request.Id = route.GetPushID(request.TypeUrl)
-		socket.Push(request.SessionId, request)
+		socket.Push(request.ClientId, request)
 	}
 	return nil
 }

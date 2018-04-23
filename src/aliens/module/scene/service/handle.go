@@ -63,13 +63,6 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
 
 func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) error {
 	
-	if request.GetSpaceEnter() != nil {
-		messageRet := &scene.SpaceEnterRet{}
-		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
-		return nil
-	}
-	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
 		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
@@ -88,6 +81,13 @@ func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) e
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
+		return nil
+	}
+	
+	if request.GetSpaceEnter() != nil {
+		messageRet := &scene.SpaceEnterRet{}
+		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
 		return nil
 	}
 	

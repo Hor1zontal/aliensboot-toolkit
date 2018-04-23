@@ -19,5 +19,5 @@ import (
 //
 func handleGetState(request *scene.GetState, response *scene.GetStateRet) {
 	neighbors := mmorpg.SpaceManager.GetEntityState(request.GetSpaceID(), request.GetEntityID())
-	response.Neighbors = util.BuildEntities(neighbors);
+	response.Neighbors = util.BuildEntities(neighbors)
 }

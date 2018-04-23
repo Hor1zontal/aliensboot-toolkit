@@ -51,11 +51,11 @@ func (this *network) GetID() string {
 }
 
 func (this *network) HandleMessage(request interface{}) interface{} {
-	sessionID := ""
+	clientID := ""
 	if !this.IsAuth() {
-		sessionID = this.id
+		clientID = this.id
 	}
-	response, error := route.HandleMessage(request, sessionID)
+	response, error := route.HandleMessage(request, clientID)
 	//TODO 返回服务不可用 或 嘿嘿嘿
 	if error != nil {
 		log.Debug(error.Error())

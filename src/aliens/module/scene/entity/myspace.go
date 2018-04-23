@@ -32,7 +32,7 @@ func (this *MySpace) OnEntityLeave(entity *entity.Entity) {
 }
 
 func (this *MySpace) OnEntityMove(entity *entity.Entity) {
-
+	//dispatch.gate
 }
 
 func Init() {
