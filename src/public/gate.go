@@ -6,7 +6,6 @@ import (
 	"github.com/name5566/leaf"
 	"math/rand"
 	"aliens/module/gate"
-	"aliens/log"
 )
 
 func init() {
@@ -14,7 +13,7 @@ func init() {
 }
 
 func main() {
-	defer log.Close()
+	//defer log.Close()
 	//log.Init("conf/aliens/log.xml")
 	rand.Seed(time.Now().UnixNano())
 	leaf.Run(

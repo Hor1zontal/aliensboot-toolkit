@@ -60,7 +60,7 @@ func (this *NetworkManager) Auth(network *network) {
 
 //推送消息
 func (this *NetworkManager) Push(id string, message interface{}) {
-	this.RUnlock()
+	this.RLock()
 	defer this.RUnlock()
 	auth := this.authNetworks[id]
 	if auth == nil {

@@ -29,20 +29,20 @@ func (this * PlayerEntity) GetDist() float32 {
 
 
 func (this * PlayerEntity) OnEntityEnter(entity *entity.Entity) {
-	log.Debug("entity enter %v", entity.GetID())
+	log.Debugf("entity enter %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
 func (this * PlayerEntity) OnEntityLeave(entity *entity.Entity) {
-	log.Debug("entity leave %v", entity.GetID())
+	log.Debugf("entity leave %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
 func (this * PlayerEntity) OnEntityMove(entity *entity.Entity) {
-	log.Debug("entity move %v", entity.GetID())
+	log.Debugf("entity move %v", entity.GetID())
 
 }

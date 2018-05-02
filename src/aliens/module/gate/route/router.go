@@ -67,23 +67,23 @@ func GetPushID(service string) uint16 {
 }
 
 
-func HandleMessage(request interface{}, clientID string) (interface{}, error) {
+func HandleMessage(request interface{}, clientID string) (interface{}, int32, error) {
 	any, _ := request.(*protocol.Any)
 	serviceID, ok := requestServiceMapping[any.Id]
 	if !ok {
-		return nil, errors.New("unexpect requestID")
+		return nil, 0, errors.New("unexpect requestID")
 	}
 	if clientID != "" {
 		any.ClientId = clientID
 	}
 	response, error := dispatch.Request(serviceID, request)
 	if error != nil {
-		return nil, error
+		return nil, 0, error
 	}
 	responseProxy, ok := response.(*protocol.Any)
 	if !ok {
-		return nil, errors.New("unexpect response type")
+		return nil, 0, errors.New("unexpect response type")
 	}
 	responseProxy.Id = responseMapping[any.Id]
-	return responseProxy, nil
+	return responseProxy, responseProxy.GetAuthId(), nil
 }

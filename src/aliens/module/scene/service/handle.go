@@ -47,7 +47,7 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
     				responseProxy.Response = &scene.SceneResponse_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
-    				util.PrintStackDetail()
+    				util.CatchStackDetail()
     				//未知异常不需要回数据
                     response = nil
                     return

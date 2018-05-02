@@ -11,12 +11,12 @@ package center
 //服务中心，处理服务的调度和查询
 import (
 	"encoding/json"
-	"github.com/name5566/leaf/log"
 	"github.com/samuel/go-zookeeper/zk"
 	"sync"
 	"time"
 	"aliens/cluster/center/lbs"
 	"gopkg.in/mgo.v2/bson"
+	"aliens/log"
 )
 
 const NODE_SPLIT string = "/"
@@ -184,7 +184,7 @@ func (this *ServiceCenter) SubscribeService(serviceType string) {
 	desc := this.confirmContentNode(path)
 	serviceIDs, _, ch, err := this.zkCon.ChildrenW(path)
 	if err != nil {
-		log.Release("subscribe service %v error: %v", path, err)
+		log.Errorf("subscribe service %v error: %v", path, err)
 		return
 	}
 	this.Lock()
@@ -195,7 +195,7 @@ func (this *ServiceCenter) SubscribeService(serviceType string) {
 		data, _, err := this.zkCon.Get(path + NODE_SPLIT + serviceID)
 		service := loadService(data)
 		if service == nil {
-			log.Release("%v unExpect service : %v", path, err)
+			log.Errorf("%v unExpect service : %v", path, err)
 			continue
 		}
 		service.SetID(serviceID)
@@ -267,13 +267,13 @@ func (this *ServiceCenter) confirmDataNode(path string, data []byte) bool {
 func (this *ServiceCenter) PublicService(service IService) bool {
 	this.assert()
 	if !service.IsLocal() {
-		log.Release("service info is invalid")
+		log.Error("service info is invalid")
 		return false
 	}
 	//path string, data []byte, version int32
 	data, err := json.Marshal(service)
 	if err != nil {
-		log.Release("marshal json service data error : %v", err)
+		log.Errorf("marshal json service data error : %v", err)
 		return false
 	}
 	servicePath := this.serviceRoot + NODE_SPLIT + service.GetType()
@@ -283,10 +283,10 @@ func (this *ServiceCenter) PublicService(service IService) bool {
 	id, err := this.zkCon.Create(servicePath + NODE_SPLIT + service.GetID(), data,
 		zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 	if err != nil {
-		log.Release("create service error : %v", err)
+		log.Errorf("create service error : %v", err)
 		return false
 	}
-	log.Release("public %v success : %v", service.GetType(), id)
+	log.Infof("public %v success : %v", service.GetType(), id)
 	//服务注册在容器
 	this.UpdateService(service)
 	return true

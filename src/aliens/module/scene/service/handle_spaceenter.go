@@ -14,9 +14,18 @@ import (
 	"aliens/mmorpg"
 	"aliens/module/scene/entity"
 	"aliens/module/scene/util"
+	"aliens/module/cluster/dispatch"
+	"aliens/module/cluster/constant"
 )
 
 func handleSpaceEnter(request *scene.SpaceEnter, response *scene.SpaceEnterRet) {
 	entity := mmorpg.SpaceManager.CreateEntity(request.GetSpaceID(), &entity.PlayerEntity{}, util.TransVector(request.GetPosition()), util.TransVector(request.GetDirection()))
 	response.EntityID = entity.GetID()
+
+	//GatePush(serviceType string, clientID string, message proto.Message) error {
+	dispatch.GatePush(constant.SERVICE_GATE, "1_1", &scene.SceneResponse{
+		Response:&scene.SceneResponse_ScenePush{
+			ScenePush:"测试",
+		},
+	})
 }

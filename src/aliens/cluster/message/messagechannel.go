@@ -10,9 +10,8 @@
 package message
 
 import (
-	"fmt"
-	"runtime"
 	"aliens/log"
+	"aliens/common/util"
 )
 
 type IMessageChannel interface {
@@ -43,7 +42,7 @@ func (this *MessageChannel) WriteMsg(message interface{}) {
 	select {
 	case this.channel <- message:
 	default:
-		log.Debug("message channel full %v - %v", this.channel, message)
+		log.Debugf("message channel full %v - %v", this.channel, message)
 		//TODO 消息管道满了需要异常处理
 	}
 }
@@ -56,12 +55,7 @@ func (this *MessageChannel) EnsureOpen() {
 	this.channel = make(chan interface{}, this.messageLimit)
 	go func() {
 		defer func() {
-			if err := recover(); err != nil {
-				buf := make([]byte, 2048)
-				n := runtime.Stack(buf, false)
-				stackInfo := fmt.Sprintf("%s", buf[:n])
-				log.Error("panic stack info %s", stackInfo)
-			}
+			util.CatchStackDetail()
 		}()
 
 		for {

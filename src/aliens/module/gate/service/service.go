@@ -16,7 +16,7 @@ func Init() {
 }
 
 func Close() {
-	dispatch.UnregisterConsumer(conf.Config.Service.Name)
+	dispatch.UNRegisterConsumer(conf.Config.Service.Name)
 }
 
 //只处理推送消息

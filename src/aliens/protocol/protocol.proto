@@ -4,7 +4,7 @@ package protocol;
 message Any {
 
     //Id uint16 `protobuf:"-" json:"-"`
-    int64 auth_id = 1; //用户id 服务器内部透传
+    int32 auth_id = 1; //用户id 服务器内部透传
 
     string client_id = 2; //客户端id  网关id + 自增序号
 

@@ -85,6 +85,6 @@ func (this *LocalService) Close() {
 		if this.dealTotal <= 0 {
 			return
 		}
-		log.Debug("%v [%v] undeal message : %v", time.Now(), this.serviceType, this.dealTotal)
+		log.Debugf("%v [%v] undeal message : %v", time.Now(), this.serviceType, this.dealTotal)
 	}
 }

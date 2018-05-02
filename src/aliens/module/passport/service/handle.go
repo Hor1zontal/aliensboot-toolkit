@@ -51,7 +51,7 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
     			default:
     				buf := make([]byte, 2048)
     				n := runtime.Stack(buf, false)
-    				log.Error("panic stack info %s", fmt.Sprintf("%s", buf[:n]))
+    				log.Errorf("panic stack info %s", buf[:n])
     				//未知异常不需要回数据
                     response = nil
                     return

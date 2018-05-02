@@ -25,7 +25,7 @@ var id int64 = 0
 
 func genClientID() string {
 	id ++
-	return center.ClusterCenter.GetNodeID() + util.Int64ToString(id)
+	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
 }
 
 func newNetwork(outerChannel message.IMessageChannel) *network {
@@ -35,9 +35,10 @@ func newNetwork(outerChannel message.IMessageChannel) *network {
 }
 
 type network struct {
+	*message.MessageChannel
 	*message.ChannelMessageHandler
 	id string 				//clientID
-	authID        uint32    //验证通过的用户id 没有验证通过为0
+	authID        int32    //验证通过的用户id 没有验证通过为0
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 }
@@ -55,11 +56,16 @@ func (this *network) HandleMessage(request interface{}) interface{} {
 	if !this.IsAuth() {
 		clientID = this.id
 	}
-	response, error := route.HandleMessage(request, clientID)
+	response, authID, error := route.HandleMessage(request, clientID)
 	//TODO 返回服务不可用 或 嘿嘿嘿
 	if error != nil {
 		log.Debug(error.Error())
 	}
+
+	if authID != 0 {
+		this.Auth(authID)
+	}
+
 	return response
 }
 
@@ -75,7 +81,7 @@ func (this *network) IsAuth() bool {
 	return this.authID != 0
 }
 
-func (this *network) Auth(id uint32) {
+func (this *network) Auth(id int32) {
 	this.authID = id
 	networkManager.Auth(this)
 }

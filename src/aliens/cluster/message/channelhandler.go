@@ -73,7 +73,7 @@ func (this *ChannelMessageHandler) HandleMessage(msg interface{}) {
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
-			util.PrintStackDetail()
+			util.CatchStackDetail()
 			this.Close()
 		}
 	}()

@@ -21,7 +21,7 @@ func Init() {
 	if conf.Config.HTTPAddr != "" {
 		go func() {
 			http.HandleFunc("/", httpHandle)
-			log.Info("%v", http.ListenAndServe(conf.Config.HTTPAddr, nil))
+			log.Info(http.ListenAndServe(conf.Config.HTTPAddr, nil))
 		}()
 	}
 }

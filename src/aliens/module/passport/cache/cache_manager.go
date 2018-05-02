@@ -77,7 +77,7 @@ func NewUser(username string, password string, ip string, channel string, channe
 	user.ID = db.DatabaseHandler.GenTimestampId(user)
 	err := db.DatabaseHandler.Insert(user)
 	if err != nil {
-		log.Debug("add user invalid %v", err)
+		log.Debugf("add user invalid %v", err)
 		//exception.GameException(exception.USERNAME_EXISTS)
 	}
 	PassportCache.SetUsernameUidMapping(user.Username, user.ID)

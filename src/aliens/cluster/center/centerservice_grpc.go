@@ -96,12 +96,12 @@ func (this *GRPCService) Start() bool {
 	address := ":" + strconv.Itoa(this.port)
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Error("failed to listen: %v", err)
+		log.Errorf("failed to listen: %v", err)
 		return false
 	}
 	go func() {
 		this.server.Serve(lis)
-		log.Info("rpc service %v stop", this.serviceType)
+		log.Infof("rpc service %v stop", this.serviceType)
 	}()
 	return true
 }
@@ -116,7 +116,7 @@ func (this *GRPCService) Connect() bool {
 
 	conn, err := grpc.Dial(this.Address, grpc.WithInsecure())
 	if err != nil {
-		log.Error("did not connect: %v", err)
+		log.Errorf("did not connect: %v", err)
 		return false
 	}
 	this.client = conn

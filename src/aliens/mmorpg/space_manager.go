@@ -49,7 +49,7 @@ func (spmgr *_SpaceManager) getSpace(id int32) *entity.Space {
 func (spmgr *_SpaceManager) CreateEntity(spaceID int32, proxy entity.IEntity, position entity.Vector3, direction entity.Vector3) *entity.Entity {
 	space := spmgr.getSpace(spaceID)
 	if space == nil {
-		log.Warn("space is not found %v", spaceID)
+		log.Warnf("space is not found %v", spaceID)
 		return nil
 	}
 	entity := &entity.Entity{}
@@ -61,7 +61,7 @@ func (spmgr *_SpaceManager) CreateEntity(spaceID int32, proxy entity.IEntity, po
 func (spmgr *_SpaceManager) LeaveEntity(spaceID int32, entityID int32)  {
 	space := spmgr.getSpace(spaceID)
 	if space == nil {
-		log.Warn("space is not found %v", spaceID)
+		log.Warnf("space is not found %v", spaceID)
 		return
 	}
 	space.EntityLeave(entityID)
@@ -70,7 +70,7 @@ func (spmgr *_SpaceManager) LeaveEntity(spaceID int32, entityID int32)  {
 func (spmgr *_SpaceManager) MoveEntity(spaceID int32, entityID int32, position entity.Vector3, direction entity.Vector3)  {
 	space := spmgr.getSpace(spaceID)
 	if space == nil {
-		log.Warn("space is not found %v", spaceID)
+		log.Warnf("space is not found %v", spaceID)
 		return
 	}
 	space.EntityMove(entityID, position, direction)
@@ -79,7 +79,7 @@ func (spmgr *_SpaceManager) MoveEntity(spaceID int32, entityID int32, position e
 func (spmgr *_SpaceManager) GetEntityState(spaceID int32, entityID int32) entity.EntitySet {
 	space := spmgr.getSpace(spaceID)
 	if space == nil {
-		log.Warn("space is not found %v", spaceID)
+		log.Warnf("space is not found %v", spaceID)
 		return nil
 	}
 	return space.GetNeighbors(entityID)

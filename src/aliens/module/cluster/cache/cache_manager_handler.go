@@ -14,16 +14,16 @@ const (
 )
 
 //设置客户端所在的网关id
-func (this *cacheManager) SetClientGateID(clientID string, gateID string) bool {
-	return this.redisClient.SetData(clientID, gateID)
-}
-
-//清楚用户和网关的对应关系
-func (this *cacheManager) CleanClientGateID(clientID string, gateID string) bool {
-	return this.redisClient.DelData(clientID)
-}
-
-//获取客户端所在的网关id
-func (this *cacheManager) GetClientGateID(clientID string) string {
-	return this.redisClient.GetData(clientID)
-}
+//func (this *cacheManager) SetClientGateID(clientID string, gateID string) bool {
+//	return this.redisClient.SetData(clientID, gateID)
+//}
+//
+////清楚用户和网关的对应关系
+//func (this *cacheManager) CleanClientGateID(clientID string, gateID string) bool {
+//	return this.redisClient.DelData(clientID)
+//}
+//
+////获取客户端所在的网关id
+//func (this *cacheManager) GetClientGateID(clientID string) string {
+//	return this.redisClient.GetData(clientID)
+//}

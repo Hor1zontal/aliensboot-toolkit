@@ -14,7 +14,7 @@ func (t *tower) init(indexX int, indexY int) {
 	t.indexY = indexY
 	t.aoiNodes = map[*AOI]struct{}{}
 	t.watchers = map[*AOI]struct{}{}
-	log.Info("tower init %v-%v", indexX, indexY)
+	log.Infof("tower init %v-%v", indexX, indexY)
 }
 
 func (t *tower) addAOINode(aoiNode *AOI, fromOtherTower *tower) {

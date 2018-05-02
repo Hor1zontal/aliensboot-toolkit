@@ -11,65 +11,139 @@
 package log
 
 import (
-	"github.com/alecthomas/log4go"
 	//"os"
-	"github.com/name5566/leaf/log"
+	"os"
+	log "github.com/sirupsen/logrus"
+	"time"
+	"path"
+	"github.com/lestrrat/go-file-rotatelogs"
+	"github.com/rifflock/lfshook"
+	"github.com/pkg/errors"
+	"gopkg.in/olivere/elastic.v5"
+	"gopkg.in/sohlich/elogrus.v2"
 )
 
-//<!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) -->
-var logger = log4go.NewLogger()
-
+var format = &log.TextFormatter{}
 
 func init() {
-	Init("conf/aliens/log.xml")
-}
+	//log.SetFormatter(&log.JSONFormatter{})
+	log.SetFormatter(format)
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+	// Only log the warning severity or above.
+	log.SetLevel(log.DebugLevel)
 
-func Init(configPath string) {
-	logger.LoadConfiguration(configPath)
+	ConfigLocalFilesystemLogger("", "kylin.log", 30 * 24 * time.Hour, 24 * time.Hour)
 }
 
 func Close() {
-	logger.Close()
+	//log.Close()
 }
+
+// config logrus log to amqp  rabbitMQ
+//func ConfigAmqpLogger(server, username, password, exchange, exchangeType, virtualHost, routingKey string) {
+//	hook := logrus_amqp.NewAMQPHookWithType(server, username, password, exchange, exchangeType, virtualHost, routingKey)
+//	log.AddHook(hook)
+//}
+
+// config logrus log to elasticsearch
+func ConfigESLogger(esUrl string, esHOst string, index string) {
+	client, err := elastic.NewClient(elastic.SetURL(esUrl))
+	if err != nil {
+		log.Errorf("config es logger error. %+v", errors.WithStack(err))
+	}
+	esHook, err := elogrus.NewElasticHook(client, esHOst, log.DebugLevel, index)
+	if err != nil {
+		log.Errorf("config es logger error. %+v", errors.WithStack(err))
+	}
+	log.AddHook(esHook)
+}
+
+//config logrus log to local file
+func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
+	baseLogPath := path.Join(logPath, logFileName)
+	writer, err := rotatelogs.New(
+		baseLogPath+".%Y%m%d%H%M",
+		rotatelogs.WithLinkName(baseLogPath),      // 生成软链，指向最新日志文件
+		rotatelogs.WithMaxAge(maxAge),             // 文件最大保存时间
+		rotatelogs.WithRotationTime(rotationTime), // 日志切割时间间隔
+	)
+	if err != nil {
+		log.Errorf("config local file system logger error. %+v", errors.WithStack(err))
+	}
+	lfHook := lfshook.NewHook(lfshook.WriterMap{
+		log.DebugLevel: writer, // 为不同级别设置不同的输出目的
+		log.InfoLevel:  writer,
+		log.WarnLevel:  writer,
+		log.ErrorLevel: writer,
+		log.FatalLevel: writer,
+		log.PanicLevel: writer,
+	}, format)
+	log.AddHook(lfHook)
+}
+
+
+
+//Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
 
 //做一层适配，方便后续切换到其他日志框架或者自己写
-
-func Finest(arg0 interface{}, args ...interface{}) {
-	logger.Finest(arg0, args...)
+func Debug(arg ...interface{}) {
+	log.Debug(arg...)
 }
 
-func Fine(arg0 interface{}, args ...interface{}) {
-	logger.Fine(arg0, args...)
+func Print(arg ...interface{}) {
+	log.Print(arg...)
 }
 
-func Debug(arg0 interface{}, args ...interface{}) {
-	logger.Debug(arg0, args...)
+func Info(arg ...interface{}) {
+	log.Info(arg...)
 }
 
-func Trace(arg0 interface{}, args ...interface{}) {
-	logger.Trace(arg0, args...)
+func Warn(arg ...interface{}) {
+	log.Warn(arg...)
 }
 
-func Info(arg0 interface{}, args ...interface{}) {
-	logger.Info(arg0, args...)
+func Error(arg ...interface{}) {
+	log.Error(arg...)
 }
 
-func Warn(arg0 interface{}, args ...interface{}) {
-	logger.Warn(arg0, args...)
+func Panic(arg ...interface{}) {
+	log.Panic(arg...)
 }
 
-func Error(arg0 interface{}, args ...interface{}) {
-	logger.Error(arg0, args...)
+func Fatal(arg ...interface{}) {
+	log.Fatal(arg...)
 }
 
-func Critical(arg0 interface{}, args ...interface{}) {
-	logger.Critical(arg0, args...)
+
+//-----------format
+
+func Debugf(format string, arg ...interface{}) {
+	log.Debugf(format, arg...)
 }
 
-func Fatal(arg0 interface{}, args ...interface{}) {
-	log.Fatal(arg0.(string), args...)
-	//logger.Error(arg0, args...)
-	//
-	//os.Exit(1)
+func Printf(format string, arg ...interface{}) {
+	log.Printf(format, arg...)
+}
+
+func Infof(format string, arg ...interface{}) {
+	log.Infof(format, arg...)
+}
+
+func Warnf(format string, arg ...interface{}) {
+	log.Warnf(format, arg...)
+}
+
+func Errorf(format string, arg ...interface{}) {
+	log.Errorf(format, arg...)
+}
+
+func Panicf(format string, arg ...interface{}) {
+	log.Panicf(format, arg...)
+}
+
+func Fatalf(format string, arg ...interface{}) {
+	log.Fatalf(format, arg...)
 }
 

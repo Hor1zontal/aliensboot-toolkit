@@ -16,11 +16,11 @@ import (
 	"aliens/module/cluster/conf"
 	"aliens/log"
 	"github.com/gogo/protobuf/proto"
-	"aliens/module/cluster/cache"
 	"errors"
 	//"aliens/module/cluster"
 	"aliens/cluster/center"
 	"aliens/module/cluster/constant"
+	"strings"
 )
 
 //消息生产者
@@ -34,7 +34,7 @@ func Init() {
 	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
 	handler, err := mq.NewProducer(mq.TYPE_KAFKA, conf.Config.MQ)
 	if err != nil {
-		log.Fatal("%v", err)
+		log.Fatal(err)
 	} else {
 		mqProducer = handler
 	}
@@ -50,28 +50,28 @@ func RegisterConsumer(serviceType string, handle func(data *protocol.Any) error)
 	consumerID := serviceType + center.ClusterCenter.GetNodeID()
 	consumer := mqConsumer[consumerID]
 	if consumer != nil {
-		log.Warn("consumer %v already register", consumerID)
+		log.Warnf("consumer %v already register", consumerID)
 		return
 	}
 
 	handleProxy := NewProtobufHandler(handle).HandleMessage
 	consumer, err := mq.NewConsumer(mq.TYPE_KAFKA, conf.Config.MQ, serviceType, center.ClusterCenter.GetNodeID(), handleProxy)
 	if err != nil {
-		log.Fatal("%v", err)
+		log.Fatal(err)
 	} else {
 		mqConsumer[consumerID] = consumer
-		log.Info("register consumer %v success", consumerID)
+		log.Infof("register consumer %v success", consumerID)
 	}
 }
 
 //注销消费者
-func UnregisterConsumer(serviceType string) {
+func UNRegisterConsumer(serviceType string) {
 	consumerID := serviceType + center.ClusterCenter.GetNodeID()
 	consumer := mqConsumer[consumerID]
 	if consumer != nil {
 		err := consumer.Close()
 		if err != nil {
-			log.Error("%v", err)
+			log.Error(err)
 		}
 	}
 }
@@ -83,11 +83,22 @@ func GatePush(serviceType string, clientID string, message proto.Message) error 
 		return err
 	}
 	request := &protocol.Any{TypeUrl: serviceType, ClientId: clientID, Value: data}
-	gateID := cache.ClusterCache.GetClientGateID(clientID)
+
+	//func genClientID() string {
+	//	id ++
+	//	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
+	//}
+
+	gateID := getGateNodeID(clientID)
+	//cache.ClusterCache.GetClientGateID(clientID)
 	if gateID == "" {
 		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", clientID))
 	}
 	return AsyncPush(constant.SERVICE_GATE, gateID, request)
+}
+
+func getGateNodeID(clientID string) string {
+	return strings.Split(clientID, "_")[0]
 }
 
 //消息异步推送 - 推送到指定服务节点
