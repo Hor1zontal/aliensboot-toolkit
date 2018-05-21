@@ -11,6 +11,7 @@ package mq
 
 
 type Config struct {
+	Type Type //队列类型  kafka
 	Address []string //集群地址
 	Timeout int //发送超时时间
 }

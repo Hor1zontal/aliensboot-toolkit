@@ -14,12 +14,13 @@ import (
 	"strings"
 	"aliens/protocol"
 	"aliens/module/cluster/dispatch"
+	"fmt"
 )
 
 //requestID - service
 var requestServiceMapping = make(map[uint16]string)
 
-//service/alias - pushID
+//service/alias - responseID
 var servicePushMapping = make(map[string]uint16)
 
 //requestID - responseID
@@ -51,7 +52,7 @@ func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
 
 	serviceID := params[1]
 	request := &protocol.Any{TypeUrl:params[2], Value:requestData}
-	response, error := dispatch.Request(serviceID, request)
+	response, error := dispatch.RPC.Request(serviceID, request)
 	if error != nil {
 		return nil, error
 	}
@@ -71,18 +72,18 @@ func HandleMessage(request interface{}, clientID string) (interface{}, int32, er
 	any, _ := request.(*protocol.Any)
 	serviceID, ok := requestServiceMapping[any.Id]
 	if !ok {
-		return nil, 0, errors.New("unexpect requestID")
+		return nil, 0, errors.New(fmt.Sprintf("un expect request id %v", any.Id))
 	}
 	if clientID != "" {
 		any.ClientId = clientID
 	}
-	response, error := dispatch.Request(serviceID, request)
+	response, error := dispatch.RPC.Request(serviceID, request)
 	if error != nil {
 		return nil, 0, error
 	}
 	responseProxy, ok := response.(*protocol.Any)
 	if !ok {
-		return nil, 0, errors.New("unexpect response type")
+		return nil, 0, errors.New("un expect response type")
 	}
 	responseProxy.Id = responseMapping[any.Id]
 	return responseProxy, responseProxy.GetAuthId(), nil

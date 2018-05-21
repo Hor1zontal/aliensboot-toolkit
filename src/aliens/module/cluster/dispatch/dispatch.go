@@ -10,114 +10,34 @@
 package dispatch
 
 import (
-	"aliens/protocol"
-	"fmt"
-	"aliens/mq"
 	"aliens/module/cluster/conf"
-	"aliens/log"
-	"github.com/gogo/protobuf/proto"
-	"errors"
-	//"aliens/module/cluster"
 	"aliens/cluster/center"
-	"aliens/module/cluster/constant"
-	"strings"
 )
 
-//消息生产者
-var mqProducer mq.IProducer = nil
+var RPC = newGRPCDispatcher()
 
-//消息消费者
-var mqConsumer = make(map[string]mq.IConsumer)
+var MQ = newMQDispatcher(conf.Config.MQ)
 
+//type Dispatcher interface {
+//	//RegisterConsumer(consumerID string, handle func(data *protocol.Any) error) //注册消息消费者
+//	//UNRegisterConsumer(consumerID string)  //注销消息消费者
+//
+//	AsyncBroadcast(serviceType string, message proto.Message) error
+//	AsyncPush(serviceType string, serviceID string, message proto.Message) error //异步推送
+//
+//	SyncRequest(serviceType string, message proto.Message) (interface{}, error)
+//	SyncRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error)
+//	Request(serviceType string, message interface{}) (interface{}, error)
+//	RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error)
+//}
 
 func Init() {
 	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
-	handler, err := mq.NewProducer(mq.TYPE_KAFKA, conf.Config.MQ)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		mqProducer = handler
-	}
-	log.Info("init message producer success")
 }
 
 func Close() {
 	center.ClusterCenter.Close()
 }
 
-//注册消息队列消费者 一般用来处理推送消息
-func RegisterConsumer(serviceType string, handle func(data *protocol.Any) error) {
-	consumerID := serviceType + center.ClusterCenter.GetNodeID()
-	consumer := mqConsumer[consumerID]
-	if consumer != nil {
-		log.Warnf("consumer %v already register", consumerID)
-		return
-	}
 
-	handleProxy := NewProtobufHandler(handle).HandleMessage
-	consumer, err := mq.NewConsumer(mq.TYPE_KAFKA, conf.Config.MQ, serviceType, center.ClusterCenter.GetNodeID(), handleProxy)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		mqConsumer[consumerID] = consumer
-		log.Infof("register consumer %v success", consumerID)
-	}
-}
-
-//注销消费者
-func UNRegisterConsumer(serviceType string) {
-	consumerID := serviceType + center.ClusterCenter.GetNodeID()
-	consumer := mqConsumer[consumerID]
-	if consumer != nil {
-		err := consumer.Close()
-		if err != nil {
-			log.Error(err)
-		}
-	}
-}
-
-//网关异步推送信息给指定用户
-func GatePush(serviceType string, clientID string, message proto.Message) error {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return err
-	}
-	request := &protocol.Any{TypeUrl: serviceType, ClientId: clientID, Value: data}
-
-	//func genClientID() string {
-	//	id ++
-	//	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
-	//}
-
-	gateID := getGateNodeID(clientID)
-	//cache.ClusterCache.GetClientGateID(clientID)
-	if gateID == "" {
-		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", clientID))
-	}
-	return AsyncPush(constant.SERVICE_GATE, gateID, request)
-}
-
-func getGateNodeID(clientID string) string {
-	return strings.Split(clientID, "_")[0]
-}
-
-//消息异步推送 - 推送到指定服务节点
-func AsyncPush(serviceType string, serviceID string, message proto.Message) error {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return err
-	}
-	mqProducer.SendMessage(serviceType, serviceID, data)
-	return nil
-}
-
-//消息异步推送 - 广播所有对应服务节点
-func AsyncBroadcast(serviceType string, message proto.Message) error {
-	data, err := proto.Marshal(message)
-	if err != nil {
-		return err
-	}
-	mqProducer.Broadcast(serviceType, data)
-	return nil
-}
 

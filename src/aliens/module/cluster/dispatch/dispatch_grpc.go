@@ -15,27 +15,33 @@ import (
 	"aliens/protocol"
 )
 
-//url - service
-var serviceMapping = make(map[string]*message.RemoteService)
+
+func newGRPCDispatcher() *GRPCDispatcher {
+	return &GRPCDispatcher{make(map[string]*message.RemoteService)}
+}
+
+type GRPCDispatcher struct {
+	serviceMapping map[string]*message.RemoteService
+}
 
 //阻塞请求消息 - 根据负载均衡动态分配一个节点处理
-func SyncRequest(serviceType string, message proto.Message) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) SyncRequest(serviceType string, message proto.Message) (interface{}, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
 	}
 	request := &protocol.Any{Value: data}
-	return Request(serviceType, request)
+	return dispatcher.Request(serviceType, request)
 }
 
 //同步阻塞请求
-func SyncRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
 	}
 	request := &protocol.Any{Value: data}
-	return RequestNode(serviceType, serviceID, request)
+	return dispatcher.RequestNode(serviceType, serviceID, request)
 }
 
 ////同步推送
@@ -56,21 +62,21 @@ func SyncRequestNode(serviceType string, serviceID string, message proto.Message
 //	return nil
 //}
 
-func Request(serviceType string, message interface{}) (interface{}, error) {
-	service := allocService(serviceType)
+func (dispatcher *GRPCDispatcher) Request(serviceType string, message interface{}) (interface{}, error) {
+	service := dispatcher.allocService(serviceType)
 	return service.HandleMessage(message)
 }
 
-func RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error) {
-	service := allocService(serviceType)
+func (dispatcher *GRPCDispatcher) RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error) {
+	service := dispatcher.allocService(serviceType)
 	return service.HandleRemoteMessage(serviceID, message)
 }
 
-func allocService(serviceID string) *message.RemoteService {
-	service := serviceMapping[serviceID]
+func (dispatcher *GRPCDispatcher) allocService(serviceID string) *message.RemoteService {
+	service := dispatcher.serviceMapping[serviceID]
 	if service == nil {
 		service = message.NewRemoteService(serviceID)
-		serviceMapping[serviceID] = service
+		dispatcher.serviceMapping[serviceID] = service
 	}
 	return service
 }

@@ -36,17 +36,17 @@ func (this *Producer) Init(address []string, timeout int) error {
 	//必须有这个匿名函数内容
 	go func(p sarama.AsyncProducer) {
 		errors := p.Errors()
-		success := p.Successes()
+		//success := p.Successes()
 		for {
 			select {
 			case err := <-errors:
 				if err != nil {
 					log.Error(err)
 				}
-			case succ := <-success:
-				if succ != nil {
-					log.Debug(succ)
-				}
+			//case _ := <-success:
+				//if succ != nil {
+				//	log.Debug(succ)
+				//}
 			}
 		}
 	}(this.proxy)

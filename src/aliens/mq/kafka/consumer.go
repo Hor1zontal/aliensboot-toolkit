@@ -34,17 +34,17 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 	this.proxy = c
 	go func(c *cluster.Consumer) {
 		errors := c.Errors()
-		noti := c.Notifications()
+		//noti := c.Notifications()
 		for {
 			select {
-			case err := <-errors:
-				if err != nil {
-					log.Error(err)
-				}
-			case notify := <-noti:
-				if notify != nil {
-					log.Debug(notify)
-				}
+				case err := <-errors:
+					if err != nil {
+						log.Error(err)
+					}
+				//case notify := <-noti:
+				//	if notify != nil {
+				//		log.Debug(notify)
+				//	}
 			}
 		}
 	}(c)

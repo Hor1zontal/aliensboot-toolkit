@@ -7,10 +7,9 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package socket
+package internal
 
 import (
-	"aliens/cluster/message"
 	"time"
 	"aliens/module/gate/conf"
 	"github.com/name5566/leaf/gate"
@@ -28,17 +27,17 @@ func genClientID() string {
 	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
 }
 
-func newNetwork(outerChannel message.IMessageChannel) *network {
-	network := &network{id: genClientID(), createTime:time.Now(), heartbeatTime:time.Now()}
-	network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
+func newNetwork(agent gate.Agent) *network {
+	network := &network{id: genClientID(), agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+	//network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
 	return network
 }
 
 type network struct {
-	*message.MessageChannel
-	*message.ChannelMessageHandler
-	id string 				//clientID
-	authID        int32    //验证通过的用户id 没有验证通过为0
+	//*message.ChannelMessageHandler
+	agent 	      gate.Agent
+	id 			  string    //clientID 网络连接句柄id
+	authID        int32     //验证通过的用户id 没有验证通过为0
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 }
@@ -51,13 +50,26 @@ func (this *network) GetID() string {
 	return this.id
 }
 
+//发送消息给客户端
+func (this *network) SendMessage(msg interface{}) {
+	this.agent.WriteMsg(msg)
+}
+
+func (this *network) AcceptMessage(msg interface{}) {
+	response := this.HandleMessage(msg)
+	if response != nil {
+		this.agent.WriteMsg(response)
+	}
+}
+
 func (this *network) HandleMessage(request interface{}) interface{} {
 	clientID := ""
+	//未授权之前需要传递连接句柄编号
 	if !this.IsAuth() {
 		clientID = this.id
 	}
 	response, authID, error := route.HandleMessage(request, clientID)
-	//TODO 返回服务不可用 或 嘿嘿嘿
+	//TODO 返回服务不可用等处理方式
 	if error != nil {
 		log.Debug(error.Error())
 	}
@@ -65,16 +77,11 @@ func (this *network) HandleMessage(request interface{}) interface{} {
 	if authID != 0 {
 		this.Auth(authID)
 	}
-
 	return response
 }
 
 func (this *network) GetRemoteAddr() net.Addr {
-	channel := this.GetOuterChannel()
-	if channel == nil {
-		return nil
-	}
-	return channel.(gate.Agent).RemoteAddr()
+	return this.agent.RemoteAddr()
 }
 
 func (this *network) IsAuth() bool {
@@ -83,7 +90,7 @@ func (this *network) IsAuth() bool {
 
 func (this *network) Auth(id int32) {
 	this.authID = id
-	networkManager.Auth(this)
+	Skeleton.ChanRPCServer.Go(CommandAgentAuth, this)
 }
 
 //是否没有验权超时 释放多余的空连接

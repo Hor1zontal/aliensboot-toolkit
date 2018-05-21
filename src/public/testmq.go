@@ -19,11 +19,11 @@ func main() {
 
 	service := "gate"
 
-	config := mq.Config{Address:[]string{"127.0.0.1:9092"}, Timeout:5}
-	_, err := mq.NewConsumer(mq.TYPE_KAFKA, config, service, "1", handleProxy)
+	config := mq.Config{Type:mq.KAFKA,Address:[]string{"127.0.0.1:9092"}, Timeout:5}
+	_, err := mq.NewConsumer(config, service, "1", handleProxy)
 	log.Debug(err)
 
-	producer, err := mq.NewProducer(mq.TYPE_KAFKA, config)
+	producer, err := mq.NewProducer(config)
 	log.Debug(err)
 	producer.SendMessage(service, "1", []byte{1,2,3})
 	producer.Broadcast(service, []byte{3,2,1})

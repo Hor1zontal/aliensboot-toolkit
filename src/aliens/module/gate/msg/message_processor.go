@@ -16,6 +16,8 @@ import (
 	"aliens/protocol"
 )
 
+var Processor = NewMsgProcessor() //protobuf.NewProcessor()
+
 type MessageProcessor struct {
 	littleEndian bool
 	msgRouter     *chanrpc.Server

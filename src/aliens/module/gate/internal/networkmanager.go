@@ -1,11 +1,10 @@
-package socket
+package internal
 
 import (
 	"time"
 	"aliens/common/util"
 	"aliens/common/collection"
 	"aliens/module/gate/conf"
-	"sync"
 )
 
 var networkManager = &NetworkManager{}
@@ -14,12 +13,8 @@ func init() {
 	networkManager.Init()
 }
 
-func Push(clientID string, message interface{}) {
-	networkManager.Push(clientID, message)
-}
-
 type NetworkManager struct {
-	sync.RWMutex
+	//sync.RWMutex
 	networks  *collection.Map //存储所有未验权的网络连接
 	authNetworks map[string]*network  //存储所有验权通过的网络连接
 	timeWheel *util.TimeWheel //验权检查时间轮
@@ -27,8 +22,6 @@ type NetworkManager struct {
 
 //开启权限,心跳等验证机制
 func (this *NetworkManager) Init() {
-	this.Lock()
-	defer this.Unlock()
 	if this.timeWheel != nil {
 		this.timeWheel.Stop()
 	}
@@ -51,17 +44,13 @@ func (this *NetworkManager) dealAuthTimeout(data util.TaskData) {
 }
 
 //验权限
-func (this *NetworkManager) Auth(network *network) {
-	this.Lock()
-	defer this.Unlock()
+func (this *NetworkManager) auth(network *network) {
 	this.networks.Del(network)
 	this.authNetworks[network.GetID()] = network
 }
 
 //推送消息
-func (this *NetworkManager) Push(id string, message interface{}) {
-	this.RLock()
-	defer this.RUnlock()
+func (this *NetworkManager) push(id string, message interface{}) {
 	auth := this.authNetworks[id]
 	if auth == nil {
 		return
@@ -69,18 +58,14 @@ func (this *NetworkManager) Push(id string, message interface{}) {
 	auth.SendMessage(message)
 }
 
-func (this *NetworkManager) AddNetwork(network *network) {
+func (this *NetworkManager) addNetwork(network *network) {
 	data := make(util.TaskData)
 	data[0] = network
 	this.timeWheel.AddTimer(time.Duration(conf.Config.AuthTimeout)*time.Second, network, data)
-	this.Lock()
-	defer this.Unlock()
 	this.networks.Set(network, &struct{}{})
 }
 
-func (this *NetworkManager) RemoveNetwork(network *network) {
-	this.Lock()
-	defer this.Unlock()
+func (this *NetworkManager) removeNetwork(network *network) {
 	this.timeWheel.RemoveTimer(network)
 	this.networks.Del(network)
 }

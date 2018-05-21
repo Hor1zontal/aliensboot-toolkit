@@ -9,12 +9,16 @@
  *******************************************************************************/
 package mq
 
-import "aliens/mq/kafka"
+import (
+	"aliens/mq/kafka"
+	"github.com/pkg/errors"
+	"fmt"
+)
 
-type Type uint8
+type Type string
 
 const (
-	TYPE_KAFKA Type = 1
+	KAFKA Type = "kafka"
 )
 
 //消息生产者
@@ -31,23 +35,26 @@ type IConsumer interface {
 	Close() error
 }
 
-func NewProducer(mqType Type, config Config) (producer IProducer, err error) {
-	if mqType == TYPE_KAFKA {
+func NewProducer(config Config) (producer IProducer, err error) {
+	if config.Type == KAFKA {
 		producer = &kafka.Producer{}
 	}
 	if producer != nil {
 		err = producer.Init(config.Address, config.Timeout)
+	} else {
+		err = errors.New(fmt.Sprintf("un expect mq producer type %v", config.Type))
 	}
 	return
 }
 
-func NewConsumer(mqType Type, config Config, service string, node string, handle func(data []byte) error) (consumer IConsumer, err error) {
-	if mqType == TYPE_KAFKA {
+func NewConsumer(config Config, service string, node string, handle func(data []byte) error) (consumer IConsumer, err error) {
+	if config.Type == KAFKA {
 		consumer = &kafka.Consumer{}
 	}
-
 	if consumer != nil {
 		err = consumer.Init(config.Address, service, node, handle)
+	} else {
+		err = errors.New(fmt.Sprintf("un expect mq producer type %v", config.Type))
 	}
 	return
 }
