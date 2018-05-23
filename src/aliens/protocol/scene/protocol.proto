@@ -30,9 +30,6 @@ message SceneResponse {
         get_state_ret getStateRet = 8;
 
 
-
-
-
         string scenePush = 500; //测试推送信息
     }
 }

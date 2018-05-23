@@ -23,7 +23,7 @@ func handleSpaceEnter(request *scene.SpaceEnter, response *scene.SpaceEnterRet) 
 	response.EntityID = entity.GetID()
 
 	//GatePush(serviceType string, clientID string, message proto.Message) error {
-	dispatch.GatePush(constant.SERVICE_GATE, "1_1", &scene.SceneResponse{
+	dispatch.MQ.GatePush(constant.SERVICE_SCENE, "1_1", &scene.SceneResponse{
 		Response:&scene.SceneResponse_ScenePush{
 			ScenePush:"测试",
 		},

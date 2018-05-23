@@ -34,26 +34,26 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 	this.proxy = c
 	go func(c *cluster.Consumer) {
 		errors := c.Errors()
-		//noti := c.Notifications()
+		noti := c.Notifications()
 		for {
 			select {
 				case err := <-errors:
 					if err != nil {
 						log.Error(err)
 					}
-				//case notify := <-noti:
-				//	if notify != nil {
-				//		log.Debug(notify)
-				//	}
+				case notify := <-noti:
+					if notify != nil {
+						log.Debug(notify)
+					}
 			}
 		}
-	}(c)
+	}(this.proxy)
 
 	go func() {
 		defer c.Close()
 		for msg := range c.Messages() {
 			handle(msg.Value)
-			//fmt.Fprintf(os.Stdout, "%s %s/%d/%d\t%s\n",groupID, msg.Topic, msg.Partition, msg.Offset, msg.Value)
+			//fmt.Fprintf(os.Stdout, "%s %s/%d/%d\t%s\n",service, msg.Topic, msg.Partition, msg.Offset, msg.Value)
 			c.MarkOffset(msg, "") //MarkOffset 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
 		}
 		//log.Error("consumer close!")

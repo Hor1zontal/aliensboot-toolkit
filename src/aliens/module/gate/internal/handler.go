@@ -21,11 +21,11 @@ import (
 )
 
 const (
-	CommandAgentNew   = "NewAgent"
-	CommandAgentClose = "CloseAgent"
-	CommandAgentPush  = "Push"
-	CommandAgentAuth  = "Auth"
-	CommandAgentMsg  = "Msg"
+	CommandAgentNew   = "NewAgent" //新建agent
+	CommandAgentClose = "CloseAgent" //关闭agent
+	CommandAgentPush  = "Push"  //推送消息给agent
+	CommandAgentAuth  = "Auth"  //验证agent权限
+	CommandAgentMsg  = "Msg" //接受agent消息
 )
 
 func Init() {

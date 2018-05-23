@@ -24,7 +24,13 @@ func (this *Producer) Init(address []string, timeout int) error {
 		timeout = 5
 	}
 	config := sarama.NewConfig()
-	config.Producer.Return.Successes = true //必须有这个选项
+	//等待服务器所有副本都保存成功后的响应
+	config.Producer.RequiredAcks = sarama.WaitForAll
+	//随机的分区类型
+	config.Producer.Partitioner = sarama.NewRandomPartitioner
+	//是否等待成功和失败后的响应,只有上面的RequireAcks设置不是NoReponse这里才有用.
+	//config.Producer.Return.Successes = true
+	config.Producer.Return.Errors = true
 	config.Producer.Timeout = time.Duration(timeout) * time.Second
 	p, err := sarama.NewAsyncProducer(address, config)
 	//defer p.Close()
@@ -35,6 +41,7 @@ func (this *Producer) Init(address []string, timeout int) error {
 	this.proxy = p
 	//必须有这个匿名函数内容
 	go func(p sarama.AsyncProducer) {
+		defer p.AsyncClose()
 		errors := p.Errors()
 		//success := p.Successes()
 		for {
@@ -43,10 +50,10 @@ func (this *Producer) Init(address []string, timeout int) error {
 				if err != nil {
 					log.Error(err)
 				}
-			//case _ := <-success:
-				//if succ != nil {
-				//	log.Debug(succ)
-				//}
+			//case succ := <-success:
+			//	if succ != nil {
+			//		log.Debug(succ)
+			//	}
 			}
 		}
 	}(this.proxy)

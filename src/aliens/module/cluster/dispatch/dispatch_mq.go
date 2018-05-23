@@ -22,6 +22,7 @@ import (
 )
 
 func newMQDispatcher(config mq.Config) *MQDispatcher {
+	log.Debugf("%v", config.Address)
 	producer, err := mq.NewProducer(config)
 	if err != nil {
 		log.Fatal(err)

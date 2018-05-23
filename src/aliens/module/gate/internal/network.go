@@ -29,17 +29,35 @@ func genClientID() string {
 
 func newNetwork(agent gate.Agent) *network {
 	network := &network{id: genClientID(), agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
-	//network.ChannelMessageHandler = message.OpenChannelHandler(outerChannel, network, conf.Config.MessageChannelLimit)
+	network.channel = make(chan *CallInfo, 5)
+	go func() {
+		for {
+			info, ok := <-network.channel
+			if !ok {
+				return
+			}
+			response := network.HandleMessage(info.msg)
+			if response != nil {
+				info.agent.WriteMsg(response)
+			}
+		}
+	}()
 	return network
 }
 
 type network struct {
-	//*message.ChannelMessageHandler
 	agent 	      gate.Agent
+	channel       chan *CallInfo //消息管道
+
 	id 			  string    //clientID 网络连接句柄id
 	authID        int32     //验证通过的用户id 没有验证通过为0
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
+}
+
+type CallInfo struct {
+	msg interface{} //消息管道
+	agent 	      gate.Agent
 }
 
 type IAuthMessage interface {
@@ -55,11 +73,19 @@ func (this *network) SendMessage(msg interface{}) {
 	this.agent.WriteMsg(msg)
 }
 
+//发送消息给客户端
+func (this *network) Close() (isClosed bool) {
+	defer func() {
+		if recover() != nil {
+			isClosed = false
+		}
+	} ()
+	close(this.channel)
+	return true
+}
+
 func (this *network) AcceptMessage(msg interface{}) {
-	response := this.HandleMessage(msg)
-	if response != nil {
-		this.agent.WriteMsg(response)
-	}
+	this.channel <- &CallInfo{msg, this.agent}
 }
 
 func (this *network) HandleMessage(request interface{}) interface{} {

@@ -66,6 +66,7 @@ func (this *NetworkManager) addNetwork(network *network) {
 }
 
 func (this *NetworkManager) removeNetwork(network *network) {
+	network.Close()
 	this.timeWheel.RemoveTimer(network)
 	this.networks.Del(network)
 }

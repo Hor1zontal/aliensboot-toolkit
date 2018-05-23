@@ -14,23 +14,10 @@ import (
 	"aliens/common/util"
 )
 
-type IMessageChannel interface {
-	WriteMsg(msg interface{})
-	Close()
-	SetUserData(data interface{})
-	UserData() interface{}
-}
-
-type IMessageHandler interface {
-	HandleMessage(msg interface{}) interface{} //处理
-}
-
 type MessageChannel struct {
-	channel        chan interface{} //管道
-	open           bool
+	channel        chan interface{} //消息管道
 	messageLimit   int
-	messageHandler *ChannelMessageHandler //消息处理handler
-	userdata       interface{}
+	handler func (msg interface{}) interface{}
 }
 
 //向管道发送消息
@@ -47,54 +34,28 @@ func (this *MessageChannel) WriteMsg(message interface{}) {
 	}
 }
 
-//打开用户消息管道
-func (this *MessageChannel) EnsureOpen() {
-	if this.channel != nil {
-		return
-	}
+func (this *MessageChannel) Open() {
 	this.channel = make(chan interface{}, this.messageLimit)
 	go func() {
 		defer func() {
 			util.CatchStackDetail()
 		}()
-
 		for {
 			//只要消息管道没有关闭，就一直等待用户请求
 			message, open := <-this.channel
-			if !this.open || !open {
-				this.channel = nil
+			if !open {
 				break
 			}
-			this.messageHandler.HandleMessage(message)
+			this.handler(message)
 		}
 		this.Close()
 	}()
-	this.open = true
 }
 
 //关闭消息管道
 func (this *MessageChannel) Close() {
-	if !this.IsOpen() {
-		return
-	}
-	defer func() {
-		recover()
-	}()
-	this.open = false
 	if this.channel != nil {
 		close(this.channel)
+		this.channel = nil
 	}
-}
-
-//消息管道是否打开
-func (this *MessageChannel) IsOpen() bool {
-	return this.open
-}
-
-func (this *MessageChannel) SetUserData(data interface{}) {
-	this.userdata = data
-}
-
-func (this *MessageChannel) UserData() interface{} {
-	return this.userdata
 }
