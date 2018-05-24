@@ -9,21 +9,27 @@
  *******************************************************************************/
 package cache
 
+import "aliens/common/util"
+
 const (
 	userGatePrefix string = "ug_"     //
 )
 
+func getAuthGateKey(authID int64) string {
+	return userGatePrefix + util.Int64ToString(authID)
+}
+
 //设置客户端所在的网关id
-//func (this *cacheManager) SetClientGateID(clientID string, gateID string) bool {
-//	return this.redisClient.SetData(clientID, gateID)
-//}
-//
-////清楚用户和网关的对应关系
-//func (this *cacheManager) CleanClientGateID(clientID string, gateID string) bool {
-//	return this.redisClient.DelData(clientID)
-//}
-//
-////获取客户端所在的网关id
-//func (this *cacheManager) GetClientGateID(clientID string) string {
-//	return this.redisClient.GetData(clientID)
-//}
+func (this *cacheManager) SetAuthGateID(authID int64, gateID string) bool {
+	return this.redisClient.SetData(getAuthGateKey(authID), gateID)
+}
+
+//清楚用户和网关的对应关系
+func (this *cacheManager) CleanAuthGateID(authID int64) bool {
+	return this.redisClient.DelData(getAuthGateKey(authID))
+}
+
+//获取客户端所在的网关id
+func (this *cacheManager) GetAuthGateID(authID int64) string {
+	return this.redisClient.GetData(getAuthGateKey(authID))
+}

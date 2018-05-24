@@ -14,11 +14,11 @@ import (
 	"aliens/cluster/center"
 	"aliens/mq"
 	"fmt"
-	"strings"
 	"aliens/log"
 	"github.com/gogo/protobuf/proto"
 	"errors"
 	"aliens/module/cluster/constant"
+	"aliens/module/cluster/cache"
 )
 
 func newMQDispatcher(config mq.Config) *MQDispatcher {
@@ -87,23 +87,23 @@ func (this *protobufHandler) HandleMessage(data []byte) error {
 }
 
 //网关异步推送信息给指定用户
-func (dispatcher *MQDispatcher) GatePush(serviceType string, clientID string, message proto.Message) error {
+func (dispatcher *MQDispatcher) GatePush(serviceType string, authID int64, message proto.Message) error {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return err
 	}
-	request := &protocol.Any{TypeUrl: serviceType, ClientId: clientID, Value: data}
-	gateID := getGateNodeID(clientID)
-	//cache.ClusterCache.GetClientGateID(clientID)
+	request := &protocol.Any{TypeUrl: serviceType, Value: data}
+	//gateID := getGateNodeID(clientID)
+	gateID := cache.ClusterCache.GetAuthGateID(authID)
 	if gateID == "" {
-		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", clientID))
+		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", gateID))
 	}
 	return dispatcher.AsyncPush(constant.SERVICE_GATE, gateID, request)
 }
 
-func getGateNodeID(clientID string) string {
-	return strings.Split(clientID, "_")[0]
-}
+//func getGateNodeID(clientID string) string {
+//	return strings.Split(clientID, "_")[0]
+//}
 
 //消息异步推送 - 推送到指定服务节点
 func (dispatcher *MQDispatcher) AsyncPush(serviceType string, serviceID string, message proto.Message) error {

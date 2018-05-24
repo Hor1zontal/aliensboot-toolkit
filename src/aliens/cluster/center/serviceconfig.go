@@ -11,9 +11,10 @@ package center
 
 
 type ServiceConfig struct {
-	Address string
-	Name string
-	Port int
+	Name string   //服务名称
+	Address string  //服务地址
+	Port int      //服务端端口
+	Unique bool   //是否全局唯一
 }
 
 type ClusterConfig struct {
@@ -22,4 +23,7 @@ type ClusterConfig struct {
 	Servers []string   //集群服务器列表
 	Timeout uint
 	LBS     string   //负载均衡策略  polling 轮询
+	CertFile string
+	KeyFile  string
+	CommonName string
 }

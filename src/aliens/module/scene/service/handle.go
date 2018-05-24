@@ -39,43 +39,28 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
 	}
 	responseProxy := &scene.SceneResponse{Session:requestProxy.GetSession()}
 
-     defer func() {
-    		//处理消息异常
-    		if err := recover(); err != nil {
-    			switch err.(type) {
-    			case exception.GameCode:
+    defer func() {
+    	//处理消息异常
+    	if err := recover(); err != nil {
+    		switch err.(type) {
+    		    case exception.GameCode:
     				responseProxy.Response = &scene.SceneResponse_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
-    				util.CatchStackDetail()
+    				util.PrintStackDetail()
     				//未知异常不需要回数据
                     response = nil
                     return
     			}
-    		}
-
-    		data, _ := proto.Marshal(responseProxy)
-            response = &protocol.Any{TypeUrl:"", Value:data}
-    	}()
+    	}
+    	data, _ := proto.Marshal(response)
+        response = &protocol.Any{TypeUrl:"", Value:data}
+    }()
 	err = handleRequest(requestProxy, responseProxy)
     return
 }
 
 func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) error {
-	
-	if request.GetSpaceLeave() != nil {
-		messageRet := &scene.SpaceLeaveRet{}
-		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceLeaveRet{messageRet}
-		return nil
-	}
-	
-	if request.GetGetState() != nil {
-		messageRet := &scene.GetStateRet{}
-		handleGetState(request.GetGetState(), messageRet)
-		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
-		return nil
-	}
 	
 	if request.GetSpaceMove() != nil {
 		messageRet := &scene.SpaceMoveRet{}
@@ -88,6 +73,20 @@ func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) e
 		messageRet := &scene.SpaceEnterRet{}
 		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
+		return nil
+	}
+	
+	if request.GetSpaceLeave() != nil {
+		messageRet := &scene.SpaceLeaveRet{}
+		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
+		response.Response = &scene.SceneResponse_SpaceLeaveRet{messageRet}
+		return nil
+	}
+	
+	if request.GetGetState() != nil {
+		messageRet := &scene.GetStateRet{}
+		handleGetState(request.GetGetState(), messageRet)
+		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
 		return nil
 	}
 	

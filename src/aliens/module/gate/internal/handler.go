@@ -44,23 +44,21 @@ func Close() {
 
 //只处理推送消息
 func HandlePush(request *protocol.Any) error {
-	if request.ClientId != "" {
+	if request.AuthId != 0 {
 		request.Id = route.GetPushID(request.TypeUrl)
-		Skeleton.ChanRPCServer.Go(CommandAgentPush, request.ClientId, request)
+		Skeleton.ChanRPCServer.Go(CommandAgentPush, request.AuthId, request)
 	}
 	return nil
 }
 
 //授权
 func agentAuth(args []interface{}) {
-	network := args[0].(*network)
-	networkManager.auth(network)
+	networkManager.auth(args[0].(int64), args[1].(*network))
 }
 
 //推送消息
 func agentPush(args []interface{}) {
-	id := args[0].(string)
-	networkManager.push(id, args[1])
+	networkManager.push(args[0].(int64), args[1])
 }
 
 //新的连接处理
@@ -89,7 +87,7 @@ func handleMessage(args []interface{}) {
 	data := gateAgent.UserData()
 	switch data.(type) {
 	case *network:
-		data.(*network).AcceptMessage(request)
+		data.(*network).AcceptMessage(request.(*protocol.Any))
 		break
 	}
 }

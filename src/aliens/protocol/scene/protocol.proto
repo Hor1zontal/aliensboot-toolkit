@@ -22,14 +22,16 @@ message SceneResponse {
     int32 session = 1;
 
     oneof response {
+        uint32 exception = 2;
+
         //ignore d s
-        uint32 exception = 3;
         space_move_ret spaceMoveRet = 5;
         space_enter_ret spaceEnterRet = 6;
         space_leave_ret spaceLeaveRet = 7;
         get_state_ret getStateRet = 8;
-
-
-        string scenePush = 500; //测试推送信息
     }
+
+    string scenePush = 500; //测试推送信息
+    space_push spacePush = 501;
+
 }

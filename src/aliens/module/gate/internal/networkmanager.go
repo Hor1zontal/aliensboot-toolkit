@@ -5,6 +5,8 @@ import (
 	"aliens/common/util"
 	"aliens/common/collection"
 	"aliens/module/gate/conf"
+	"aliens/module/cluster/cache"
+	"aliens/cluster/center"
 )
 
 var networkManager = &NetworkManager{}
@@ -16,7 +18,7 @@ func init() {
 type NetworkManager struct {
 	//sync.RWMutex
 	networks  *collection.Map //存储所有未验权的网络连接
-	authNetworks map[string]*network  //存储所有验权通过的网络连接
+	authNetworks map[int64]*network  //存储所有验权通过的网络连接
 	timeWheel *util.TimeWheel //验权检查时间轮
 }
 
@@ -26,7 +28,7 @@ func (this *NetworkManager) Init() {
 		this.timeWheel.Stop()
 	}
 	this.networks = &collection.Map{}
-	this.authNetworks = make(map[string]*network)
+	this.authNetworks = make(map[int64]*network)
 
 	//心跳精确到s
 	this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
@@ -44,13 +46,15 @@ func (this *NetworkManager) dealAuthTimeout(data util.TaskData) {
 }
 
 //验权限
-func (this *NetworkManager) auth(network *network) {
+func (this *NetworkManager) auth(authID int64, network *network) {
+	this.timeWheel.RemoveTimer(network)
 	this.networks.Del(network)
-	this.authNetworks[network.GetID()] = network
+	this.authNetworks[authID] = network
+	cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())
 }
 
 //推送消息
-func (this *NetworkManager) push(id string, message interface{}) {
+func (this *NetworkManager) push(id int64, message interface{}) {
 	auth := this.authNetworks[id]
 	if auth == nil {
 		return
@@ -67,6 +71,11 @@ func (this *NetworkManager) addNetwork(network *network) {
 
 func (this *NetworkManager) removeNetwork(network *network) {
 	network.Close()
-	this.timeWheel.RemoveTimer(network)
-	this.networks.Del(network)
+	if network.IsAuth() {
+		delete(this.authNetworks, network.authID)
+		cache.ClusterCache.CleanAuthGateID(network.authID)
+	} else {
+		this.timeWheel.RemoveTimer(network)
+		this.networks.Del(network)
+	}
 }

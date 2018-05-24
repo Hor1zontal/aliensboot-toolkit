@@ -16,9 +16,7 @@ import (
 	"github.com/pkg/errors"
 	"aliens/protocol"
 	"aliens/exception"
-    "fmt"
-    "runtime"
-    "aliens/log"
+	"aliens/common/util"
 )
 
 type passportService struct {
@@ -41,26 +39,23 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
 	}
 	responseProxy := &passport.PassportResponse{Session:requestProxy.GetSession()}
 
-     defer func() {
-    		//处理消息异常
-    		if err := recover(); err != nil {
-    			switch err.(type) {
-    			case exception.GameCode:
+    defer func() {
+    	//处理消息异常
+    	if err := recover(); err != nil {
+    		switch err.(type) {
+    		    case exception.GameCode:
     				responseProxy.Response = &passport.PassportResponse_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
-    				buf := make([]byte, 2048)
-    				n := runtime.Stack(buf, false)
-    				log.Errorf("panic stack info %s", buf[:n])
+    				util.PrintStackDetail()
     				//未知异常不需要回数据
                     response = nil
                     return
     			}
-    		}
-
-    		data, _ := proto.Marshal(response)
-            response = &protocol.Any{TypeUrl:"", Value:data}
-    	}()
+    	}
+    	data, _ := proto.Marshal(response)
+        response = &protocol.Any{TypeUrl:"", Value:data}
+    }()
 	err = handleRequest(requestProxy, responseProxy)
     return
 }

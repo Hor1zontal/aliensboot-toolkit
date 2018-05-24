@@ -16,19 +16,18 @@ import (
 	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
-	"aliens/common/util"
-	"aliens/cluster/center"
+	"aliens/protocol"
 )
 
 var id int64 = 0
 
-func genClientID() string {
-	id ++
-	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
-}
+//func genClientID() string {
+//	id ++
+//	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
+//}
 
 func newNetwork(agent gate.Agent) *network {
-	network := &network{id: genClientID(), agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
 	network.channel = make(chan *CallInfo, 5)
 	go func() {
 		for {
@@ -49,23 +48,18 @@ type network struct {
 	agent 	      gate.Agent
 	channel       chan *CallInfo //消息管道
 
-	id 			  string    //clientID 网络连接句柄id
-	authID        int32     //验证通过的用户id 没有验证通过为0
+	authID        int64     //验证通过的用户id 没有验证通过为0
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 }
 
 type CallInfo struct {
-	msg interface{} //消息管道
-	agent 	      gate.Agent
+	msg   *protocol.Any
+	agent gate.Agent
 }
 
 type IAuthMessage interface {
 	GetUserID() uint32
-}
-
-func (this *network) GetID() string {
-	return this.id
 }
 
 //发送消息给客户端
@@ -84,24 +78,24 @@ func (this *network) Close() (isClosed bool) {
 	return true
 }
 
-func (this *network) AcceptMessage(msg interface{}) {
+func (this *network) AcceptMessage(msg *protocol.Any) {
 	this.channel <- &CallInfo{msg, this.agent}
 }
 
-func (this *network) HandleMessage(request interface{}) interface{} {
-	clientID := ""
+func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
 	//未授权之前需要传递连接句柄编号
 	if !this.IsAuth() {
-		clientID = this.id
+
+	} else {
+		request.AuthId = this.authID
 	}
-	response, authID, error := route.HandleMessage(request, clientID)
-	//TODO 返回服务不可用等处理方式
+	response, error := route.HandleMessage(request)
 	if error != nil {
+		//TODO 返回服务不可用等处理方式
 		log.Debug(error.Error())
 	}
-
-	if authID != 0 {
-		this.Auth(authID)
+	if response.GetAuthId() != 0 {
+		this.Auth(response.GetAuthId())
 	}
 	return response
 }
@@ -114,9 +108,9 @@ func (this *network) IsAuth() bool {
 	return this.authID != 0
 }
 
-func (this *network) Auth(id int32) {
+func (this *network) Auth(id int64) {
 	this.authID = id
-	Skeleton.ChanRPCServer.Go(CommandAgentAuth, this)
+	Skeleton.ChanRPCServer.Go(CommandAgentAuth, id, this)
 }
 
 //是否没有验权超时 释放多余的空连接

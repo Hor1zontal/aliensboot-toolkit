@@ -34,6 +34,9 @@ type ServiceCenter struct {
 
 	nodeId  string //当前集群节点的id
 	lbs string //default polling
+	certFile string
+	keyFile string
+	commonName string
 }
 
 func (this *ServiceCenter) GetNodeID() string {
@@ -57,6 +60,9 @@ func (this *ServiceCenter) ConnectCluster(config ClusterConfig) {
 	this.lbs = config.LBS
 	this.zkName = config.Name
 	this.nodeId = config.ID
+	this.certFile = config.CertFile
+	this.keyFile = config.KeyFile
+	this.commonName = config.CommonName
 	//this.serviceFactory = serviceFactory
 	c, _, err := zk.Connect(config.Servers, time.Duration(config.Timeout)*time.Second)
 	if err != nil {
@@ -123,13 +129,13 @@ func (this *ServiceCenter) GetMasterService(serviceType string) IService {
 	return serviceCategory.getMaster()
 }
 
-func (this *ServiceCenter) CanHandle(serviceType string, seq int32) bool {
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return false
-	}
-	return serviceCategory.canHandle(seq)
-}
+//func (this *ServiceCenter) CanHandle(serviceType string, seq int32) bool {
+//	serviceCategory := this.serviceContainer[serviceType]
+//	if serviceCategory == nil {
+//		return false
+//	}
+//	return serviceCategory.canHandle(seq)
+//}
 
 func (this *ServiceCenter) GetService(serviceType string, serviceID string) IService {
 	this.RLock()
@@ -264,7 +270,7 @@ func (this *ServiceCenter) confirmDataNode(path string, data []byte) bool {
 }
 
 //发布服务
-func (this *ServiceCenter) PublicService(service IService) bool {
+func (this *ServiceCenter) PublicService(service IService, unique bool) bool {
 	this.assert()
 	if !service.IsLocal() {
 		log.Error("service info is invalid")
@@ -277,9 +283,20 @@ func (this *ServiceCenter) PublicService(service IService) bool {
 		return false
 	}
 	servicePath := this.serviceRoot + NODE_SPLIT + service.GetType()
-	this.confirmNode(servicePath)
+
 	//id, err := this.zkCon.Create(servicePath + NODE_SPLIT + service.GetType(), data,
 	//	zk.FlagEphemeral|zk.FlagSequence, zk.WorldACL(zk.PermAll))
+
+	if unique {
+		//TODO 可能有事务上的问题 需要优化
+		child, _, _ := this.zkCon.Children(servicePath)
+		if child != nil && len(child) > 0 {
+			log.Errorf("unique service %v-%v already exist.", service.GetType(), child)
+			return false
+		}
+	}
+
+	this.confirmNode(servicePath)
 	id, err := this.zkCon.Create(servicePath + NODE_SPLIT + service.GetID(), data,
 		zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 	if err != nil {

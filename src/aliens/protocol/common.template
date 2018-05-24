@@ -39,11 +39,11 @@ func (this *${package}Service) Request(ctx context.Context,request *protocol.Any
 	}
 	responseProxy := &${package}.${response}{Session:requestProxy.GetSession()}
 
-     defer func() {
-    		//处理消息异常
-    		if err := recover(); err != nil {
-    			switch err.(type) {
-    			case exception.GameCode:
+    defer func() {
+    	//处理消息异常
+    	if err := recover(); err != nil {
+    		switch err.(type) {
+    		    case exception.GameCode:
     				responseProxy.Response = &${package}.${response}_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
@@ -52,11 +52,10 @@ func (this *${package}Service) Request(ctx context.Context,request *protocol.Any
                     response = nil
                     return
     			}
-    		}
-
-    		data, _ := proto.Marshal(response)
-            response = &protocol.Any{TypeUrl:"", Value:data}
-    	}()
+    	}
+    	data, _ := proto.Marshal(response)
+        response = &protocol.Any{TypeUrl:"", Value:data}
+    }()
 	err = handleRequest(requestProxy, responseProxy)
     return
 }

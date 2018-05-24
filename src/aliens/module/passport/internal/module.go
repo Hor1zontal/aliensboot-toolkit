@@ -4,9 +4,12 @@ import (
 	"aliens/module/passport/cache"
 	"aliens/module/passport/db"
 	"aliens/module/passport/service"
+	"github.com/name5566/leaf/module"
+	"aliens/module/base"
 )
 
 type Module struct {
+	*module.Skeleton
 }
 
 func (m *Module) IsEnable() bool {
@@ -14,6 +17,7 @@ func (m *Module) IsEnable() bool {
 }
 
 func (m *Module) OnInit() {
+	m.Skeleton = base.NewSkeleton()
 	db.Init()
 	cache.Init()
 	service.Init()
@@ -23,9 +27,5 @@ func (m *Module) OnDestroy() {
 	service.Close()
 	db.Close()
 	cache.Close()
-
-}
-
-func (s *Module) Run(closeSig chan bool) {
 
 }

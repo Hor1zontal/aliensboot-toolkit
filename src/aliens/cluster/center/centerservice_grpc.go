@@ -18,16 +18,27 @@ import (
 	"golang.org/x/net/context"
 	"aliens/common/util"
 	"aliens/protocol"
-
+	"google.golang.org/grpc/credentials"
 )
 
 func PublicGRPCService(config ServiceConfig, handle protocol.RPCServiceServer) *GRPCService {
 	if !ClusterCenter.IsConnect() {
-		panic(config.Name + " cluster center is not connected")
+		log.Fatal(config.Name + " cluster center is not connected")
 		return nil
 	}
 
-	server := grpc.NewServer()
+	var server *grpc.Server = nil
+	if ClusterCenter.certFile != "" {
+		creds, err := credentials.NewServerTLSFromFile(ClusterCenter.certFile, ClusterCenter.keyFile)
+		if err != nil {
+			log.Fatalf("Failed to generate credentials %v", err)
+			return nil
+		}
+		server = grpc.NewServer(grpc.Creds(creds))
+	} else {
+		server = grpc.NewServer()
+	}
+
 	protocol.RegisterRPCServiceServer(server,  handle)
 
 	if config.Address == "" {
@@ -45,11 +56,11 @@ func PublicGRPCService(config ServiceConfig, handle protocol.RPCServiceServer) *
 		server : server,
 	}
 	if !service.Start() {
-		panic(service.serviceType + " rpc service can not be start")
+		log.Fatal(service.serviceType + " rpc service can not be start")
 	}
 	//RPC启动成功,则发布到中心服务器
-	if !ClusterCenter.PublicService(service) {
-		panic(service.serviceType + " rpc service can not be start")
+	if !ClusterCenter.PublicService(service, config.Unique) {
+		log.Fatal(service.serviceType + " rpc service can not be start")
 	}
 	return service
 }
@@ -113,8 +124,19 @@ func (this *GRPCService) Connect() bool {
 	//	log.Error("grpc mapping not register %v", this.serviceType)
 	//	return false
 	//}
+	var option grpc.DialOption = nil
+	if ClusterCenter.certFile != "" {
+		creds, err := credentials.NewClientTLSFromFile(ClusterCenter.certFile, ClusterCenter.commonName)
+		if err != nil {
+			log.Errorf("Failed to create TLS credentials %v", err)
+			return false
+		}
+		option = grpc.WithTransportCredentials(creds)
+	} else {
+		option = grpc.WithInsecure()
+	}
 
-	conn, err := grpc.Dial(this.Address, grpc.WithInsecure())
+	conn, err := grpc.Dial(this.Address, option)
 	if err != nil {
 		log.Errorf("did not connect: %v", err)
 		return false

@@ -5,25 +5,11 @@ import (
 	"aliens/module/gate/conf"
 	"time"
 	"github.com/name5566/leaf/gate"
-	"github.com/name5566/leaf/module"
-	"github.com/name5566/leaf/chanrpc"
 	"aliens/module/gate/msg"
+	"aliens/module/base"
 )
 
-var Skeleton = NewSkeleton()
-
-
-func NewSkeleton() *module.Skeleton {
-	skeleton := &module.Skeleton{
-		GoLen:              conf.GoLen,
-		TimerDispatcherLen: conf.TimerDispatcherLen,
-		AsynCallLen:        conf.AsynCallLen,
-		ChanRPCServer:      chanrpc.NewServer(conf.ChanRPCLen),
-	}
-	skeleton.Init()
-	return skeleton
-}
-
+var Skeleton = base.NewSkeleton()
 
 type Module struct {
 	*gate.Gate

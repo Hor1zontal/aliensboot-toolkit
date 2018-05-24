@@ -28,9 +28,10 @@ var responseMapping = make(map[uint16]uint16)
 
 type Route struct
 {
-	RequestID uint16 `json:"requestID"`
-	ResponseID uint16 `json:"responseID"`
 	Service string `json:"service"`
+	RequestID uint16 `json:"req"`
+	ResponseID uint16 `json:"resp"`
+	Auth bool `json:"auth"`
 }
 
 func LoadRoute(routes []Route) {
@@ -67,24 +68,20 @@ func GetPushID(service string) uint16 {
 	return servicePushMapping[service]
 }
 
-
-func HandleMessage(request interface{}, clientID string) (interface{}, int32, error) {
-	any, _ := request.(*protocol.Any)
-	serviceID, ok := requestServiceMapping[any.Id]
+//未授权的消息转发
+func HandleMessage(request *protocol.Any) (*protocol.Any, error) {
+	serviceType, ok := requestServiceMapping[request.Id]
 	if !ok {
-		return nil, 0, errors.New(fmt.Sprintf("un expect request id %v", any.Id))
+		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
-	if clientID != "" {
-		any.ClientId = clientID
-	}
-	response, error := dispatch.RPC.Request(serviceID, request)
+	response, error := dispatch.RPC.Request(serviceType, request)
 	if error != nil {
-		return nil, 0, error
+		return nil, error
 	}
 	responseProxy, ok := response.(*protocol.Any)
 	if !ok {
-		return nil, 0, errors.New("un expect response type")
+		return nil, errors.New("un expect response type")
 	}
-	responseProxy.Id = responseMapping[any.Id]
-	return responseProxy, responseProxy.GetAuthId(), nil
+	responseProxy.Id = responseMapping[request.Id]
+	return responseProxy, nil
 }

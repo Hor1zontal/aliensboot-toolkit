@@ -25,7 +25,7 @@ func PublicWBService(config ServiceConfig, address string) *wbService {
 	}
 	//center.ClusterCenter.AddServiceFactory(service.serviceType, &wbServiceFactory{})
 	//websocket服务启动成功,则发布到中心服务器
-	if !ClusterCenter.PublicService(service) {
+	if !ClusterCenter.PublicService(service, config.Unique) {
 		panic(service.serviceType + " wb service can not be public")
 	}
 	return service
