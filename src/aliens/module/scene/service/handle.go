@@ -53,7 +53,7 @@ func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (re
                     return
     			}
     	}
-    	data, _ := proto.Marshal(response)
+    	data, _ := proto.Marshal(responseProxy)
         response = &protocol.Any{TypeUrl:"", Value:data}
     }()
 	err = handleRequest(requestProxy, responseProxy)

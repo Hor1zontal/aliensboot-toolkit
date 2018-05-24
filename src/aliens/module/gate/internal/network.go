@@ -90,6 +90,7 @@ func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
 		request.AuthId = this.authID
 	}
 	response, error := route.HandleMessage(request)
+	//log.Debugf("request %v - response %v", request, response)
 	if error != nil {
 		//TODO 返回服务不可用等处理方式
 		log.Debug(error.Error())
