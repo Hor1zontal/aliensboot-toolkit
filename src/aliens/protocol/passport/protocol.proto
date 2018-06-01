@@ -13,7 +13,9 @@ message PassportRequest {
         login_register loginRegister = 6;
         login_login loginLogin = 7;
 
-    }
+        new_interface newInterface = 10;
+
+}
 
 
 }
@@ -29,7 +31,9 @@ message PassportResponse {
 
         uint32 exception = 3;
         login_register_ret loginRegisterRet = 6;
-        login_login_ret loginLoginRet = 7;   
+        login_login_ret loginLoginRet = 7;
+
+        new_interface_ret newInterfaceRet = 10;
     }
 
 }

@@ -2,32 +2,34 @@
 // source: protocol.proto
 
 /*
-Package scene is a generated protocol buffer package.
+	Package scene is a generated protocol buffer package.
 
-It is generated from these files:
-	protocol.proto
-	scene.proto
+	It is generated from these files:
+		protocol.proto
+		scene.proto
 
-It has these top-level messages:
-	SceneRequest
-	SceneResponse
-	Vector
-	Entity
-	SpaceEnter
-	SpaceEnterRet
-	SpaceMove
-	SpaceMoveRet
-	SpaceLeave
-	SpaceLeaveRet
-	GetState
-	GetStateRet
-	SpacePush
+	It has these top-level messages:
+		SceneRequest
+		SceneResponse
+		Vector
+		Entity
+		SpaceEnter
+		SpaceEnterRet
+		SpaceMove
+		SpaceMoveRet
+		SpaceLeave
+		SpaceLeaveRet
+		GetState
+		GetStateRet
+		SpacePush
 */
 package scene
 
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
+
+import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -38,7 +40,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 // request
 type SceneRequest struct {
@@ -58,6 +60,8 @@ func (*SceneRequest) Descriptor() ([]byte, []int) { return fileDescriptorProtoco
 
 type isSceneRequest_Request interface {
 	isSceneRequest_Request()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 
 type SceneRequest_SpaceMove struct {
@@ -253,6 +257,8 @@ func (*SceneResponse) Descriptor() ([]byte, []int) { return fileDescriptorProtoc
 
 type isSceneResponse_Response interface {
 	isSceneResponse_Response()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 
 type SceneResponse_Exception struct {
@@ -470,30 +476,944 @@ func init() {
 	proto.RegisterType((*SceneRequest)(nil), "scene.SceneRequest")
 	proto.RegisterType((*SceneResponse)(nil), "scene.SceneResponse")
 }
+func (m *SceneRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SceneRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Session != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.Session))
+	}
+	if m.Request != nil {
+		nn1, err := m.Request.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn1
+	}
+	return i, nil
+}
+
+func (m *SceneRequest_SpaceMove) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceMove != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceMove.Size()))
+		n2, err := m.SpaceMove.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n2
+	}
+	return i, nil
+}
+func (m *SceneRequest_SpaceEnter) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceEnter != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceEnter.Size()))
+		n3, err := m.SpaceEnter.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n3
+	}
+	return i, nil
+}
+func (m *SceneRequest_SpaceLeave) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceLeave != nil {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceLeave.Size()))
+		n4, err := m.SpaceLeave.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
+func (m *SceneRequest_GetState) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GetState != nil {
+		dAtA[i] = 0x42
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GetState.Size()))
+		n5, err := m.GetState.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	return i, nil
+}
+func (m *SceneResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SceneResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Session != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.Session))
+	}
+	if m.Response != nil {
+		nn6, err := m.Response.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn6
+	}
+	if len(m.ScenePush) > 0 {
+		dAtA[i] = 0xa2
+		i++
+		dAtA[i] = 0x1f
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(len(m.ScenePush)))
+		i += copy(dAtA[i:], m.ScenePush)
+	}
+	if m.SpacePush != nil {
+		dAtA[i] = 0xaa
+		i++
+		dAtA[i] = 0x1f
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpacePush.Size()))
+		n7, err := m.SpacePush.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n7
+	}
+	return i, nil
+}
+
+func (m *SceneResponse_Exception) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintProtocol(dAtA, i, uint64(m.Exception))
+	return i, nil
+}
+func (m *SceneResponse_SpaceMoveRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceMoveRet != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceMoveRet.Size()))
+		n8, err := m.SpaceMoveRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n8
+	}
+	return i, nil
+}
+func (m *SceneResponse_SpaceEnterRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceEnterRet != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceEnterRet.Size()))
+		n9, err := m.SpaceEnterRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n9
+	}
+	return i, nil
+}
+func (m *SceneResponse_SpaceLeaveRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.SpaceLeaveRet != nil {
+		dAtA[i] = 0x3a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceLeaveRet.Size()))
+		n10, err := m.SpaceLeaveRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n10
+	}
+	return i, nil
+}
+func (m *SceneResponse_GetStateRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GetStateRet != nil {
+		dAtA[i] = 0x42
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GetStateRet.Size()))
+		n11, err := m.GetStateRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n11
+	}
+	return i, nil
+}
+func encodeVarintProtocol(dAtA []byte, offset int, v uint64) int {
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return offset + 1
+}
+func (m *SceneRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.Session != 0 {
+		n += 1 + sovProtocol(uint64(m.Session))
+	}
+	if m.Request != nil {
+		n += m.Request.Size()
+	}
+	return n
+}
+
+func (m *SceneRequest_SpaceMove) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceMove != nil {
+		l = m.SpaceMove.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneRequest_SpaceEnter) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceEnter != nil {
+		l = m.SpaceEnter.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneRequest_SpaceLeave) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceLeave != nil {
+		l = m.SpaceLeave.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneRequest_GetState) Size() (n int) {
+	var l int
+	_ = l
+	if m.GetState != nil {
+		l = m.GetState.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.Session != 0 {
+		n += 1 + sovProtocol(uint64(m.Session))
+	}
+	if m.Response != nil {
+		n += m.Response.Size()
+	}
+	l = len(m.ScenePush)
+	if l > 0 {
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	if m.SpacePush != nil {
+		l = m.SpacePush.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+
+func (m *SceneResponse_Exception) Size() (n int) {
+	var l int
+	_ = l
+	n += 1 + sovProtocol(uint64(m.Exception))
+	return n
+}
+func (m *SceneResponse_SpaceMoveRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceMoveRet != nil {
+		l = m.SpaceMoveRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneResponse_SpaceEnterRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceEnterRet != nil {
+		l = m.SpaceEnterRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneResponse_SpaceLeaveRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.SpaceLeaveRet != nil {
+		l = m.SpaceLeaveRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *SceneResponse_GetStateRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.GetStateRet != nil {
+		l = m.GetStateRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+
+func sovProtocol(x uint64) (n int) {
+	for {
+		n++
+		x >>= 7
+		if x == 0 {
+			break
+		}
+	}
+	return n
+}
+func sozProtocol(x uint64) (n int) {
+	return sovProtocol(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *SceneRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowProtocol
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SceneRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SceneRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			m.Session = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Session |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceMove", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceMove{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Request = &SceneRequest_SpaceMove{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceEnter", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceEnter{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Request = &SceneRequest_SpaceEnter{v}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceLeave", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceLeave{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Request = &SceneRequest_SpaceLeave{v}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetState", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GetState{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Request = &SceneRequest_GetState{v}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipProtocol(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SceneResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowProtocol
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SceneResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SceneResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Session", wireType)
+			}
+			m.Session = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Session |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Exception", wireType)
+			}
+			var v uint32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Response = &SceneResponse_Exception{v}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceMoveRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceMoveRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Response = &SceneResponse_SpaceMoveRet{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceEnterRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceEnterRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Response = &SceneResponse_SpaceEnterRet{v}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceLeaveRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &SpaceLeaveRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Response = &SceneResponse_SpaceLeaveRet{v}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetStateRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GetStateRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Response = &SceneResponse_GetStateRet{v}
+			iNdEx = postIndex
+		case 500:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScenePush", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScenePush = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 501:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpacePush", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.SpacePush == nil {
+				m.SpacePush = &SpacePush{}
+			}
+			if err := m.SpacePush.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipProtocol(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipProtocol(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowProtocol
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+			return iNdEx, nil
+		case 1:
+			iNdEx += 8
+			return iNdEx, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			iNdEx += length
+			if length < 0 {
+				return 0, ErrInvalidLengthProtocol
+			}
+			return iNdEx, nil
+		case 3:
+			for {
+				var innerWire uint64
+				var start int = iNdEx
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return 0, ErrIntOverflowProtocol
+					}
+					if iNdEx >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					innerWire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				innerWireType := int(innerWire & 0x7)
+				if innerWireType == 4 {
+					break
+				}
+				next, err := skipProtocol(dAtA[start:])
+				if err != nil {
+					return 0, err
+				}
+				iNdEx = start + next
+			}
+			return iNdEx, nil
+		case 4:
+			return iNdEx, nil
+		case 5:
+			iNdEx += 4
+			return iNdEx, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
+}
+
+var (
+	ErrInvalidLengthProtocol = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowProtocol   = fmt.Errorf("proto: integer overflow")
+)
 
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 336 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x7c, 0x92, 0x41, 0x4b, 0xfb, 0x40,
-	0x14, 0xc4, 0x93, 0x96, 0x36, 0xcd, 0x4b, 0xdb, 0xff, 0x9f, 0x3d, 0x2d, 0x82, 0x12, 0x7a, 0x0a,
-	0x0a, 0x39, 0x54, 0x04, 0xcf, 0x05, 0x21, 0x07, 0x05, 0xd9, 0x7e, 0x80, 0x52, 0xc3, 0xa3, 0x15,
-	0x6a, 0x36, 0x66, 0xb7, 0xc5, 0xcf, 0xec, 0x59, 0xcf, 0xca, 0xbe, 0x6c, 0x37, 0xd9, 0x8b, 0xa7,
-	0x64, 0x67, 0x7e, 0x73, 0x98, 0xe1, 0xc1, 0xbc, 0x6e, 0xa4, 0x96, 0xa5, 0x3c, 0xe4, 0xf4, 0xc3,
-	0x46, 0xaa, 0xc4, 0x0a, 0x2f, 0x12, 0xfa, 0xb4, 0xda, 0xe2, 0x33, 0x84, 0xe9, 0xda, 0xbc, 0x05,
-	0xbe, 0x1f, 0x51, 0x69, 0xc6, 0x21, 0x52, 0xa8, 0xd4, 0xab, 0xac, 0x78, 0x98, 0x86, 0xd9, 0x48,
-	0x9c, 0x9f, 0xec, 0x06, 0x62, 0x55, 0x6f, 0x4b, 0x7c, 0x92, 0x27, 0xe4, 0xa3, 0x34, 0xcc, 0x92,
-	0x65, 0x92, 0x93, 0xb2, 0x79, 0x93, 0x27, 0x2c, 0x02, 0xd1, 0xf9, 0x2c, 0x07, 0xa0, 0xc7, 0x43,
-	0xa5, 0xb1, 0xe1, 0x63, 0xa2, 0xa7, 0x96, 0x46, 0xa3, 0x15, 0x81, 0xe8, 0x11, 0x8e, 0x7f, 0xc4,
-	0xed, 0x09, 0x79, 0xe4, 0xf1, 0x07, 0xa3, 0x39, 0x9e, 0x08, 0x96, 0xc1, 0x64, 0x87, 0x7a, 0xad,
-	0xb7, 0x1a, 0xf9, 0x84, 0x68, 0xc8, 0x77, 0xa8, 0x37, 0xca, 0x28, 0x45, 0x20, 0x9c, 0xbb, 0x8a,
-	0x21, 0x6a, 0xda, 0x6e, 0x8b, 0x9f, 0x01, 0xcc, 0x6c, 0x59, 0x55, 0xcb, 0x4a, 0xe1, 0x1f, 0x6d,
-	0xaf, 0x20, 0xc6, 0x8f, 0x12, 0x6b, 0x6d, 0xbc, 0x41, 0x1a, 0x66, 0x33, 0x53, 0xd0, 0x49, 0xec,
-	0x0e, 0xa6, 0xae, 0xad, 0x40, 0x6d, 0x07, 0xf9, 0xd7, 0x1b, 0x64, 0xd3, 0xa0, 0x2e, 0x02, 0xe1,
-	0x61, 0xec, 0x1e, 0x66, 0x5d, 0x6b, 0x93, 0x6b, 0xa7, 0xf9, 0xdf, 0x9f, 0xc6, 0x06, 0x7d, 0xd0,
-	0x25, 0xa9, 0xbf, 0x49, 0x46, 0x5e, 0x92, 0x46, 0xf2, 0x92, 0x67, 0x90, 0x2d, 0x21, 0x39, 0xaf,
-	0x61, 0x72, 0xed, 0x5c, 0xf3, 0x6e, 0x2e, 0x9b, 0xea, 0x43, 0xec, 0x12, 0x62, 0x3a, 0x93, 0xe7,
-	0xa3, 0xda, 0xf3, 0xaf, 0x61, 0x1a, 0x66, 0xb1, 0xe8, 0x14, 0x76, 0x6d, 0x6f, 0x81, 0xec, 0xef,
-	0xa1, 0x77, 0x0c, 0xf5, 0x51, 0xed, 0x45, 0x67, 0xaf, 0x00, 0x26, 0x8d, 0xdd, 0xfb, 0x65, 0x4c,
-	0x57, 0x77, 0xfb, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xd0, 0x6f, 0x61, 0x53, 0x9b, 0x02, 0x00, 0x00,
+	// 358 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0xcf, 0x4a, 0xc3, 0x40,
+	0x18, 0xc4, 0xb3, 0x2d, 0x6d, 0x9a, 0x2f, 0x6d, 0x2d, 0x7b, 0x5a, 0x04, 0x43, 0xe8, 0x29, 0x28,
+	0xe4, 0x50, 0x11, 0x3c, 0x17, 0x84, 0x1c, 0x14, 0x64, 0xfb, 0x00, 0xa5, 0x86, 0x8f, 0x56, 0xa8,
+	0xd9, 0x98, 0xdd, 0x16, 0x1f, 0xc5, 0x47, 0xf2, 0xe8, 0x23, 0x48, 0xbd, 0x79, 0xd6, 0xb3, 0xb2,
+	0x9b, 0x6d, 0xfe, 0x5c, 0x3c, 0x25, 0x3b, 0xf3, 0x9b, 0xc3, 0x0c, 0x1f, 0x8c, 0xf3, 0x42, 0x28,
+	0x91, 0x8a, 0x6d, 0x6c, 0x7e, 0x68, 0x4f, 0xa6, 0x98, 0xe1, 0xa9, 0x6f, 0x3e, 0xa5, 0x36, 0xfd,
+	0x22, 0x30, 0x5c, 0xe8, 0x37, 0xc7, 0xe7, 0x1d, 0x4a, 0x45, 0x19, 0xb8, 0x12, 0xa5, 0x7c, 0x14,
+	0x19, 0x23, 0x21, 0x89, 0x7a, 0xfc, 0xf8, 0xa4, 0x17, 0xe0, 0xc9, 0x7c, 0x95, 0xe2, 0x9d, 0xd8,
+	0x23, 0xeb, 0x85, 0x24, 0xf2, 0x67, 0x7e, 0x6c, 0x94, 0xe5, 0x93, 0xd8, 0x63, 0xe2, 0xf0, 0xda,
+	0xa7, 0x31, 0x80, 0x79, 0xdc, 0x64, 0x0a, 0x0b, 0xd6, 0x37, 0xf4, 0xd0, 0xd2, 0xa8, 0xb5, 0xc4,
+	0xe1, 0x0d, 0xa2, 0xe2, 0x6f, 0x71, 0xb5, 0x47, 0xe6, 0xb6, 0xf8, 0xad, 0xd6, 0x2a, 0xde, 0x10,
+	0x34, 0x82, 0xc1, 0x1a, 0xd5, 0x42, 0xad, 0x14, 0xb2, 0x81, 0xa1, 0x21, 0x5e, 0xa3, 0x5a, 0x4a,
+	0xad, 0x24, 0x0e, 0xaf, 0xdc, 0xb9, 0x07, 0x6e, 0x51, 0x76, 0x9b, 0xfe, 0x76, 0x60, 0x64, 0xcb,
+	0xca, 0x5c, 0x64, 0x12, 0xff, 0x69, 0x1b, 0x80, 0x87, 0x2f, 0x29, 0xe6, 0x4a, 0x7b, 0x9d, 0x90,
+	0x44, 0x23, 0x5d, 0xb0, 0x92, 0xe8, 0x15, 0x0c, 0xab, 0xb6, 0x1c, 0x95, 0x1d, 0xe4, 0xa4, 0x31,
+	0xc8, 0xb2, 0x40, 0x95, 0x38, 0xbc, 0x85, 0xd1, 0x6b, 0x18, 0xd5, 0xad, 0x75, 0xae, 0x9c, 0x66,
+	0xd2, 0x9c, 0xc6, 0x06, 0xdb, 0x60, 0x95, 0x34, 0xfd, 0x75, 0xd2, 0x6d, 0x25, 0xcd, 0x48, 0xad,
+	0xe4, 0x11, 0xa4, 0x33, 0xf0, 0x8f, 0x6b, 0xe8, 0x5c, 0x39, 0xd7, 0xb8, 0x9e, 0xcb, 0xa6, 0x9a,
+	0x10, 0x3d, 0x03, 0xcf, 0x9c, 0xc9, 0xfd, 0x4e, 0x6e, 0xd8, 0x77, 0x37, 0x24, 0x91, 0xc7, 0x6b,
+	0x85, 0x9e, 0xdb, 0x5b, 0x30, 0xf6, 0x4f, 0xb7, 0x75, 0x0c, 0xf9, 0x4e, 0x6e, 0x78, 0x6d, 0xcf,
+	0x01, 0x06, 0x85, 0xdd, 0x7b, 0x3e, 0x79, 0x3b, 0x04, 0xe4, 0xfd, 0x10, 0x90, 0x8f, 0x43, 0x40,
+	0x5e, 0x3f, 0x03, 0xe7, 0xa1, 0x6f, 0xee, 0xf0, 0xf2, 0x2f, 0x00, 0x00, 0xff, 0xff, 0xb3, 0x1e,
+	0x5e, 0x17, 0xad, 0x02, 0x00, 0x00,
 }

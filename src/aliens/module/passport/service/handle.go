@@ -53,7 +53,7 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
                     return
     			}
     	}
-    	data, _ := proto.Marshal(response)
+    	data, _ := proto.Marshal(responseProxy)
         response = &protocol.Any{TypeUrl:"", Value:data}
     }()
 	err = handleRequest(requestProxy, responseProxy)
@@ -73,6 +73,13 @@ func handleRequest(request *passport.PassportRequest, response *passport.Passpor
 		messageRet := &passport.LoginLoginRet{}
 		handleLoginLogin(request.GetLoginLogin(), messageRet)
 		response.Response = &passport.PassportResponse_LoginLoginRet{messageRet}
+		return nil
+	}
+	
+	if request.GetNewInterface() != nil {
+		messageRet := &passport.NewInterfaceRet{}
+		handleNewInterface(request.GetNewInterface(), messageRet)
+		response.Response = &passport.PassportResponse_NewInterfaceRet{messageRet}
 		return nil
 	}
 	

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+//创建房间
+message create_room {
+    uint32 maxPlayer = 1; //最大可容纳的玩家数量
+}
+
+message create_room_ret {
+    string roomID = 1;
+}
+
+//加入房间
+message join_room {
+    string roomID = 1; //房间id
+    string token = 2; //携带token加入游戏
+}
+
+message join_room_ret {
+    uint32 playerID = 1; //分配玩家id
+}
+
+//离开房间
+message leave_room {
+    string roomID = 1;
+}
+
+message leave_room_ret {
+
+}

@@ -30,8 +30,8 @@ func handleLoginRegister(request *passport.LoginRegister, result *passport.Login
 	userCache := cache.NewUser(username, passwd, "ip address", "", "", "", "")
 
 	result.Result = passport.LoginRegisterRet_registerSuccess
-	result.Uid = userCache.ID
+	result.Uid = userCache.Id
 	token := NewToken()
-	cache.PassportCache.SetUserToken(userCache.ID, token)
+	cache.PassportCache.SetUserToken(userCache.Id, token)
 	result.Token = token
 }

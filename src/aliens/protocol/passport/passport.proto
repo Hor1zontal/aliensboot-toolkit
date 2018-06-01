@@ -65,3 +65,11 @@ message channel_login_ret {
 }
 
 
+message new_interface {
+    string notify = 1;
+}
+
+message new_interface_ret {
+    string result = 1;
+}
+

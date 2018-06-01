@@ -2,22 +2,22 @@ package db
 
 import (
 	"aliens/module/passport/conf"
-	"aliens/common/database/mongo"
-	"aliens/common/database"
+	"aliens/database/mongo"
+	"aliens/protocol/passport"
 )
 
-var Database database.IDatabase = &mongo.Database{}
-var DatabaseHandler = Database.GetHandler()
+var Database *mongo.Database = &mongo.Database{}
+var DatabaseHandler = Database
 
 func Init() {
-	//Database.Auth(conf.Config.DBUsername, conf.Config.DBPassword)
 	err := Database.Init(conf.Config.Database)
 	if err != nil {
 		panic(err)
 	}
-	DatabaseHandler.EnsureTable(&DBUser{})
-	DatabaseHandler.EnsureUniqueIndex(&DBUser{}, "username")
+	DatabaseHandler.EnsureTable("passport", &passport.User{})
+	DatabaseHandler.EnsureUniqueIndex(&passport.User{}, "username")
 
+	//DatabaseHandler.Insert(&passport.User{Id:DatabaseHandler.GenTimestampId(&passport.User{}),Username:"hejialin",RegTime:time.Now()})
 }
 
 func Close() {

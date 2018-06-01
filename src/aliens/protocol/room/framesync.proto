@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+//---------client -> server------------
+
+//客户端发送给服务端的操作指令
+message command {
+    uint32 playerID = 1;  //操作的发送者
+    bytes data = 2; //操作的内容
+}
+
+//获取帧数据 一般丢帧的情况下会请求
+message request_lost_frame {
+    repeated uint32 seq = 1; //帧序号
+}
+
+
+//---------server -> client-------------
+//服务端发送给客户端的帧消息
+message frame {
+    uint32 seq = 1; //帧序号
+    repeated command commands = 2;
+}
+
+
+

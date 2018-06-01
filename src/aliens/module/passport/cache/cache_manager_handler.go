@@ -11,40 +11,18 @@ package cache
 
 import (
 	"aliens/common/util"
-	"aliens/common/database"
 )
 
 const (
-	USER_KEY_PREFIX string = "gu"
-	USERNAME_KEY_PREFIX string = "uk_"
+	USER_KEY_PREFIX string = "test_uid_"
+	USERNAME_KEY_PREFIX string = "test_username"
 
 	UPROP_DESC string = "desc"         //用户签名
 	UPROP_NICKNAME string = "nname"         //用户昵称
 	UPROP_ICON string = "icon"      	//图标
 	UPROP_ONLINE string = "online"		//用户是否登录
-	UPROP_ONLINE_TIME string = "otime"  //用户上次的登录时间戳
-	UPROP_INTO_EVENT string = "inevent" //用户当前进入的事件副本
-	UPROP_FAITH string = "faith"      	//用户信仰值
-	UPROP_POWER string = "power"      	//用户法力值
-	UPROP_POWER_LIMIT string = "p_limit"      	//用户法力值上限
-	UPROP_LEVEL string = "level"      	//用户神力值
 	UPROP_AVATAR string = "avatar"      //用户头像
-	UPROP_HISTORY_ATK string = "h_atk"  //星球被攻击的历史记录
-	UPROP_BUILDING_LEVEL string = "b_level"  //星球建筑总等级
-	UPROP_BELIEVER_COUNT string = "b_count"  //星球信徒数量
 
-	UPROP_PUBLIC_ITEM string = "pitem"      	//用户发布的物品
-	UPROP_PUBLIC_TIMESTAMP string = "ptstamp"   //用户发布物品的时间戳
-
-	UPROP_SALE string = "h_sale"  //用户挂售的圣物
-
-	UPROP_STAR string = "star"      	//用户当前星球id
-	UPROP_STARTYPE string = "tstar"      	//用户当前的星球类型
-
-	UPROP_BUFF_MANA_LIMIT string = "buffml"      	//用户当前的BUFF法力上限加成
-	UPROP_BUFF_MANA_INTERVAL string = "buffmi"      	//用户当前的BUFF法力回复间隔
-
-	UPROP_NODE string = "un"   			//用户内存所在的节点信息
 
 	FLAG_LOADUSER string = "flu_"   	//标识，是否加载用户数据到缓存
 
@@ -116,12 +94,12 @@ func (this *cacheManager) GetUidByUsername(username string) int64 {
 }
 
 //获取用户所有信息数据
-func (this *cacheManager) HSetUser(uid int64, data database.IData) {
+func (this *cacheManager) HSetUser(uid int64, data interface{}) {
 	this.redisClient.HSetData(GetUserKey(uid), data)
 }
 
 //设置用户所有信息数据
-func (this *cacheManager) HGetUser(uid int64, data database.IData) {
+func (this *cacheManager) HGetUser(uid int64, data interface{}) {
 	this.redisClient.HGetData(GetUserKey(uid), data)
 }
 

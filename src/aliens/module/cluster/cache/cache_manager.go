@@ -10,7 +10,7 @@
 package cache
 
 import (
-	"aliens/common/cache/redis"
+	"aliens/cache/redis"
 	"aliens/module/cluster/conf"
 )
 

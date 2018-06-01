@@ -1,5 +1,11 @@
 syntax = "proto3";
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+
+//import "gogo.proto";
+
 message Vector {
     float x = 1;
     float y = 2;
@@ -7,10 +13,11 @@ message Vector {
 }
 
 message Entity {
-    int32 id = 1;  //实体id
+    int32 id = 1 [(gogoproto.moretags) = "bson:\"id\""];  //实体id
     Vector position = 2; //玩家的位置
     Vector direction = 3; //玩家的向量
     string data = 4;  //实体数据 json
+    google.protobuf.Timestamp nullableTimestamp = 5 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
 }
 
 message space_enter {

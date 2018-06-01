@@ -39,6 +39,16 @@ func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 			handleLoginLogin(request, response)
 			return json.Marshal(response)
 		
+		case "NewInterface" :
+			request := &passport.NewInterface{}
+			response := &passport.NewInterfaceRet{}
+			error := json.Unmarshal(data, request)
+			if error != nil {
+				return nil, error
+			}
+			handleNewInterface(request, response)
+			return json.Marshal(response)
+		
 		default:
 		    return nil, errors.New("unexpect request " + requestUrl)
 

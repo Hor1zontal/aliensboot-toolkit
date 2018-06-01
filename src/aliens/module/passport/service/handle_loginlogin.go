@@ -38,9 +38,9 @@ func handleLoginLogin(request *passport.LoginLogin, result *passport.LoginLoginR
 	//qdoc := bson.M{"_id": userCache.ID}
 	//udoc := bson.M{"$set": bson.M{"ip": getNetworkAddress(network)}}
 	//db.DatabaseHandler.Update(userCache.Name(), qdoc, udoc)
-	result.Uid = userCache.ID
+	result.Uid = userCache.GetId()
 	token := NewToken()
-	cache.PassportCache.SetUserToken(userCache.ID, token)
+	cache.PassportCache.SetUserToken(userCache.GetId(), token)
 	result.Token = token
 	result.Result = passport.LoginLoginRet_loginSuccess
 }

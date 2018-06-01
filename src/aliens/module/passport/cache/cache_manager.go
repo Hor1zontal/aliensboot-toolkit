@@ -10,11 +10,12 @@
 package cache
 
 import (
-	"aliens/common/cache/redis"
+	"aliens/cache/redis"
 	"aliens/module/passport/conf"
 	"aliens/module/passport/db"
 	"time"
 	"aliens/log"
+	"aliens/protocol/passport"
 )
 
 var PassportCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -28,11 +29,11 @@ func Init() {
 
 	//其他服务器加载了缓存就不需要再加载到缓存了
 	if PassportCache.SetNX(FLAG_LOADUSER, 1) {
-		var users []*db.DBUser
-		db.DatabaseHandler.QueryAll(&db.DBUser{}, &users)
+		var users []*passport.User
+		db.DatabaseHandler.QueryAll(&passport.User{}, &users)
 		for _, user := range users {
-			PassportCache.SetUsernameUidMapping(user.Username, user.ID)
-			PassportCache.HSetUser(user.ID, user)
+			PassportCache.SetUsernameUidMapping(user.GetUsername(), user.GetId())
+			PassportCache.HSetUser(user.GetId(), user)
 		}
 	}
 }
@@ -59,42 +60,42 @@ func (this *cacheManager) SetNX(key string, value interface{}) bool {
 /**
  *  新建用户
  */
-func NewUser(username string, password string, ip string, channel string, channelUID string, openID string, avatar string) *db.DBUser {
-	user := &db.DBUser{
+func NewUser(username string, password string, ip string, channel string, channelUID string, openID string, avatar string) *passport.User {
+	user := &passport.User{
 		Username: username,
 		Password: password,
 		Salt:     "",
 		Channel:  channel,
-		ChannelUID: channelUID,
+		Channeluid: channelUID,
 		Mobile:   "",
-		IP:       ip,
-		OpenID:   openID,
+		Ip:       ip,
+		Openid:   openID,
 		Status:   0,
 		Avatar:   avatar,
 		RegTime:  time.Now(),
 		//LastLogin:time.Now(),
 	}
-	user.ID = db.DatabaseHandler.GenTimestampId(user)
+	user.Id = db.DatabaseHandler.GenTimestampId(user)
 	err := db.DatabaseHandler.Insert(user)
 	if err != nil {
 		log.Debugf("add user invalid %v", err)
 		//exception.GameException(exception.USERNAME_EXISTS)
 	}
-	PassportCache.SetUsernameUidMapping(user.Username, user.ID)
-	PassportCache.HSetUser(user.ID, user)
+	PassportCache.SetUsernameUidMapping(user.Username, user.GetId())
+	PassportCache.HSetUser(user.GetId(), user)
 	return user
 }
 
 /**
  *  获取用户数据
  */
-func GetUser(username string) *db.DBUser {
+func GetUser(username string) *passport.User {
 	uid := PassportCache.GetUidByUsername(username)
 	if uid == 0 {
 		return nil
 	}
-	user := &db.DBUser{}
+	user := &passport.User{}
 	PassportCache.HGetUser(uid, user)
-	user.ID = uid
+	user.Id = uid
 	return user
 }

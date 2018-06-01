@@ -3,8 +3,8 @@ package conf
 import (
 	"time"
 	"aliens/config"
-	"aliens/common/cache/redis"
-	"aliens/common/database/dbconfig"
+	"aliens/cache/redis"
+	"aliens/database/dbconfig"
 	"aliens/cluster/center"
 )
 

@@ -1,0 +1,42 @@
+syntax = "proto3";
+package room;
+
+import "framesync.proto";
+import "room.proto";
+
+//request
+message Request {
+
+
+    //-----------------房间模块接口---------------
+    oneof request {
+        create_room createRoom = 4;
+        join_room joinRoom = 5;
+        leave_room leaveRoom = 6;
+
+
+    }
+
+    command command = 40;  //同步指令信息
+    request_lost_frame requestLostFrame  = 41;//丢帧请求
+}
+
+//response
+message Response {
+
+
+    //-----------------房间模块接口---------------
+    oneof response {
+
+        uint32 exception = 3;
+        create_room_ret createRoomRet = 4;
+        join_room_ret joinRoomRet = 5;
+        leave_room_ret leaveRoomRet = 6;
+    }
+
+
+    repeated frame syncFramePush = 50;  //帧信息推送
+}
+
+
+

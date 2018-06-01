@@ -22,6 +22,7 @@ type PassportRequest struct {
 	// Types that are valid to be assigned to Request:
 	//	*PassportRequest_LoginRegister
 	//	*PassportRequest_LoginLogin
+	//	*PassportRequest_NewInterface
 	Request isPassportRequest_Request `protobuf_oneof:"request"`
 }
 
@@ -42,9 +43,13 @@ type PassportRequest_LoginRegister struct {
 type PassportRequest_LoginLogin struct {
 	LoginLogin *LoginLogin `protobuf:"bytes,7,opt,name=loginLogin,oneof"`
 }
+type PassportRequest_NewInterface struct {
+	NewInterface *NewInterface `protobuf:"bytes,10,opt,name=newInterface,oneof"`
+}
 
 func (*PassportRequest_LoginRegister) isPassportRequest_Request() {}
 func (*PassportRequest_LoginLogin) isPassportRequest_Request()    {}
+func (*PassportRequest_NewInterface) isPassportRequest_Request()  {}
 
 func (m *PassportRequest) GetRequest() isPassportRequest_Request {
 	if m != nil {
@@ -74,11 +79,19 @@ func (m *PassportRequest) GetLoginLogin() *LoginLogin {
 	return nil
 }
 
+func (m *PassportRequest) GetNewInterface() *NewInterface {
+	if x, ok := m.GetRequest().(*PassportRequest_NewInterface); ok {
+		return x.NewInterface
+	}
+	return nil
+}
+
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*PassportRequest) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _PassportRequest_OneofMarshaler, _PassportRequest_OneofUnmarshaler, _PassportRequest_OneofSizer, []interface{}{
 		(*PassportRequest_LoginRegister)(nil),
 		(*PassportRequest_LoginLogin)(nil),
+		(*PassportRequest_NewInterface)(nil),
 	}
 }
 
@@ -94,6 +107,11 @@ func _PassportRequest_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	case *PassportRequest_LoginLogin:
 		_ = b.EncodeVarint(7<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.LoginLogin); err != nil {
+			return err
+		}
+	case *PassportRequest_NewInterface:
+		_ = b.EncodeVarint(10<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.NewInterface); err != nil {
 			return err
 		}
 	case nil:
@@ -122,6 +140,14 @@ func _PassportRequest_OneofUnmarshaler(msg proto.Message, tag, wire int, b *prot
 		err := b.DecodeMessage(msg)
 		m.Request = &PassportRequest_LoginLogin{msg}
 		return true, err
+	case 10: // request.newInterface
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(NewInterface)
+		err := b.DecodeMessage(msg)
+		m.Request = &PassportRequest_NewInterface{msg}
+		return true, err
 	default:
 		return false, nil
 	}
@@ -141,6 +167,11 @@ func _PassportRequest_OneofSizer(msg proto.Message) (n int) {
 		n += proto.SizeVarint(7<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
+	case *PassportRequest_NewInterface:
+		s := proto.Size(x.NewInterface)
+		n += proto.SizeVarint(10<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
 	case nil:
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
@@ -158,6 +189,7 @@ type PassportResponse struct {
 	//	*PassportResponse_Exception
 	//	*PassportResponse_LoginRegisterRet
 	//	*PassportResponse_LoginLoginRet
+	//	*PassportResponse_NewInterfaceRet
 	Response isPassportResponse_Response `protobuf_oneof:"response"`
 }
 
@@ -181,10 +213,14 @@ type PassportResponse_LoginRegisterRet struct {
 type PassportResponse_LoginLoginRet struct {
 	LoginLoginRet *LoginLoginRet `protobuf:"bytes,7,opt,name=loginLoginRet,oneof"`
 }
+type PassportResponse_NewInterfaceRet struct {
+	NewInterfaceRet *NewInterfaceRet `protobuf:"bytes,10,opt,name=newInterfaceRet,oneof"`
+}
 
 func (*PassportResponse_Exception) isPassportResponse_Response()        {}
 func (*PassportResponse_LoginRegisterRet) isPassportResponse_Response() {}
 func (*PassportResponse_LoginLoginRet) isPassportResponse_Response()    {}
+func (*PassportResponse_NewInterfaceRet) isPassportResponse_Response()  {}
 
 func (m *PassportResponse) GetResponse() isPassportResponse_Response {
 	if m != nil {
@@ -228,12 +264,20 @@ func (m *PassportResponse) GetLoginLoginRet() *LoginLoginRet {
 	return nil
 }
 
+func (m *PassportResponse) GetNewInterfaceRet() *NewInterfaceRet {
+	if x, ok := m.GetResponse().(*PassportResponse_NewInterfaceRet); ok {
+		return x.NewInterfaceRet
+	}
+	return nil
+}
+
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*PassportResponse) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _PassportResponse_OneofMarshaler, _PassportResponse_OneofUnmarshaler, _PassportResponse_OneofSizer, []interface{}{
 		(*PassportResponse_Exception)(nil),
 		(*PassportResponse_LoginRegisterRet)(nil),
 		(*PassportResponse_LoginLoginRet)(nil),
+		(*PassportResponse_NewInterfaceRet)(nil),
 	}
 }
 
@@ -252,6 +296,11 @@ func _PassportResponse_OneofMarshaler(msg proto.Message, b *proto.Buffer) error 
 	case *PassportResponse_LoginLoginRet:
 		_ = b.EncodeVarint(7<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.LoginLoginRet); err != nil {
+			return err
+		}
+	case *PassportResponse_NewInterfaceRet:
+		_ = b.EncodeVarint(10<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.NewInterfaceRet); err != nil {
 			return err
 		}
 	case nil:
@@ -287,6 +336,14 @@ func _PassportResponse_OneofUnmarshaler(msg proto.Message, tag, wire int, b *pro
 		err := b.DecodeMessage(msg)
 		m.Response = &PassportResponse_LoginLoginRet{msg}
 		return true, err
+	case 10: // response.newInterfaceRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(NewInterfaceRet)
+		err := b.DecodeMessage(msg)
+		m.Response = &PassportResponse_NewInterfaceRet{msg}
+		return true, err
 	default:
 		return false, nil
 	}
@@ -307,6 +364,11 @@ func _PassportResponse_OneofSizer(msg proto.Message) (n int) {
 	case *PassportResponse_LoginLoginRet:
 		s := proto.Size(x.LoginLoginRet)
 		n += proto.SizeVarint(7<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *PassportResponse_NewInterfaceRet:
+		s := proto.Size(x.NewInterfaceRet)
+		n += proto.SizeVarint(10<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -378,6 +440,20 @@ func (m *PassportRequest_LoginLogin) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
+func (m *PassportRequest_NewInterface) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.NewInterface != nil {
+		dAtA[i] = 0x52
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.NewInterface.Size()))
+		n4, err := m.NewInterface.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
 func (m *PassportResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -404,11 +480,11 @@ func (m *PassportResponse) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintProtocol(dAtA, i, uint64(m.AuthID))
 	}
 	if m.Response != nil {
-		nn4, err := m.Response.MarshalTo(dAtA[i:])
+		nn5, err := m.Response.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn4
+		i += nn5
 	}
 	return i, nil
 }
@@ -426,11 +502,11 @@ func (m *PassportResponse_LoginRegisterRet) MarshalTo(dAtA []byte) (int, error) 
 		dAtA[i] = 0x32
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRegisterRet.Size()))
-		n5, err := m.LoginRegisterRet.MarshalTo(dAtA[i:])
+		n6, err := m.LoginRegisterRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n5
+		i += n6
 	}
 	return i, nil
 }
@@ -440,11 +516,25 @@ func (m *PassportResponse_LoginLoginRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3a
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginLoginRet.Size()))
-		n6, err := m.LoginLoginRet.MarshalTo(dAtA[i:])
+		n7, err := m.LoginLoginRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n6
+		i += n7
+	}
+	return i, nil
+}
+func (m *PassportResponse_NewInterfaceRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.NewInterfaceRet != nil {
+		dAtA[i] = 0x52
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.NewInterfaceRet.Size()))
+		n8, err := m.NewInterfaceRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n8
 	}
 	return i, nil
 }
@@ -487,6 +577,15 @@ func (m *PassportRequest_LoginLogin) Size() (n int) {
 	}
 	return n
 }
+func (m *PassportRequest_NewInterface) Size() (n int) {
+	var l int
+	_ = l
+	if m.NewInterface != nil {
+		l = m.NewInterface.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
 func (m *PassportResponse) Size() (n int) {
 	var l int
 	_ = l
@@ -522,6 +621,15 @@ func (m *PassportResponse_LoginLoginRet) Size() (n int) {
 	_ = l
 	if m.LoginLoginRet != nil {
 		l = m.LoginLoginRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *PassportResponse_NewInterfaceRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.NewInterfaceRet != nil {
+		l = m.NewInterfaceRet.Size()
 		n += 1 + l + sovProtocol(uint64(l))
 	}
 	return n
@@ -651,6 +759,38 @@ func (m *PassportRequest) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			m.Request = &PassportRequest_LoginLogin{v}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewInterface", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &NewInterface{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Request = &PassportRequest_NewInterface{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -824,6 +964,38 @@ func (m *PassportResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Response = &PassportResponse_LoginLoginRet{v}
 			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewInterfaceRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &NewInterfaceRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Response = &PassportResponse_NewInterfaceRet{v}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipProtocol(dAtA[iNdEx:])
@@ -953,23 +1125,26 @@ var (
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 282 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0x28, 0xca, 0x2f,
-	0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x03, 0x33, 0x84, 0x38, 0x0a, 0x12, 0x8b, 0x8b, 0x0b, 0xf2, 0x8b,
-	0x4a, 0xa4, 0xf8, 0x60, 0x2c, 0x88, 0x8c, 0xd2, 0x46, 0x46, 0x2e, 0xfe, 0x00, 0xa8, 0x50, 0x50,
-	0x6a, 0x61, 0x69, 0x6a, 0x71, 0x89, 0x90, 0x04, 0x17, 0x7b, 0x71, 0x6a, 0x71, 0x71, 0x66, 0x7e,
-	0x9e, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x6b, 0x10, 0x8c, 0x2b, 0xe4, 0xc0, 0xc5, 0x9b, 0x93, 0x9f,
-	0x9e, 0x99, 0x17, 0x94, 0x9a, 0x9e, 0x59, 0x5c, 0x92, 0x5a, 0x24, 0xc1, 0xa6, 0xc0, 0xa8, 0xc1,
-	0x6d, 0x24, 0xa1, 0x07, 0x37, 0x15, 0x2c, 0x1d, 0x5f, 0x04, 0x95, 0xf7, 0x60, 0x08, 0x42, 0xd5,
-	0x20, 0x64, 0xce, 0xc5, 0x05, 0x16, 0xf0, 0x01, 0x11, 0x12, 0xec, 0x60, 0xed, 0xa2, 0xe8, 0xda,
-	0xc1, 0xa4, 0x07, 0x43, 0x10, 0x92, 0x52, 0x27, 0x4e, 0x2e, 0xf6, 0x22, 0x88, 0xfb, 0x94, 0xfe,
-	0x33, 0x72, 0x09, 0x20, 0xdc, 0x5c, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x8a, 0xc7, 0xd1, 0x62, 0x5c,
-	0x6c, 0x89, 0xa5, 0x25, 0x19, 0x9e, 0x2e, 0x12, 0x4c, 0x60, 0x09, 0x28, 0x4f, 0x48, 0x8e, 0x8b,
-	0x33, 0xb5, 0x22, 0x39, 0xb5, 0xa0, 0x04, 0xa4, 0x87, 0x59, 0x81, 0x51, 0x83, 0xd7, 0x83, 0x21,
-	0x08, 0x21, 0x24, 0xe4, 0xc5, 0x25, 0x80, 0xe2, 0xf6, 0xa0, 0xd4, 0x12, 0xa8, 0x7f, 0x65, 0x70,
-	0xf9, 0x37, 0xbe, 0x28, 0xb5, 0xc4, 0x83, 0x21, 0x08, 0x43, 0x9f, 0x90, 0x23, 0x34, 0xe0, 0x7c,
-	0x20, 0x12, 0x25, 0x50, 0x9f, 0x4b, 0x62, 0xf5, 0x39, 0xd4, 0x14, 0x54, 0x1d, 0x4e, 0x5c, 0x5c,
-	0x1c, 0x45, 0x50, 0xcf, 0x3a, 0x09, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83,
-	0x47, 0x72, 0x8c, 0x33, 0x1e, 0xcb, 0x31, 0x24, 0xb1, 0x81, 0xa3, 0xd3, 0x18, 0x10, 0x00, 0x00,
-	0xff, 0xff, 0xf7, 0xcf, 0x4f, 0x80, 0xfa, 0x01, 0x00, 0x00,
+	// 329 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0x4d, 0x4a, 0x03, 0x31,
+	0x14, 0xc7, 0x93, 0x8a, 0xfd, 0x78, 0xda, 0x0f, 0x02, 0x6a, 0xfc, 0x60, 0x28, 0x5d, 0x75, 0xd5,
+	0x85, 0x2e, 0x5c, 0x09, 0x5a, 0x04, 0xa7, 0xd2, 0x85, 0xe4, 0x02, 0xa5, 0x96, 0x67, 0x1d, 0x28,
+	0xc9, 0x98, 0xa4, 0xd4, 0xa3, 0x78, 0xa4, 0x2e, 0x3d, 0x82, 0xd4, 0x0b, 0x78, 0x04, 0x99, 0x4c,
+	0xc6, 0xe9, 0x54, 0xeb, 0x26, 0x24, 0xef, 0xff, 0x7e, 0x0f, 0xde, 0x8f, 0x40, 0x23, 0xd6, 0xca,
+	0xaa, 0x89, 0x9a, 0xf5, 0xdc, 0x85, 0x55, 0xe3, 0xb1, 0x31, 0xb1, 0xd2, 0xf6, 0xa4, 0x91, 0xdd,
+	0xd2, 0xa4, 0xf3, 0x45, 0xa1, 0xf9, 0xe0, 0x4b, 0x02, 0x5f, 0xe6, 0x68, 0x2c, 0xe3, 0x50, 0x31,
+	0x68, 0x4c, 0xa4, 0x24, 0xa7, 0x6d, 0xda, 0xdd, 0x15, 0xd9, 0x93, 0x5d, 0x43, 0x7d, 0xa6, 0xa6,
+	0x91, 0x14, 0x38, 0x8d, 0x8c, 0x45, 0xcd, 0xcb, 0x6d, 0xda, 0xdd, 0x3b, 0xe7, 0xbd, 0x9f, 0xa9,
+	0x2e, 0x1e, 0x69, 0x9f, 0x87, 0x44, 0x14, 0x01, 0x76, 0x09, 0xe0, 0x0a, 0xc3, 0xe4, 0xe0, 0x15,
+	0x87, 0x1f, 0x6c, 0xe2, 0xee, 0x0c, 0x89, 0x58, 0x6b, 0x65, 0x57, 0xb0, 0x2f, 0x71, 0x31, 0x90,
+	0x16, 0xf5, 0xd3, 0x78, 0x82, 0x1c, 0x1c, 0x7a, 0x94, 0xa3, 0x12, 0x17, 0xa3, 0x28, 0x8b, 0x43,
+	0x22, 0x0a, 0xed, 0xfd, 0x1a, 0x54, 0x74, 0xba, 0x5e, 0x67, 0x59, 0x82, 0x56, 0xbe, 0xb2, 0x89,
+	0x95, 0x34, 0xf8, 0xcf, 0xce, 0x87, 0x50, 0x1e, 0xcf, 0xed, 0xf3, 0xe0, 0x96, 0x97, 0x5c, 0xe0,
+	0x5f, 0x2c, 0x80, 0x1a, 0xbe, 0x4e, 0x30, 0xb6, 0x09, 0xb3, 0xd3, 0xa6, 0xdd, 0x7a, 0x48, 0x44,
+	0x5e, 0x62, 0xf7, 0xd0, 0x2a, 0xac, 0x2e, 0xd0, 0x7a, 0x5d, 0x67, 0xdb, 0x74, 0x8d, 0x34, 0xda,
+	0x90, 0x88, 0x5f, 0x1c, 0xbb, 0xf1, 0xde, 0x87, 0x69, 0x60, 0xbd, 0xb8, 0xe3, 0x3f, 0xc5, 0xf9,
+	0x29, 0x45, 0x82, 0xdd, 0x41, 0x73, 0x5d, 0x48, 0x32, 0x24, 0x55, 0x78, 0xba, 0x45, 0xa1, 0x1f,
+	0xb3, 0x49, 0xf5, 0x01, 0xaa, 0xda, 0x5b, 0xeb, 0xb7, 0x96, 0xab, 0x80, 0xbe, 0xaf, 0x02, 0xfa,
+	0xb1, 0x0a, 0xe8, 0xdb, 0x67, 0x40, 0x1e, 0xcb, 0xee, 0x5b, 0x5d, 0x7c, 0x07, 0x00, 0x00, 0xff,
+	0xff, 0x1c, 0xcc, 0xc5, 0xb0, 0x82, 0x02, 0x00, 0x00,
 }

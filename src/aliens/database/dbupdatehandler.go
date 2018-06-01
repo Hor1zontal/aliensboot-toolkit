@@ -29,10 +29,10 @@ const (
 //数据库操作
 type DBOperation struct {
 	operation DB_OP
-	data      IData
+	data      interface{}
 }
 
-func (this *DBOperation) change(op DB_OP, data IData) {
+func (this *DBOperation) change(op DB_OP, data interface{}) {
 	if op == OP_DELETE || this.operation != OP_INSERT {
 		this.operation = op
 	}
@@ -118,15 +118,15 @@ func (this *dbUpdateHandler) handleOperation(dbOperation *DBOperation) {
 	//记录数据库操作时间超过一秒的操作
 	if result > 1 {
 		log.Debug("execute opration op %v time(s) %v data %v", dbOperation.operation, result,
-			dbOperation.data.Name())
+			this.handler.GetTableName(dbOperation.data))
 	}
 }
 
 //加入缓存队列
-func (this *dbUpdateHandler) UpdateQueue(operation DB_OP, data IData) {
+func (this *dbUpdateHandler) UpdateQueue(operation DB_OP, data interface{}) {
 	this.Lock()
 	defer this.Unlock()
-	key := getDataKey(data)
+	key := this.getDataKey(data)
 	operationHistory := this.updateCache[key]
 	if operationHistory != nil {
 		operationHistory.change(operation, data)
@@ -141,9 +141,9 @@ func (this *dbUpdateHandler) UpdateQueue(operation DB_OP, data IData) {
 	//}
 }
 
-func getDataKey(data IData) string {
-	key := data.Name()
-	id := data.GetID()
+func (this *dbUpdateHandler)getDataKey(data interface{}) string {
+	key := this.handler.GetTableName(data)
+	id := this.handler.GetID(data)
 	switch id.(type) {
 	case string:
 		key = key + id.(string)
@@ -156,16 +156,16 @@ func getDataKey(data IData) string {
 }
 
 //实时更新
-func (this *dbUpdateHandler) UpdateQueueNow(operation DB_OP, data IData) {
+func (this *dbUpdateHandler) UpdateQueueNow(operation DB_OP, data interface{}) {
 	this.Lock()
-	key := getDataKey(data)
+	defer this.Unlock()
+	key := this.getDataKey(data)
 	operationHistory := this.updateCache[key]
 	if operationHistory != nil {
 		//只有删除操作和非插入操作才允许覆盖
 		operationHistory.change(operation, data)
 		delete(this.updateCache, key)
 	}
-	this.Unlock()
 	this.handleOperation(operationHistory)
 }
 
