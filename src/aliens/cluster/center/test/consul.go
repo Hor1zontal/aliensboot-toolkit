@@ -109,6 +109,7 @@ func DoRegistService(consul_addr string, monitor_addr string, service_name strin
 	}
 
 	client, err := api.NewClient(api.DefaultConfig())
+
 	if err != nil {
 		log.Fatal(err)
 	}

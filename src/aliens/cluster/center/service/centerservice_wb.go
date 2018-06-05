@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package center
+package service
 
 
 //func PublicWBService(config ServiceConfig, address string) *wbService {

@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package center
+package service
 
 //调用方式
 const (
@@ -20,7 +20,10 @@ const (
 type IService interface {
 	GetID() string
 	SetID(id string)
+	SetName(name string)
 	GetName() string
+	GetAddress() string
+	GetPort() int
 	//GetConfig() *ServiceConfig
 
 
@@ -34,6 +37,56 @@ type IService interface {
 	SetHandler(handler interface{})  //设置处理句柄
 	//Push(request interface{}) error //服务推送
 }
+
+
+type ServiceConfig struct {
+	ID   string		//服务器的id
+	Name string     //服务名称
+	Address string  //服务地址 域名或ip
+	Port int      //服务端端口
+	Unique bool   //是否全局唯一
+	Protocol string //提供服务的协议 GRPC HTTP WBSOCKET
+}
+
+
+func (this *ServiceConfig) GetAddress() string {
+	return this.Address
+}
+
+
+func (this *ServiceConfig) SetAddress(address string) {
+	this.Address = address
+}
+
+func (this *ServiceConfig) GetPort() int {
+	return this.Port
+}
+
+func (this *ServiceConfig) SetPort(port int) {
+	this.Port = port
+}
+
+
+func (this *ServiceConfig) GetID() string {
+	return this.ID
+}
+
+
+func (this *ServiceConfig) SetID(id string) {
+	this.ID = id
+}
+
+
+func (this *ServiceConfig) GetName() string {
+	return this.Name
+}
+
+
+func (this *ServiceConfig) SetName(name string) {
+	this.Name = name
+}
+
+
 //
 //type centerService struct {
 //	Ip       string `json:"ip"`

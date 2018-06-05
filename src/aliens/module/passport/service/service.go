@@ -10,11 +10,12 @@
 package service
 
 import (
-	"aliens/cluster/center"
+	"aliens/cluster/center/service"
 	"aliens/module/passport/conf"
+	"aliens/cluster/center"
 )
 
-var instance center.IService = nil
+var instance service.IService = nil
 
 func Init() {
 	instance = center.PublicService(conf.Config.Service, &passportService{})

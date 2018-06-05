@@ -14,14 +14,16 @@ package center
 //	"github.com/hashicorp/consul/api"
 //	"aliens/log"
 //	"fmt"
-//	"encoding/json"
+//
 //	"time"
 //	"gopkg.in/mgo.v2/bson"
 //)
 //
 //type ConsulServiceCenter struct {
-//	proxy *api.Client
 //	node string
+//	proxy *api.Client
+//	serviceContainer map[string]*serviceCategory //服务容器 key 服务名
+//
 //}
 //
 //func DoRegistService(consul_addr string, monitor_addr string, service_name string, ip string, port int) {
@@ -54,7 +56,7 @@ package center
 //		log.Fatal(err)
 //	}
 //	this.proxy = client
-//
+//	this.serviceContainer = make(map[string]*serviceCategory)
 //}
 //
 //func (this *ConsulServiceCenter) IsConnect() bool {
@@ -68,14 +70,12 @@ package center
 //}
 //
 //func (this *ConsulServiceCenter) PublicService(service IService, unique bool) {
-//	serviceName := service.GetName()
-//
 //	var tags []string
 //	consuleService := &api.AgentServiceRegistration{
 //		ID:      this.node,
-//		Name:    serviceName,
-//		Address: service.GetConfig().Address,
-//		Port:    service.GetConfig().Port,
+//		Name:    service.GetName(),
+//		Address: service.GetAddress(),
+//		Port:    service.GetPort(),
 //		Tags:    tags,
 //		//Check: &api.AgentServiceCheck{
 //		//	HTTP:     "http://" + "monitor" + "/status",
@@ -86,7 +86,7 @@ package center
 //	if err := this.proxy.Agent().ServiceRegister(consuleService); err != nil {
 //		log.Fatal(err)
 //	}
-//	log.Printf("Registered service %q in consul with tags %q", serviceName, strings.Join(tags, ","))
+//	log.Printf("Registered service %q in consul with tags %q", service.GetName(), strings.Join(tags, ","))
 //
 //}
 //
@@ -95,7 +95,10 @@ package center
 //	for {
 //		select {
 //		case <-t.C:
-//			this.DiscoverServices( true, found_service)
+//			for _, serviceName := range serviceNames {
+//				this.DiscoverServices( true, serviceName)
+//			}
+//
 //		}
 //	}
 //}
@@ -115,34 +118,27 @@ package center
 //				continue
 //			}
 //			fmt.Println("  health nodeid:", health.Node, " serviceName:", health.ServiceName, " service_id:", health.ServiceID, " status:", health.Status, " ip:", entry.Service.Address, " port:", entry.Service.Port)
+//			node := newService1(health.ServiceID, serviceName, entry.Service.Address, entry.Service.Port, GRPC)
 //
-//			var node IService
-//			node.SetID(health.ServiceID)
-//			node.SetName(serviceName)
-//			node.Start()
 //
-//			node.IP = entry.Service.Address
-//			node.Port = entry.Service.Port
-//			node.ServiceID = health.ServiceID
-//
-//			//get data from kv store
-//			s := GetKeyValue(serviceName, node.IP, node.Port)
-//			if len(s) > 0 {
-//				var data KVData
-//				err = json.Unmarshal([]byte(s), &data)
-//				if err == nil {
-//					node.Load = data.Load
-//					node.Timestamp = data.Timestamp
-//				}
-//			}
-//			fmt.Println("service node updated ip:", node.IP, " port:", node.Port, " serviceid:", node.ServiceID, " load:", node.Load, " ts:", node.Timestamp)
-//			sers = append(sers, node)
+//			////get data from kv store
+//			//s := GetKeyValue(serviceName, node.IP, node.Port)
+//			//if len(s) > 0 {
+//			//	var data KVData
+//			//	err = json.Unmarshal([]byte(s), &data)
+//			//	if err == nil {
+//			//		node.Load = data.Load
+//			//		node.Timestamp = data.Timestamp
+//			//	}
+//			//}
+//			//fmt.Println("service node updated ip:", node.IP, " port:", node.Port, " serviceid:", node.ServiceID, " load:", node.Load, " ts:", node.Timestamp)
+//			//sers = append(sers, node)
 //		}
 //	}
 //
-//	service_locker.Lock()
-//	servics_map[serviceName] = sers
-//	service_locker.Unlock()
+//	//service_locker.Lock()
+//	//servics_map[serviceName] = sers
+//	//service_locker.Unlock()
 //}
 //
 //

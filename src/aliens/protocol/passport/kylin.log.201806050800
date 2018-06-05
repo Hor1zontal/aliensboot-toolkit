@@ -1,0 +1,6 @@
+time="2018-06-05T17:15:41+08:00" level=warning msg="gen code file ../../module/passport/service/handle.go success!"
+time="2018-06-05T17:15:41+08:00" level=warning msg="gen code file ../../module/passport/service/handlejson.go success!"
+time="2018-06-05T17:15:41+08:00" level=warning msg="file ../../module/passport/service//handle_newinterface.go alread exist, skip it!"
+time="2018-06-05T17:15:41+08:00" level=warning msg="file ../../module/passport/service//handle_loginregister.go alread exist, skip it!"
+time="2018-06-05T17:15:41+08:00" level=warning msg="file ../../module/passport/service//handle_loginlogin.go alread exist, skip it!"
+time="2018-06-05T17:15:41+08:00" level=warning msg="gen code file ../../module/passport/service/service.go success!"

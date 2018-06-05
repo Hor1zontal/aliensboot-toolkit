@@ -13,7 +13,7 @@ import (
 	"time"
 	"aliens/config"
 	"aliens/module/gate/route"
-	"aliens/cluster/center"
+	"aliens/cluster/center/service"
 )
 
 var (
@@ -35,7 +35,7 @@ var (
 
 var Config struct {
 	//Enable              bool   //网络模块是否开启
-	Service 			center.ServiceConfig
+	Service 			service.ServiceConfig
 
 	MaxConnNum          int
 	WSAddr              string //

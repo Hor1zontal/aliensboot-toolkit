@@ -11,12 +11,12 @@ package conf
 
 import (
 	"aliens/config"
-	"aliens/cluster/center"
+	"aliens/cluster/center/service"
 )
 
 
 var Config struct {
-	Service  center.ServiceConfig
+	Service  service.ServiceConfig
 }
 
 func init() {

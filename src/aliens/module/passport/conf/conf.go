@@ -5,14 +5,14 @@ import (
 	"aliens/config"
 	"aliens/cache/redis"
 	"aliens/database/dbconfig"
-	"aliens/cluster/center"
+	"aliens/cluster/center/service"
 )
 
 
 var configPath = "conf/aliens/passport/server.json"
 
 var Config struct {
-	Service  center.ServiceConfig
+	Service  service.ServiceConfig
 	Cache 	 redis.CacheConfig
 	Database dbconfig.DBConfig
 

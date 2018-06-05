@@ -12,11 +12,11 @@ package center
 import (
 	"encoding/json"
 	"github.com/samuel/go-zookeeper/zk"
-	"sync"
 	"time"
 	"aliens/cluster/center/lbs"
 	"gopkg.in/mgo.v2/bson"
 	"aliens/log"
+	"aliens/cluster/center/service"
 )
 
 const NODE_SPLIT string = "/"
@@ -26,14 +26,14 @@ const SERVICE_NODE_NAME string = "service"
 const DEFAULT_LBS string = lbs.LBS_STRATEGY_POLLING
 
 type ZKServiceCenter struct {
-	sync.RWMutex
+	*service.Container
 	zkCon            *zk.Conn
 	zkName           string
 	serviceRoot      string
-	serviceContainer map[string]*serviceCategory //服务容器 key 服务名
+
 
 	nodeId  string //当前集群节点的id
-	lbs string //default polling
+	//lbs string //default polling
 	certFile string
 	keyFile string
 	commonName string
@@ -57,7 +57,7 @@ func (this *ZKServiceCenter) ConnectCluster(config ClusterConfig) {
 	if config.Timeout == 0 {
 		config.Timeout = 10
 	}
-	this.lbs = config.LBS
+	//this.lbs = config.LBS
 	this.zkName = config.Name
 	this.nodeId = config.ID
 	//this.certFile = config.CertFile
@@ -68,16 +68,12 @@ func (this *ZKServiceCenter) ConnectCluster(config ClusterConfig) {
 	if err != nil {
 		panic(err)
 	}
-	this.serviceContainer = make(map[string]*serviceCategory)
+	this.Container = service.NewContainer(config.LBS)
 	this.serviceRoot = NODE_SPLIT + this.zkName + NODE_SPLIT + SERVICE_NODE_NAME
 	this.zkCon = c
 	this.confirmNode(NODE_SPLIT + this.zkName)
 	this.confirmNode(this.serviceRoot)
 }
-
-//func (this *ZKServiceCenter) SetLBS(lbs string) {
-//	this.lbs = lbs
-//}
 
 func (this *ZKServiceCenter) IsConnect() bool {
 	return this.zkCon != nil
@@ -96,88 +92,6 @@ func (this *ZKServiceCenter) Close() {
 	}
 }
 
-//更新服务
-func (this *ZKServiceCenter) UpdateService(service IService) {
-	this.Lock()
-	defer this.Unlock()
-	serviceName := service.GetName()
-	if this.serviceContainer[serviceName] == nil {
-		this.serviceContainer[serviceName] = NewServiceCategory(serviceName, this.lbs, "")
-	}
-	this.serviceContainer[serviceName].updateService(service)
-}
-
-//根据服务类型获取一个空闲的服务节点
-func (this *ZKServiceCenter) AllocService(serviceType string) IService {
-	this.RLock()
-	defer this.RUnlock()
-	//TODO 后续要优化，考虑负载、空闲等因素
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return nil
-	}
-	return serviceCategory.allocService()
-}
-
-//
-func (this *ZKServiceCenter) GetMasterService(serviceType string) IService {
-	this.RLock()
-	defer this.RUnlock()
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return nil
-	}
-	return serviceCategory.getMaster()
-}
-
-//func (this *ZKServiceCenter) CanHandle(name string, seq int32) bool {
-//	serviceCategory := this.serviceContainer[name]
-//	if serviceCategory == nil {
-//		return false
-//	}
-//	return serviceCategory.canHandle(seq)
-//}
-
-func (this *ZKServiceCenter) GetService(serviceType string, serviceID string) IService {
-	this.RLock()
-	defer this.RUnlock()
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return nil
-	}
-	return serviceCategory.services[serviceID]
-	////节点没有取第一个
-	//if (service == nil) {
-	//	serviceCategory.allocService()
-	//}
-	//return service
-}
-
-func (this *ZKServiceCenter) GetAllService(serviceType string) []IService {
-	this.RLock()
-	defer this.RUnlock()
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return nil
-	}
-	return serviceCategory.getAllService()
-	////节点没有取第一个
-	//if (service == nil) {
-	//	serviceCategory.allocService()
-	//}
-	//return service
-}
-
-func (this *ZKServiceCenter) GetServiceInfo(serviceType string) []string {
-	this.RLock()
-	defer this.RUnlock()
-	serviceCategory := this.serviceContainer[serviceType]
-	if serviceCategory == nil {
-		return nil
-	}
-	return serviceCategory.getNodes()
-}
-
 //订阅服务  能实时更新服务信息
 func (this *ZKServiceCenter) SubscribeServices(serviceTypes ...string) {
 	this.assert()
@@ -188,55 +102,33 @@ func (this *ZKServiceCenter) SubscribeServices(serviceTypes ...string) {
 
 func (this *ZKServiceCenter) SubscribeService(serviceName string) {
 	path := this.serviceRoot + NODE_SPLIT + serviceName
-	desc := this.confirmContentNode(path)
+	//desc := this.confirmContentNode(path)
 	serviceIDs, _, ch, err := this.zkCon.ChildrenW(path)
 	if err != nil {
 		log.Errorf("subscribe service %v error: %v", path, err)
 		return
 	}
-	this.Lock()
-	defer this.Unlock()
-	oldContainer := this.serviceContainer[serviceName]
-	serviceCategory := NewServiceCategory(serviceName, this.lbs, desc)
+	services := []service.IService{}
 	for _, serviceID := range serviceIDs {
-		data, _, err := this.zkCon.Get(path + NODE_SPLIT + serviceID)
-		service := loadService(data, serviceID, serviceName)
-		if service == nil {
-			log.Errorf("%v unExpect service : %v", path, err)
+		servicePath := path + NODE_SPLIT + serviceID
+		data, _, err := this.zkCon.Get(servicePath)
+		if err != nil {
+			log.Errorf("get service %v data error: %v", servicePath, err)
 			continue
 		}
-		if oldContainer != nil {
-			oldService := oldContainer.takeoutService(service)
-			if oldService != nil {
-				oldService.SetID(service.GetID())
-				serviceCategory.updateService(oldService)
-				continue
-			}
+		config := &service.ServiceConfig{}
+		err1 := json.Unmarshal(data, config)
+		if err1 != nil {
+			log.Errorf("unmarshal service %v data error: %v", servicePath, err1)
+			continue
 		}
-		//新服务需要连接上才能更新
-		if service.Connect() {
-			serviceCategory.updateService(service)
-		}
+		service := service.NewService(*config)
+		services = append(services, service)
 	}
-	this.serviceContainer[serviceName] = serviceCategory
+
+	this.UpdateServices(serviceName, services)
 	go this.openListener(serviceName, path, ch)
 }
-
-//func loadService(data []byte, id string, name string) IService {
-//	centerService := &centerService{}
-//	json.Unmarshal(data, centerService)
-//	centerService.SetID(id)
-//	centerService.SetName(name)
-//	switch centerService.Protocol {
-//	case GRPC:
-//		return &GRPCService{centerService: centerService}
-//	//case WEBSOCKET:
-//	//	return &wbService{centerService: centerService}
-//	//case HTTP:
-//	//	return &httpService{centerService: centerService}
-//	}
-//	return nil
-//}
 
 func (this *ZKServiceCenter) openListener(serviceType string, path string, ch <-chan zk.Event) {
 	event, _ := <-ch
@@ -271,7 +163,7 @@ func (this *ZKServiceCenter) confirmDataNode(path string, data []byte) bool {
 }
 
 //发布服务
-func (this *ZKServiceCenter) PublicService(service IService, unique bool) bool {
+func (this *ZKServiceCenter) PublicService(service service.IService, unique bool) bool {
 	this.assert()
 	if !service.IsLocal() {
 		log.Error("service info is invalid")
