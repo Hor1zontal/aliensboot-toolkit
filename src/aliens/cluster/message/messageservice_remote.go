@@ -25,7 +25,7 @@ type RemoteService struct {
 }
 
 func (this *RemoteService) Init() {
-	center.ClusterCenter.SubscribeService(this.serviceType)
+	center.ClusterCenter.SubscribeServices(this.serviceType)
 }
 
 func (this *RemoteService) HandleMessage(request interface{}) (interface{}, error) {

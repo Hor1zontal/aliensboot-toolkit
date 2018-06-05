@@ -16,17 +16,36 @@ package center
 //	"fmt"
 //	"encoding/json"
 //	"time"
+//	"gopkg.in/mgo.v2/bson"
 //)
 //
 //type ConsulServiceCenter struct {
 //	proxy *api.Client
+//	node string
 //}
 //
 //func DoRegistService(consul_addr string, monitor_addr string, service_name string, ip string, port int) {
 //
 //}
 //
+//
+////GetNodeID() string
+////ConnectCluster(config ClusterConfig)
+////PublicService(service IService, unique bool) bool
+////SubscribeServices(serviceNames ...string)
+////GetAllService(serviceName string) []IService
+////GetService(serviceName string, serviceID string) IService
+////AllocService(serviceName string) IService
+////
+////IsConnect() bool
+////Close()
+//
 //func (this *ConsulServiceCenter) ConnectCluster(config ClusterConfig) {
+//	if config.ID == "" {
+//		config.ID = bson.NewObjectId().Hex()
+//	}
+//	this.node = config.ID
+//
 //	consulConfig := api.DefaultConfig()
 //	consulConfig.Address = config.Servers[0]
 //
@@ -38,15 +57,25 @@ package center
 //
 //}
 //
+//func (this *ConsulServiceCenter) IsConnect() bool {
+//	return this.proxy != nil
+//}
+//
+//func (this *ConsulServiceCenter) Close() {
+//	if this.proxy != nil {
+//		this.proxy = nil
+//	}
+//}
+//
 //func (this *ConsulServiceCenter) PublicService(service IService, unique bool) {
 //	serviceName := service.GetName()
-//	serviceID := serviceName + "-" + service.GetIP() + ":"
+//
 //	var tags []string
 //	consuleService := &api.AgentServiceRegistration{
-//		ID:      serviceID,
+//		ID:      this.node,
 //		Name:    serviceName,
-//		Address: service.GetIP(),
-//		Port:    service.GetPort(),
+//		Address: service.GetConfig().Address,
+//		Port:    service.GetConfig().Port,
 //		Tags:    tags,
 //		//Check: &api.AgentServiceCheck{
 //		//	HTTP:     "http://" + "monitor" + "/status",
@@ -61,66 +90,58 @@ package center
 //
 //}
 //
-//func (this *ConsulServiceCenter) SubscribeService(serviceTypes ...string) {
+//func (this *ConsulServiceCenter) SubscribeServices(serviceNames ...string) {
 //	t := time.NewTicker(time.Second * 5)
 //	for {
 //		select {
 //		case <-t.C:
-//			DiscoverServices( true, found_service)
+//			this.DiscoverServices( true, found_service)
 //		}
 //	}
 //}
 //
 //
-//func (this *ConsulServiceCenter)DiscoverServices(healthyOnly bool, service_name string) {
-//	services, _, err := this.proxy.Catalog().Services(&api.QueryOptions{})
-//	if err != nil {
-//		log.Errorf("subscribe service %v error: %v", service_name, err)
-//		return
-//	}
+//func (this *ConsulServiceCenter)DiscoverServices(healthyOnly bool, serviceName string) {
+//	servicesData, _, err := this.proxy.Health().Service(serviceName, "", healthyOnly, &api.QueryOptions{})
+//	if err == nil  {
 //
-//	//var sers ServiceList
-//	for name := range services {
-//		servicesData, _, err := this.proxy.Health().Service(name, "", healthyOnly,
-//			&api.QueryOptions{})
-//		CheckErr(err)
-//		for _, entry := range servicesData {
-//			if service_name != entry.Service.Service {
+//	}
+//	for _, entry := range servicesData {
+//		if serviceName != entry.Service.Service {
+//			continue
+//		}
+//		for _, health := range entry.Checks {
+//			if health.ServiceName != serviceName {
 //				continue
 //			}
-//			for _, health := range entry.Checks {
-//				if health.ServiceName != service_name {
-//					continue
+//			fmt.Println("  health nodeid:", health.Node, " serviceName:", health.ServiceName, " service_id:", health.ServiceID, " status:", health.Status, " ip:", entry.Service.Address, " port:", entry.Service.Port)
+//
+//			var node IService
+//			node.SetID(health.ServiceID)
+//			node.SetName(serviceName)
+//			node.Start()
+//
+//			node.IP = entry.Service.Address
+//			node.Port = entry.Service.Port
+//			node.ServiceID = health.ServiceID
+//
+//			//get data from kv store
+//			s := GetKeyValue(serviceName, node.IP, node.Port)
+//			if len(s) > 0 {
+//				var data KVData
+//				err = json.Unmarshal([]byte(s), &data)
+//				if err == nil {
+//					node.Load = data.Load
+//					node.Timestamp = data.Timestamp
 //				}
-//				fmt.Println("  health nodeid:", health.Node, " service_name:", health.ServiceName, " service_id:", health.ServiceID, " status:", health.Status, " ip:", entry.Service.Address, " port:", entry.Service.Port)
-//
-//				var node IService
-//				node.SetID(health.ServiceID)
-//				node.SetName(service_name)
-//				node.Start()
-//
-//				node.IP = entry.Service.Address
-//				node.Port = entry.Service.Port
-//				node.ServiceID = health.ServiceID
-//
-//				//get data from kv store
-//				s := GetKeyValue(service_name, node.IP, node.Port)
-//				if len(s) > 0 {
-//					var data KVData
-//					err = json.Unmarshal([]byte(s), &data)
-//					if err == nil {
-//						node.Load = data.Load
-//						node.Timestamp = data.Timestamp
-//					}
-//				}
-//				fmt.Println("service node updated ip:", node.IP, " port:", node.Port, " serviceid:", node.ServiceID, " load:", node.Load, " ts:", node.Timestamp)
-//				sers = append(sers, node)
 //			}
+//			fmt.Println("service node updated ip:", node.IP, " port:", node.Port, " serviceid:", node.ServiceID, " load:", node.Load, " ts:", node.Timestamp)
+//			sers = append(sers, node)
 //		}
 //	}
 //
 //	service_locker.Lock()
-//	servics_map[service_name] = sers
+//	servics_map[serviceName] = sers
 //	service_locker.Unlock()
 //}
 //

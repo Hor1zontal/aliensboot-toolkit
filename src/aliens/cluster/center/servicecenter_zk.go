@@ -60,9 +60,9 @@ func (this *ZKServiceCenter) ConnectCluster(config ClusterConfig) {
 	this.lbs = config.LBS
 	this.zkName = config.Name
 	this.nodeId = config.ID
-	this.certFile = config.CertFile
-	this.keyFile = config.KeyFile
-	this.commonName = config.CommonName
+	//this.certFile = config.CertFile
+	//this.keyFile = config.KeyFile
+	//this.commonName = config.CommonName
 	//this.serviceFactory = serviceFactory
 	c, _, err := zk.Connect(config.Servers, time.Duration(config.Timeout)*time.Second)
 	if err != nil {
@@ -100,10 +100,11 @@ func (this *ZKServiceCenter) Close() {
 func (this *ZKServiceCenter) UpdateService(service IService) {
 	this.Lock()
 	defer this.Unlock()
-	if this.serviceContainer[service.GetName()] == nil {
-		this.serviceContainer[service.GetName()] = NewServiceCategory(service.GetName(), this.lbs, service.GetDesc())
+	serviceName := service.GetName()
+	if this.serviceContainer[serviceName] == nil {
+		this.serviceContainer[serviceName] = NewServiceCategory(serviceName, this.lbs, "")
 	}
-	this.serviceContainer[service.GetName()].updateService(service)
+	this.serviceContainer[serviceName].updateService(service)
 }
 
 //根据服务类型获取一个空闲的服务节点
@@ -221,21 +222,21 @@ func (this *ZKServiceCenter) SubscribeService(serviceName string) {
 	go this.openListener(serviceName, path, ch)
 }
 
-func loadService(data []byte, id string, name string) IService {
-	centerService := &centerService{}
-	json.Unmarshal(data, centerService)
-	centerService.SetID(id)
-	centerService.SetName(name)
-	switch centerService.Protocol {
-	case GRPC:
-		return &GRPCService{centerService: centerService}
-	//case WEBSOCKET:
-	//	return &wbService{centerService: centerService}
-	//case HTTP:
-	//	return &httpService{centerService: centerService}
-	}
-	return nil
-}
+//func loadService(data []byte, id string, name string) IService {
+//	centerService := &centerService{}
+//	json.Unmarshal(data, centerService)
+//	centerService.SetID(id)
+//	centerService.SetName(name)
+//	switch centerService.Protocol {
+//	case GRPC:
+//		return &GRPCService{centerService: centerService}
+//	//case WEBSOCKET:
+//	//	return &wbService{centerService: centerService}
+//	//case HTTP:
+//	//	return &httpService{centerService: centerService}
+//	}
+//	return nil
+//}
 
 func (this *ZKServiceCenter) openListener(serviceType string, path string, ch <-chan zk.Event) {
 	event, _ := <-ch
@@ -282,24 +283,26 @@ func (this *ZKServiceCenter) PublicService(service IService, unique bool) bool {
 		log.Errorf("marshal json service data error : %v", err)
 		return false
 	}
-	servicePath := this.serviceRoot + NODE_SPLIT + service.GetName()
+	serviceName := service.GetName()
+	serviceId := service.GetID()
+	servicePath := this.serviceRoot + NODE_SPLIT + serviceName
 	if unique {
 		//TODO 可能有事务上的问题 需要优化
 		child, _, _ := this.zkCon.Children(servicePath)
 		if child != nil && len(child) > 0 {
-			log.Errorf("unique service %v-%v already exist.", service.GetName(), child)
+			log.Errorf("unique service %v-%v already exist.", serviceName, child)
 			return false
 		}
 	}
 
 	this.confirmNode(servicePath)
-	id, err := this.zkCon.Create(servicePath + NODE_SPLIT + service.GetID(), data,
+	id, err := this.zkCon.Create(servicePath + NODE_SPLIT + serviceId, data,
 		zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 	if err != nil {
 		log.Errorf("create service error : %v", err)
 		return false
 	}
-	log.Infof("public %v success : %v", service.GetName(), id)
+	log.Infof("public %v success : %v", serviceName, id)
 	//服务注册在容器
 	this.UpdateService(service)
 	return true

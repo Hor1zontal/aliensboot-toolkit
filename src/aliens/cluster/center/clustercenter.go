@@ -1,5 +1,5 @@
 package center
 
-var ClusterCenter *ZKServiceCenter = &ZKServiceCenter{} //服务调度中心
+var ClusterCenter ServiceCenter = &ZKServiceCenter{} //服务调度中心
 
 

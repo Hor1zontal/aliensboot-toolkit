@@ -21,10 +21,7 @@ type IService interface {
 	GetID() string
 	SetID(id string)
 	GetName() string
-	SetName(name string)
-
-	GetDesc() string                                  //获取服务的描述信息
-	GetProxy() *centerService
+	//GetConfig() *ServiceConfig
 
 
 	Start() bool                                      //启动服务
@@ -37,33 +34,14 @@ type IService interface {
 	SetHandler(handler interface{})  //设置处理句柄
 	//Push(request interface{}) error //服务推送
 }
-
-type centerService struct {
-	Ip       string `json:"ip"`
-	Port     int	`json:"port"`
-	//Address  string `json:"address"`  	//服务访问地址 写入到中心服务器供外部调用
-	Protocol string `json:"protocol"` 		//服务的访问方式
-	id       string `json:"-"`              //服务ID
-	name     string `json:"-"`              //服务类型
-}
-
-
-func (this *centerService) SetID(id string) {
-	this.id = id
-}
+//
+//type centerService struct {
+//	Ip       string `json:"ip"`
+//	Port     int	`json:"port"`
+//	//Address  string `json:"address"`  	//服务访问地址 写入到中心服务器供外部调用
+//	Protocol string `json:"protocol"` 		//服务的访问方式
+//	id       string `json:"-"`              //服务ID
+//	name     string `json:"-"`              //服务类型
+//}
 
 
-func (this *centerService) GetID() string {
-	return this.id
-}
-
-
-
-func (this *centerService) GetName() string {
-	return this.name
-}
-
-
-func (this *centerService) SetName(name string) {
-	this.name = name
-}

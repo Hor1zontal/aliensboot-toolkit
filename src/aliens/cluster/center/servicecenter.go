@@ -10,12 +10,14 @@
 package center
 
 type ServiceCenter interface {
-
+	GetNodeID() string
 	ConnectCluster(config ClusterConfig)
 	PublicService(service IService, unique bool) bool
-	SubscribeService(serviceNames ...string)
+	SubscribeServices(serviceNames ...string)
 	GetAllService(serviceName string) []IService
+	GetService(serviceName string, serviceID string) IService
+	AllocService(serviceName string) IService
+
 	IsConnect() bool
 	Close()
-
 }

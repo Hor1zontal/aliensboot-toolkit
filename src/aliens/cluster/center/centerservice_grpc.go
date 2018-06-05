@@ -18,11 +18,10 @@ import (
 	"golang.org/x/net/context"
 	"aliens/common/util"
 	"aliens/protocol"
-	"google.golang.org/grpc/credentials"
 )
 
 type GRPCService struct {
-	*centerService
+	*ServiceConfig
 
 	//调用服务参数
 	client *grpc.ClientConn
@@ -34,12 +33,8 @@ type GRPCService struct {
 	handler protocol.RPCServiceServer //处理句柄
 }
 
-func (this *GRPCService) SetProxy(service *centerService) {
-	this.centerService = service
-}
-
-func (this *GRPCService) GetProxy() *centerService {
-	return this.centerService
+func (this *GRPCService) GetConfig() *ServiceConfig {
+	return this.ServiceConfig
 }
 
 func (this *GRPCService) GetDesc() string {
@@ -57,20 +52,22 @@ func (this *GRPCService) SetHandler(handler interface{}) {
 
 //启动服务
 func (this *GRPCService) Start() bool {
-	var server *grpc.Server = nil
-	if ClusterCenter.certFile != "" {
-		creds, err := credentials.NewServerTLSFromFile(ClusterCenter.certFile, ClusterCenter.keyFile)
-		if err != nil {
-			log.Fatalf("Failed to generate credentials %v", err)
-			return false
-		}
-		server = grpc.NewServer(grpc.Creds(creds))
-	} else {
-		server = grpc.NewServer()
-	}
+	//var server *grpc.Server = nil
+	//if ClusterCenter.certFile != "" {
+	//	creds, err := credentials.NewServerTLSFromFile(ClusterCenter.certFile, ClusterCenter.keyFile)
+	//	if err != nil {
+	//		log.Fatalf("Failed to generate credentials %v", err)
+	//		return false
+	//	}
+	//	server = grpc.NewServer(grpc.Creds(creds))
+	//} else {
+	//	server = grpc.NewServer()
+	//}
+
+	server := grpc.NewServer()
 	protocol.RegisterRPCServiceServer(server, this.handler)
-	if this.Ip == "" {
-		this.Ip = util.GetIP()
+	if this.Address == "" {
+		this.Address = util.GetIP()
 	}
 	this.server = server
 
@@ -82,7 +79,7 @@ func (this *GRPCService) Start() bool {
 	}
 	go func() {
 		this.server.Serve(lis)
-		log.Infof("rpc service %v stop", this.name)
+		log.Infof("rpc service %v stop", this.Name)
 	}()
 	return true
 }
@@ -90,18 +87,19 @@ func (this *GRPCService) Start() bool {
 //连接服务
 func (this *GRPCService) Connect() bool {
 	var option grpc.DialOption = nil
-	if ClusterCenter.certFile != "" {
-		creds, err := credentials.NewClientTLSFromFile(ClusterCenter.certFile, ClusterCenter.commonName)
-		if err != nil {
-			log.Errorf("Failed to create TLS credentials %v", err)
-			return false
-		}
-		option = grpc.WithTransportCredentials(creds)
-	} else {
-		option = grpc.WithInsecure()
-	}
+	//if ClusterCenter.certFile != "" {
+	//	creds, err := credentials.NewClientTLSFromFile(ClusterCenter.certFile, ClusterCenter.commonName)
+	//	if err != nil {
+	//		log.Errorf("Failed to create TLS credentials %v", err)
+	//		return false
+	//	}
+	//	option = grpc.WithTransportCredentials(creds)
+	//} else {
+	//	option = grpc.WithInsecure()
+	//}
+	option = grpc.WithInsecure()
 
-	conn, err := grpc.Dial(this.Ip + ":" + util.IntToString(this.Port), option)
+	conn, err := grpc.Dial(this.Address + ":" + util.IntToString(this.Port), option)
 	if err != nil {
 		log.Errorf("did not connect: %v", err)
 		return false
@@ -117,7 +115,7 @@ func (this *GRPCService) Equals(other IService) bool {
 	if !ok {
 		return false
 	}
-	return this.name == otherService.name && this.Ip == otherService.Ip
+	return this.Name == otherService.Name && this.Address == otherService.Address
 }
 
 //服务是否本进程启动的

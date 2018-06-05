@@ -14,29 +14,17 @@ import (
 	"encoding/json"
 )
 
-func newCenterService(config ServiceConfig) *centerService {
-	if !ClusterCenter.IsConnect() {
-		log.Fatal(config.Name + " cluster center is not connected")
-		return nil
-	}
-	return &centerService{
-		id:       ClusterCenter.GetNodeID(),
-		name:     config.Name,
-		Ip:  	  config.Address,
-		Port:     config.Port,
-		Protocol: config.Protocol,
-	}
-}
 
-func loadCenterService(data []byte, id string, name string) IService {
-	centerService := &centerService{}
+
+func loadService(data []byte, id string, name string) IService {
+	centerService := &ServiceConfig{}
 	json.Unmarshal(data, centerService)
 	centerService.SetID(id)
 	centerService.SetName(name)
 
 	switch centerService.Protocol {
 	case GRPC:
-		return &GRPCService{centerService: centerService}
+		return &GRPCService{ServiceConfig: centerService}
 		//case WEBSOCKET:
 		//	return &wbService{centerService: centerService}
 		//case HTTP:
@@ -45,40 +33,47 @@ func loadCenterService(data []byte, id string, name string) IService {
 	return nil
 }
 
-//func newService(service *centerService) IService {
-//	switch service.Protocol {
-//		case GRPC:
-//		return &GRPCService{centerService: service}
-//		//case WEBSOCKET:
-//		//	return &wbService{centerService: centerService}
-//		//case HTTP:
-//		//	return &httpService{centerService: centerService}
-//		}
-//	return nil
-//}
+func newService(config ServiceConfig) IService {
+	if !ClusterCenter.IsConnect() {
+		log.Fatal(config.Name + " cluster center is not connected")
+		return nil
+	}
+	return loadService1(ClusterCenter.GetNodeID(), config.Name, config.Address, config.Port, config.Protocol)
+}
 
-func PublicService(config ServiceConfig, handler interface{}) IService {
-	proxy := newCenterService(config)
+func loadService1(id string, name string, address string, port int, protocol string) IService {
+	centerService := &ServiceConfig{
+		ID:       id,
+		Name:     name,
+		Address:  address,
+		Port:     port,
+		Protocol: protocol,
+	}
+
 	var service IService = nil
-	switch config.Protocol {
+	switch centerService.Protocol {
 	case GRPC:
-		service = &GRPCService{centerService: proxy}
-		break
+		service = &GRPCService{ServiceConfig: centerService}
 		//case WEBSOCKET:
 		//	return &wbService{centerService: centerService}
 		//case HTTP:
 		//	return &httpService{centerService: centerService}
 	}
+	return service
+}
+
+func PublicService(config ServiceConfig, handler interface{}) IService {
+	service := newService(config)
 	if service == nil {
 		log.Fatalf( "un expect service protocol %v", config.Protocol)
 	}
 	service.SetHandler(handler)
 	if !service.Start() {
-		log.Fatal(service.GetProxy().GetName() + " rpc service can not be start")
+		log.Fatal(service.GetName() + " rpc service can not be start")
 	}
 	//RPC启动成功,则发布到中心服务器
 	if !ClusterCenter.PublicService(service, config.Unique) {
-		log.Fatal(service.GetProxy().GetName() + " rpc service can not be start")
+		log.Fatal(service.GetName() + " rpc service can not be start")
 	}
 	return service
 }
