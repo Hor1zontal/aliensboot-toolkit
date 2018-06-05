@@ -14,14 +14,14 @@ import (
 	"aliens/module/passport/conf"
 )
 
-var passportRPCService *center.GRPCService = nil
+var instance center.IService = nil
 
 func Init() {
-	passportRPCService = center.PublicGRPCService(conf.Config.Service, &passportService{})
+	instance = center.PublicService(conf.Config.Service, &passportService{})
 }
 
 func Close() {
-	if passportRPCService != nil {
-		passportRPCService.Close()
+	if instance != nil {
+		instance.Close()
 	}
 }

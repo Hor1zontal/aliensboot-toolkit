@@ -11,10 +11,11 @@ package center
 
 
 type ServiceConfig struct {
-	Name string   //服务名称
-	Address string  //服务地址
+	Name string     //服务名称
+	Address string  //服务地址 域名或ip
 	Port int      //服务端端口
 	Unique bool   //是否全局唯一
+	Protocol string //提供服务的协议 GRPC HTTP WBSOCKET
 }
 
 type ClusterConfig struct {

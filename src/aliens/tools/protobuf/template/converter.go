@@ -11,9 +11,9 @@ package template
 
 import (
 	"strings"
-	"fmt"
 	"io/ioutil"
 	"os"
+	"aliens/log"
 )
 
 const (
@@ -25,38 +25,42 @@ func Convert(protoPath string, templatePath string, outputPath string, filePrefi
 	message := ParseProto(protoPath)
 	b, err := ioutil.ReadFile(templatePath)
 	if err != nil {
-		fmt.Errorf(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	templateContent := string(b)
 
 	results := strings.Split(templateContent, SPLIT_STR)
-	if len(results) < 3 {
-		fmt.Errorf("invalid template")
-		return
-	}
-	header := replaceMessage(results[0], message)
 
-	tailf := ""
-	if len(results) == 3 {
-		tailf = replaceMessage(results[2], message)
-	}
-
+	header := ""
 	content := ""
-	for _, handler := range message.Handlers {
-		handleStr := replaceMessage(results[1], message)
-		if !handler.IsValid() {
-			continue
+	tailf := ""
+
+	if len(results) == 3 {
+		header = replaceMessage(results[0], message)
+		if len(results) == 3 {
+			tailf = replaceMessage(results[2], message)
 		}
-		handleStr = replaceHandle(handleStr, handler)
-		if filePrefix != "" {
-			filePath := outputPath + "/" + strings.Replace(filePrefix, "${}", strings.ToLower(handler.ORequest), -1)
-			//单独写文件
-			writeFile(filePath, header + handleStr + tailf, overwrite)
-		} else {
-			content += handleStr
+
+
+		for _, handler := range message.Handlers {
+			handleStr := replaceMessage(results[1], message)
+			if !handler.IsValid() {
+				continue
+			}
+			handleStr = replaceHandle(handleStr, handler)
+			if filePrefix != "" {
+				filePath := outputPath + "/" + strings.Replace(filePrefix, "${}", strings.ToLower(handler.ORequest), -1)
+				//单独写文件
+				writeFile(filePath, header + handleStr + tailf, overwrite)
+			} else {
+				content += handleStr
+			}
 		}
+	} else {
+		header = replaceMessage(templateContent, message)
 	}
+
 
 	if filePrefix == "" {
 		//写一个文件
@@ -70,22 +74,22 @@ func writeFile(filePath string, content string, overwrite bool) {
 		//文件存在不允许覆盖
 		_, err := os.Stat(filePath)
 		if err == nil {
-			fmt.Println("file " + filePath + " alread exist, skip it!")
+			log.Warn("file " + filePath + " alread exist, skip it!")
 			return
 		}
 	}
 	f, err := os.Create(filePath) //创建文件
 	if err != nil {
-		fmt.Errorf(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	defer f.Close()
 	_, err1 := f.Write([]byte(content)) //写入文件(字节数组)
 	if err1 != nil {
-		fmt.Errorf(err1.Error())
+		log.Error(err1.Error())
 		return
 	}
-	fmt.Println("gen code file " + filePath + " success!")
+	log.Warn("gen code file " + filePath + " success!")
 }
 
 

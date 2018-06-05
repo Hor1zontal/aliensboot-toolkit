@@ -1,0 +1,7 @@
+time="2018-06-05T11:12:37+08:00" level=warning msg="gen code file ../../module/scene/service/handle.go success!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="gen code file ../../module/scene/service/handlejson.go success!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="file ../../module/scene/service//handle_spacemove.go alread exist, skip it!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="file ../../module/scene/service//handle_spaceenter.go alread exist, skip it!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="file ../../module/scene/service//handle_spaceleave.go alread exist, skip it!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="file ../../module/scene/service//handle_getstate.go alread exist, skip it!"
+time="2018-06-05T11:12:37+08:00" level=warning msg="gen code file ../../module/scene/service/service.go success!"

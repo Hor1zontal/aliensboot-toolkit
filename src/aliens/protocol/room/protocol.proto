@@ -27,8 +27,8 @@ message Response {
 
     //-----------------房间模块接口---------------
     oneof response {
-
         uint32 exception = 3;
+
         create_room_ret createRoomRet = 4;
         join_room_ret joinRoomRet = 5;
         leave_room_ret leaveRoomRet = 6;

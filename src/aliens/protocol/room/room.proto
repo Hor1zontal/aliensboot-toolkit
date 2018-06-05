@@ -1,4 +1,5 @@
 syntax = "proto3";
+package room;
 
 //创建房间
 message create_room {

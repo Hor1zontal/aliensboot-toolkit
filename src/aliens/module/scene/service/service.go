@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * All rights reserved.
+ * Date:
+ *     2017/11/16
+ * Contributors:
+ *     aliens idea(xiamen) Corporation - initial API and implementation
+ *     jialin.he <kylinh@gmail.com>
+ *******************************************************************************/
 package service
 
 import (
@@ -5,14 +14,14 @@ import (
 	"aliens/module/scene/conf"
 )
 
-var sceneRPCService *center.GRPCService = nil
+var instance center.IService = nil
 
 func Init() {
-	sceneRPCService = center.PublicGRPCService(conf.Config.Service, &sceneService{})
+	instance = center.PublicService(conf.Config.Service, &sceneService{})
 }
 
 func Close() {
-	if sceneRPCService != nil {
-		sceneRPCService.Close()
+	if instance != nil {
+		instance.Close()
 	}
 }

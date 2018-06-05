@@ -14,10 +14,10 @@ import (
 	"strconv"
 )
 
-var ip = GetIP()
+var IP = GetIP()
 
 func GetAddress(port int) string {
-	return ip + ":" + strconv.Itoa(port)
+	return IP + ":" + strconv.Itoa(port)
 }
 
 func GetIP() string {

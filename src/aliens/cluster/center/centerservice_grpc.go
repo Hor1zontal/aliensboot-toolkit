@@ -21,51 +21,6 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-func PublicGRPCService(config ServiceConfig, handle protocol.RPCServiceServer) *GRPCService {
-	if !ClusterCenter.IsConnect() {
-		log.Fatal(config.Name + " cluster center is not connected")
-		return nil
-	}
-
-	var server *grpc.Server = nil
-	if ClusterCenter.certFile != "" {
-		creds, err := credentials.NewServerTLSFromFile(ClusterCenter.certFile, ClusterCenter.keyFile)
-		if err != nil {
-			log.Fatalf("Failed to generate credentials %v", err)
-			return nil
-		}
-		server = grpc.NewServer(grpc.Creds(creds))
-	} else {
-		server = grpc.NewServer()
-	}
-
-	protocol.RegisterRPCServiceServer(server,  handle)
-
-	if config.Address == "" {
-		config.Address = util.GetAddress(config.Port)
-	}
-
-	service := &GRPCService{
-		centerService: &centerService{
-			id:          ClusterCenter.GetNodeID(),
-			serviceType: config.Name,
-			Address:     config.Address,
-			Protocol: GRPC,
-		},
-		port: config.Port,
-		server : server,
-	}
-	if !service.Start() {
-		log.Fatal(service.serviceType + " rpc service can not be start")
-	}
-	//RPC启动成功,则发布到中心服务器
-	if !ClusterCenter.PublicService(service, config.Unique) {
-		log.Fatal(service.serviceType + " rpc service can not be start")
-	}
-	return service
-}
-
-
 type GRPCService struct {
 	*centerService
 
@@ -74,37 +29,52 @@ type GRPCService struct {
 	caller protocol.RPCServiceClient
 
 	//启动服务参数
-	port    int
 	server  *grpc.Server      //
+
+	handler protocol.RPCServiceServer //处理句柄
+}
+
+func (this *GRPCService) SetProxy(service *centerService) {
+	this.centerService = service
+}
+
+func (this *GRPCService) GetProxy() *centerService {
+	return this.centerService
 }
 
 func (this *GRPCService) GetDesc() string {
 	return "rpc service"
 }
 
-func (this *GRPCService) GetID() string {
-	return this.id
-}
+func (this *GRPCService) SetHandler(handler interface{}) {
+	result, ok := handler.(protocol.RPCServiceServer)
+	if !ok {
 
-func (this *GRPCService) GetType() string {
-	return this.serviceType
-}
+	}
 
-func (this *GRPCService) SetID(id string) {
-	this.id = id
-}
-
-func (this *GRPCService) SetType(serviceType string) {
-	this.serviceType = serviceType
+	this.handler = result
 }
 
 //启动服务
 func (this *GRPCService) Start() bool {
-	if this.server == nil {
-		log.Error("invalid service param")
-		return false
+	var server *grpc.Server = nil
+	if ClusterCenter.certFile != "" {
+		creds, err := credentials.NewServerTLSFromFile(ClusterCenter.certFile, ClusterCenter.keyFile)
+		if err != nil {
+			log.Fatalf("Failed to generate credentials %v", err)
+			return false
+		}
+		server = grpc.NewServer(grpc.Creds(creds))
+	} else {
+		server = grpc.NewServer()
 	}
-	address := ":" + strconv.Itoa(this.port)
+	protocol.RegisterRPCServiceServer(server, this.handler)
+	if this.Ip == "" {
+		this.Ip = util.GetIP()
+	}
+	this.server = server
+
+	address := ":" + strconv.Itoa(this.Port)
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Errorf("failed to listen: %v", err)
@@ -112,18 +82,13 @@ func (this *GRPCService) Start() bool {
 	}
 	go func() {
 		this.server.Serve(lis)
-		log.Infof("rpc service %v stop", this.serviceType)
+		log.Infof("rpc service %v stop", this.name)
 	}()
 	return true
 }
 
 //连接服务
 func (this *GRPCService) Connect() bool {
-	//rpc := rpcClientFactories[this.serviceType]
-	//if rpc == nil {
-	//	log.Error("grpc mapping not register %v", this.serviceType)
-	//	return false
-	//}
 	var option grpc.DialOption = nil
 	if ClusterCenter.certFile != "" {
 		creds, err := credentials.NewClientTLSFromFile(ClusterCenter.certFile, ClusterCenter.commonName)
@@ -136,21 +101,13 @@ func (this *GRPCService) Connect() bool {
 		option = grpc.WithInsecure()
 	}
 
-	conn, err := grpc.Dial(this.Address, option)
+	conn, err := grpc.Dial(this.Ip + ":" + util.IntToString(this.Port), option)
 	if err != nil {
 		log.Errorf("did not connect: %v", err)
 		return false
 	}
 	this.client = conn
 	this.caller = protocol.NewRPCServiceClient(this.client)
-	//rpc(this.client)
-	//mutable := reflect.ValueOf(caller).Elem()
-	//this.caller = mutable.Addr().MethodByName(method)
-	//if !this.caller.IsValid() {
-	//	log.Error("grpc %v request method not found", this.serviceType)
-	//	this.client.Close()
-	//	return false
-	//}
 	return true
 }
 
@@ -160,7 +117,7 @@ func (this *GRPCService) Equals(other IService) bool {
 	if !ok {
 		return false
 	}
-	return this.serviceType == otherService.serviceType && this.Address == otherService.Address
+	return this.name == otherService.name && this.Ip == otherService.Ip
 }
 
 //服务是否本进程启动的
@@ -186,12 +143,6 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	if this.client == nil {
 		return nil, errors.New("service is not initial")
 	}
-	//params := make([]reflect.Value, 2)
-	//params[0] = reflect.ValueOf(context.Background())
-	//params[1] = reflect.ValueOf(request)
-	//results := this.caller.Call(params)
-	//
-	//response := results[0].Interface()
 	requestAny, error := request.(*protocol.Any)
 	if !error {
 		return nil, errors.New("invalid request type")

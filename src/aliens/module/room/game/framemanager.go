@@ -9,37 +9,41 @@
  *******************************************************************************/
 package game
 
-import "time"
+import (
+	"time"
 
-func NewFrameManager(framePerSecond uint, frameHandle func(frame *Frame)) *FrameManager {
+	"aliens/protocol/room"
+)
+
+func NewFrameManager(framePerSecond uint, frameHandle func(frame *room.Frame)) *FrameManager {
 	return &FrameManager{
 		framePerSecond: framePerSecond,
 		currFrame:      newFrame(1),
-		frames:         make(map[uint]*Frame),
+		frames:         make(map[uint]*room.Frame),
 		frameHandle:    frameHandle,
 	}
 }
 
 
-func newFrame(seq uint32) *Frame {
-	return &Frame{Seq:seq, Commands:[]*Command{}}
+func newFrame(seq uint32) *room.Frame {
+	return &room.Frame{Seq:seq, Commands:[]*room.Command{}}
 }
 
 type FrameManager struct {
 	framePerSecond uint //逻辑帧数
 
 	timer *time.Timer //逻辑帧驱动定时器
-	channel chan *Command  //接受到的游戏指令管道
+	channel chan *room.Command  //接受到的游戏指令管道
 
-	currFrame *Frame //游戏当前帧数
+	currFrame *room.Frame //游戏当前帧数
 
-	frameHandle func(frame *Frame) //帧处理器
-	frames map[uint]*Frame //存储所有的帧数据
+	frameHandle func(frame *room.Frame) //帧处理器
+	frames map[uint]*room.Frame //存储所有的帧数据
 }
 
 func (this *FrameManager) Start() {
 	frameInterval := time.Second / time.Duration(this.framePerSecond)
-	this.channel = make(chan *Command, 5)
+	this.channel = make(chan *room.Command, 5)
 	this.timer = time.NewTimer(frameInterval)
 	go func() {
 		for {
@@ -55,7 +59,7 @@ func (this *FrameManager) Start() {
 	}()
 }
 
-func (this *FrameManager) AddCommand(command *Command) {
+func (this *FrameManager) AddCommand(command *room.Command) {
 	this.channel <- command
 }
 
@@ -73,6 +77,6 @@ func (this *FrameManager) nextFrame() {
 }
 
 //接受命令
-func (this *FrameManager) acceptCommand(command *Command) {
+func (this *FrameManager) acceptCommand(command *room.Command) {
 	this.currFrame.Commands = append(this.currFrame.Commands, command)
 }

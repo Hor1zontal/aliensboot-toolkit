@@ -37,7 +37,7 @@ func ParseProto(protoPath string) *ProtoMessage {
 		switch element.(type) {
 			case *proto.Package :
 				message.PackageName = element.(*proto.Package).Name
-				//fmt.Println()
+				//log.Println()
 				break;
 			case *proto.Message:
 				comment := element.(*proto.Message).Doc()
