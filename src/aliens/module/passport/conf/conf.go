@@ -12,7 +12,7 @@ import (
 var configPath = "conf/aliens/passport/server.json"
 
 var Config struct {
-	Service  service.ServiceConfig
+	Service  service.Config
 	Cache 	 redis.CacheConfig
 	Database dbconfig.DBConfig
 

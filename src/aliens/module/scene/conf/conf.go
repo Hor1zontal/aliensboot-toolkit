@@ -16,7 +16,7 @@ import (
 
 
 var Config struct {
-	Service  service.ServiceConfig
+	Service  service.Config
 }
 
 func init() {

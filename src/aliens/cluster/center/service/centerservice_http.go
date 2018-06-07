@@ -10,7 +10,7 @@
 package service
 
 
-//func PublicHTTPService(config ServiceConfig, address string) *httpService {
+//func PublicHTTPService(config CenterService, address string) *httpService {
 //	if !ClusterCenter.IsConnect() {
 //		panic(config.Name + " cluster center is not connected")
 //		return nil

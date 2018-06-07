@@ -9,27 +9,30 @@
  *******************************************************************************/
 package service
 
-func NewService(config ServiceConfig) IService {
+func NewService(config Config) IService {
 	return NewService1(config.ID, config.Name, config.Address, config.Port, config.Protocol)
 }
 
-func NewService1(id string, name string, address string, port int, protocol string) IService {
-	centerService := &ServiceConfig{
-		ID:       id,
-		Name:     name,
-		Address:  address,
-		Port:     port,
-		Protocol: protocol,
-	}
-
+func NewService2(centerService *CenterService, id string, name string) IService {
+	centerService.SetID(id)
+	centerService.SetName(name)
 	var service IService = nil
 	switch centerService.Protocol {
 	case GRPC:
-		service = &GRPCService{ServiceConfig: centerService}
+		service = &GRPCService{CenterService: centerService}
 		//case WEBSOCKET:
 		//	return &wbService{centerService: centerService}
 		//case HTTP:
 		//	return &httpService{centerService: centerService}
 	}
 	return service
+}
+
+func NewService1(id string, name string, address string, port int, protocol string) IService {
+	centerService := &CenterService{
+		Address:  address,
+		Port:     port,
+		Protocol: protocol,
+	}
+	return NewService2(centerService, id, name)
 }

@@ -22,7 +22,5 @@ func Init() {
 }
 
 func Close() {
-	if instance != nil {
-		instance.Close()
-	}
+	center.ReleaseService(instance)
 }

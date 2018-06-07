@@ -13,23 +13,19 @@ import (
 	"encoding/json"
 	"github.com/samuel/go-zookeeper/zk"
 	"time"
-	"aliens/cluster/center/lbs"
 	"gopkg.in/mgo.v2/bson"
 	"aliens/log"
 	"aliens/cluster/center/service"
 )
 
-const NODE_SPLIT string = "/"
 
-const SERVICE_NODE_NAME string = "service"
-
-const DEFAULT_LBS string = lbs.LBS_STRATEGY_POLLING
 
 type ZKServiceCenter struct {
 	*service.Container
 	zkCon            *zk.Conn
 	zkName           string
 	serviceRoot      string
+	configRoot 		 string
 
 
 	nodeId  string //当前集群节点的id
@@ -70,6 +66,8 @@ func (this *ZKServiceCenter) ConnectCluster(config ClusterConfig) {
 	}
 	this.Container = service.NewContainer(config.LBS)
 	this.serviceRoot = NODE_SPLIT + this.zkName + NODE_SPLIT + SERVICE_NODE_NAME
+	this.configRoot = NODE_SPLIT + this.zkName + NODE_SPLIT + CONFIG_NODE_NAME
+
 	this.zkCon = c
 	this.confirmNode(NODE_SPLIT + this.zkName)
 	this.confirmNode(this.serviceRoot)
@@ -100,6 +98,10 @@ func (this *ZKServiceCenter) SubscribeServices(serviceTypes ...string) {
 	}
 }
 
+func (this *ZKServiceCenter) ReleaseService(service service.IService) {
+
+}
+
 func (this *ZKServiceCenter) SubscribeService(serviceName string) {
 	path := this.serviceRoot + NODE_SPLIT + serviceName
 	//desc := this.confirmContentNode(path)
@@ -116,13 +118,13 @@ func (this *ZKServiceCenter) SubscribeService(serviceName string) {
 			log.Errorf("get service %v data error: %v", servicePath, err)
 			continue
 		}
-		config := &service.ServiceConfig{}
-		err1 := json.Unmarshal(data, config)
+		centerService := &service.CenterService{}
+		err1 := json.Unmarshal(data, centerService)
 		if err1 != nil {
 			log.Errorf("unmarshal service %v data error: %v", servicePath, err1)
 			continue
 		}
-		service := service.NewService(*config)
+		service := service.NewService2(centerService, serviceID, serviceName)
 		services = append(services, service)
 	}
 
@@ -196,6 +198,51 @@ func (this *ZKServiceCenter) PublicService(service service.IService, unique bool
 	}
 	log.Infof("public %v success : %v", serviceName, id)
 	//服务注册在容器
-	this.UpdateService(service)
+	this.UpdateService(service, true)
 	return true
 }
+
+//发布配置信息
+func (this *ZKServiceCenter) PublicConfig(configType string, configContent []byte) bool {
+	this.assert()
+	if configType == "" {
+		log.Info("config type con not be empty")
+		return false
+	}
+	configPath := this.configRoot + NODE_SPLIT + configType
+	this.confirmNode(configPath)
+	_, err := this.zkCon.Set(configPath, configContent, -1)
+	if err != nil {
+		log.Info("public config %v  err : %v", configType, err)
+		return false
+	}
+	log.Info("public config %v success", configType)
+	return true
+}
+
+//订阅服务  能实时更新服务信息
+func (this *ZKServiceCenter) SubscribeConfig(configName string, configHandler ConfigListener) {
+	this.assert()
+	path := this.configRoot + NODE_SPLIT + configName
+	this.confirmNode(path)
+	content, _, ch, err := this.zkCon.GetW(path)
+	if err != nil {
+		log.Info("subscribe config %v error: %v", path, err)
+		return
+	}
+	configHandler(content)
+	go func(){
+		for {
+			event, _ := <-ch
+			//更新配置节点信息
+			if event.Type == zk.EventNodeDataChanged {
+				content, _, err := this.zkCon.Get(path)
+				if err == nil {
+					configHandler(content)
+				}
+			}
+		}
+
+	}()
+}
+

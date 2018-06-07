@@ -12,38 +12,66 @@ package center
 import (
 	"aliens/cluster/center/service"
 	"aliens/log"
+	"aliens/cluster/center/lbs"
 )
 
-var ClusterCenter ServiceCenter = &ZKServiceCenter{} //服务调度中心
+var ClusterCenter ServiceCenter = &ETCDServiceCenter{} //服务调度中心
 
+const NODE_SPLIT string = "/"
 
-func PublicService(config service.ServiceConfig, handler interface{}) service.IService {
+const SERVICE_NODE_NAME string = "service"
+
+const CONFIG_NODE_NAME string = "config"
+
+const DEFAULT_LBS string = lbs.LBS_STRATEGY_POLLING
+
+func PublicService(config service.Config, handler interface{}) service.IService {
 	if !ClusterCenter.IsConnect() {
 		log.Fatal(config.Name + " cluster center is not connected")
 		return nil
 	}
+
+	config.ID = ClusterCenter.GetNodeID() //节点id
+
 	service := service.NewService(config)
-	service.SetID(ClusterCenter.GetNodeID())
 	if service == nil {
 		log.Fatalf( "un expect service protocol %v", config.Protocol)
 	}
 	service.SetHandler(handler)
 	if !service.Start() {
-		log.Fatal(service.GetName() + " rpc service can not be start")
+		log.Fatalf("service %v can not be start", service.GetName())
 	}
 	//RPC启动成功,则发布到中心服务器
 	if !ClusterCenter.PublicService(service, config.Unique) {
-		log.Fatal(service.GetName() + " rpc service can not be start")
+		log.Fatalf("service %v can not be public", service.GetName())
 	}
 	return service
 }
 
 
+func ReleaseService(service service.IService) {
+	if service != nil {
+		service.Close()
+	}
+	if !ClusterCenter.IsConnect() {
+		log.Errorf(" cluster center is not connected")
+		return
+	}
+	ClusterCenter.ReleaseService(service)
+}
+
+type ConfigListener func(data []byte)
+
 type ServiceCenter interface {
 	GetNodeID() string
 	ConnectCluster(config ClusterConfig)
-	PublicService(service service.IService, unique bool) bool
-	SubscribeServices(serviceNames ...string)
+
+	PublicConfig(configName string, content []byte) bool        //发布配置
+	SubscribeConfig(configName string, listener ConfigListener) //订阅配置
+
+	ReleaseService(service service.IService)   //释放服务
+	PublicService(service service.IService, unique bool) bool  //发布服务
+	SubscribeServices(serviceNames ...string) //订阅服务
 	GetAllService(serviceName string) []service.IService
 	GetService(serviceName string, serviceID string) service.IService
 	AllocService(serviceName string) service.IService
@@ -58,6 +86,7 @@ type ClusterConfig struct {
 	Servers []string   //集群服务器列表
 	Timeout uint
 	LBS     string   //负载均衡策略  polling 轮询
+	TTL     int64   //
 	//CertFile string
 	//KeyFile  string
 	//CommonName string

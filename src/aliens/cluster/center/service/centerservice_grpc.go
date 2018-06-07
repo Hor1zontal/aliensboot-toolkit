@@ -21,7 +21,7 @@ import (
 )
 
 type GRPCService struct {
-	*ServiceConfig
+	*CenterService
 
 	//调用服务参数
 	client *grpc.ClientConn
@@ -33,8 +33,8 @@ type GRPCService struct {
 	handler protocol.RPCServiceServer //处理句柄
 }
 
-func (this *GRPCService) GetConfig() *ServiceConfig {
-	return this.ServiceConfig
+func (this *GRPCService) GetConfig() *CenterService {
+	return this.CenterService
 }
 
 func (this *GRPCService) GetDesc() string {
@@ -98,14 +98,15 @@ func (this *GRPCService) Connect() bool {
 	//	option = grpc.WithInsecure()
 	//}
 	option = grpc.WithInsecure()
-
-	conn, err := grpc.Dial(this.Address + ":" + util.IntToString(this.Port), option)
+	address := this.Address + ":" + util.IntToString(this.Port)
+	conn, err := grpc.Dial(address, option)
 	if err != nil {
 		log.Errorf("did not connect: %v", err)
 		return false
 	}
 	this.client = conn
 	this.caller = protocol.NewRPCServiceClient(this.client)
+	log.Infof("connect grpc service %v-%v success", this.Name, address)
 	return true
 }
 
@@ -115,7 +116,7 @@ func (this *GRPCService) Equals(other IService) bool {
 	if !ok {
 		return false
 	}
-	return this.Name == otherService.Name && this.Address == otherService.Address
+	return this.Name == otherService.Name && this.Address == otherService.Address && this.Port == this.Port
 }
 
 //服务是否本进程启动的

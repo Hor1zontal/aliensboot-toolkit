@@ -24,7 +24,7 @@ type IService interface {
 	GetName() string
 	GetAddress() string
 	GetPort() int
-	//GetConfig() *ServiceConfig
+	//GetConfig() *CenterService
 
 
 	Start() bool                                      //启动服务
@@ -38,51 +38,58 @@ type IService interface {
 	//Push(request interface{}) error //服务推送
 }
 
-
-type ServiceConfig struct {
+type Config struct {
 	ID   string		//服务器的id
 	Name string     //服务名称
 	Address string  //服务地址 域名或ip
-	Port int      //服务端端口
-	Unique bool   //是否全局唯一
+	Port int        //服务端端口
+	Unique bool     //是否全局唯一
 	Protocol string //提供服务的协议 GRPC HTTP WBSOCKET
 }
 
+type CenterService struct {
+	Address string  `json:"address"`//服务地址 域名或ip
+	Port int        `json:"port"` //服务端端口
+	Protocol string `json:"protocol"`//提供服务的协议 GRPC HTTP WBSOCKET
+	ID   string		`json:"-"` //服务器的id
+	Name string     `json:"-"`//服务名称
+	Unique bool     `json:"-"`//是否全局唯一
+}
 
-func (this *ServiceConfig) GetAddress() string {
+func (this *CenterService) GetAddress() string {
 	return this.Address
 }
 
 
-func (this *ServiceConfig) SetAddress(address string) {
+func (this *CenterService) SetAddress(address string) {
 	this.Address = address
 }
 
-func (this *ServiceConfig) GetPort() int {
+func (this *CenterService) GetPort() int {
 	return this.Port
 }
 
-func (this *ServiceConfig) SetPort(port int) {
+func (this *CenterService) SetPort(port int) {
 	this.Port = port
 }
 
 
-func (this *ServiceConfig) GetID() string {
+func (this *CenterService) GetID() string {
 	return this.ID
 }
 
 
-func (this *ServiceConfig) SetID(id string) {
+func (this *CenterService) SetID(id string) {
 	this.ID = id
 }
 
 
-func (this *ServiceConfig) GetName() string {
+func (this *CenterService) GetName() string {
 	return this.Name
 }
 
 
-func (this *ServiceConfig) SetName(name string) {
+func (this *CenterService) SetName(name string) {
 	this.Name = name
 }
 
