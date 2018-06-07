@@ -238,6 +238,28 @@ func (this *ETCDServiceCenter) handleService(eventType mvccpb.Event_EventType, v
 }
 
 func (this *ETCDServiceCenter) SubscribeConfig(configName string, configHandler ConfigListener) {
+	configPath := this.configRoot + NODE_SPLIT + configName
+	rsp, err := this.client.Get(newTimeoutContext(), configPath)
+	if err != nil {
+		log.Errorf("subscribe config %v error: %v", configPath, err)
+		return
+	}
+	for _, v := range rsp.Kvs {
+		configHandler(v.Value)
+	}
+
+	go func(){
+		ch := this.client.Watch(context.TODO(), configPath)
+		for {
+			//只要消息管道没有关闭，就一直等待用户请求
+			event, _ := <-ch
+			for _, serviceEvent := range event.Events {
+				if serviceEvent.Type == clientv3.EventTypePut {
+					configHandler(serviceEvent.Kv.Value)
+				}
+			}
+		}
+	} ()
 
 }
 
