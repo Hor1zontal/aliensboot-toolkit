@@ -58,8 +58,8 @@ func (this *ETCDServiceCenter) ConnectCluster(config ClusterConfig) {
 	}
 	this.client = client
 	this.ttlCheck = make(map[string]string)
-	this.serviceRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + SERVICE_NODE_NAME + NODE_SPLIT
-	this.configRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + CONFIG_NODE_NAME + NODE_SPLIT
+	this.serviceRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + SERVICE_NODE_NAME
+	this.configRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + CONFIG_NODE_NAME
 
 
 	this.node = config.ID
@@ -133,6 +133,8 @@ func (this *ETCDServiceCenter) PublicService(service service.IService, unique bo
 
 	//ttlCheck : 10s
 	data, err := json.Marshal(service)
+
+	this.PublicConfig("testconfig", data)
 	if err != nil {
 		log.Errorf("marshal json service data error : %v", err)
 		return false
@@ -270,11 +272,11 @@ func (this *ETCDServiceCenter) PublicConfig(configType string, configContent []b
 	}
 	configPath := this.configRoot + NODE_SPLIT + configType
 
-	_, err := this.client.Put(newTimeoutContext(), configPath, string(configContent), nil)
+	_, err := this.client.Put(newTimeoutContext(), configPath, string(configContent))
 	if err != nil {
-		log.Info("public config %v  err : %v", configType, err)
+		log.Infof("public config %v  err : %v", configType, err)
 		return false
 	}
-	log.Info("public config %v success", configType)
+	log.Infof("public config %v success", configType)
 	return true
 }

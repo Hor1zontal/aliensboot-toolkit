@@ -16,6 +16,7 @@ import (
 	"time"
 	"aliens/log"
 	"aliens/protocol/passport"
+	"aliens/exception"
 )
 
 var PassportCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -75,11 +76,16 @@ func NewUser(username string, password string, ip string, channel string, channe
 		RegTime:  time.Now(),
 		//LastLogin:time.Now(),
 	}
-	user.Id = db.DatabaseHandler.GenTimestampId(user)
-	err := db.DatabaseHandler.Insert(user)
+	uid, err := db.DatabaseHandler.GenTimestampId(user)
 	if err != nil {
-		log.Debugf("add user invalid %v", err)
-		//exception.GameException(exception.USERNAME_EXISTS)
+		log.Debugf("insert user error %v", err)
+		exception.GameException(exception.DATABASE_ERROR)
+	}
+	user.Id = uid
+	err1 := db.DatabaseHandler.Insert(user)
+	if err1 != nil {
+		log.Debugf("insert user error %v", err1)
+		exception.GameException(exception.DATABASE_ERROR)
 	}
 	PassportCache.SetUsernameUidMapping(user.Username, user.GetId())
 	PassportCache.HSetUser(user.GetId(), user)

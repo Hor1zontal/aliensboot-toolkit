@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 	"aliens/common/util"
+	"reflect"
 )
 
 //数据库操作枚举
@@ -118,7 +119,7 @@ func (this *dbUpdateHandler) handleOperation(dbOperation *DBOperation) {
 	//记录数据库操作时间超过一秒的操作
 	if result > 1 {
 		log.Debug("execute opration op %v time(s) %v data %v", dbOperation.operation, result,
-			this.handler.GetTableName(dbOperation.data))
+			reflect.TypeOf(dbOperation.data))
 	}
 }
 
@@ -126,7 +127,11 @@ func (this *dbUpdateHandler) handleOperation(dbOperation *DBOperation) {
 func (this *dbUpdateHandler) UpdateQueue(operation DB_OP, data interface{}) {
 	this.Lock()
 	defer this.Unlock()
-	key := this.getDataKey(data)
+	key, err := this.getDataKey(data)
+	if err != nil {
+		log.Error("get data key error : ",err)
+		return
+	}
 	operationHistory := this.updateCache[key]
 	if operationHistory != nil {
 		operationHistory.change(operation, data)
@@ -141,8 +146,11 @@ func (this *dbUpdateHandler) UpdateQueue(operation DB_OP, data interface{}) {
 	//}
 }
 
-func (this *dbUpdateHandler)getDataKey(data interface{}) string {
-	key := this.handler.GetTableName(data)
+func (this *dbUpdateHandler)getDataKey(data interface{}) (string, error) {
+	key, err := this.handler.GetTableName(data)
+	if err != nil {
+		return "", err
+	}
 	id := this.handler.GetID(data)
 	switch id.(type) {
 	case string:
@@ -152,14 +160,18 @@ func (this *dbUpdateHandler)getDataKey(data interface{}) string {
 		key = key + util.Int32ToString(id.(int32))
 		break
 	}
-	return key
+	return key, nil
 }
 
 //实时更新
 func (this *dbUpdateHandler) UpdateQueueNow(operation DB_OP, data interface{}) {
 	this.Lock()
 	defer this.Unlock()
-	key := this.getDataKey(data)
+	key, err := this.getDataKey(data)
+	if err != nil {
+		log.Error("get data key error : ", err)
+		return
+	}
 	operationHistory := this.updateCache[key]
 	if operationHistory != nil {
 		//只有删除操作和非插入操作才允许覆盖

@@ -21,17 +21,17 @@ type Authority struct {
 
 //数据库handler
 type IDatabaseHandler interface {
-	GetTableName(data interface{}) string
+	GetTableName(data interface{}) (string, error)
+	EnsureTable(name string, data interface{}) error //确保表存在
 	GetID(data interface{}) interface{}
-	EnsureTable(name string, data interface{}) //确保表存在
-	EnsureUniqueIndex(data interface{}, name string)                                                        //确保索引
+	EnsureUniqueIndex(data interface{}, name string) error                                                       //确保索引
 	Related(data interface{}, relateData interface{}, relateTableName string, relateKey string) error //创建依赖关系
-	GenId(data interface{}) int32
-	GenTimestampId(data interface{}) int64
+	GenId(data interface{}) (int32, error)
+	GenTimestampId(data interface{}) (int64, error)
 	Insert(data interface{}) error
 	QueryAll(data interface{}, result interface{}) error
 	QueryAllCondition(data interface{}, condition string, value interface{}, result interface{}) error
-	IDExist(data interface{}) bool
+	IDExist(data interface{}) (bool, error)
 	QueryOne(data interface{}) error
 	QueryOneCondition(data interface{}, condition string, value interface{}) error
 	DeleteOne(data interface{}) error
