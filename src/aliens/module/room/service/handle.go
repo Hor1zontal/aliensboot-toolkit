@@ -10,7 +10,7 @@
 package service
 
 import (
-	"aliens/protocol/passport"
+	"aliens/protocol/room"
 	"github.com/gogo/protobuf/proto"
 	"golang.org/x/net/context"
 	"github.com/pkg/errors"
@@ -19,15 +19,10 @@ import (
 	"aliens/common/util"
 )
 
-type passportService struct {
+type roomService struct {
 }
 
-
-func (this *passportService) Request1(request *protocol.Any, server RPCService_RequestServer) error {
-
-}
-
-func (this *passportService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
+func (this *roomService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
@@ -37,19 +32,19 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
 		return &protocol.Any{TypeUrl:"", Value:data}, nil
 	}
 
-	requestProxy := &passport.PassportRequest{}
+	requestProxy := &room.Request{}
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		return nil, error
 	}
-	responseProxy := &passport.PassportResponse{Session:requestProxy.GetSession()}
+	responseProxy := &room.Response{Session:requestProxy.GetSession()}
 
     defer func() {
     	//处理消息异常
     	if err := recover(); err != nil {
     		switch err.(type) {
     		    case exception.GameCode:
-    				responseProxy.Response = &passport.PassportResponse_Exception{Exception:uint32(err.(exception.GameCode))}
+    				responseProxy.Response = &room.Response_Exception{Exception:uint32(err.(exception.GameCode))}
     				break
     			default:
     				util.PrintStackDetail()
@@ -65,26 +60,26 @@ func (this *passportService) Request(ctx context.Context,request *protocol.Any) 
     return
 }
 
-func handleRequest(request *passport.PassportRequest, response *passport.PassportResponse) error {
+func handleRequest(request *room.Request, response *room.Response) error {
 	
-	if request.GetLoginRegister() != nil {
-		messageRet := &passport.LoginRegisterRet{}
-		handleLoginRegister(request.GetLoginRegister(), messageRet)
-		response.Response = &passport.PassportResponse_LoginRegisterRet{messageRet}
+	if request.GetCreateRoom() != nil {
+		messageRet := &room.CreateRoomRet{}
+		handleCreateRoom(request.GetCreateRoom(), messageRet)
+		response.Response = &room.Response_CreateRoomRet{messageRet}
 		return nil
 	}
 	
-	if request.GetLoginLogin() != nil {
-		messageRet := &passport.LoginLoginRet{}
-		handleLoginLogin(request.GetLoginLogin(), messageRet)
-		response.Response = &passport.PassportResponse_LoginLoginRet{messageRet}
+	if request.GetJoinRoom() != nil {
+		messageRet := &room.JoinRoomRet{}
+		handleJoinRoom(request.GetJoinRoom(), messageRet)
+		response.Response = &room.Response_JoinRoomRet{messageRet}
 		return nil
 	}
 	
-	if request.GetNewInterface() != nil {
-		messageRet := &passport.NewInterfaceRet{}
-		handleNewInterface(request.GetNewInterface(), messageRet)
-		response.Response = &passport.PassportResponse_NewInterfaceRet{messageRet}
+	if request.GetLeaveRoom() != nil {
+		messageRet := &room.LeaveRoomRet{}
+		handleLeaveRoom(request.GetLeaveRoom(), messageRet)
+		response.Response = &room.Response_LeaveRoomRet{messageRet}
 		return nil
 	}
 	

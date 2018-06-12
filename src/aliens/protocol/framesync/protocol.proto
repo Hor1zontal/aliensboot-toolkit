@@ -1,0 +1,35 @@
+syntax = "proto3";
+package framesync;
+
+import "framesync.proto";
+
+//request
+message Request {
+
+    auth auth = 4; //验证权限
+
+    //-----------------帧同步服务接口---------------
+    command command = 5;  //同步指令信息
+    request_lost_frame requestLostFrame = 6;//丢帧请求
+}
+
+//response
+message Response {
+
+    bool authRet = 4; //验证权限结果
+
+    //-----------------帧同步服务接口---------------
+
+    request_lost_frame_ret requestLostFrameRet = 6;  //丢帧数据返回
+    frame syncFrame = 10;
+
+}
+
+message auth {
+    string roomID = 1;
+    uint32 seatID = 2;
+    string token = 3;
+}
+
+
+

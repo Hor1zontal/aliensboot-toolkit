@@ -18,6 +18,7 @@ import (
 	"golang.org/x/net/context"
 	"aliens/common/util"
 	"aliens/protocol"
+	"reflect"
 )
 
 type GRPCService struct {
@@ -44,9 +45,8 @@ func (this *GRPCService) GetDesc() string {
 func (this *GRPCService) SetHandler(handler interface{}) {
 	result, ok := handler.(protocol.RPCServiceServer)
 	if !ok {
-
+		log.Fatalf("invalid grpc service handle %v", reflect.TypeOf(handler))
 	}
-
 	this.handler = result
 }
 
@@ -142,9 +142,10 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	if this.client == nil {
 		return nil, errors.New("service is not initial")
 	}
-	requestAny, error := request.(*protocol.Any)
-	if !error {
+	requestAny, ok := request.(*protocol.Any)
+	if !ok {
 		return nil, errors.New("invalid request type")
 	}
+
 	return this.caller.Request(context.Background(), requestAny)
 }

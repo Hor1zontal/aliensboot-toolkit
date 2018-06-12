@@ -22,7 +22,6 @@ var Config struct {
 	AppKey            string
 }
 
-
 func init() {
 	config.LoadConfig(&Config, configPath) //加载服务器配置
 	if Config.TokenExpireTime <= 0 {

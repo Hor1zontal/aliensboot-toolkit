@@ -1,19 +1,21 @@
 syntax = "proto3";
-package room;
 
 //---------client -> server------------
 
 //客户端发送给服务端的操作指令
 message command {
-    uint32 playerID = 1;  //操作的发送者
+    uint32 ownID = 1;  //命令发出的客户端id
     bytes data = 2; //操作的内容
 }
 
-//获取帧数据 一般丢帧的情况下会请求
+//获取帧数据 一般丢帧的情况下会请求丢帧情况
 message request_lost_frame {
     repeated uint32 seq = 1; //帧序号
 }
 
+message request_lost_frame_ret {
+    repeated frame frame = 1; //获取丢帧数据
+}
 
 //---------server -> client-------------
 //服务端发送给客户端的帧消息

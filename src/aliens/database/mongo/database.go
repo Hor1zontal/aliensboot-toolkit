@@ -50,7 +50,7 @@ func (this *Database) Init(config dbconfig.DBConfig) error {
 }
 
 //初始化账号密码信息
-//func (this *Database) Auth(username string, password string) {
+//func (this *Database) auth(username string, password string) {
 //	if username != "" {
 //		this.auth = &database.Authority{username, password}
 //	}

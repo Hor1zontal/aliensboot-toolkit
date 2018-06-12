@@ -1,12 +1,11 @@
 syntax = "proto3";
 package room;
 
-import "framesync.proto";
-import "room.proto";
+import "room.proto"
 
 //request
 message Request {
-
+    int32 session = 1;  //消息序号
 
     //-----------------房间模块接口---------------
     oneof request {
@@ -16,14 +15,11 @@ message Request {
 
 
     }
-
-    command command = 40;  //同步指令信息
-    request_lost_frame requestLostFrame  = 41;//丢帧请求
 }
 
 //response
 message Response {
-
+    int32 session = 1;  //消息序号
 
     //-----------------房间模块接口---------------
     oneof response {
@@ -34,9 +30,4 @@ message Response {
         leave_room_ret leaveRoomRet = 6;
     }
 
-
-    repeated frame syncFramePush = 50;  //帧信息推送
 }
-
-
-

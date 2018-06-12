@@ -134,7 +134,7 @@ func (this *ETCDServiceCenter) PublicService(service service.IService, unique bo
 	//ttlCheck : 10s
 	data, err := json.Marshal(service)
 
-	this.PublicConfig("testconfig", data)
+	//this.PublicConfig("testconfig", data)
 	if err != nil {
 		log.Errorf("marshal json service data error : %v", err)
 		return false

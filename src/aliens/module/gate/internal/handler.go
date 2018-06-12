@@ -24,7 +24,7 @@ const (
 	CommandAgentNew   = "NewAgent" //新建agent
 	CommandAgentClose = "CloseAgent" //关闭agent
 	CommandAgentPush  = "Push"  //推送消息给agent
-	CommandAgentAuth  = "Auth"  //验证agent权限
+	CommandAgentAuth  = "auth"  //验证agent权限
 	CommandAgentMsg  = "Msg" //接受agent消息
 )
 

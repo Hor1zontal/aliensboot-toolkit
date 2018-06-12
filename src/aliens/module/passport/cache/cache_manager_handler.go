@@ -14,21 +14,17 @@ import (
 )
 
 const (
-	USER_KEY_PREFIX string = "test_uid_"
-	USERNAME_KEY_PREFIX string = "test_username"
+	USER_KEY_PREFIX string = "uid_"
+	USERNAME_KEY_PREFIX string = "username_"
 
-	UPROP_DESC string = "desc"         //用户签名
-	UPROP_NICKNAME string = "nname"         //用户昵称
+	UPROP_DESC string = "desc"          //用户签名
+	UPROP_NICKNAME string = "nname"     //用户昵称
 	UPROP_ICON string = "icon"      	//图标
 	UPROP_ONLINE string = "online"		//用户是否登录
 	UPROP_AVATAR string = "avatar"      //用户头像
 
-
 	FLAG_LOADUSER string = "flu_"   	//标识，是否加载用户数据到缓存
-
 	UPROP_TOKEN string = "token"      	//登录令牌
-
-
 )
 
 func GetUserKey(uid int64) string {

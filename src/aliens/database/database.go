@@ -5,7 +5,7 @@ import "aliens/database/dbconfig"
 //数据库抽象层 适配其他数据库
 type IDatabase interface {
 	Init(config dbconfig.DBConfig) error //初始化数据库
-	//Auth(username string, password string)           //登录信息
+	//auth(username string, password string)           //登录信息
 	Close()                                          //关闭数据库
 	GetHandler() IDatabaseHandler                    //获取数据库处理类
 }

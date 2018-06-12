@@ -1,5 +1,12 @@
 syntax = "proto3";
-package room;
+
+//-------------------------------------------message-------------------------------------
+
+enum room_result {
+    success = 0;                    //操作成功
+    invalidToken = 1;		        //无效的标识
+    maxPlayers = 2;				    //人数已达上限
+}
 
 //创建房间
 message create_room {
@@ -7,24 +14,28 @@ message create_room {
 }
 
 message create_room_ret {
-    string roomID = 1;
+    room_result result = 1;
+    string roomID = 2;
 }
 
 //加入房间
 message join_room {
     string roomID = 1; //房间id
-    string token = 2; //携带token加入游戏
+    string token = 2; //加入令牌
 }
 
 message join_room_ret {
-    uint32 playerID = 1; //分配玩家id
+    room_result result = 1;
+    uint32 seatID = 2; //分配座位id
 }
 
 //离开房间
 message leave_room {
     string roomID = 1;
+    string token = 2; //frame 令牌
 }
 
 message leave_room_ret {
-
+    room_result result = 1;
 }
+
