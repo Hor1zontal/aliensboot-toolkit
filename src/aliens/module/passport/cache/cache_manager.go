@@ -73,19 +73,19 @@ func NewUser(username string, password string, ip string, channel string, channe
 		Openid:   openID,
 		Status:   0,
 		Avatar:   avatar,
-		RegTime:  time.Now(),
+		RegTime:  time.Now().Unix(),
 		//LastLogin:time.Now(),
 	}
 	uid, err := db.DatabaseHandler.GenTimestampId(user)
 	if err != nil {
 		log.Debugf("insert user error %v", err)
-		exception.GameException(exception.DATABASE_ERROR)
+		exception.GameException(passport.Code_DBExcetpion)
 	}
 	user.Id = uid
 	err1 := db.DatabaseHandler.Insert(user)
 	if err1 != nil {
 		log.Debugf("insert user error %v", err1)
-		exception.GameException(exception.DATABASE_ERROR)
+		exception.GameException(passport.Code_DBExcetpion)
 	}
 	PassportCache.SetUsernameUidMapping(user.Username, user.GetId())
 	PassportCache.HSetUser(user.GetId(), user)

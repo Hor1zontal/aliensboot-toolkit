@@ -20,7 +20,7 @@ func (m *Module) OnInit() {
 	m.Skeleton = base.NewSkeleton()
 	db.Init()
 	cache.Init()
-	service.Init()
+	service.Init(m.ChanRPCServer)
 }
 
 func (m *Module) OnDestroy() {

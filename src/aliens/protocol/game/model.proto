@@ -2,7 +2,7 @@ syntax = "proto3";
 package passport;
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-//import "google/protobuf/timestamp.proto";
+import "google/protobuf/timestamp.proto";
 
 
 message User {
@@ -17,5 +17,5 @@ message User {
     string openid = 9 [(gogoproto.moretags) = "bson:\"openid\""];
     string ip = 10 [(gogoproto.moretags) = "bson:\"ip\""];
     int32 status = 11 [(gogoproto.moretags) = "bson:\"status\" rorm:\"status\""];
-    int64 regTime = 12 [(gogoproto.moretags) = "bson:\"regtime\""];
+    google.protobuf.Timestamp regTime = 12 [(gogoproto.moretags) = "bson:\"regtime\"", (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }

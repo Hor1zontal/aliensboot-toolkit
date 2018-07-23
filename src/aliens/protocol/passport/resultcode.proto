@@ -1,0 +1,9 @@
+syntax = "proto3";
+package passport;
+
+enum Code {
+    Success = 0;     //请求成功
+    InvalidRequest = 1; //无效的请求
+    ServerException = 2; //服务器处理异常  内部抛异常
+    DBExcetpion = 3; //数据库异常
+}

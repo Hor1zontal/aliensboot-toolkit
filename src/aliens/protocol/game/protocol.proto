@@ -1,12 +1,11 @@
 syntax = "proto3";
-package passport;
+package game;
 
 import "passport.proto";
-import "resultcode.proto";
 
 
 //request
-message PassportRequest {
+message GameRequest {
     int32 session = 1;     //消息序号
 
     //-----------------登录模块接口---------------
@@ -20,15 +19,13 @@ message PassportRequest {
 }
 
 //response
-message PassportResponse {
+message GameResponse {
     int32 session = 1;
-    Code code = 2; //结果码
 
     //-----------------登录服接口---------------
     oneof response {
-        login_register_ret loginRegisterRet = 6;
-        login_login_ret loginLoginRet = 7;
-        new_interface_ret newInterfaceRet = 10;
+        uint32 exception = 3;
+
     }
 
 }
