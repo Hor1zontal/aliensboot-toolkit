@@ -18,19 +18,16 @@ import (
 )
 
 //requestID - service
-var requestServiceMapping = make(map[uint16]string)
+var seqServiceMapping = make(map[uint16]string)
 
 //service/alias - responseID
-var servicePushMapping = make(map[string]uint16)
+var serviceSeqMapping = make(map[string]uint16)
 
-//requestID - responseID
-var responseMapping = make(map[uint16]uint16)
 
 type Route struct
 {
 	Service string `json:"service"`
-	RequestID uint16 `json:"req"`
-	ResponseID uint16 `json:"resp"`
+	Seq uint16 `json:"seq"`
 	Auth bool `json:"auth"`
 }
 
@@ -39,9 +36,8 @@ func LoadRoute(routes []Route) {
 		if route.Service == "" {
 			continue
 		}
-		requestServiceMapping[route.RequestID] = route.Service
-		responseMapping[route.RequestID] = route.ResponseID
-		servicePushMapping[route.Service] = route.ResponseID
+		seqServiceMapping[route.Seq] = route.Service
+		serviceSeqMapping[route.Service] = route.Seq
 	}
 }
 
@@ -65,12 +61,12 @@ func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
 }
 
 func GetPushID(service string) uint16 {
-	return servicePushMapping[service]
+	return serviceSeqMapping[service]
 }
 
 //未授权的消息转发
 func HandleMessage(request *protocol.Any) (*protocol.Any, error) {
-	serviceType, ok := requestServiceMapping[request.Id]
+	serviceType, ok := seqServiceMapping[request.Id]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
@@ -82,6 +78,6 @@ func HandleMessage(request *protocol.Any) (*protocol.Any, error) {
 	if !ok {
 		return nil, errors.New("un expect response type")
 	}
-	responseProxy.Id = responseMapping[request.Id]
+	responseProxy.Id = request.Id
 	return responseProxy, nil
 }

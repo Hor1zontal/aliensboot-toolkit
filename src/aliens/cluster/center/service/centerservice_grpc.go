@@ -146,6 +146,31 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	if !ok {
 		return nil, errors.New("invalid request type")
 	}
+	//if this.IsLocal() {
+	//	return this.handler.re.Request(context.Background(), requestAny)
+	//} else {
+	//	client, err := this.caller.Request(context.Background(), requestAny)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	return client.Recv()
+	//}
+	client, err := this.caller.Request(context.Background(), requestAny)
+	if err != nil {
+		return nil, err
+	}
+	return client.Recv()
+}
 
-	return this.caller.Request(context.Background(), requestAny)
+func (this *GRPCService) AsyncRequest(request interface{}) error {
+	//服务为本机，直接处理
+	if this.client == nil {
+		return errors.New("service is not initial")
+	}
+	requestAny, ok := request.(*protocol.Any)
+	if !ok {
+		return errors.New("invalid request type")
+	}
+	_, err := this.caller.Request(context.Background(), requestAny)
+	return err
 }

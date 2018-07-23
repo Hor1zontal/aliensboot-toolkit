@@ -24,12 +24,3 @@ message Response {
     frame syncFrame = 10;
 
 }
-
-message auth {
-    string roomID = 1;
-    uint32 seatID = 2;
-    string token = 3;
-}
-
-
-

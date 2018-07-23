@@ -72,8 +72,8 @@ type ServiceCenter interface {
 	ReleaseService(service service.IService)   //释放服务
 	PublicService(service service.IService, unique bool) bool  //发布服务
 	SubscribeServices(serviceNames ...string) //订阅服务
-	GetAllService(serviceName string) []service.IService
-	GetService(serviceName string, serviceID string) service.IService
+	GetAllService(serviceName string) []service.IService  //获取所有的服务
+	GetService(serviceName string, serviceID string) service.IService //获取指定服务
 	AllocService(serviceName string) service.IService
 
 	IsConnect() bool

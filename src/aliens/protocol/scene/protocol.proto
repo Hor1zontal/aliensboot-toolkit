@@ -2,6 +2,7 @@ syntax = "proto3";
 package scene;
 
 import "scene.proto";
+import "resultcode.proto";
 
 //request
 message SceneRequest {
@@ -20,11 +21,9 @@ message SceneRequest {
 //response
 message SceneResponse {
     int32 session = 1;
+    Code code = 2; //结果码
 
     oneof response {
-        uint32 exception = 2;
-
-        //ignore d s
         space_move_ret spaceMoveRet = 5;
         space_enter_ret spaceEnterRet = 6;
         space_leave_ret spaceLeaveRet = 7;

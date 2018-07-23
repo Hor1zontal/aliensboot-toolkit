@@ -96,7 +96,7 @@ func (dispatcher *MQDispatcher) GatePush(serviceType string, authID int64, messa
 	//gateID := getGateNodeID(clientID)
 	gateID := cache.ClusterCache.GetAuthGateID(authID)
 	if gateID == "" {
-		return errors.New(fmt.Sprint("gate ID can not found, clientID : %v", gateID))
+		return errors.New(fmt.Sprintf("gate ID can not found, clientID : %v", gateID))
 	}
 	return dispatcher.AsyncPush(constant.SERVICE_GATE, gateID, request)
 }

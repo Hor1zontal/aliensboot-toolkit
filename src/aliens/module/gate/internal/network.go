@@ -19,7 +19,7 @@ import (
 	"aliens/protocol"
 )
 
-var id int64 = 0
+//var id int64 = 0
 
 //func genClientID() string {
 //	id ++
@@ -28,43 +28,44 @@ var id int64 = 0
 
 func newNetwork(agent gate.Agent) *network {
 	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
-	network.channel = make(chan *CallInfo, 5)
-	go func() {
-		for {
-			info, ok := <-network.channel
-			if !ok {
-				return
-			}
-			response := network.HandleMessage(info.msg)
-			if response != nil {
-				info.agent.WriteMsg(response)
-			}
-		}
-	}()
+	network.channel = make(chan *protocol.Any, 5)
+	go network.Start()
 	return network
 }
 
 type network struct {
 	agent 	      gate.Agent
-	channel       chan *CallInfo //消息管道
+	channel       chan *protocol.Any //消息管道
 
-	authID        int64     //验证通过的用户id 没有验证通过为0
+	authID        int64     //用户标识 登录验证后
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
+
+	userData interface{}
 }
 
-type CallInfo struct {
-	msg   *protocol.Any
-	agent gate.Agent
-}
 
 type IAuthMessage interface {
 	GetUserID() uint32
 }
 
 //发送消息给客户端
-func (this *network) SendMessage(msg interface{}) {
-	this.agent.WriteMsg(msg)
+//func (this *network) SendMessage(msg interface{}) {
+//	this.agent.WriteMsg(msg)
+//}
+
+func (this *network) Start() {
+	for {
+		msg, ok := <-this.channel
+		if !ok {
+			return
+		}
+		//msg.Agent = this
+		response := this.HandleMessage(msg)
+		if response != nil {
+			this.agent.WriteMsg(response)
+		}
+	}
 }
 
 //发送消息给客户端
@@ -79,15 +80,15 @@ func (this *network) Close() (isClosed bool) {
 }
 
 func (this *network) AcceptMessage(msg *protocol.Any) {
-	this.channel <- &CallInfo{msg, this.agent}
+	this.channel <- msg
 }
 
 func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
 	//未授权之前需要传递连接句柄编号
-	if !this.IsAuth() {
-
-	} else {
+	if this.IsAuth() {
 		request.AuthId = this.authID
+	} else {
+		request.AuthId = 0
 	}
 	response, error := route.HandleMessage(request)
 	//log.Debugf("request %v - response %v", request, response)
@@ -128,4 +129,14 @@ func (this *network) HeartBeat () {
 	this.heartbeatTime = time.Now()
 }
 
+func (this *network) WriteMsg(msg interface{}) {
+	this.agent.WriteMsg(msg)
+}
 
+func (this *network) UserData() interface{} {
+	return this.userData
+}
+
+func (this *network) SetUserData(data interface{}) {
+	this.userData = data
+}

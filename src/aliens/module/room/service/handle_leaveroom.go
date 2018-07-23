@@ -9,12 +9,14 @@
  *******************************************************************************/
 package service
 
+import "aliens/protocol/room"
 import (
-	"aliens/protocol/room"
+	"aliens/network"
 	"aliens/module/room/core"
 )
 
+
 //
-func handleLeaveRoom(request *room.LeaveRoom, response *room.LeaveRoomRet) {
-	core.Manager.AcceptRoomMessage(request.RoomID, request, response)
+func handleLeaveRoom(request *room.LeaveRoom, response *room.LeaveRoomRet, agent network.Agent) {
+	core.Manager.AcceptRoomMessage(request.GetRoomID(), request, response, agent)
 }

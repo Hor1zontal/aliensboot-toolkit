@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -12,85 +12,93 @@ package service
 import (
 	"aliens/protocol/scene"
 	"github.com/gogo/protobuf/proto"
-	"golang.org/x/net/context"
-	"github.com/pkg/errors"
 	"aliens/protocol"
+	"github.com/name5566/leaf/chanrpc"
+	"aliens/log"
+	"runtime/debug"
 	"aliens/exception"
-	"aliens/common/util"
 )
 
-type sceneService struct {
+func newService(chanRpc *chanrpc.Server) *sceneService {
+	service := &sceneService{}
+	service.chanRpc = chanRpc
+	service.chanRpc.Register("m", service.handle)
+	return service
 }
 
-func (this *sceneService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
-	isJSONRequest := request.TypeUrl != ""
-	if isJSONRequest {
-		data, error := handleJsonRequest(request.TypeUrl, request.Value)
-		if error != nil {
-			return nil, error
-		}
-		return &protocol.Any{TypeUrl:"", Value:data}, nil
-	}
+type sceneService struct {
+	chanRpc *chanrpc.Server
+}
 
+func (this *sceneService) Request(request *protocol.Any, server protocol.RPCService_RequestServer) error {
+	if this.chanRpc != nil {
+		this.chanRpc.Call0("m", request, server)
+		return nil
+	}
+	return nil
+}
+
+
+func (this *sceneService) handle(args []interface{}) {
+	request := args[0].(*protocol.Any)
+	server := args[1].(protocol.RPCService_RequestServer)
 	requestProxy := &scene.SceneRequest{}
+	responseProxy := &scene.SceneResponse{}
+	defer func() {
+		//处理消息异常
+		if err := recover(); err != nil {
+			switch err.(type) {
+			case scene.Code:
+				responseProxy.Code = err.(scene.Code)
+				break
+			default:
+				log.Error("%v", err)
+				debug.PrintStack()
+				responseProxy.Code = scene.Code_ServerException
+			}
+		}
+		data, _ := proto.Marshal(responseProxy)
+		responseProxy.Session = requestProxy.GetSession()
+		log.Debugf("%v-%v", requestProxy, responseProxy)
+		server.Send(&protocol.Any{TypeUrl:"", Value:data})
+	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
-		return nil, error
+		exception.GameException(scene.Code_InvalidRequest)
 	}
-	responseProxy := &scene.SceneResponse{Session:requestProxy.GetSession()}
-
-    defer func() {
-    	//处理消息异常
-    	if err := recover(); err != nil {
-    		switch err.(type) {
-    		    case exception.GameCode:
-    				responseProxy.Response = &scene.SceneResponse_Exception{Exception:uint32(err.(exception.GameCode))}
-    				break
-    			default:
-    				util.PrintStackDetail()
-    				//未知异常不需要回数据
-                    response = nil
-                    return
-    			}
-    	}
-    	data, _ := proto.Marshal(responseProxy)
-        response = &protocol.Any{TypeUrl:"", Value:data}
-    }()
-	err = handleRequest(requestProxy, responseProxy)
-    return
+	handleRequest(requestProxy, responseProxy)
 }
 
-func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) error {
+func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) {
 	
 	if request.GetSpaceMove() != nil {
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
-		return nil
+		return
 	}
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &scene.SpaceEnterRet{}
 		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
-		return nil
+		return
 	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
 		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
 		response.Response = &scene.SceneResponse_SpaceLeaveRet{messageRet}
-		return nil
+		return
 	}
 	
 	if request.GetGetState() != nil {
 		messageRet := &scene.GetStateRet{}
 		handleGetState(request.GetGetState(), messageRet)
 		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
-		return nil
+		return
 	}
 	
-	return errors.New("unexpect request")
-
+	response.Code = scene.Code_InvalidRequest
 }
 

@@ -17,6 +17,7 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/common/util"
+	"aliens/network"
 )
 
 type roomService struct {
@@ -56,34 +57,33 @@ func (this *roomService) Request(ctx context.Context,request *protocol.Any) (res
     	data, _ := proto.Marshal(responseProxy)
         response = &protocol.Any{TypeUrl:"", Value:data}
     }()
-	err = handleRequest(requestProxy, responseProxy)
+	err = handleRequest(requestProxy, responseProxy, request.Agent)
     return
 }
 
-func handleRequest(request *room.Request, response *room.Response) error {
+func handleRequest(request *room.Request, response *room.Response, agent network.Agent) error {
 	
-	if request.GetCreateRoom() != nil {
-		messageRet := &room.CreateRoomRet{}
-		handleCreateRoom(request.GetCreateRoom(), messageRet)
-		response.Response = &room.Response_CreateRoomRet{messageRet}
+	if request.GetLeaveRoom() != nil {
+		messageRet := &room.LeaveRoomRet{}
+		handleLeaveRoom(request.GetLeaveRoom(), messageRet, agent)
+		response.Response = &room.Response_LeaveRoomRet{messageRet}
+		return nil
+	}
+	
+	if request.GetAllocFreeRoomSeat() != nil {
+		messageRet := &room.AllocFreeRoomSeatRet{}
+		handleAllocFreeRoomSeat(request.GetAllocFreeRoomSeat(), messageRet, agent)
+		response.Response = &room.Response_AllocFreeRoomSeatRet{messageRet}
 		return nil
 	}
 	
 	if request.GetJoinRoom() != nil {
 		messageRet := &room.JoinRoomRet{}
-		handleJoinRoom(request.GetJoinRoom(), messageRet)
+		handleJoinRoom(request.GetJoinRoom(), messageRet, agent)
 		response.Response = &room.Response_JoinRoomRet{messageRet}
-		return nil
-	}
-	
-	if request.GetLeaveRoom() != nil {
-		messageRet := &room.LeaveRoomRet{}
-		handleLeaveRoom(request.GetLeaveRoom(), messageRet)
-		response.Response = &room.Response_LeaveRoomRet{messageRet}
 		return nil
 	}
 	
 	return errors.New("unexpect request")
 
 }
-

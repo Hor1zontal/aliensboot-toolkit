@@ -40,6 +40,7 @@ func (this *cacheManager) SetUserToken(uid int64, token string) bool {
 func (this *cacheManager) GetUserToken(uid int64) string {
 	return this.redisClient.HGet(GetUserKey(uid), UPROP_TOKEN)
 }
+
 //
 ////设置用户属性
 //func (this *cacheManager) SetUserAttr(uid int64, propKey string, value interface{}) bool {

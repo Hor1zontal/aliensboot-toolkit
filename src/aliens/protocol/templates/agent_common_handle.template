@@ -1,20 +1,20 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
- *     2018/6/11
+ *     2018/3/30
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package core
+package service
 
-import (
-	"aliens/protocol/framesync"
-	"aliens/network"
-)
+import "aliens/protocol/${package}"
+import "aliens/network"
 
-type RoomMessage struct {
-	agent *network.UDPAgent
-	request *framesync.Request
+<message>
+//${o_desc}
+func handle${o_request}(request *${package}.${o_request}, response *${package}.${o_response}, agent network.Agent) {
+
 }
+<message>

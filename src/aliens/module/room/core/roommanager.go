@@ -26,59 +26,67 @@ func init () {
 }
 
 type manager struct {
+
 	sync.RWMutex
-	rooms map[string]*Room //运行的游戏 游戏类型 - 游戏id - 游戏对象
 
-	authUDPAgent map[string]*network.UDPAgent  //验权通过的udp agent
+	rooms map[string]*Room //运行的游戏 游戏类型 - 房间id - 房间对象
 
-
-
-
+	//authUDPAgent map[uint32]*network.UDPAgent //验权通过的udp agent
 }
 
-func (this *manager) CreateRoom(maxSeat uint8) string {
+//获取空闲的房间
+func (this *manager) AllocFreeRoom(gameID uint32) string {
+	this.RLock()
+	for _, room := range this.rooms {
+		if !room.IsFull() {
+			return room.id
+		}
+	}
+	this.RUnlock()
+	return this.CreateRoom(gameID)
+}
+
+func (this *manager) CreateRoom(gameID uint32) string {
 	room := &Room{}
-	room.init(maxSeat)
+	room.init(1)
 	this.Lock()
 	defer this.Unlock()
 	this.rooms[room.id] = room
 	return room.id
 }
 
+//func (this *manager) CloseRoom(roomID string) {
+//	room := this.rooms[roomID]
+//	if room == nil {
+//		return
+//	}
+//	room.close()
+//	delete(this.rooms, roomID)
+//}
 
 //接收房间消息
-func (this *manager) AcceptRoomMessage(roomID string, request interface{}, response interface{}) {
+func (this *manager) AcceptRoomMessage(roomID string, request interface{}, response interface{}, agent network.Agent) {
 	this.Lock()
 	room := this.rooms[roomID]
 	this.Unlock()
 	if room != nil {
-		room.acceptMessage(request, response)
+		room.AcceptMessage(agent, request, response)
 	}
 }
 
-
-func (this *manager) CloseRoom(roomID string) {
-	room := this.rooms[roomID]
-	if room == nil {
-		return
-	}
-	room.close()
-	delete(this.rooms, roomID)
-}
-
-func (this *manager) AcceptFrameMessage(message *framesync.Request, agent *network.UDPAgent) {
-	authMessage := message.GetAuth()
-	if authMessage != nil {
-		room := this.rooms[authMessage.GetRoomID()]
-		if room != nil {
-			room.acceptFrameMessage(message, agent)
-		}
-	} else {
-		player, ok := agent.UserData().(*Player)
-		if ok {
-			if player.room != nil {
-				player.room.acceptFrameMessage(message, agent)
-			}
-		}
-	}
-}
+//func (this *manager) AcceptFrameMessage(message *framesync.Request, agent network.Agent) {
+//	authMessage := message.GetAuth()
+//	if authMessage != nil {
+//		room := this.rooms[authMessage.GetRoomID()]
+//		if room != nil {
+//			room.AcceptMessage().acceptFrameMessage(message, agent)
+//		}
+//	} else {
+//		player, ok := agent.UserData().(*Player)
+//		if ok {
+//			if player.room != nil {
+//				player.room.acceptFrameMessage(message, agent)
+//			}
+//		}
+//	}
+//}

@@ -1,0 +1,54 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * All rights reserved. 
+ * Date:
+ *     2018/6/15
+ * Contributors:
+ *     aliens idea(xiamen) Corporation - initial API and implementation
+ *     jialin.he <kylinh@gmail.com>
+ *******************************************************************************/
+package rpc
+
+import (
+	"aliens/protocol/${package}"
+	"aliens/module/cluster/dispatch"
+	"aliens/protocol"
+	"aliens/exception"
+	"aliens/log"
+)
+
+var Proxy_${package} = &${package}RPCHandle{"${package}"}
+
+
+type ${package}RPCHandle struct {
+	name string
+}
+
+
+func (this *${package}RPCHandle) request(request *${package}.Request) *${package}.Response {
+	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+	if err != nil {
+		log.Error(err)
+		exception.GameException(exception.INVALID_SERVICE)
+	}
+	any, ok := rpcRet.(*protocol.Any)
+	if !ok {
+		log.Error("invalid rpc ret data")
+		exception.GameException(exception.INVALID_SERVICE)
+	}
+	messageRet := &${package}.Response{}
+	messageRet.Unmarshal(any.GetValue())
+	return  messageRet
+}
+
+<message>
+func (this *${package}RPCHandle) ${o_request}(request *${package}.${o_request}) *${package}.${o_response} {
+	message := &${package}.Request{
+		Request:&${package}.Request_${o_request}{
+			${o_request}:request,
+		},
+	}
+	messageRet := this.request(message)
+	return messageRet.Get${o_response}()
+}
+<message>

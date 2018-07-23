@@ -12,11 +12,9 @@ message PassportRequest {
     oneof request {
         login_register loginRegister = 6;
         login_login loginLogin = 7;
-
         new_interface newInterface = 10;
 
-}
-
+    }
 
 }
 
@@ -28,11 +26,9 @@ message PassportResponse {
 
     //-----------------登录服接口---------------
     oneof response {
-
         uint32 exception = 3;
         login_register_ret loginRegisterRet = 6;
         login_login_ret loginLoginRet = 7;
-
         new_interface_ret newInterfaceRet = 10;
     }
 

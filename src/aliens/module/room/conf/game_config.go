@@ -1,26 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2017/11/16
+ *     2018/6/13
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package service
+package conf
 
-import (
-	"aliens/cluster/center/service"
-	"aliens/module/${package}/conf"
-	"aliens/cluster/center"
-)
 
-var instance service.IService = nil
 
-func Init() {
-	instance = center.PublicService(conf.Config.Service, &${package}Service{})
-}
-
-func Close() {
-	center.ReleaseService(instance)
-}

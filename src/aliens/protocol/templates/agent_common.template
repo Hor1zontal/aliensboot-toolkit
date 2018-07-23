@@ -1,0 +1,75 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * All rights reserved. 
+ * Date:
+ *     2018/3/30
+ * Contributors:
+ *     aliens idea(xiamen) Corporation - initial API and implementation
+ *     jialin.he <kylinh@gmail.com>
+ *******************************************************************************/
+package service
+
+import (
+	"aliens/protocol/${package}"
+	"github.com/gogo/protobuf/proto"
+	"golang.org/x/net/context"
+	"github.com/pkg/errors"
+	"aliens/protocol"
+	"aliens/exception"
+	"aliens/common/util"
+	"aliens/network"
+)
+
+type ${package}Service struct {
+}
+
+func (this *${package}Service) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
+	isJSONRequest := request.TypeUrl != ""
+	if isJSONRequest {
+		data, error := handleJsonRequest(request.TypeUrl, request.Value)
+		if error != nil {
+			return nil, error
+		}
+		return &protocol.Any{TypeUrl:"", Value:data}, nil
+	}
+
+	requestProxy := &${package}.${request}{}
+	error := proto.Unmarshal(request.Value, requestProxy)
+	if error != nil {
+		return nil, error
+	}
+	responseProxy := &${package}.${response}{Session:requestProxy.GetSession()}
+
+    defer func() {
+    	//处理消息异常
+    	if err := recover(); err != nil {
+    		switch err.(type) {
+    		    case exception.GameCode:
+    				responseProxy.Response = &${package}.${response}_Exception{Exception:uint32(err.(exception.GameCode))}
+    				break
+    			default:
+    				util.PrintStackDetail()
+    				//未知异常不需要回数据
+                    response = nil
+                    return
+    			}
+    	}
+    	data, _ := proto.Marshal(responseProxy)
+        response = &protocol.Any{TypeUrl:"", Value:data}
+    }()
+	err = handleRequest(requestProxy, responseProxy, request.Agent)
+    return
+}
+
+func handleRequest(request *${package}.${request}, response *${package}.${response}, agent network.Agent) error {
+	<message>
+	if request.Get${o_request}() != nil {
+		messageRet := &${package}.${o_response}{}
+		handle${o_request}(request.Get${o_request}(), messageRet, agent)
+		response.Response = &${package}.${response}_${o_response}{messageRet}
+		return nil
+	}
+	<message>
+	return errors.New("unexpect request")
+
+}

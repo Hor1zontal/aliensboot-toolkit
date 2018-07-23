@@ -37,6 +37,8 @@ const (
 	OP_EXISTS string = "EXISTS"
 	OP_SETEX  string = "SETEX"
 	OP_SETNX  string = "SETNX"
+	OP_INCR   string = "INCR"     //自增长
+	OP_DECR   string = "DECR"   //自减
 
 	OP_EXPIRE string = "EXPIRE"
 
@@ -171,6 +173,19 @@ func (this *RedisCacheClient) SetData(key string, value interface{}) bool {
 	}
 	return true
 }
+
+func (this *RedisCacheClient) Incr(key string) (int, error) {
+	conn := this.pool.Get()
+	defer conn.Close()
+	return redis.Int(conn.Do(OP_INCR, key))
+}
+
+func (this *RedisCacheClient) Decr(key string) (int, error) {
+	conn := this.pool.Get()
+	defer conn.Close()
+	return redis.Int(conn.Do(OP_DECR, key))
+}
+
 
 func (this *RedisCacheClient) SelectDB(dbNumber int) bool {
 	conn := this.pool.Get()

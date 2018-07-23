@@ -10,14 +10,18 @@
 package service
 
 import (
+	"aliens/protocol/hall"
+	"aliens/module/cluster/rpc"
 	"aliens/protocol/room"
-	"aliens/module/room/core"
 )
 
 
-//
-func handleCreateRoom(request *room.CreateRoom, response *room.CreateRoomRet) {
-	roomID := core.Manager.CreateRoom(uint8(request.MaxPlayer))
-	response.RoomID = roomID
-	response.Result = room.RoomResult_success
+func handleQuickMatch(request *hall.QuickMatch, response *hall.QuickMatchRet) {
+	ret := rpc.Proxy_room.AllocFreeRoom(&room.AllocFreeRoom{GameID:1})
+	response.Result = hall.HallResult_success
+	response.MatchResult = &hall.QuickMatchResult{
+		RoomID:ret.GetRoomID(),
+		Address:ret.GetAddress(),
+		Token:ret.GetToken(),
+	}
 }

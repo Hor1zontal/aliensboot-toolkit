@@ -13,7 +13,6 @@ import (
 	"aliens/protocol/framesync"
 	"aliens/log"
 	"aliens/network"
-	"aliens/module/room/core"
 	"aliens/module/room/conf"
 )
 
@@ -38,7 +37,7 @@ func handleUDPMessage(args []interface{}) {
 		return
 	}
 
-	core.Manager.AcceptFrameMessage(request, agent)
+	//core.Manager.AcceptFrameMessage(request, agent)
 }
 
 

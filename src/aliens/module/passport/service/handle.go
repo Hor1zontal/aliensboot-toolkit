@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -17,14 +17,10 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/common/util"
+
 )
 
 type passportService struct {
-}
-
-
-func (this *passportService) Request1(request *protocol.Any, server RPCService_RequestServer) error {
-
 }
 
 func (this *passportService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {

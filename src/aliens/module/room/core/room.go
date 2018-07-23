@@ -10,125 +10,92 @@
 package core
 
 import (
-	"aliens/module/room/frame"
-	"aliens/protocol/framesync"
-	"aliens/log"
-	"aliens/network"
 	"aliens/common/util"
+	"aliens/module/room/games"
+	"aliens/network"
 )
 
 type Room struct {
-	id string
 
-	token string //令牌
+	id string //房间id
 
-	frameChannel chan *RoomMessage //接受到帧消息管道
+	game games.Game //绑定游戏
 
-	channel chan []interface{} //接收rpc消息
+	channel chan games.GameMessage //房间消息处理管道
 
-	players map[uint8]*Player  //加入游戏的玩家
-
-	frameManager *frame.Manager //帧管理容器
-
-	maxSeat uint8 //最大人数
-
-	allocSeat uint8 //当前分配到的座位编号
-
+	//tokens map[string]int64  //token-分配的时间戳
+	//allocSeat uint8 //当前分配到的座位编号
 }
 
-func (this *Room) init(maxSeat uint8) {
-	this.frameChannel = make(chan *RoomMessage, 5)
-	this.channel = make(chan []interface{})
+func (this *Room) init(gameID uint32) {
 
-	this.players = make(map[uint8]*Player)
-	this.frameManager = frame.NewFrameManager(20)
 	this.id = util.GenUUID()
-	this.allocSeat = 0
+
+	this.game = games.NewGame(gameID)
+
+	this.channel = make(chan games.GameMessage)
+
+	//this.allocSeat = 0
+
+	//this.maxSeat = game.MaxPlayer()
+
+	this.game.Init(this.id)
+
 }
 
 func (this *Room) close() {
-	close(this.frameChannel)
-	this.frameChannel = nil
+	this.game.Stop()
 }
 
-func (this *Room) start() {
-	timer := this.frameManager.Start()
-	go func() {
-		for {
-			select {
-			case message := <-this.frameChannel:
-				//处理udp消息
-				request := message.request
-				agent := message.agent
-				player, ok := agent.UserData().(*Player)
+func (this *Room) startGame() {
+	this.game.Start()
+	timerGame, ok := this.game.(games.TimeGame)
+	if ok {
+		go this.gameTimerLogic(timerGame)
+	} else {
+		go this.gameLogic()
+	}
+}
 
-				if ok {
-					if request.GetCommand() != nil {
-						this.frameManager.AcceptCommand(request.GetCommand())
-					} else if request.GetRequestLostFrame() != nil {
-						lostFrames := this.frameManager.GetFrames(request.GetRequestLostFrame().GetSeq())
-						player.lostFrame(lostFrames)
-					}
-				} else {
-					if request.GetAuth() != nil {
-						authMessage := request.GetAuth()
-						this.auth(uint8(authMessage.GetSeatID()), authMessage.GetToken(), agent)
-					}
-				}
+func (this *Room) IsFull() bool {
+	return this.game.IsMaxPlayer()
+}
 
-				case <-timer.C:
-					//处理定时消息
-					frame := this.frameManager.NextFrame()
-					if frame != nil {
-						this.syncFrame(frame)
-					}
-
-				case rw := <-this.channel:
-					//处理rpc调用消息
-					this.handle(rw[0], rw[1])
-			}
-
-
+func (this *Room) gameTimerLogic(game games.TimeGame) {
+	timer := game.GetTimer()
+	for {
+		select {
+		case <- timer.C:
+			game.HandleTimer()
+		case message := <-this.channel:
+			game.HandleMessage(message)
 		}
-
-	}()
-}
-
-func (this *Room) syncFrame(frame *framesync.Frame) {
-	data, _ := frame.Marshal()
-	for _, player := range this.players {
-		player.sendData(data)
 	}
 }
 
-func (this *Room) acceptFrameMessage(message *framesync.Request, agent *network.UDPAgent) {
-	if this.frameChannel != nil {
-		this.frameChannel <- &RoomMessage{agent,message,}
+func (this *Room) gameLogic() {
+	for {
+		message := <-this.channel
+		this.game.HandleMessage(message)
 	}
 }
 
-func (this *Room) acceptMessage(request interface{}, response interface{}) {
+func (this *Room) AcceptMessage(agent network.Agent, request interface{}, response interface{}) {
+	//player, _ := agent.UserData().(*games.Player)
 	if this.channel != nil {
-		this.channel <- []interface{}{request, response}
+		this.channel <- games.NewGameMessage(agent, request, response)
 	}
 }
 
 //验证udp网络连接权限
-func (this *Room) auth(seatID uint8, token string, agent *network.UDPAgent) {
-	player := this.players[seatID]
-	if player == nil {
-		log.Warnf("invalid auth room : %v  token : %v", this.id, token)
-		return
-	}
-	if player.auth(token, agent) {
-		agent.SetUserData(player)
-		agent.WriteData(authResponseData)
-	}
-}
-
-
-func (this *Room) LeaveRoom(seatID uint8) {
-	delete(this.players, seatID)
-}
-
-
+//func (this *Room) auth(seatID uint8, token string, agent *network.UDPAgent) {
+//	player := this.players[seatID]
+//	if player == nil {
+//		log.Warnf("invalid auth room : %v  token : %v", this.id, token)
+//		return
+//	}
+//	if player.auth(token, agent) {
+//		agent.SetUserData(player)
+//		agent.WriteData(authResponseData)
+//	}
+//}

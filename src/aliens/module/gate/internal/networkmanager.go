@@ -37,7 +37,7 @@ func (this *NetworkManager) Init() {
 
 func (this *NetworkManager) dealAuthTimeout(data util.TaskData) {
 	//network := data[0].(*network)
-	//超过固定时长没有验证权限需要提出
+	//超过固定时长没有验证权限需要退出
 	//if network.IsAuthTimeout() {
 	//	log.Debug("network auth timeout : %v", network.GetRemoteAddr())
 	//	network.Close()
@@ -59,7 +59,7 @@ func (this *NetworkManager) push(id int64, message interface{}) {
 	if auth == nil {
 		return
 	}
-	auth.SendMessage(message)
+	auth.WriteMsg(message)
 }
 
 func (this *NetworkManager) addNetwork(network *network) {

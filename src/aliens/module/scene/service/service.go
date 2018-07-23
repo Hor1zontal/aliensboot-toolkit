@@ -13,12 +13,13 @@ import (
 	"aliens/cluster/center/service"
 	"aliens/module/scene/conf"
 	"aliens/cluster/center"
+	"github.com/name5566/leaf/chanrpc"
 )
 
 var instance service.IService = nil
 
-func Init() {
-	instance = center.PublicService(conf.Config.Service, &sceneService{})
+func Init(chanRpc *chanrpc.Server) {
+	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
 }
 
 func Close() {

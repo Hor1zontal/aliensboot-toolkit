@@ -19,14 +19,14 @@ import (
 func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 	switch requestUrl {
 	    
-		case "CreateRoom" :
-			request := &room.CreateRoom{}
-			response := &room.CreateRoomRet{}
+		case "AllocFreeRoomSeat" :
+			request := &room.AllocFreeRoomSeat{}
+			response := &room.AllocFreeRoomSeatRet{}
 			error := json.Unmarshal(data, request)
 			if error != nil {
 				return nil, error
 			}
-			handleCreateRoom(request, response)
+			handleAllocFreeRoomSeat(request, response, nil)
 			return json.Marshal(response)
 		
 		case "JoinRoom" :
@@ -36,7 +36,7 @@ func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 			if error != nil {
 				return nil, error
 			}
-			handleJoinRoom(request, response)
+			handleJoinRoom(request, response, nil)
 			return json.Marshal(response)
 		
 		case "LeaveRoom" :
@@ -46,7 +46,7 @@ func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 			if error != nil {
 				return nil, error
 			}
-			handleLeaveRoom(request, response)
+			handleLeaveRoom(request, response, nil)
 			return json.Marshal(response)
 		
 		default:
