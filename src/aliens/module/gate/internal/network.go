@@ -84,7 +84,7 @@ func (this *network) AcceptMessage(msg *protocol.Any) {
 }
 
 func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
-	//未授权之前需要传递连接句柄编号
+	//未授权之前需要传递验权id
 	if this.IsAuth() {
 		request.AuthId = this.authID
 	} else {
@@ -96,7 +96,8 @@ func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
 		//TODO 返回服务不可用等处理方式
 		log.Debug(error.Error())
 	}
-	if response.GetAuthId() != 0 {
+	//更新验权id
+	if response.GetAuthId() > 0 {
 		this.Auth(response.GetAuthId())
 	}
 	return response

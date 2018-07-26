@@ -76,12 +76,12 @@ func NewUser(username string, password string, ip string, channel string, channe
 		RegTime:  time.Now().Unix(),
 		//LastLogin:time.Now(),
 	}
-	uid, err := db.DatabaseHandler.GenTimestampId(user)
-	if err != nil {
-		log.Debugf("insert user error %v", err)
-		exception.GameException(passport.Code_DBExcetpion)
-	}
-	user.Id = uid
+	//uid, err := db.DatabaseHandler.GenTimestampId(user)
+	//if err != nil {
+	//	log.Debugf("insert user error %v", err)
+	//	exception.GameException(passport.Code_DBExcetpion)
+	//}
+	//user.Id = uid
 	err1 := db.DatabaseHandler.Insert(user)
 	if err1 != nil {
 		log.Debugf("insert user error %v", err1)

@@ -4,7 +4,6 @@ package passport;
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "google/protobuf/timestamp.proto";
 
-
 message User {
     int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\" gorm:\"AUTO_INCREMENT\""];
     string username = 2 [(gogoproto.moretags) = "bson:\"username\" rorm:\"uname\"  unique:\"true\""];

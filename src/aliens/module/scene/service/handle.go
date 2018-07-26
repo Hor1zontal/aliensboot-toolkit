@@ -42,8 +42,8 @@ func (this *sceneService) Request(request *protocol.Any, server protocol.RPCServ
 func (this *sceneService) handle(args []interface{}) {
 	request := args[0].(*protocol.Any)
 	server := args[1].(protocol.RPCService_RequestServer)
-	requestProxy := &scene.SceneRequest{}
-	responseProxy := &scene.SceneResponse{}
+	requestProxy := &scene.Request{}
+	responseProxy := &scene.Response{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -69,33 +69,33 @@ func (this *sceneService) handle(args []interface{}) {
 	handleRequest(requestProxy, responseProxy)
 }
 
-func handleRequest(request *scene.SceneRequest, response *scene.SceneResponse) {
+func handleRequest(request *scene.Request, response *scene.Response) {
+	
+	if request.GetGetState() != nil {
+		messageRet := &scene.GetStateRet{}
+		handleGetState(request.GetGetState(), messageRet)
+		response.Response = &scene.Response_GetStateRet{messageRet}
+		return
+	}
 	
 	if request.GetSpaceMove() != nil {
 		messageRet := &scene.SpaceMoveRet{}
 		handleSpaceMove(request.GetSpaceMove(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceMoveRet{messageRet}
+		response.Response = &scene.Response_SpaceMoveRet{messageRet}
 		return
 	}
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &scene.SpaceEnterRet{}
 		handleSpaceEnter(request.GetSpaceEnter(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceEnterRet{messageRet}
+		response.Response = &scene.Response_SpaceEnterRet{messageRet}
 		return
 	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &scene.SpaceLeaveRet{}
 		handleSpaceLeave(request.GetSpaceLeave(), messageRet)
-		response.Response = &scene.SceneResponse_SpaceLeaveRet{messageRet}
-		return
-	}
-	
-	if request.GetGetState() != nil {
-		messageRet := &scene.GetStateRet{}
-		handleGetState(request.GetGetState(), messageRet)
-		response.Response = &scene.SceneResponse_GetStateRet{messageRet}
+		response.Response = &scene.Response_SpaceLeaveRet{messageRet}
 		return
 	}
 	

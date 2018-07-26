@@ -16,7 +16,7 @@ import (
 )
 
 //处理json请求
-func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
+func handleJsonRequest(authID int64, requestUrl string, data []byte) ([]byte, error) {
 	switch requestUrl {
 	    <message>
 		case "${o_request}" :
@@ -26,7 +26,7 @@ func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
 			if error != nil {
 				return nil, error
 			}
-			handle${o_request}(request, response)
+			handle${o_request}(authID, request, response)
 			return json.Marshal(response)
 		<message>
 		default:

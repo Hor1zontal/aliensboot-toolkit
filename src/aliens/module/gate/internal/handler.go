@@ -16,8 +16,6 @@ import (
 	//"aliens/module/cluster/dispatch"
 	//"aliens/module/gate/conf"
 	"aliens/module/gate/route"
-	"aliens/module/cluster/dispatch"
-	"aliens/module/cluster/constant"
 )
 
 const (
@@ -35,11 +33,11 @@ func Init() {
 	Skeleton.RegisterChanRPC(CommandAgentPush, agentPush)
 	Skeleton.RegisterChanRPC(CommandAgentAuth, agentAuth)
 	Skeleton.RegisterChanRPC(CommandAgentMsg, handleMessage)
-	dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
+	//dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
 }
 
 func Close() {
-	dispatch.MQ.UNRegisterConsumer(constant.SERVICE_GATE)
+	//dispatch.MQ.UNRegisterConsumer(constant.SERVICE_GATE)
 }
 
 //只处理推送消息

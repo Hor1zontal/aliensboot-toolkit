@@ -1,31 +1,35 @@
 syntax = "proto3";
 package game;
 
-import "passport.proto";
+import "role.proto";
+import "resultcode.proto";
 
 
 //request
-message GameRequest {
+message Request {
     int32 session = 1;     //消息序号
 
-    //-----------------登录模块接口---------------
+    //-----------------游戏模块接口---------------
     oneof request {
-        login_register loginRegister = 6;
-        login_login loginLogin = 7;
-        new_interface newInterface = 10;
-
+        get_user_info getUserInfo = 3;
+        login_role loginRole = 4;
+        create_role createRole = 5;
+        remove_role removeRole = 6;
     }
 
 }
 
 //response
-message GameResponse {
+message Response {
     int32 session = 1;
+    Code code = 2; //结果码
 
-    //-----------------登录服接口---------------
+    //-----------------游戏模块接口---------------
     oneof response {
-        uint32 exception = 3;
-
+        get_user_info_ret getUserInfoRet = 3;
+        login_role_ret loginRoleRet = 4;
+        create_role_ret createRoleRet = 5;
+        remove_role_ret removeRoleRet = 6;
     }
 
 }

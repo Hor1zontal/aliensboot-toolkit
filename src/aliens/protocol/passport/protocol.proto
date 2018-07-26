@@ -6,21 +6,20 @@ import "resultcode.proto";
 
 
 //request
-message PassportRequest {
+message Request {
     int32 session = 1;     //消息序号
 
     //-----------------登录模块接口---------------
     oneof request {
         login_register loginRegister = 6;
         login_login loginLogin = 7;
-        new_interface newInterface = 10;
-
+        token_login tokenLogin = 8; //token登录
     }
 
 }
 
 //response
-message PassportResponse {
+message Response {
     int32 session = 1;
     Code code = 2; //结果码
 
@@ -28,7 +27,9 @@ message PassportResponse {
     oneof response {
         login_register_ret loginRegisterRet = 6;
         login_login_ret loginLoginRet = 7;
-        new_interface_ret newInterfaceRet = 10;
+        token_login_ret tokenLoginRet = 8; //token登录结果
+
+
     }
 
 }

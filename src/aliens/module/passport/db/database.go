@@ -15,7 +15,6 @@ func Init() {
 		panic(err)
 	}
 	DatabaseHandler.EnsureTable("passport", &passport.User{})
-	DatabaseHandler.EnsureUniqueIndex(&passport.User{}, "username")
 
 	//DatabaseHandler.Insert(&passport.User{Id:DatabaseHandler.GenTimestampId(&passport.User{}),Username:"hejialin",RegTime:time.Now()})
 }

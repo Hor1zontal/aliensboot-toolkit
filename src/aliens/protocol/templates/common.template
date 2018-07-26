@@ -59,21 +59,20 @@ func (this *${package}Service) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		log.Debugf("%v-%v", requestProxy, responseProxy)
-		server.Send(&protocol.Any{TypeUrl:"", Value:data})
+		server.Send(&protocol.Any{Value:data})
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(${package}.Code_InvalidRequest)
 	}
-	handleRequest(requestProxy, responseProxy)
+	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
 }
 
-func handleRequest(request *${package}.${request}, response *${package}.${response}) {
+func handleRequest(authID int64, request *${package}.${request}, response *${package}.${response}) {
 	<message>
 	if request.Get${o_request}() != nil {
 		messageRet := &${package}.${o_response}{}
-		handle${o_request}(request.Get${o_request}(), messageRet)
+		handle${o_request}(authID, request.Get${o_request}(), messageRet)
 		response.Response = &${package}.${response}_${o_response}{messageRet}
 		return
 	}

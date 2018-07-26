@@ -42,8 +42,9 @@ func (this *passportService) Request(request *protocol.Any, server protocol.RPCS
 func (this *passportService) handle(args []interface{}) {
 	request := args[0].(*protocol.Any)
 	server := args[1].(protocol.RPCService_RequestServer)
-	requestProxy := &passport.PassportRequest{}
-	responseProxy := &passport.PassportResponse{}
+	requestProxy := &passport.Request{}
+	responseProxy := &passport.Response{}
+	authID := request.GetAuthId()
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -59,39 +60,39 @@ func (this *passportService) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		log.Debugf("%v-%v", requestProxy, responseProxy)
-		server.Send(&protocol.Any{TypeUrl:"", Value:data})
+		server.Send(&protocol.Any{AuthId:authID, TypeUrl:"", Value:data})
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(passport.Code_InvalidRequest)
 	}
-	handleRequest(requestProxy, responseProxy)
+	authID = handleRequest(requestProxy, responseProxy)
 }
 
-func handleRequest(request *passport.PassportRequest, response *passport.PassportResponse) {
-	
-	if request.GetLoginLogin() != nil {
-		messageRet := &passport.LoginLoginRet{}
-		handleLoginLogin(request.GetLoginLogin(), messageRet)
-		response.Response = &passport.PassportResponse_LoginLoginRet{messageRet}
-		return
-	}
-	
-	if request.GetNewInterface() != nil {
-		messageRet := &passport.NewInterfaceRet{}
-		handleNewInterface(request.GetNewInterface(), messageRet)
-		response.Response = &passport.PassportResponse_NewInterfaceRet{messageRet}
-		return
-	}
+func handleRequest(request *passport.Request, response *passport.Response) int64 {
 	
 	if request.GetLoginRegister() != nil {
 		messageRet := &passport.LoginRegisterRet{}
-		handleLoginRegister(request.GetLoginRegister(), messageRet)
-		response.Response = &passport.PassportResponse_LoginRegisterRet{messageRet}
-		return
+		result := handleLoginRegister(request.GetLoginRegister(), messageRet)
+		response.Response = &passport.Response_LoginRegisterRet{messageRet}
+		return result
+	}
+	
+	if request.GetLoginLogin() != nil {
+		messageRet := &passport.LoginLoginRet{}
+		result := handleLoginLogin(request.GetLoginLogin(), messageRet)
+		response.Response = &passport.Response_LoginLoginRet{messageRet}
+		return result
+	}
+	
+	if request.GetTokenLogin() != nil {
+		messageRet := &passport.TokenLoginRet{}
+		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
+		response.Response = &passport.Response_TokenLoginRet{messageRet}
+		return result
 	}
 	
 	response.Code = passport.Code_InvalidRequest
+	return 0
 }
 

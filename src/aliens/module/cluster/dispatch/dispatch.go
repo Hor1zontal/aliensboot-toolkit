@@ -16,7 +16,7 @@ import (
 
 var RPC = newGRPCDispatcher()
 
-var MQ = newMQDispatcher(conf.Config.MQ)
+//var MQ = newMQDispatcher(conf.Config.MQ)
 
 //type Dispatcher interface {
 //	//RegisterConsumer(consumerID string, handle func(data *protocol.Any) error) //注册消息消费者

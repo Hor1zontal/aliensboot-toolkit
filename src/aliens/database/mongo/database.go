@@ -24,8 +24,7 @@ type Database struct {
 	database  *mgo.Database
 	auth      *database.Authority
 
-	table     map[reflect.Type]string
-	tableIDName  map[reflect.Type]string //表格id字段名
+	tableMetas  map[reflect.Type]*dbconfig.TableMeta
 }
 
 //初始化连接数据库
@@ -38,8 +37,7 @@ func (this *Database) Init(config dbconfig.DBConfig) error {
 	if err != nil {
 		return err
 	}
-	this.table = make(map[reflect.Type]string)
-	this.tableIDName = make(map[reflect.Type]string)
+	this.tableMetas = make(map[reflect.Type]*dbconfig.TableMeta)
 	this.dbContext = c
 	this.dbSession = this.dbContext.Ref()
 	this.database = this.dbSession.DB(config.Name)

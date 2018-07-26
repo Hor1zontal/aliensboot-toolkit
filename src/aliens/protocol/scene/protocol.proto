@@ -5,7 +5,7 @@ import "scene.proto";
 import "resultcode.proto";
 
 //request
-message SceneRequest {
+message Request {
     int32 session = 1;  //消息序号
 
     oneof request {
@@ -19,7 +19,7 @@ message SceneRequest {
 
 
 //response
-message SceneResponse {
+message Response {
     int32 session = 1;
     Code code = 2; //结果码
 
@@ -30,8 +30,12 @@ message SceneResponse {
         get_state_ret getStateRet = 8;
     }
 
-    string scenePush = 500; //测试推送信息
-    space_push spacePush = 501;
+    oneof push {
+        string scenePush = 500; //测试推送信息
+        space_push spacePush = 501;
+    }
+
+
 
 }
 

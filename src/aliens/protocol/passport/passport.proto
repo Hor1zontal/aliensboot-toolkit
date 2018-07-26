@@ -1,6 +1,27 @@
 syntax = "proto3";
 package passport;
 
+
+//服务端不允许login文件名存在,特改为bblogin
+//登录相关通讯协议
+enum LoginResult {
+    loginSuccess = 0;				//登录成功
+    invalidUser = 1;				//用户不存在
+    invalidPwd = 2;					//验证密码失败
+    forbiddenUser = 3;				//封号
+    tokenExpire = 4;                //token过期
+    //invalidMaintain = 5; 		    //游戏正在维护
+    //invalidGameServer = 6;          //连接游戏服务器失败
+}
+
+enum RegisterResult {
+    registerSuccess = 0;		    //注册成功
+    userExists = 1;				    //用户名已经存在
+    invalidFormat = 2;				//用户名格式不符合规范
+    //invalidServer = 6;              //连接游戏服务器失败
+}
+
+
 //普通注册账号
 message login_register{
     string username = 1; //用户名
@@ -10,14 +31,7 @@ message login_register{
 
 //登录服务器注册账号返回
 message login_register_ret {
-    enum register_Result {
-        registerSuccess = 0;		    //注册成功
-        userExists = 1;				    //用户名已经存在
-        invalidFormat = 2;				//用户名格式不符合规范
-        //invalidServer = 6;              //连接游戏服务器失败
-    }
-
-    register_Result result = 1;    //注册结果
+    RegisterResult result = 1;    //注册结果
     int64 uid = 2;                 //用户id 注册成功返回此字段
     string token = 3;              //登录令牌 注册成功返回此字段
     string msg = 4;                //反馈消息 登录失败返回
@@ -31,18 +45,7 @@ message login_login{
 
 //登录服务器返回
 message login_login_ret{
-    //服务端不允许login文件名存在,特改为bblogin
-    //登录相关通讯协议
-    enum login_Result {
-        loginSuccess = 0;				//登录成功
-        invalidUser = 1;				//用户不存在
-        invalidPwd = 2;					//验证密码失败
-        forbiddenUser = 3;				//封号
-        //invalidMaintain = 5; 		    //游戏正在维护
-        //invalidGameServer = 6;          //连接游戏服务器失败
-    }
-
-    login_Result result = 1;	//登录结果
+    LoginResult result = 1;	//登录结果
     int64 uid = 2;             //用户id
     string token = 3;          //登录令牌
     string msg = 4;                //反馈消息 登录失败返回
@@ -65,11 +68,13 @@ message channel_login_ret {
 }
 
 
-message new_interface {
-    string notify = 1;
+//token 登录
+message token_login {
+    int64 uid = 1;
+    string token = 2;
 }
 
-message new_interface_ret {
-    string result = 1;
+message token_login_ret {
+    LoginResult result = 1;	//登录结果
 }
 

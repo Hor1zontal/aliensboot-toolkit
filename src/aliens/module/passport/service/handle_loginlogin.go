@@ -16,22 +16,25 @@ import (
 
 
 //
-func handleLoginLogin(request *passport.LoginLogin, result *passport.LoginLoginRet) {
+func handleLoginLogin(request *passport.LoginLogin, result *passport.LoginLoginRet) int64 {
 	username := request.GetUsername()
 	password := request.GetPassword()
 
 	userCache := cache.GetUser(username)
 	if userCache == nil {
-		//TODO 后续可以做成缓存读不到去数据库并写回到缓存,要考虑数据穿透的情况
-		result.Result = passport.LoginLoginRet_invalidUser
-		return
+		passwordHash := PasswordHash(username, password)
+
+
+		userCache = cache.NewUser(username, passwordHash, "ip address", "", "", "", "")
+		//result.Result = passport.LoginLoginRet_invalidUser
+		//return
 	}
 
 	passwordHash := PasswordHash(username, password)
 	//密码不对
 	if passwordHash != userCache.Password {
-		result.Result = passport.LoginLoginRet_invalidPwd
-		return
+		result.Result = passport.LoginResult_invalidPwd
+		return 0
 	}
 
 	//更新ip
@@ -42,5 +45,6 @@ func handleLoginLogin(request *passport.LoginLogin, result *passport.LoginLoginR
 	token := NewToken()
 	cache.PassportCache.SetUserToken(userCache.GetId(), token)
 	result.Token = token
-	result.Result = passport.LoginLoginRet_loginSuccess
+	result.Result = passport.LoginResult_loginSuccess
+	return result.GetUid()
 }

@@ -14,62 +14,61 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type LoginRegisterRetRegister_Result int32
+// 服务端不允许login文件名存在,特改为bblogin
+// 登录相关通讯协议
+type LoginResult int32
 
 const (
-	LoginRegisterRet_registerSuccess LoginRegisterRetRegister_Result = 0
-	LoginRegisterRet_userExists      LoginRegisterRetRegister_Result = 1
-	LoginRegisterRet_invalidFormat   LoginRegisterRetRegister_Result = 2
+	LoginResult_loginSuccess  LoginResult = 0
+	LoginResult_invalidUser   LoginResult = 1
+	LoginResult_invalidPwd    LoginResult = 2
+	LoginResult_forbiddenUser LoginResult = 3
+	LoginResult_tokenExpire   LoginResult = 4
 )
 
-var LoginRegisterRetRegister_Result_name = map[int32]string{
+var LoginResult_name = map[int32]string{
+	0: "loginSuccess",
+	1: "invalidUser",
+	2: "invalidPwd",
+	3: "forbiddenUser",
+	4: "tokenExpire",
+}
+var LoginResult_value = map[string]int32{
+	"loginSuccess":  0,
+	"invalidUser":   1,
+	"invalidPwd":    2,
+	"forbiddenUser": 3,
+	"tokenExpire":   4,
+}
+
+func (x LoginResult) String() string {
+	return proto.EnumName(LoginResult_name, int32(x))
+}
+func (LoginResult) EnumDescriptor() ([]byte, []int) { return fileDescriptorPassport, []int{0} }
+
+type RegisterResult int32
+
+const (
+	RegisterResult_registerSuccess RegisterResult = 0
+	RegisterResult_userExists      RegisterResult = 1
+	RegisterResult_invalidFormat   RegisterResult = 2
+)
+
+var RegisterResult_name = map[int32]string{
 	0: "registerSuccess",
 	1: "userExists",
 	2: "invalidFormat",
 }
-var LoginRegisterRetRegister_Result_value = map[string]int32{
+var RegisterResult_value = map[string]int32{
 	"registerSuccess": 0,
 	"userExists":      1,
 	"invalidFormat":   2,
 }
 
-func (x LoginRegisterRetRegister_Result) String() string {
-	return proto.EnumName(LoginRegisterRetRegister_Result_name, int32(x))
+func (x RegisterResult) String() string {
+	return proto.EnumName(RegisterResult_name, int32(x))
 }
-func (LoginRegisterRetRegister_Result) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptorPassport, []int{1, 0}
-}
-
-// 服务端不允许login文件名存在,特改为bblogin
-// 登录相关通讯协议
-type LoginLoginRetLogin_Result int32
-
-const (
-	LoginLoginRet_loginSuccess  LoginLoginRetLogin_Result = 0
-	LoginLoginRet_invalidUser   LoginLoginRetLogin_Result = 1
-	LoginLoginRet_invalidPwd    LoginLoginRetLogin_Result = 2
-	LoginLoginRet_forbiddenUser LoginLoginRetLogin_Result = 3
-)
-
-var LoginLoginRetLogin_Result_name = map[int32]string{
-	0: "loginSuccess",
-	1: "invalidUser",
-	2: "invalidPwd",
-	3: "forbiddenUser",
-}
-var LoginLoginRetLogin_Result_value = map[string]int32{
-	"loginSuccess":  0,
-	"invalidUser":   1,
-	"invalidPwd":    2,
-	"forbiddenUser": 3,
-}
-
-func (x LoginLoginRetLogin_Result) String() string {
-	return proto.EnumName(LoginLoginRetLogin_Result_name, int32(x))
-}
-func (LoginLoginRetLogin_Result) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptorPassport, []int{3, 0}
-}
+func (RegisterResult) EnumDescriptor() ([]byte, []int) { return fileDescriptorPassport, []int{1} }
 
 // 普通注册账号
 type LoginRegister struct {
@@ -106,10 +105,10 @@ func (m *LoginRegister) GetServer() int32 {
 
 // 登录服务器注册账号返回
 type LoginRegisterRet struct {
-	Result LoginRegisterRetRegister_Result `protobuf:"varint,1,opt,name=result,proto3,enum=passport.LoginRegisterRetRegister_Result" json:"result,omitempty"`
-	Uid    int64                           `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	Token  string                          `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Msg    string                          `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
+	Result RegisterResult `protobuf:"varint,1,opt,name=result,proto3,enum=passport.RegisterResult" json:"result,omitempty"`
+	Uid    int64          `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Token  string         `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	Msg    string         `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
 func (m *LoginRegisterRet) Reset()                    { *m = LoginRegisterRet{} }
@@ -117,11 +116,11 @@ func (m *LoginRegisterRet) String() string            { return proto.CompactText
 func (*LoginRegisterRet) ProtoMessage()               {}
 func (*LoginRegisterRet) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{1} }
 
-func (m *LoginRegisterRet) GetResult() LoginRegisterRetRegister_Result {
+func (m *LoginRegisterRet) GetResult() RegisterResult {
 	if m != nil {
 		return m.Result
 	}
-	return LoginRegisterRet_registerSuccess
+	return RegisterResult_registerSuccess
 }
 
 func (m *LoginRegisterRet) GetUid() int64 {
@@ -172,10 +171,10 @@ func (m *LoginLogin) GetPassword() string {
 
 // 登录服务器返回
 type LoginLoginRet struct {
-	Result LoginLoginRetLogin_Result `protobuf:"varint,1,opt,name=result,proto3,enum=passport.LoginLoginRetLogin_Result" json:"result,omitempty"`
-	Uid    int64                     `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	Token  string                    `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Msg    string                    `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
+	Result LoginResult `protobuf:"varint,1,opt,name=result,proto3,enum=passport.LoginResult" json:"result,omitempty"`
+	Uid    int64       `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Token  string      `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	Msg    string      `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
 func (m *LoginLoginRet) Reset()                    { *m = LoginLoginRet{} }
@@ -183,11 +182,11 @@ func (m *LoginLoginRet) String() string            { return proto.CompactTextStr
 func (*LoginLoginRet) ProtoMessage()               {}
 func (*LoginLoginRet) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{3} }
 
-func (m *LoginLoginRet) GetResult() LoginLoginRetLogin_Result {
+func (m *LoginLoginRet) GetResult() LoginResult {
 	if m != nil {
 		return m.Result
 	}
-	return LoginLoginRet_loginSuccess
+	return LoginResult_loginSuccess
 }
 
 func (m *LoginLoginRet) GetUid() int64 {
@@ -277,36 +276,45 @@ func (m *ChannelLoginRet) GetToken() string {
 	return ""
 }
 
-type NewInterface struct {
-	Notify string `protobuf:"bytes,1,opt,name=notify,proto3" json:"notify,omitempty"`
+// token 登录
+type TokenLogin struct {
+	Uid   int64  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 }
 
-func (m *NewInterface) Reset()                    { *m = NewInterface{} }
-func (m *NewInterface) String() string            { return proto.CompactTextString(m) }
-func (*NewInterface) ProtoMessage()               {}
-func (*NewInterface) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{6} }
+func (m *TokenLogin) Reset()                    { *m = TokenLogin{} }
+func (m *TokenLogin) String() string            { return proto.CompactTextString(m) }
+func (*TokenLogin) ProtoMessage()               {}
+func (*TokenLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{6} }
 
-func (m *NewInterface) GetNotify() string {
+func (m *TokenLogin) GetUid() int64 {
 	if m != nil {
-		return m.Notify
+		return m.Uid
+	}
+	return 0
+}
+
+func (m *TokenLogin) GetToken() string {
+	if m != nil {
+		return m.Token
 	}
 	return ""
 }
 
-type NewInterfaceRet struct {
-	Result string `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+type TokenLoginRet struct {
+	Result LoginResult `protobuf:"varint,1,opt,name=result,proto3,enum=passport.LoginResult" json:"result,omitempty"`
 }
 
-func (m *NewInterfaceRet) Reset()                    { *m = NewInterfaceRet{} }
-func (m *NewInterfaceRet) String() string            { return proto.CompactTextString(m) }
-func (*NewInterfaceRet) ProtoMessage()               {}
-func (*NewInterfaceRet) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{7} }
+func (m *TokenLoginRet) Reset()                    { *m = TokenLoginRet{} }
+func (m *TokenLoginRet) String() string            { return proto.CompactTextString(m) }
+func (*TokenLoginRet) ProtoMessage()               {}
+func (*TokenLoginRet) Descriptor() ([]byte, []int) { return fileDescriptorPassport, []int{7} }
 
-func (m *NewInterfaceRet) GetResult() string {
+func (m *TokenLoginRet) GetResult() LoginResult {
 	if m != nil {
 		return m.Result
 	}
-	return ""
+	return LoginResult_loginSuccess
 }
 
 func init() {
@@ -316,10 +324,10 @@ func init() {
 	proto.RegisterType((*LoginLoginRet)(nil), "passport.login_login_ret")
 	proto.RegisterType((*ChannelLogin)(nil), "passport.channel_login")
 	proto.RegisterType((*ChannelLoginRet)(nil), "passport.channel_login_ret")
-	proto.RegisterType((*NewInterface)(nil), "passport.new_interface")
-	proto.RegisterType((*NewInterfaceRet)(nil), "passport.new_interface_ret")
-	proto.RegisterEnum("passport.LoginRegisterRetRegister_Result", LoginRegisterRetRegister_Result_name, LoginRegisterRetRegister_Result_value)
-	proto.RegisterEnum("passport.LoginLoginRetLogin_Result", LoginLoginRetLogin_Result_name, LoginLoginRetLogin_Result_value)
+	proto.RegisterType((*TokenLogin)(nil), "passport.token_login")
+	proto.RegisterType((*TokenLoginRet)(nil), "passport.token_login_ret")
+	proto.RegisterEnum("passport.LoginResult", LoginResult_name, LoginResult_value)
+	proto.RegisterEnum("passport.RegisterResult", RegisterResult_name, RegisterResult_value)
 }
 func (m *LoginRegister) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -537,7 +545,7 @@ func (m *ChannelLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *NewInterface) Marshal() (dAtA []byte, err error) {
+func (m *TokenLogin) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -547,21 +555,26 @@ func (m *NewInterface) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *NewInterface) MarshalTo(dAtA []byte) (int, error) {
+func (m *TokenLogin) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if len(m.Notify) > 0 {
-		dAtA[i] = 0xa
+	if m.Uid != 0 {
+		dAtA[i] = 0x8
 		i++
-		i = encodeVarintPassport(dAtA, i, uint64(len(m.Notify)))
-		i += copy(dAtA[i:], m.Notify)
+		i = encodeVarintPassport(dAtA, i, uint64(m.Uid))
+	}
+	if len(m.Token) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintPassport(dAtA, i, uint64(len(m.Token)))
+		i += copy(dAtA[i:], m.Token)
 	}
 	return i, nil
 }
 
-func (m *NewInterfaceRet) Marshal() (dAtA []byte, err error) {
+func (m *TokenLoginRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -571,16 +584,15 @@ func (m *NewInterfaceRet) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *NewInterfaceRet) MarshalTo(dAtA []byte) (int, error) {
+func (m *TokenLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if len(m.Result) > 0 {
-		dAtA[i] = 0xa
+	if m.Result != 0 {
+		dAtA[i] = 0x8
 		i++
-		i = encodeVarintPassport(dAtA, i, uint64(len(m.Result)))
-		i += copy(dAtA[i:], m.Result)
+		i = encodeVarintPassport(dAtA, i, uint64(m.Result))
 	}
 	return i, nil
 }
@@ -700,22 +712,24 @@ func (m *ChannelLoginRet) Size() (n int) {
 	return n
 }
 
-func (m *NewInterface) Size() (n int) {
+func (m *TokenLogin) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Notify)
+	if m.Uid != 0 {
+		n += 1 + sovPassport(uint64(m.Uid))
+	}
+	l = len(m.Token)
 	if l > 0 {
 		n += 1 + l + sovPassport(uint64(l))
 	}
 	return n
 }
 
-func (m *NewInterfaceRet) Size() (n int) {
+func (m *TokenLoginRet) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Result)
-	if l > 0 {
-		n += 1 + l + sovPassport(uint64(l))
+	if m.Result != 0 {
+		n += 1 + sovPassport(uint64(m.Result))
 	}
 	return n
 }
@@ -903,7 +917,7 @@ func (m *LoginRegisterRet) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Result |= (LoginRegisterRetRegister_Result(b) & 0x7F) << shift
+				m.Result |= (RegisterResult(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1157,7 +1171,7 @@ func (m *LoginLoginRet) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Result |= (LoginLoginRetLogin_Result(b) & 0x7F) << shift
+				m.Result |= (LoginResult(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1524,7 +1538,7 @@ func (m *ChannelLoginRet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *NewInterface) Unmarshal(dAtA []byte) error {
+func (m *TokenLogin) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1547,15 +1561,34 @@ func (m *NewInterface) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: new_interface: wiretype end group for non-group")
+			return fmt.Errorf("proto: token_login: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: new_interface: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: token_login: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
+			}
+			m.Uid = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPassport
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Uid |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Notify", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1580,7 +1613,7 @@ func (m *NewInterface) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Notify = string(dAtA[iNdEx:postIndex])
+			m.Token = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1603,7 +1636,7 @@ func (m *NewInterface) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *NewInterfaceRet) Unmarshal(dAtA []byte) error {
+func (m *TokenLoginRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1626,17 +1659,17 @@ func (m *NewInterfaceRet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: new_interface_ret: wiretype end group for non-group")
+			return fmt.Errorf("proto: token_login_ret: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: new_interface_ret: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: token_login_ret: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Result", wireType)
 			}
-			var stringLen uint64
+			m.Result = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowPassport
@@ -1646,21 +1679,11 @@ func (m *NewInterfaceRet) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				m.Result |= (LoginResult(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthPassport
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Result = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipPassport(dAtA[iNdEx:])
@@ -1790,33 +1813,32 @@ var (
 func init() { proto.RegisterFile("passport.proto", fileDescriptorPassport) }
 
 var fileDescriptorPassport = []byte{
-	// 441 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x93, 0xc1, 0x6e, 0x13, 0x31,
-	0x10, 0x86, 0xeb, 0x0d, 0x0d, 0xcd, 0x94, 0x6c, 0x1c, 0x83, 0xaa, 0x15, 0x87, 0x55, 0xe5, 0x03,
-	0x54, 0x02, 0xe5, 0x00, 0x47, 0x24, 0x0e, 0xa8, 0x45, 0xea, 0x0d, 0x2d, 0xf4, 0x1c, 0xb6, 0xd9,
-	0x49, 0xb0, 0x92, 0xd8, 0x2b, 0xdb, 0x69, 0xe0, 0x4d, 0x78, 0x24, 0x8e, 0xbc, 0x01, 0x10, 0x5e,
-	0x04, 0xd9, 0x99, 0xa4, 0xd9, 0xc0, 0x09, 0xf5, 0x12, 0xcd, 0x3f, 0x1e, 0xcf, 0xfc, 0xf3, 0x39,
-	0x0b, 0x69, 0x5d, 0x3a, 0x57, 0x1b, 0xeb, 0x07, 0xb5, 0x35, 0xde, 0x88, 0xa3, 0x8d, 0x96, 0x1f,
-	0x21, 0x9d, 0x99, 0x89, 0xd2, 0x43, 0x8b, 0x13, 0xe5, 0x3c, 0x5a, 0xf1, 0x18, 0x8e, 0x16, 0x0e,
-	0xad, 0x2e, 0xe7, 0x98, 0xb1, 0x53, 0x76, 0xd6, 0x29, 0xb6, 0x3a, 0x9c, 0x85, 0x9b, 0x4b, 0x63,
-	0xab, 0x2c, 0x59, 0x9f, 0x6d, 0xb4, 0x38, 0x81, 0xb6, 0x43, 0x7b, 0x83, 0x36, 0x6b, 0x9d, 0xb2,
-	0xb3, 0xc3, 0x82, 0x94, 0xfc, 0xc1, 0x40, 0x34, 0x47, 0x0c, 0x2d, 0x7a, 0x71, 0x0e, 0x6d, 0x8b,
-	0x6e, 0x31, 0xf3, 0x71, 0x48, 0xfa, 0xe2, 0xf9, 0x60, 0xeb, 0xf1, 0xef, 0xea, 0xc1, 0x56, 0x14,
-	0xf1, 0x4e, 0x41, 0x77, 0x05, 0x87, 0xd6, 0x42, 0xad, 0xbd, 0xb4, 0x8a, 0x10, 0x8a, 0x47, 0x70,
-	0xe8, 0xcd, 0x14, 0x75, 0x74, 0xd1, 0x29, 0xd6, 0x22, 0xd4, 0xcd, 0xdd, 0x24, 0xbb, 0x17, 0x73,
-	0x21, 0x94, 0x97, 0xd0, 0xdb, 0x6b, 0x2a, 0x1e, 0xde, 0xa6, 0xde, 0x2f, 0x46, 0x23, 0x74, 0x8e,
-	0x1f, 0x88, 0x14, 0x20, 0xac, 0x7f, 0xf1, 0x59, 0x39, 0xef, 0x38, 0x13, 0x7d, 0xe8, 0x2a, 0x7d,
-	0x53, 0xce, 0x54, 0xf5, 0xd6, 0xd8, 0x79, 0xe9, 0x79, 0x22, 0x2f, 0xe0, 0x78, 0x6d, 0x39, 0xfe,
-	0xfe, 0x2f, 0x40, 0xf9, 0x8b, 0x41, 0x6f, 0xa7, 0x4f, 0xa4, 0xf4, 0x7a, 0x8f, 0xd2, 0x93, 0x7d,
-	0x4a, 0xdb, 0x52, 0xd2, 0x77, 0xc6, 0xe7, 0x03, 0x3c, 0xd8, 0xed, 0x28, 0x38, 0xe9, 0x5b, 0x32,
-	0x3d, 0x38, 0x26, 0x12, 0x57, 0x0e, 0x2d, 0x67, 0x01, 0x15, 0x25, 0xde, 0x2d, 0x2b, 0x9e, 0x04,
-	0x54, 0x63, 0x63, 0xaf, 0x55, 0x55, 0xa1, 0x8e, 0x25, 0x2d, 0x39, 0x85, 0xee, 0xe8, 0x53, 0xa9,
-	0x35, 0xce, 0x08, 0x56, 0x06, 0xf7, 0x29, 0x41, 0xac, 0x36, 0x52, 0xe4, 0x00, 0x14, 0x5e, 0x5d,
-	0x9e, 0x13, 0xac, 0x9d, 0x4c, 0xb0, 0xec, 0xaa, 0x29, 0xad, 0x11, 0x42, 0x91, 0x42, 0xa2, 0x6a,
-	0xda, 0x21, 0x51, 0xb5, 0x7c, 0x05, 0xfd, 0xc6, 0xb0, 0x48, 0x94, 0x88, 0xb0, 0x7f, 0x10, 0x49,
-	0x76, 0x88, 0xc8, 0xa7, 0xd0, 0xd5, 0xb8, 0x1c, 0x2a, 0xed, 0xd1, 0x8e, 0xcb, 0x11, 0x86, 0xff,
-	0xb7, 0x36, 0x5e, 0x8d, 0xbf, 0x90, 0x51, 0x52, 0xf2, 0x19, 0xf4, 0x1b, 0x85, 0x71, 0xca, 0x49,
-	0xe3, 0xdd, 0x3a, 0x9b, 0xf7, 0x78, 0xc3, 0xbf, 0xad, 0x72, 0xf6, 0x7d, 0x95, 0xb3, 0x9f, 0xab,
-	0x9c, 0x7d, 0xfd, 0x9d, 0x1f, 0x5c, 0xb7, 0xe3, 0x17, 0xf9, 0xf2, 0x4f, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xa0, 0xe9, 0xe0, 0xa6, 0xa3, 0x03, 0x00, 0x00,
+	// 429 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0xcd, 0xaa, 0xd3, 0x40,
+	0x14, 0xbe, 0x93, 0xdc, 0x5b, 0xdb, 0x13, 0x9b, 0x4c, 0xc7, 0x1f, 0x82, 0x8b, 0x50, 0xb2, 0x2a,
+	0x05, 0x8b, 0x28, 0xae, 0xdc, 0x88, 0x58, 0x51, 0x70, 0x21, 0x91, 0xae, 0x6b, 0xda, 0x8c, 0x75,
+	0x68, 0x9a, 0x09, 0x33, 0x93, 0xb6, 0xb8, 0xf2, 0x31, 0x7c, 0x24, 0x97, 0x3e, 0x82, 0xd4, 0x17,
+	0x91, 0x99, 0x4c, 0xda, 0x54, 0x5c, 0x48, 0xb9, 0x9b, 0x70, 0xbe, 0xf3, 0xf7, 0x7d, 0x5f, 0x38,
+	0x03, 0x7e, 0x99, 0x4a, 0x59, 0x72, 0xa1, 0x26, 0xa5, 0xe0, 0x8a, 0x93, 0x6e, 0x83, 0xe3, 0x4f,
+	0xe0, 0xe7, 0x7c, 0xc5, 0x8a, 0xb9, 0xa0, 0x2b, 0x26, 0x15, 0x15, 0xe4, 0x11, 0x74, 0x2b, 0x49,
+	0x45, 0x91, 0x6e, 0x68, 0x88, 0x86, 0x68, 0xd4, 0x4b, 0x8e, 0x58, 0xd7, 0xf4, 0xe4, 0x8e, 0x8b,
+	0x2c, 0x74, 0xea, 0x5a, 0x83, 0xc9, 0x43, 0xe8, 0x48, 0x2a, 0xb6, 0x54, 0x84, 0xee, 0x10, 0x8d,
+	0x6e, 0x12, 0x8b, 0xe2, 0x6f, 0x08, 0xc8, 0x39, 0xc5, 0x5c, 0x50, 0x45, 0x9e, 0x40, 0x47, 0x50,
+	0x59, 0xe5, 0xca, 0x90, 0xf8, 0x4f, 0xc3, 0xc9, 0x51, 0x63, 0x62, 0xfb, 0x12, 0x53, 0x4f, 0x6c,
+	0x1f, 0xc1, 0xe0, 0x56, 0xac, 0xe6, 0x75, 0x13, 0x1d, 0x92, 0xfb, 0x70, 0xa3, 0xf8, 0x9a, 0x16,
+	0x86, 0xb1, 0x97, 0xd4, 0x40, 0xf7, 0x6d, 0xe4, 0x2a, 0xbc, 0x36, 0x39, 0x1d, 0xc6, 0x53, 0xf0,
+	0x6a, 0x05, 0xe6, 0x7b, 0xa9, 0xc3, 0xf8, 0x2b, 0x04, 0xad, 0x35, 0xc6, 0xc5, 0xe3, 0xbf, 0x5c,
+	0x3c, 0x38, 0xb9, 0x78, 0xaf, 0x9b, 0x6e, 0xcd, 0xc2, 0x1a, 0xfa, 0xcb, 0x2f, 0x69, 0x51, 0xd0,
+	0xdc, 0x9a, 0x08, 0xe1, 0x8e, 0x4d, 0x58, 0x0f, 0x0d, 0x24, 0x11, 0x80, 0x0d, 0x67, 0xef, 0x5e,
+	0x5b, 0x13, 0xad, 0x8c, 0x5e, 0x2e, 0xb3, 0xb5, 0x25, 0xd4, 0x21, 0xf1, 0xc1, 0x61, 0xa5, 0x65,
+	0x73, 0x58, 0x19, 0xbf, 0x80, 0xc1, 0x19, 0x99, 0xb1, 0x6a, 0xb5, 0xa3, 0x7f, 0x68, 0x77, 0x5a,
+	0xda, 0xe3, 0xe7, 0xe0, 0x99, 0xc0, 0xea, 0xfc, 0xdf, 0xb1, 0x97, 0x10, 0xb4, 0xc6, 0x2e, 0xf8,
+	0xb9, 0xe3, 0x0c, 0xbc, 0x56, 0x9a, 0x60, 0xb8, 0x6b, 0x56, 0x7d, 0xac, 0x96, 0x4b, 0x2a, 0x25,
+	0xbe, 0x22, 0x01, 0x78, 0xac, 0xd8, 0xa6, 0x39, 0xcb, 0x66, 0x92, 0x0a, 0x8c, 0x88, 0x0f, 0x60,
+	0x13, 0x1f, 0x76, 0x19, 0x76, 0xc8, 0x00, 0xfa, 0x9f, 0xb9, 0x58, 0xb0, 0x2c, 0xa3, 0x85, 0x69,
+	0x71, 0xf5, 0x8c, 0x91, 0x35, 0xdd, 0x97, 0x4c, 0x50, 0x7c, 0x3d, 0x7e, 0x0b, 0xfe, 0xf9, 0x7d,
+	0x92, 0x7b, 0x10, 0x34, 0x97, 0x7d, 0xe2, 0xf2, 0x01, 0xf4, 0x4d, 0x4d, 0xf7, 0x4c, 0x2a, 0x89,
+	0x91, 0x5e, 0x6d, 0xa9, 0xde, 0x70, 0xb1, 0x49, 0x15, 0x76, 0x5e, 0xe1, 0x1f, 0x87, 0x08, 0xfd,
+	0x3c, 0x44, 0xe8, 0xd7, 0x21, 0x42, 0xdf, 0x7f, 0x47, 0x57, 0x8b, 0x8e, 0x79, 0x9d, 0xcf, 0xfe,
+	0x04, 0x00, 0x00, 0xff, 0xff, 0xb6, 0x9c, 0x33, 0xa4, 0xaf, 0x03, 0x00, 0x00,
 }

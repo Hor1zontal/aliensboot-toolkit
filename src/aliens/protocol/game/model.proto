@@ -1,21 +1,44 @@
 syntax = "proto3";
-package passport;
+package game;
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "google/protobuf/timestamp.proto";
 
+enum profession {
+    coder = 0;   //程序员
+    artist = 1;  //美术
+    planner = 2; //策划
+}
 
 message User {
+    int64 uid = 1 [(gogoproto.moretags) = "bson:\"_id\""]; //用户id
+    repeated Role roles = 2 [(gogoproto.moretags) = "bson:\"roles\""];  //拥有的角色信息
+    int64 selectedRole = 3 [(gogoproto.moretags) = "bson:\"selectedRole\""]; //上次选择的角色id
+}
+
+//角色显示信息 、 选择角色界面数据
+message Role {
+    int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\""];
+    string nickname = 3 [(gogoproto.moretags) = "bson:\"nickname\""];
+    profession profession = 4 [(gogoproto.moretags) = "bson:\"profession\""]; //职业
+    repeated int32 equp = 5 [(gogoproto.moretags) = "bson:\"equip\""]; //部件id 装备或者外观
+    bool sex = 6 [(gogoproto.moretags) = "bson:\"sex\""]; //性别 false 男  true 女
+}
+
+//角色详细信息
+message RoleInfo {
     int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\" gorm:\"AUTO_INCREMENT\""];
-    string username = 2 [(gogoproto.moretags) = "bson:\"username\" rorm:\"uname\"  unique:\"true\""];
-    string password = 3 [(gogoproto.moretags) = "bson:\"password\" rorm:\"pwd\""];
-    string salt = 4 [(gogoproto.moretags) = "bson:\"salt\" rorm:\"salt\""];
-    string channeluid = 5 [(gogoproto.moretags) = "bson:\"cuid\" rorm:\"cuid\""];
-    string channel = 6 [(gogoproto.moretags) = "bson:\"channel\" rorm:\"channel\""];
-    string avatar = 7 [(gogoproto.moretags) = "bson:\"avatar\" rorm:\"avatar\""];
-    string mobile = 8 [(gogoproto.moretags) = "bson:\"mobile\""];
-    string openid = 9 [(gogoproto.moretags) = "bson:\"openid\""];
-    string ip = 10 [(gogoproto.moretags) = "bson:\"ip\""];
-    int32 status = 11 [(gogoproto.moretags) = "bson:\"status\" rorm:\"status\""];
-    google.protobuf.Timestamp regTime = 12 [(gogoproto.moretags) = "bson:\"regtime\"", (gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+    int32 sceneID = 2 [(gogoproto.moretags) = "bson:\"sceneID\""]; //玩家当前在哪个场景
+    repeated Equip equp = 5  [(gogoproto.moretags) = "bson:\"equip\""]; //部件id 装备或者外观
+}
+
+message Equip {
+    int32 id = 1 [(gogoproto.moretags) = "bson:\"id\""]; //装备id
+    int64 hp = 2 [(gogoproto.moretags) = "bson:\"hp\""]; //血量
+    int32 attack = 3 [(gogoproto.moretags) = "bson:\"attack\""]; //攻击
+    int32 armor = 4 [(gogoproto.moretags) = "bson:\"armor\""];  //护甲
+}
+
+message Skill {
+    int32 id = 1;  //技能id
+    int32 level = 2; //技能等级
 }

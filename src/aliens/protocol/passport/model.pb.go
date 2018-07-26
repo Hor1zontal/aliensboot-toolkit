@@ -18,10 +18,10 @@
 		LoginLoginRet
 		ChannelLogin
 		ChannelLoginRet
-		NewInterface
-		NewInterfaceRet
-		PassportRequest
-		PassportResponse
+		TokenLogin
+		TokenLoginRet
+		Request
+		Response
 */
 package passport
 

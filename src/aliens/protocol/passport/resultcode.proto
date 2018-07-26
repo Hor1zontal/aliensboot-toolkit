@@ -6,4 +6,7 @@ enum Code {
     InvalidRequest = 1; //无效的请求
     ServerException = 2; //服务器处理异常  内部抛异常
     DBExcetpion = 3; //数据库异常
+
+    InvalidService = 1000; //服务不可用
+
 }

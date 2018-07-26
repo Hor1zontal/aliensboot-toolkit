@@ -13,7 +13,7 @@ import "aliens/protocol/${package}"
 
 <message>
 //${o_desc}
-func handle${o_request}(request *${package}.${o_request}, response *${package}.${o_response}) {
+func handle${o_request}(authID int64, request *${package}.${o_request}, response *${package}.${o_response}) {
 
 }
 <message>

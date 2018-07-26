@@ -10,43 +10,53 @@
 package service
 
 import (
-	"aliens/protocol/passport"
+	"aliens/protocol/game"
 	"github.com/pkg/errors"
     "encoding/json"
 )
 
 //处理json请求
-func handleJsonRequest(requestUrl string, data []byte) ([]byte, error) {
+func handleJsonRequest(authID int64, requestUrl string, data []byte) ([]byte, error) {
 	switch requestUrl {
 	    
-		case "LoginRegister" :
-			request := &passport.LoginRegister{}
-			response := &passport.LoginRegisterRet{}
+		case "LoginRole" :
+			request := &game.LoginRole{}
+			response := &game.LoginRoleRet{}
 			error := json.Unmarshal(data, request)
 			if error != nil {
 				return nil, error
 			}
-			handleLoginRegister(request, response)
+			handleLoginRole(authID, request, response)
 			return json.Marshal(response)
 		
-		case "LoginLogin" :
-			request := &passport.LoginLogin{}
-			response := &passport.LoginLoginRet{}
+		case "CreateRole" :
+			request := &game.CreateRole{}
+			response := &game.CreateRoleRet{}
 			error := json.Unmarshal(data, request)
 			if error != nil {
 				return nil, error
 			}
-			handleLoginLogin(request, response)
+			handleCreateRole(authID, request, response)
 			return json.Marshal(response)
 		
-		case "NewInterface" :
-			request := &passport.NewInterface{}
-			response := &passport.NewInterfaceRet{}
+		case "RemoveRole" :
+			request := &game.RemoveRole{}
+			response := &game.RemoveRoleRet{}
 			error := json.Unmarshal(data, request)
 			if error != nil {
 				return nil, error
 			}
-			handleNewInterface(request, response)
+			handleRemoveRole(authID, request, response)
+			return json.Marshal(response)
+		
+		case "GetUserInfo" :
+			request := &game.GetUserInfo{}
+			response := &game.GetUserInfoRet{}
+			error := json.Unmarshal(data, request)
+			if error != nil {
+				return nil, error
+			}
+			handleGetUserInfo(authID, request, response)
 			return json.Marshal(response)
 		
 		default:

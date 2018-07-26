@@ -29,12 +29,12 @@ func (this *${package}RPCHandle) request(request *${package}.Request) *${package
 	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
 	if err != nil {
 		log.Error(err)
-		exception.GameException(exception.INVALID_SERVICE)
+		exception.GameException(${package}.Code_InvalidService)
 	}
 	any, ok := rpcRet.(*protocol.Any)
 	if !ok {
 		log.Error("invalid rpc ret data")
-		exception.GameException(exception.INVALID_SERVICE)
+		exception.GameException(${package}.Code_InvalidService)
 	}
 	messageRet := &${package}.Response{}
 	messageRet.Unmarshal(any.GetValue())

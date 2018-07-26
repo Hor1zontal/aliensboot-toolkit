@@ -1,0 +1,13 @@
+syntax = "proto3";
+package game;
+
+enum Code {
+    Success = 0;     //请求成功
+    InvalidRequest = 1; //无效的请求
+    ServerException = 2; //服务器处理异常  内部抛异常
+    DBExcetpion = 3; //数据库异常
+
+    ValidateException = 9; //验证用户失败、需要重新登录校验
+    RoleNotExists = 10; //角色不存在
+    RoleNotSelect = 11; //角色未选择
+}

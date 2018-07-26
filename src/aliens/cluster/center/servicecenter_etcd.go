@@ -45,7 +45,7 @@ func (this *ETCDServiceCenter) ConnectCluster(config ClusterConfig) {
 		config.Timeout = 5
 	}
 	if config.TTL == 0 {
-		config.TTL = 130
+		config.TTL = 10
 	}
 
 	etcdConfig := clientv3.Config{
