@@ -13,7 +13,7 @@ import (
 	"github.com/name5566/leaf/chanrpc"
 	"errors"
 	"encoding/binary"
-	"aliens/protocol"
+	"aliens/protocol/base"
 )
 
 var Processor = NewMsgProcessor() //protobuf.NewProcessor()
@@ -33,7 +33,7 @@ func (p *MessageProcessor) SetByteOrder(littleEndian bool) {
 }
 
 //func (this *MessageProcessor) Route(msg interface{}, userData interface{}) error {
-//	this.msgRouter.Go(reflect.TypeOf(&protocol.Any{}), msg, userData)
+//	this.msgRouter.Go(reflect.TypeOf(&base.Any{}), msg, userData)
 //	return nil
 //}
 
@@ -49,12 +49,12 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 	} else {
 		id = binary.BigEndian.Uint16(data)
 	}
-	return &protocol.Any{Id:id, Value:data[2:]}, nil
+	return &base.Any{Id:id, Value:data[2:]}, nil
 }
 
 // must goroutine safe
 func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
-	any, ok := msg.(*protocol.Any)
+	any, ok := msg.(*base.Any)
 	if !ok {
 		return nil, errors.New("invalid any type")
 	}

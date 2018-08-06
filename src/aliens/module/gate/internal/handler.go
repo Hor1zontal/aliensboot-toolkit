@@ -11,11 +11,11 @@ package internal
 
 import (
 	"aliens/module/gate/msg"
-	"aliens/protocol"
 	"github.com/name5566/leaf/gate"
 	//"aliens/module/cluster/dispatch"
 	//"aliens/module/gate/conf"
 	"aliens/module/gate/route"
+	"aliens/protocol/base"
 )
 
 const (
@@ -41,7 +41,7 @@ func Close() {
 }
 
 //只处理推送消息
-func HandlePush(request *protocol.Any) error {
+func HandlePush(request *base.Any) error {
 	if request.AuthId != 0 {
 		request.Id = route.GetPushID(request.TypeUrl)
 		Skeleton.ChanRPCServer.Go(CommandAgentPush, request.AuthId, request)
@@ -85,7 +85,7 @@ func handleMessage(args []interface{}) {
 	data := gateAgent.UserData()
 	switch data.(type) {
 	case *network:
-		data.(*network).AcceptMessage(request.(*protocol.Any))
+		data.(*network).AcceptMessage(request.(*base.Any))
 		break
 	}
 }

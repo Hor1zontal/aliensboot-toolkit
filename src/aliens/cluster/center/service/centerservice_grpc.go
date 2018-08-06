@@ -17,8 +17,8 @@ import (
 	"aliens/log"
 	"golang.org/x/net/context"
 	"aliens/common/util"
-	"aliens/protocol"
 	"reflect"
+	"aliens/protocol/base"
 )
 
 type GRPCService struct {
@@ -26,12 +26,12 @@ type GRPCService struct {
 
 	//调用服务参数
 	client *grpc.ClientConn
-	caller protocol.RPCServiceClient
+	caller base.RPCServiceClient
 
 	//启动服务参数
 	server  *grpc.Server      //
 
-	handler protocol.RPCServiceServer //处理句柄
+	handler base.RPCServiceServer //处理句柄
 }
 
 func (this *GRPCService) GetConfig() *CenterService {
@@ -43,7 +43,7 @@ func (this *GRPCService) GetDesc() string {
 }
 
 func (this *GRPCService) SetHandler(handler interface{}) {
-	result, ok := handler.(protocol.RPCServiceServer)
+	result, ok := handler.(base.RPCServiceServer)
 	if !ok {
 		log.Fatalf("invalid grpc service handle %v", reflect.TypeOf(handler))
 	}
@@ -65,7 +65,7 @@ func (this *GRPCService) Start() bool {
 	//}
 
 	server := grpc.NewServer()
-	protocol.RegisterRPCServiceServer(server, this.handler)
+	base.RegisterRPCServiceServer(server, this.handler)
 	if this.Address == "" {
 		this.Address = util.GetIP()
 	}
@@ -105,7 +105,7 @@ func (this *GRPCService) Connect() bool {
 		return false
 	}
 	this.client = conn
-	this.caller = protocol.NewRPCServiceClient(this.client)
+	this.caller = base.NewRPCServiceClient(this.client)
 	log.Infof("connect grpc service %v-%v success", this.Name, address)
 	return true
 }
@@ -142,7 +142,7 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	if this.client == nil {
 		return nil, errors.New("service is not initial")
 	}
-	requestAny, ok := request.(*protocol.Any)
+	requestAny, ok := request.(*base.Any)
 	if !ok {
 		return nil, errors.New("invalid request type")
 	}
@@ -167,7 +167,7 @@ func (this *GRPCService) AsyncRequest(request interface{}) error {
 	if this.client == nil {
 		return errors.New("service is not initial")
 	}
-	requestAny, ok := request.(*protocol.Any)
+	requestAny, ok := request.(*base.Any)
 	if !ok {
 		return errors.New("invalid request type")
 	}

@@ -16,7 +16,7 @@ import (
 	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
-	"aliens/protocol"
+	"aliens/protocol/base"
 )
 
 //var id int64 = 0
@@ -28,14 +28,14 @@ import (
 
 func newNetwork(agent gate.Agent) *network {
 	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
-	network.channel = make(chan *protocol.Any, 5)
+	network.channel = make(chan *base.Any, 5)
 	go network.Start()
 	return network
 }
 
 type network struct {
 	agent 	      gate.Agent
-	channel       chan *protocol.Any //消息管道
+	channel       chan *base.Any //消息管道
 
 	authID        int64     //用户标识 登录验证后
 	createTime    time.Time //创建时间
@@ -79,11 +79,11 @@ func (this *network) Close() (isClosed bool) {
 	return true
 }
 
-func (this *network) AcceptMessage(msg *protocol.Any) {
+func (this *network) AcceptMessage(msg *base.Any) {
 	this.channel <- msg
 }
 
-func (this *network) HandleMessage(request *protocol.Any) *protocol.Any {
+func (this *network) HandleMessage(request *base.Any) *base.Any {
 	//未授权之前需要传递验权id
 	if this.IsAuth() {
 		request.AuthId = this.authID

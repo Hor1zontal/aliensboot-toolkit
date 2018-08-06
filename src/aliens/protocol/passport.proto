@@ -1,0 +1,80 @@
+syntax = "proto3";
+package protocol;
+
+
+//服务端不允许login文件名存在,特改为bblogin
+//登录相关通讯协议
+enum LoginResult {
+    loginSuccess = 0;				//登录成功
+    invalidUser = 1;				//用户不存在
+    invalidPwd = 2;					//验证密码失败
+    forbiddenUser = 3;				//封号
+    tokenExpire = 4;                //token过期
+    //invalidMaintain = 5; 		    //游戏正在维护
+    //invalidGameServer = 6;          //连接游戏服务器失败
+}
+
+enum RegisterResult {
+    registerSuccess = 0;		    //注册成功
+    userExists = 1;				    //用户名已经存在
+    invalidFormat = 2;				//用户名格式不符合规范
+    //invalidServer = 6;              //连接游戏服务器失败
+}
+
+
+//普通注册账号
+message login_register{
+    string username = 1; //用户名
+    string password = 2; //密码
+    int32 server = 3; //服务器id
+}
+
+//登录服务器注册账号返回
+message login_register_ret {
+    RegisterResult result = 1;    //注册结果
+    int64 uid = 2;                 //用户id 注册成功返回此字段
+    string token = 3;              //登录令牌 注册成功返回此字段
+    string msg = 4;                //反馈消息 登录失败返回
+}
+
+//用户名密码登录服务器
+message login_login{
+    string username = 1;		//用户名
+    string password = 2;		//密码
+}
+
+//登录服务器返回
+message login_login_ret{
+    LoginResult result = 1;	//登录结果
+    int64 uid = 2;             //用户id
+    string token = 3;          //登录令牌
+    string msg = 4;                //反馈消息 登录失败返回
+}
+
+//渠道登录
+message channel_login {
+    string channel = 1; //渠道编号
+    string channelUID = 2; //渠道用户id
+    string sdk = 3; //sdk信息
+    string ip = 4; //登录ip
+    //int32 server = 5; //服务器id
+}
+
+//渠道登录结果
+message channel_login_ret {
+    int64 uid = 1; //登录成功后游戏的uid
+    string token = 2; //登录成功后的token信息
+    //string gameServer = 3; //游戏服务器地址信息
+}
+
+
+//token 登录
+message token_login {
+    int64 uid = 1;
+    string token = 2;
+}
+
+message token_login_ret {
+    LoginResult result = 1;	//登录结果
+}
+

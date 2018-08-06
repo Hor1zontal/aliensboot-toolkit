@@ -15,6 +15,9 @@ message Request {
         get_state getState = 8;
     }
 
+
+
+
 }
 
 
@@ -29,6 +32,10 @@ message Response {
         space_leave_ret spaceLeaveRet = 7;
         get_state_ret getStateRet = 8;
     }
+
+
+
+
 
     oneof push {
         string scenePush = 500; //测试推送信息

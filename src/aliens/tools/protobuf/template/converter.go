@@ -13,7 +13,7 @@ import (
 	"strings"
 	"io/ioutil"
 	"os"
-	"aliens/log"
+	"github.com/name5566/leaf/log"
 )
 
 const (
@@ -21,51 +21,69 @@ const (
 )
 
 
-func Convert(protoPath string, templatePath string, outputPath string, filePrefix string, overwrite bool) {
-	message := ParseProto(protoPath)
-	b, err := ioutil.ReadFile(templatePath)
-	if err != nil {
-		log.Error(err.Error())
-		return
+func Convert(config *Config) {
+	message := ParseProto(config.ProtoPath)
+
+	log.Debug("proto data %v", message.modules["passport"].Handlers[6])
+
+	for _, moduleConfig := range config.Modules {
+		module := message.modules[moduleConfig.Name]
+		if module == nil {
+			log.Debug("module %v is nou found in proto file %v", moduleConfig.Name, config.ProtoPath)
+			continue
+		}
+
+		convertModule(moduleConfig, module)
 	}
-	templateContent := string(b)
 
-	results := strings.Split(templateContent, SPLIT_STR)
 
-	header := ""
-	content := ""
-	tailf := ""
+}
 
-	if len(results) == 3 {
-		header = replaceMessage(results[0], message)
+
+func convertModule(moduleConfig *ModuleConfig, module *Module) {
+	for _, outputConfig := range moduleConfig.Outputs {
+		b, err := ioutil.ReadFile(outputConfig.Template)
+		if err != nil {
+			log.Error(err.Error())
+			return
+		}
+		templateContent := string(b)
+
+		results := strings.Split(templateContent, SPLIT_STR)
+
+		header := ""
+		content := ""
+		tailf := ""
+
 		if len(results) == 3 {
-			tailf = replaceMessage(results[2], message)
-		}
+			header = replaceMessage(results[0], module)
+			tailf = replaceMessage(results[2], module)
 
 
-		for _, handler := range message.Handlers {
-			handleStr := replaceMessage(results[1], message)
-			if !handler.IsValid() {
-				continue
+			for _, handler := range module.Handlers {
+				handleStr := replaceMessage(results[1], module)
+				if !handler.IsValid() {
+					continue
+				}
+				handleStr = replaceHandle(handleStr, handler)
+				if outputConfig.Prefix != "" {
+					filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler.ORequest), -1)
+					//单独写文件
+					writeFile(filePath, header + handleStr + tailf, outputConfig.Overwrite)
+				} else {
+					content += handleStr
+				}
 			}
-			handleStr = replaceHandle(handleStr, handler)
-			if filePrefix != "" {
-				filePath := outputPath + "/" + strings.Replace(filePrefix, "${}", strings.ToLower(handler.ORequest), -1)
-				//单独写文件
-				writeFile(filePath, header + handleStr + tailf, overwrite)
-			} else {
-				content += handleStr
-			}
+		} else {
+			header = replaceMessage(templateContent, module)
 		}
-	} else {
-		header = replaceMessage(templateContent, message)
+		if  outputConfig.Prefix == "" {
+			//写一个文件
+			writeFile( outputConfig.Output, header + content + tailf,  outputConfig.Overwrite)
+		}
 	}
 
 
-	if filePrefix == "" {
-		//写一个文件
-		writeFile(outputPath, header + content + tailf, overwrite)
-	}
 
 }
 
@@ -74,7 +92,7 @@ func writeFile(filePath string, content string, overwrite bool) {
 		//文件存在不允许覆盖
 		_, err := os.Stat(filePath)
 		if err == nil {
-			log.Warn("file " + filePath + " alread exist, skip it!")
+			log.Debug("file " + filePath + " alread exist, skip it!")
 			return
 		}
 	}
@@ -89,14 +107,16 @@ func writeFile(filePath string, content string, overwrite bool) {
 		log.Error(err1.Error())
 		return
 	}
-	log.Warn("gen code file " + filePath + " success!")
+	log.Debug("gen code file " + filePath + " success!")
 }
 
 
-func replaceMessage(content string, message *ProtoMessage) string {
+func replaceMessage(content string, module *Module) string {
 	content = strings.Replace(content, "${package}", message.PackageName, -1)
-	content = strings.Replace(content, "${request}", message.RequestName, -1)
-	content = strings.Replace(content, "${response}", message.ResponseName, -1)
+	content = strings.Replace(content, "${module}", module.Name, -1)
+	content = strings.Replace(content, "${Module}", module.UName, -1)
+	content = strings.Replace(content, "${request}", module.Name, -1)
+	content = strings.Replace(content, "${response}", module.Name, -1)
 	return content
 }
 

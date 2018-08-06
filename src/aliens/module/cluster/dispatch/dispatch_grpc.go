@@ -12,7 +12,7 @@ package dispatch
 import (
 	"aliens/cluster/message"
 	"github.com/gogo/protobuf/proto"
-	"aliens/protocol"
+	"aliens/protocol/base"
 )
 
 
@@ -30,7 +30,7 @@ func (dispatcher *GRPCDispatcher) SyncRequest(serviceType string, message proto.
 	if err != nil {
 		return nil, err
 	}
-	request := &protocol.Any{Value: data}
+	request := &base.Any{Value: data}
 	return dispatcher.Request(serviceType, request)
 }
 
@@ -40,7 +40,7 @@ func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceType string, serviceID 
 	if err != nil {
 		return nil, err
 	}
-	request := &protocol.Any{Value: data}
+	request := &base.Any{Value: data}
 	return dispatcher.RequestNode(serviceType, serviceID, request)
 }
 

@@ -19,8 +19,6 @@ import (
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/pkg/errors"
-	"gopkg.in/olivere/elastic.v5"
-	"gopkg.in/sohlich/elogrus.v2"
 )
 
 var format = &log.TextFormatter{}
@@ -48,17 +46,17 @@ func Close() {
 //}
 
 // config logrus log to elasticsearch
-func ConfigESLogger(esUrl string, esHOst string, index string) {
-	client, err := elastic.NewClient(elastic.SetURL(esUrl))
-	if err != nil {
-		log.Errorf("config es logger error. %+v", errors.WithStack(err))
-	}
-	esHook, err := elogrus.NewElasticHook(client, esHOst, log.DebugLevel, index)
-	if err != nil {
-		log.Errorf("config es logger error. %+v", errors.WithStack(err))
-	}
-	log.AddHook(esHook)
-}
+//func ConfigESLogger(esUrl string, esHOst string, index string) {
+//	client, err := elastic.NewClient(elastic.SetURL(esUrl))
+//	if err != nil {
+//		log.Errorf("config es logger error. %+v", errors.WithStack(err))
+//	}
+//	esHook, err := elogrus.NewElasticHook(client, esHOst, log.DebugLevel, index)
+//	if err != nil {
+//		log.Errorf("config es logger error. %+v", errors.WithStack(err))
+//	}
+//	log.AddHook(esHook)
+//}
 
 //config logrus log to local file
 func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {

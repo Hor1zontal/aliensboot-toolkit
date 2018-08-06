@@ -9,30 +9,10 @@
  *******************************************************************************/
 package service
 
-import (
-	"aliens/protocol/passport"
-	"aliens/module/passport/cache"
-)
+import "aliens/protocol/protocol"
 
 
 //
-func handleLoginRegister(request *passport.LoginRegister, result *passport.LoginRegisterRet) int64 {
-	username := request.GetUsername()
-	passwd := request.GetPassword()
-	if cache.PassportCache.IsUsernameExist(username) {
-		result.Msg = "用户名已存在"
-		result.Result = passport.RegisterResult_userExists
-		return 0
-	}
+func handleLoginRegister(request *protocol.LoginRegister, response *protocol.LoginRegisterRet) int64 {
 
-	passwd = PasswordHash(username, passwd)
-	//TODO 有风险最好查询 数据库再加一层判断
-	userCache := cache.NewUser(username, passwd, "ip address", "", "", "", "")
-
-	result.Result = passport.RegisterResult_registerSuccess
-	result.Uid = userCache.Id
-	token := NewToken()
-	cache.PassportCache.SetUserToken(userCache.Id, token)
-	result.Token = token
-	return result.GetUid()
 }

@@ -13,6 +13,7 @@ import (
 	"aliens/tools/protobuf/template"
 	"flag"
 	"fmt"
+	"aliens/config"
 )
 
 
@@ -22,43 +23,57 @@ var (
 	output    string
 	prefix      string
 	overwrite    bool
+
+	configPath string
 )
 
 func main() {
-	flag.StringVar(&proto, "proto", "", "protobuf file path")
-	flag.StringVar(&templatePath,"template", "", "output template path")
-	flag.StringVar(&output,"output", "", "output path")
-	flag.StringVar(&prefix,"prefix", "", "output file prefix")
-	flag.BoolVar(&overwrite,"overwrite", false, "is overwrite ?")
+	//flag.StringVar(&proto, "proto", "", "protobuf file path")
+	//flag.StringVar(&templatePath,"template", "", "output template path")
+	//flag.StringVar(&output,"output", "", "output path")
+	//flag.StringVar(&prefix,"prefix", "", "output file prefix")
+	//flag.BoolVar(&overwrite,"overwrite", false, "is overwrite ?")
 
-
+	flag.StringVar(&configPath,"configPath", "", "config file path")
 	flag.Parse()
 
-	//fmt.Printf("proto: %v template: %v output: %v prefix: %v overwrite: %v", proto, templatePath, output, prefix, overwrite)
-	if proto == "" || templatePath == "" || output == "" {
+
+	if configPath == "" {
 		fmt.Printf("Please input correct params => codegen -h \n")
 		return
 	}
-	template.Convert(proto, templatePath, output, prefix, overwrite)
+
+	//fmt.Printf("proto: %v template: %v output: %v prefix: %v overwrite: %v", proto, templatePath, output, prefix, overwrite)
+	//if proto == "" || templatePath == "" || output == "" {
+	//	fmt.Printf("Please input correct params => codegen -h \n")
+	//	return
+	//}
+
+	configObject := &template.Config{}
+	config.LoadConfig(configObject, configPath) //加载服务器配置
+
+	template.Convert(configObject)
+
+	//template.Convert(proto, templatePath, output, prefix, overwrite)
 	//genSceneProto()
 	//genPassportProto()
 }
 
 func genSceneProto() {
-	protoPath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
-	templatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common.template"
-	outputPath := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handle.go"
-	template.Convert(protoPath, templatePath, outputPath, "", true)
-
-	protoPath1 := "/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
-	templatePath1 := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common_json.template"
-	outputPath1 := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handlejson.go"
-	template.Convert(protoPath1, templatePath1, outputPath1, "", true)
-
-	handleTemplatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common_handle.template"
-	outputDir := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/"
-	filePrefix := "handle_${}.go"
-	template.Convert(protoPath, handleTemplatePath, outputDir, filePrefix, false)
+	//protoPath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
+	//templatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common.template"
+	//outputPath := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handle.go"
+	//template.Convert(protoPath, templatePath, outputPath, "", true)
+	//
+	//protoPath1 := "/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
+	//templatePath1 := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common_json.template"
+	//outputPath1 := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/handlejson.go"
+	//template.Convert(protoPath1, templatePath1, outputPath1, "", true)
+	//
+	//handleTemplatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/common_handle.template"
+	//outputDir := "/Users/hejialin/git/server/kylin/src/aliens/module/scene/service/"
+	//filePrefix := "handle_${}.go"
+	//template.Convert(protoPath, handleTemplatePath, outputDir, filePrefix, false)
 }
 
 func genPassportProto() {
@@ -78,10 +93,10 @@ func genPassportProto() {
 	//filePrefix := "handle_${}.go"
 	//template.Convert(protoPath, handleTemplatePath, outputDir, filePrefix, false)
 
-	protoPath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/passport/protocol.proto"
-	templatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/service.template"
-	outputPath := "/Users/hejialin/git/server/kylin/src/aliens/module/passport/service/service1.go"
-	template.Convert(protoPath, templatePath, outputPath, "", true)
+	//protoPath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/passport/protocol.proto"
+	//templatePath := "/Users/hejialin/git/server/kylin/src/aliens/protocol/service.template"
+	//outputPath := "/Users/hejialin/git/server/kylin/src/aliens/module/passport/service/service1.go"
+	//template.Convert(protoPath, templatePath, outputPath, "", true)
 }
 
 

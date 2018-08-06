@@ -1,0 +1,35 @@
+{
+  "ProtoPath":"protocol.proto",
+  "Modules": [
+    {
+      "Name":"passport",
+      "Outputs":[
+        {
+          "Template":"templates/auth_common.template",
+          "Output":"../module/passport/service/handle.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/auth_common_handle.template",
+          "Output":"../module/passport/service",
+          "Prefix":"handle_${}.go",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/service.template",
+          "Output":"../module/passport/service/service.go",
+          "Prefix":"",
+          "Overwrite":false
+        },
+        {
+          "Template":"templates/common_rpc.template",
+          "Output":"../module/cluster/rpc/passport.go",
+          "Prefix":"",
+          "Overwrite":true
+        }
+      ]
+    }
+  ]
+
+}

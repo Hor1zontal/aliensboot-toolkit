@@ -9,42 +9,10 @@
  *******************************************************************************/
 package service
 
-import (
-	"aliens/protocol/passport"
-	"aliens/module/passport/cache"
-)
+import "aliens/protocol/protocol"
 
 
 //
-func handleLoginLogin(request *passport.LoginLogin, result *passport.LoginLoginRet) int64 {
-	username := request.GetUsername()
-	password := request.GetPassword()
+func handleLoginLogin(request *protocol.LoginLogin, response *protocol.LoginLoginRet) int64 {
 
-	userCache := cache.GetUser(username)
-	if userCache == nil {
-		passwordHash := PasswordHash(username, password)
-
-
-		userCache = cache.NewUser(username, passwordHash, "ip address", "", "", "", "")
-		//result.Result = passport.LoginLoginRet_invalidUser
-		//return
-	}
-
-	passwordHash := PasswordHash(username, password)
-	//密码不对
-	if passwordHash != userCache.Password {
-		result.Result = passport.LoginResult_invalidPwd
-		return 0
-	}
-
-	//更新ip
-	//qdoc := bson.M{"_id": userCache.ID}
-	//udoc := bson.M{"$set": bson.M{"ip": getNetworkAddress(network)}}
-	//db.DatabaseHandler.Update(userCache.Name(), qdoc, udoc)
-	result.Uid = userCache.GetId()
-	token := NewToken()
-	cache.PassportCache.SetUserToken(userCache.GetId(), token)
-	result.Token = token
-	result.Result = passport.LoginResult_loginSuccess
-	return result.GetUid()
 }

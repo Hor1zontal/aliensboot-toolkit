@@ -1,30 +1,44 @@
 syntax = "proto3";
 package protocol;
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
-message Any {
-    //Agent gate.Agent
+import "passport.proto";
+import "resultcode.proto";
 
-    uint32 id = 1[(gogoproto.customtype) = "uint16",(gogoproto.nullable) = false]; //消息id
 
-    int64 auth_id = 2; //验权id 服务器内部透传,玩家在登录成功后发送的验权id
+//request
+message Request {
+    int32 session = 1;     //消息序号
 
-    string type_url = 3; //json request
+    //-----------------登录模块接口---------------
 
-    // Must be a valid serialized protocol buffer of the above specified type.
-    bytes value = 4;
+    //1
+    oneof passport {
+        login_register loginRegister = 6;
+        login_login loginLogin = 7;
+        token_login tokenLogin = 8; //token登录
+    }
 
-    //bytes Agent = 5[(gogoproto.customtype) = "aliens/network.Agent",(gogoproto.nullable) = false]; //
 }
 
-//rpc 服务间转发
-service RPCService {
-    //rpc request (google.protobuf.Any) returns (google.protobuf.Any) {}
-    rpc request (Any) returns (stream Any) {};
+//response
+message Response {
+    int32 session = 1;
 
-//    rpc request1 (stream Any) returns (Any) {};
-//
-//    rpc request2 (Any) returns (stream Any) {};
-//
-//    rpc request3 (stream Any) returns (stream Any) {};
+    Code code = 2; //错误码
+
+    //-----------------登录模块响应接口---------------
+
+    //2
+    oneof passport {
+        login_register_ret loginRegisterRet = 6;
+        login_login_ret loginLoginRet = 7;
+        token_login_ret tokenLoginRet = 8; //token登录结果
+    }
+
+
+}
+
+message Push {
+
+
 }

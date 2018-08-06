@@ -12,9 +12,9 @@ package route
 import (
 	"errors"
 	"strings"
-	"aliens/protocol"
 	"aliens/module/cluster/dispatch"
 	"fmt"
+	"aliens/protocol/base"
 )
 
 //requestID - service
@@ -48,12 +48,12 @@ func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
 	}
 
 	serviceID := params[1]
-	request := &protocol.Any{TypeUrl:params[2], Value:requestData}
+	request := &base.Any{TypeUrl:params[2], Value:requestData}
 	response, error := dispatch.RPC.Request(serviceID, request)
 	if error != nil {
 		return nil, error
 	}
-	responseProxy, ok := response.(*protocol.Any)
+	responseProxy, ok := response.(*base.Any)
 	if !ok {
 		return nil, errors.New("unexpect response type")
 	}
@@ -65,7 +65,7 @@ func GetPushID(service string) uint16 {
 }
 
 //未授权的消息转发
-func HandleMessage(request *protocol.Any) (*protocol.Any, error) {
+func HandleMessage(request *base.Any) (*base.Any, error) {
 	serviceType, ok := seqServiceMapping[request.Id]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
@@ -74,7 +74,7 @@ func HandleMessage(request *protocol.Any) (*protocol.Any, error) {
 	if error != nil {
 		return nil, error
 	}
-	responseProxy, ok := response.(*protocol.Any)
+	responseProxy, ok := response.(*base.Any)
 	if !ok {
 		return nil, errors.New("un expect response type")
 	}
