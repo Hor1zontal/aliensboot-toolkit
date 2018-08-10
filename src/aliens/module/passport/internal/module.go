@@ -27,5 +27,4 @@ func (m *Module) OnDestroy() {
 	service.Close()
 	db.Close()
 	cache.Close()
-
 }

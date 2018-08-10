@@ -9,7 +9,7 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/${package}"
+import "aliens/protocol"
 
 <message>
 //${o_desc}

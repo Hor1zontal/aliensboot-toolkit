@@ -9,10 +9,10 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/game"
+import "aliens/protocol"
 
 
 //
-func handleRemoveRole(authID int64, request *game.RemoveRole, response *game.RemoveRoleRet) {
+func handleRemoveRole(authID int64, request *protocol.RemoveRole, response *protocol.RemoveRoleRet) {
 
 }

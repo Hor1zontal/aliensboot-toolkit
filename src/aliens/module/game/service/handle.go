@@ -10,27 +10,27 @@
 package service
 
 import (
-	"aliens/protocol/game"
 	"github.com/gogo/protobuf/proto"
-	"aliens/protocol"
-	"github.com/name5566/leaf/chanrpc"
-	"aliens/log"
-	"runtime/debug"
-	"aliens/exception"
+    "github.com/name5566/leaf/chanrpc"
+    "aliens/log"
+    "runtime/debug"
+    "aliens/exception"
+    "aliens/protocol/base"
+    "aliens/protocol"
 )
 
-func newService(chanRpc *chanrpc.Server) *gameService {
-	service := &gameService{}
+func newService(chanRpc *chanrpc.Server) *protocolService {
+	service := &protocolService{}
 	service.chanRpc = chanRpc
 	service.chanRpc.Register("m", service.handle)
 	return service
 }
 
-type gameService struct {
+type protocolService struct {
 	chanRpc *chanrpc.Server
 }
 
-func (this *gameService) Request(request *protocol.Any, server protocol.RPCService_RequestServer) error {
+func (this *protocolService) Request(request *base.Any, server base.RPCService_RequestServer) error {
 	if this.chanRpc != nil {
 		this.chanRpc.Call0("m", request, server)
 		return nil
@@ -39,65 +39,61 @@ func (this *gameService) Request(request *protocol.Any, server protocol.RPCServi
 }
 
 
-func (this *gameService) handle(args []interface{}) {
-	request := args[0].(*protocol.Any)
-	server := args[1].(protocol.RPCService_RequestServer)
-	requestProxy := &game.Request{}
-	responseProxy := &game.Response{}
+func (this *protocolService) handle(args []interface{}) {
+	request := args[0].(*base.Any)
+	server := args[1].(base.RPCService_RequestServer)
+	requestProxy := &protocol.Request{}
+	responseProxy := &protocol.Response{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
 			switch err.(type) {
-			case game.Code:
-				responseProxy.Code = err.(game.Code)
+			case protocol.Code:
+				responseProxy.Code = err.(protocol.Code)
 				break
 			default:
 				log.Error("%v", err)
 				debug.PrintStack()
-				responseProxy.Code = game.Code_ServerException
+				responseProxy.Code = protocol.Code_ServerException
 			}
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&protocol.Any{Value:data})
+		server.Send(&base.Any{Value:data})
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
-		exception.GameException(game.Code_InvalidRequest)
+		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
 }
 
-func handleRequest(authID int64, request *game.Request, response *game.Response) {
-	
-	if request.GetGetUserInfo() != nil {
-		messageRet := &game.GetUserInfoRet{}
-		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
-		response.Response = &game.Response_GetUserInfoRet{messageRet}
-		return
-	}
+func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
 	
 	if request.GetLoginRole() != nil {
-		messageRet := &game.LoginRoleRet{}
+		messageRet := &protocol.LoginRoleRet{}
 		handleLoginRole(authID, request.GetLoginRole(), messageRet)
-		response.Response = &game.Response_LoginRoleRet{messageRet}
-		return
+		response.Game = &protocol.Response_LoginRoleRet{messageRet}
 	}
 	
 	if request.GetCreateRole() != nil {
-		messageRet := &game.CreateRoleRet{}
+		messageRet := &protocol.CreateRoleRet{}
 		handleCreateRole(authID, request.GetCreateRole(), messageRet)
-		response.Response = &game.Response_CreateRoleRet{messageRet}
-		return
+		response.Game = &protocol.Response_CreateRoleRet{messageRet}
 	}
 	
 	if request.GetRemoveRole() != nil {
-		messageRet := &game.RemoveRoleRet{}
+		messageRet := &protocol.RemoveRoleRet{}
 		handleRemoveRole(authID, request.GetRemoveRole(), messageRet)
-		response.Response = &game.Response_RemoveRoleRet{messageRet}
-		return
+		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
 	}
 	
-	response.Code = game.Code_InvalidRequest
+	if request.GetGetUserInfo() != nil {
+		messageRet := &protocol.GetUserInfoRet{}
+		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
+		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
+	}
+	
+	response.Code = protocol.Code_InvalidRequest
 }
 

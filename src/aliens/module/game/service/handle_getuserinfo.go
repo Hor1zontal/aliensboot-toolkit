@@ -10,13 +10,13 @@
 package service
 
 import (
-	"aliens/protocol/game"
 	"aliens/module/game/core"
+	"aliens/protocol"
 )
 
 
 //
-func handleGetUserInfo(authID int64, request *game.GetUserInfo, response *game.GetUserInfoRet) {
+func handleGetUserInfo(authID int64, request *protocol.GetUserInfo, response *protocol.GetUserInfoRet) {
 	userSession := core.UserManager.EnsureUser(authID)
 	response.User = userSession.GetUserData()
 }

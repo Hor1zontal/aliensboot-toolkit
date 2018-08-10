@@ -10,13 +10,13 @@
 package service
 
 import (
-	"aliens/protocol/scene"
+	"aliens/protocol"
 	"aliens/mmorpg"
 	"aliens/module/scene/util"
 )
 
 
 //ignore d s
-func handleSpaceMove(request *scene.SpaceMove, response *scene.SpaceMoveRet) {
+func handleSpaceMove(authID int64, request *protocol.SpaceMove, response *protocol.SpaceMoveRet) {
 	mmorpg.SpaceManager.MoveEntity(request.GetSpaceID(), request.GetEntityID(), util.TransVector(request.GetPosition()), util.TransVector(request.GetDirection()))
 }

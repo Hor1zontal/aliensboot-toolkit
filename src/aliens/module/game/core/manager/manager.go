@@ -12,7 +12,7 @@ package manager
 
 
 import (
-	"aliens/protocol/game"
+	"aliens/protocol"
 	"aliens/module/game/db"
 	"aliens/exception"
 	"aliens/log"
@@ -20,7 +20,7 @@ import (
 
 func NewUserDataManager(uid int64) *UserDataManager {
 	dataManager := &UserDataManager{}
-	var user = &game.User{Uid:uid}
+	var user = &protocol.GameUser{Uid:uid}
 	err := db.Database.QueryOne(user)
 	if err != nil {
 		//创建数据
@@ -32,7 +32,7 @@ func NewUserDataManager(uid int64) *UserDataManager {
 
 //角色管理容器
 type UserDataManager struct {
-	user		  *game.User  //用户游戏信息 拥有的角色
+	user		  *protocol.GameUser  //用户游戏信息 拥有的角色
 	activeRole    *RoleHandler //当前的角色处理句柄
 }
 
@@ -43,15 +43,15 @@ func (this *UserDataManager) GetActiveRoleHandler() *RoleHandler {
 
 func (this *UserDataManager) LoginRole(roleID int64) *RoleHandler {
 	if !this.HaveRole(roleID) {
-		exception.GameException(game.Code_RoleNotExists)
+		exception.GameException(protocol.Code_RoleNotExists)
 	}
 	//加载当前玩家缓存
 	if this.activeRole == nil || !this.activeRole.IsRole(roleID) {
-		roleInfo := &game.RoleInfo{Id:roleID}
+		roleInfo := &protocol.RoleInfo{Id:roleID}
 		err := db.Database.QueryOne(roleInfo)
 		if err != nil {
 			log.Debugf("query role exception %v", err)
-			exception.GameException(game.Code_DBExcetpion)
+			exception.GameException(protocol.Code_DBExcetpion)
 		}
 		this.activeRole = newRoleHandler(roleInfo)
 	}
@@ -68,15 +68,15 @@ func (this *UserDataManager) HaveRole(roleID int64) bool {
 	return false
 }
 
-func (this *UserDataManager) GetUserData() *game.User {
+func (this *UserDataManager) GetUserData() *protocol.GameUser {
 	return this.user
 }
 
-func (this *UserDataManager) CreateRole(role *game.Role) *game.Role {
-	roleInfo := &game.RoleInfo{}
+func (this *UserDataManager) CreateRole(role *protocol.Role) *protocol.Role {
+	roleInfo := &protocol.RoleInfo{}
 	err := db.Database.Insert(roleInfo)
 	if err != nil {
-		exception.GameException(game.Code_DBExcetpion)
+		exception.GameException(protocol.Code_DBExcetpion)
 	}
 	role.Id = roleInfo.Id
 	this.user.Roles = append(this.user.Roles, role)

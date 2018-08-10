@@ -10,14 +10,14 @@
 package service
 
 import (
-	"aliens/protocol/game"
 	"aliens/module/game/core"
 	"time"
+	"aliens/protocol"
 )
 
 
 //
-func handleLoginRole(authID int64, request *game.LoginRole, response *game.LoginRoleRet) {
+func handleLoginRole(authID int64, request *protocol.LoginRole, response *protocol.LoginRoleRet) {
 	userSession := core.UserManager.EnsureUser(authID)
 	roleHandler := userSession.LoginRole(request.GetRoleID())
 	response.RoleInfo = roleHandler.GetData()

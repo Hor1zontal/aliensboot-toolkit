@@ -71,13 +71,6 @@ func (this *protocolService) handle(args []interface{}) {
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
 	
-	if request.GetLoginRegister() != nil {
-		messageRet := &protocol.LoginRegisterRet{}
-		result := handleLoginRegister(request.GetLoginRegister(), messageRet)
-		response.Passport = &protocol.Response_LoginRegisterRet{messageRet}
-		return result
-	}
-	
 	if request.GetLoginLogin() != nil {
 		messageRet := &protocol.LoginLoginRet{}
 		result := handleLoginLogin(request.GetLoginLogin(), messageRet)
@@ -89,6 +82,13 @@ func handleRequest(request *protocol.Request, response *protocol.Response) int64
 		messageRet := &protocol.TokenLoginRet{}
 		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
 		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
+		return result
+	}
+	
+	if request.GetLoginRegister() != nil {
+		messageRet := &protocol.LoginRegisterRet{}
+		result := handleLoginRegister(request.GetLoginRegister(), messageRet)
+		response.Passport = &protocol.Response_LoginRegisterRet{messageRet}
 		return result
 	}
 	

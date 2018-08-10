@@ -32,13 +32,13 @@ type hallService struct {
 }
 
 func (this *hallService) handle(args []interface{}) {
-	request := args[0].(*protocol.Any)
-	server := args[1].(protocol.RPCService_RequestServer)
+	request := args[0].(*scene_model_proto.Any)
+	server := args[1].(scene_model_proto.RPCService_RequestServer)
 	response, _ := this.RequestProxy(nil, request)
 	server.Send(response)
 }
 
-func (this *hallService) Request(request *protocol.Any, server protocol.RPCService_RequestServer) error {
+func (this *hallService) Request(request *scene_model_proto.Any, server scene_model_proto.RPCService_RequestServer) error {
 	if this.chanRpc != nil {
 		this.chanRpc.Call0("m", request, server)
 		return nil
@@ -46,14 +46,14 @@ func (this *hallService) Request(request *protocol.Any, server protocol.RPCServi
 	return nil
 }
 
-func (this *hallService) RequestProxy(ctx context.Context,request *protocol.Any) (response *protocol.Any, err error) {
+func (this *hallService) RequestProxy(ctx context.Context,request *scene_model_proto.Any) (response *scene_model_proto.Any, err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
 		if error != nil {
 			return nil, error
 		}
-		return &protocol.Any{TypeUrl:"", Value:data}, nil
+		return &scene_model_proto.Any{TypeUrl:"", Value:data}, nil
 	}
 
 	requestProxy := &hall.HallRequest{}
@@ -78,7 +78,7 @@ func (this *hallService) RequestProxy(ctx context.Context,request *protocol.Any)
     			}
     	}
     	data, _ := proto.Marshal(responseProxy)
-        response = &protocol.Any{Value:data}
+        response = &scene_model_proto.Any{Value:data}
     }()
 	err = handleRequest(requestProxy, responseProxy)
     return

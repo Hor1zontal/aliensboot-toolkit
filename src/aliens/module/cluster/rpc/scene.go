@@ -17,15 +17,15 @@ import (
 	"aliens/protocol/base"
 )
 
-var Passport = &passportRPCHandle{"passport"}
+var Scene = &sceneRPCHandle{"scene"}
 
 
-type passportRPCHandle struct {
+type sceneRPCHandle struct {
 	name string
 }
 
 
-func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Response {
+func (this *sceneRPCHandle) request(request *protocol.Request) *protocol.Response {
 	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
 	if err != nil {
 		log.Error(err)
@@ -42,32 +42,42 @@ func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Resp
 }
 
 
-func (this *passportRPCHandle) LoginRegister(request *protocol.LoginRegister) *protocol.LoginRegisterRet {
+func (this *sceneRPCHandle) SpaceMove(request *protocol.SpaceMove) *protocol.SpaceMoveRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginRegister{
-			LoginRegister:request,
+		Scene:&protocol.Request_SpaceMove{
+			SpaceMove:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetLoginRegisterRet()
+	return messageRet.GetSpaceMoveRet()
 }
 
-func (this *passportRPCHandle) LoginLogin(request *protocol.LoginLogin) *protocol.LoginLoginRet {
+func (this *sceneRPCHandle) SpaceEnter(request *protocol.SpaceEnter) *protocol.SpaceEnterRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginLogin{
-			LoginLogin:request,
+		Scene:&protocol.Request_SpaceEnter{
+			SpaceEnter:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetLoginLoginRet()
+	return messageRet.GetSpaceEnterRet()
 }
 
-func (this *passportRPCHandle) TokenLogin(request *protocol.TokenLogin) *protocol.TokenLoginRet {
+func (this *sceneRPCHandle) SpaceLeave(request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_TokenLogin{
-			TokenLogin:request,
+		Scene:&protocol.Request_SpaceLeave{
+			SpaceLeave:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetTokenLoginRet()
+	return messageRet.GetSpaceLeaveRet()
+}
+
+func (this *sceneRPCHandle) GetState(request *protocol.GetState) *protocol.GetStateRet {
+	message := &protocol.Request{
+		Scene:&protocol.Request_GetState{
+			GetState:request,
+		},
+	}
+	messageRet := this.request(message)
+	return messageRet.GetGetStateRet()
 }

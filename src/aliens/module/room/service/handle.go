@@ -23,14 +23,14 @@ import (
 type roomService struct {
 }
 
-func (this *roomService) Request(ctx context.Context,request *protocol.Any) (response *protocol.Any,err error) {
+func (this *roomService) Request(ctx context.Context,request *scene_model_proto.Any) (response *scene_model_proto.Any,err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
 		if error != nil {
 			return nil, error
 		}
-		return &protocol.Any{TypeUrl:"", Value:data}, nil
+		return &scene_model_proto.Any{TypeUrl:"", Value:data}, nil
 	}
 
 	requestProxy := &room.Request{}
@@ -55,7 +55,7 @@ func (this *roomService) Request(ctx context.Context,request *protocol.Any) (res
     			}
     	}
     	data, _ := proto.Marshal(responseProxy)
-        response = &protocol.Any{TypeUrl:"", Value:data}
+        response = &scene_model_proto.Any{TypeUrl:"", Value:data}
     }()
 	err = handleRequest(requestProxy, responseProxy, request.Agent)
     return

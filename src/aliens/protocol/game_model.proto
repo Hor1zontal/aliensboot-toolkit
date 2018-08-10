@@ -1,5 +1,5 @@
 syntax = "proto3";
-package game;
+package protocol;
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
@@ -9,7 +9,7 @@ enum profession {
     planner = 2; //策划
 }
 
-message User {
+message GameUser {
     int64 uid = 1 [(gogoproto.moretags) = "bson:\"_id\""]; //用户id
     repeated Role roles = 2 [(gogoproto.moretags) = "bson:\"roles\""];  //拥有的角色信息
     int64 selectedRole = 3 [(gogoproto.moretags) = "bson:\"selectedRole\""]; //上次选择的角色id

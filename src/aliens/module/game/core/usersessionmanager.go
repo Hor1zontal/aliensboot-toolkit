@@ -12,7 +12,7 @@ package core
 import (
 	"aliens/module/game/core/manager"
 	"aliens/exception"
-	"aliens/protocol/game"
+	"aliens/protocol"
 )
 
 var UserManager = &userManager{users:make(map[int64]*UserSession)}
@@ -38,7 +38,7 @@ func (this *userManager) EnsureRoleHandler(uid int64) *manager.RoleHandler {
 	session := this.EnsureUser(uid)
 	handler := session.GetActiveRoleHandler()
 	if handler == nil {
-		exception.GameException(game.Code_RoleNotSelect)
+		exception.GameException(protocol.Code_RoleNotSelect)
 	}
 	return handler
 }

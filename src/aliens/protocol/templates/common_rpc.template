@@ -10,28 +10,28 @@
 package rpc
 
 import (
-	"aliens/protocol/${package}"
 	"aliens/module/cluster/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
+	"aliens/protocol/base"
 )
 
-var Proxy_${package} = &${package}RPCHandle{"${package}"}
+var ${Module} = &${module}RPCHandle{"${module}"}
 
 
-type ${package}RPCHandle struct {
+type ${module}RPCHandle struct {
 	name string
 }
 
 
-func (this *${package}RPCHandle) request(request *${package}.Request) *${package}.Response {
+func (this *${module}RPCHandle) request(request *${package}.Request) *${package}.Response {
 	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
 	if err != nil {
 		log.Error(err)
 		exception.GameException(${package}.Code_InvalidService)
 	}
-	any, ok := rpcRet.(*protocol.Any)
+	any, ok := rpcRet.(*base.Any)
 	if !ok {
 		log.Error("invalid rpc ret data")
 		exception.GameException(${package}.Code_InvalidService)
@@ -42,9 +42,9 @@ func (this *${package}RPCHandle) request(request *${package}.Request) *${package
 }
 
 <message>
-func (this *${package}RPCHandle) ${o_request}(request *${package}.${o_request}) *${package}.${o_response} {
+func (this *${module}RPCHandle) ${o_request}(request *${package}.${o_request}) *${package}.${o_response} {
 	message := &${package}.Request{
-		Request:&${package}.Request_${o_request}{
+		${Module}:&${package}.Request_${o_request}{
 			${o_request}:request,
 		},
 	}

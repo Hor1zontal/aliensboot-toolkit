@@ -1,8 +1,10 @@
 syntax = "proto3";
 package protocol;
 
-import "passport.proto";
 import "resultcode.proto";
+import "passport.proto";
+import "scene.proto";
+import "game.proto";
 
 
 //request
@@ -11,11 +13,26 @@ message Request {
 
     //-----------------登录模块接口---------------
 
-    //1
     oneof passport {
         login_register loginRegister = 6;
         login_login loginLogin = 7;
         token_login tokenLogin = 8; //token登录
+    }
+
+    //-----------------游戏模块接口---------------
+    oneof game {
+        get_user_info getUserInfo = 50;
+        login_role loginRole = 51;
+        create_role createRole = 52;
+        remove_role removeRole = 53;
+    }
+
+
+    oneof scene {
+        space_move spaceMove = 500;
+        space_enter spaceEnter = 501;
+        space_leave spaceLeave = 502;
+        get_state getState = 503;
     }
 
 }
@@ -28,13 +45,28 @@ message Response {
 
     //-----------------登录模块响应接口---------------
 
-    //2
     oneof passport {
         login_register_ret loginRegisterRet = 6;
         login_login_ret loginLoginRet = 7;
         token_login_ret tokenLoginRet = 8; //token登录结果
     }
 
+    //-----------------游戏模块接口---------------
+    oneof game {
+        get_user_info_ret getUserInfoRet = 50;
+        login_role_ret loginRoleRet = 51;
+        create_role_ret createRoleRet = 52;
+        remove_role_ret removeRoleRet = 53;
+    }
+
+
+
+    oneof scene {
+        space_move_ret spaceMoveRet = 500;
+        space_enter_ret spaceEnterRet = 501;
+        space_leave_ret spaceLeaveRet = 502;
+        get_state_ret getStateRet = 503;
+    }
 
 }
 

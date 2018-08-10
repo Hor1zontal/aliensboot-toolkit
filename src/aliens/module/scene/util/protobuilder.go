@@ -11,35 +11,35 @@ package util
 
 import (
 	"aliens/mmorpg/entity"
-	"aliens/protocol/scene"
+	"aliens/protocol"
 )
 
 
-func BuildEntities(entitySet entity.EntitySet) []*scene.Entity {
-	results := []*scene.Entity{}
+func BuildEntities(entitySet entity.EntitySet) []*protocol.Entity {
+	results := []*protocol.Entity{}
 	for entity, _ := range entitySet {
 		results = append(results, BuildEntityProtocol(entity))
 	}
 	return results
 }
 
-func BuildEntityProtocol(entity *entity.Entity) *scene.Entity {
-	return &scene.Entity{
+func BuildEntityProtocol(entity *entity.Entity) *protocol.Entity {
+	return &protocol.Entity{
 		Id:        entity.GetID(),
 		Position:  BuildVector(entity.GetPosition()),
 		Direction: BuildVector(entity.GetDirection()),
 	}
 }
 
-func BuildVector(vector entity.Vector3) *scene.Vector {
-	return &scene.Vector{
+func BuildVector(vector entity.Vector3) *protocol.Vector {
+	return &protocol.Vector{
 		X: vector.X,
 		Y: vector.Y,
 		Z: vector.Z,
 	}
 }
 
-func TransVector(vector *scene.Vector) entity.Vector3 {
+func TransVector(vector *protocol.Vector) entity.Vector3 {
 	return entity.Vector3{
 		X: vector.GetX(),
 		Y: vector.GetY(),

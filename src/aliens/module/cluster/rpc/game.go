@@ -17,15 +17,15 @@ import (
 	"aliens/protocol/base"
 )
 
-var Passport = &passportRPCHandle{"passport"}
+var Game = &gameRPCHandle{"game"}
 
 
-type passportRPCHandle struct {
+type gameRPCHandle struct {
 	name string
 }
 
 
-func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Response {
+func (this *gameRPCHandle) request(request *protocol.Request) *protocol.Response {
 	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
 	if err != nil {
 		log.Error(err)
@@ -42,32 +42,42 @@ func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Resp
 }
 
 
-func (this *passportRPCHandle) LoginRegister(request *protocol.LoginRegister) *protocol.LoginRegisterRet {
+func (this *gameRPCHandle) RemoveRole(request *protocol.RemoveRole) *protocol.RemoveRoleRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginRegister{
-			LoginRegister:request,
+		Game:&protocol.Request_RemoveRole{
+			RemoveRole:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetLoginRegisterRet()
+	return messageRet.GetRemoveRoleRet()
 }
 
-func (this *passportRPCHandle) LoginLogin(request *protocol.LoginLogin) *protocol.LoginLoginRet {
+func (this *gameRPCHandle) GetUserInfo(request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginLogin{
-			LoginLogin:request,
+		Game:&protocol.Request_GetUserInfo{
+			GetUserInfo:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetLoginLoginRet()
+	return messageRet.GetGetUserInfoRet()
 }
 
-func (this *passportRPCHandle) TokenLogin(request *protocol.TokenLogin) *protocol.TokenLoginRet {
+func (this *gameRPCHandle) LoginRole(request *protocol.LoginRole) *protocol.LoginRoleRet {
 	message := &protocol.Request{
-		Passport:&protocol.Request_TokenLogin{
-			TokenLogin:request,
+		Game:&protocol.Request_LoginRole{
+			LoginRole:request,
 		},
 	}
 	messageRet := this.request(message)
-	return messageRet.GetTokenLoginRet()
+	return messageRet.GetLoginRoleRet()
+}
+
+func (this *gameRPCHandle) CreateRole(request *protocol.CreateRole) *protocol.CreateRoleRet {
+	message := &protocol.Request{
+		Game:&protocol.Request_CreateRole{
+			CreateRole:request,
+		},
+	}
+	messageRet := this.request(message)
+	return messageRet.GetCreateRoleRet()
 }

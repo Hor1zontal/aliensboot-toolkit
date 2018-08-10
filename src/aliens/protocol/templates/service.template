@@ -11,7 +11,7 @@ package service
 
 import (
 	"aliens/cluster/center/service"
-	"aliens/module/${package}/conf"
+	"aliens/module/${module}/conf"
 	"aliens/cluster/center"
 	"github.com/name5566/leaf/chanrpc"
 )

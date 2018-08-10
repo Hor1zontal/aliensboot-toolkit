@@ -5,22 +5,22 @@
       "Name":"passport",
       "Outputs":[
         {
-          "Template":"templates/auth_common.template",
+          "Template":"templates/passport_common.template",
           "Output":"../module/passport/service/handle.go",
           "Prefix":"",
           "Overwrite":true
         },
         {
-          "Template":"templates/auth_common_handle.template",
+          "Template":"templates/passport_common_handle.template",
           "Output":"../module/passport/service",
           "Prefix":"handle_${}.go",
-          "Overwrite":true
+          "Overwrite":false
         },
         {
           "Template":"templates/service.template",
           "Output":"../module/passport/service/service.go",
           "Prefix":"",
-          "Overwrite":false
+          "Overwrite":true
         },
         {
           "Template":"templates/common_rpc.template",
@@ -29,7 +29,66 @@
           "Overwrite":true
         }
       ]
+    },
+
+    {
+      "Name":"scene",
+      "Outputs":[
+        {
+          "Template":"templates/common.template",
+          "Output":"../module/scene/service/handle.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/common_handle.template",
+          "Output":"../module/scene/service",
+          "Prefix":"handle_${}.go",
+          "Overwrite":false
+        },
+        {
+          "Template":"templates/service.template",
+          "Output":"../module/scene/service/service.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/common_rpc.template",
+          "Output":"../module/cluster/rpc/scene.go",
+          "Prefix":"",
+          "Overwrite":true
+        }
+      ]
+    },
+
+    {
+      "Name":"game",
+      "Outputs":[
+        {
+          "Template":"templates/common.template",
+          "Output":"../module/game/service/handle.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/common_handle.template",
+          "Output":"../module/game/service",
+          "Prefix":"handle_${}.go",
+          "Overwrite":false
+        },
+        {
+          "Template":"templates/service.template",
+          "Output":"../module/game/service/service.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/common_rpc.template",
+          "Output":"../module/cluster/rpc/game.go",
+          "Prefix":"",
+          "Overwrite":true
+        }
+      ]
     }
   ]
-
 }

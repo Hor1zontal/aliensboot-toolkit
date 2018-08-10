@@ -10,12 +10,12 @@
 package service
 
 import (
-	"aliens/protocol/scene"
+	"aliens/protocol"
 	"aliens/mmorpg"
 )
 
 
 //
-func handleSpaceLeave(request *scene.SpaceLeave, response *scene.SpaceLeaveRet) {
+func handleSpaceLeave(authID int64, request *protocol.SpaceLeave, response *protocol.SpaceLeaveRet) {
 	mmorpg.SpaceManager.LeaveEntity(request.GetSpaceID(), request.GetEntityID())
 }

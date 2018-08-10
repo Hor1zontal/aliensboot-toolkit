@@ -9,10 +9,18 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol/protocol"
+import (
+	"aliens/module/passport/cache"
+	"aliens/protocol"
+)
 
 
 //
 func handleTokenLogin(request *protocol.TokenLogin, response *protocol.TokenLoginRet) int64 {
-
+	if cache.PassportCache.GetUserToken(request.GetUid()) != request.GetToken() {
+		response.Result = protocol.LoginResult_tokenExpire
+		return 0
+	}
+	response.Result = protocol.LoginResult_loginSuccess
+	return request.GetUid()
 }

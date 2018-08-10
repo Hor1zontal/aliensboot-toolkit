@@ -3,7 +3,7 @@ package db
 import (
 	"aliens/module/passport/conf"
 	"aliens/database/mongo"
-	"aliens/protocol/passport"
+	"aliens/protocol"
 )
 
 var Database *mongo.Database = &mongo.Database{}
@@ -14,7 +14,7 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	DatabaseHandler.EnsureTable("passport", &passport.User{})
+	DatabaseHandler.EnsureTable("passport", &protocol.User{})
 
 	//DatabaseHandler.Insert(&passport.User{Id:DatabaseHandler.GenTimestampId(&passport.User{}),Username:"hejialin",RegTime:time.Now()})
 }

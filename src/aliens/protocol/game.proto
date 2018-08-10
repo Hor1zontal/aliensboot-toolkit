@@ -1,7 +1,7 @@
 syntax = "proto3";
-package game;
+package protocol;
 
-import "model.proto";
+import "game_model.proto";
 
 
 //登录游戏服务器
@@ -11,7 +11,7 @@ message get_user_info {
 
 //登录游戏服务器返回
 message get_user_info_ret {
-    User user = 1;              //用户游戏信息
+    GameUser user = 1;              //用户游戏信息
 }
 
 

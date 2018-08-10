@@ -10,13 +10,13 @@
 package service
 
 import (
-	"aliens/protocol/${package}"
 	"github.com/gogo/protobuf/proto"
-	"aliens/protocol"
-	"github.com/name5566/leaf/chanrpc"
-	"aliens/log"
-	"runtime/debug"
-	"aliens/exception"
+    "github.com/name5566/leaf/chanrpc"
+    "aliens/log"
+    "runtime/debug"
+    "aliens/exception"
+    "aliens/${package}/base"
+    "aliens/${package}"
 )
 
 func newService(chanRpc *chanrpc.Server) *${package}Service {
@@ -30,7 +30,7 @@ type ${package}Service struct {
 	chanRpc *chanrpc.Server
 }
 
-func (this *${package}Service) Request(request *protocol.Any, server protocol.RPCService_RequestServer) error {
+func (this *${package}Service) Request(request *base.Any, server base.RPCService_RequestServer) error {
 	if this.chanRpc != nil {
 		this.chanRpc.Call0("m", request, server)
 		return nil
@@ -40,10 +40,10 @@ func (this *${package}Service) Request(request *protocol.Any, server protocol.RP
 
 
 func (this *${package}Service) handle(args []interface{}) {
-	request := args[0].(*protocol.Any)
-	server := args[1].(protocol.RPCService_RequestServer)
-	requestProxy := &${package}.${request}{}
-	responseProxy := &${package}.${response}{}
+	request := args[0].(*base.Any)
+	server := args[1].(base.RPCService_RequestServer)
+	requestProxy := &${package}.Request{}
+	responseProxy := &${package}.Response{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -59,7 +59,7 @@ func (this *${package}Service) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&protocol.Any{Value:data})
+		server.Send(&base.Any{Value:data})
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
@@ -68,13 +68,12 @@ func (this *${package}Service) handle(args []interface{}) {
 	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
 }
 
-func handleRequest(authID int64, request *${package}.${request}, response *${package}.${response}) {
+func handleRequest(authID int64, request *${package}.Request, response *${package}.Response) {
 	<message>
 	if request.Get${o_request}() != nil {
 		messageRet := &${package}.${o_response}{}
 		handle${o_request}(authID, request.Get${o_request}(), messageRet)
-		response.Response = &${package}.${response}_${o_response}{messageRet}
-		return
+		response.${Module} = &${package}.Response_${o_response}{messageRet}
 	}
 	<message>
 	response.Code = ${package}.Code_InvalidRequest

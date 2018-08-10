@@ -10,12 +10,12 @@
 package manager
 
 import (
-	"aliens/protocol/game"
+	"aliens/protocol"
 	"reflect"
 )
 
 
-func newRoleHandler(info *game.RoleInfo) *RoleHandler {
+func newRoleHandler(info *protocol.RoleInfo) *RoleHandler {
 	handler := &RoleHandler{data : info}
 	handler.Init()
 	return handler
@@ -23,14 +23,14 @@ func newRoleHandler(info *game.RoleInfo) *RoleHandler {
 
 //角色数据管理
 type RoleHandler struct {
-	data *game.RoleInfo //
+	data *protocol.RoleInfo //
 }
 
 func (this *RoleHandler) IsRole(roleID int64) bool {
 	return this.data.Id == roleID
 }
 
-func (this *RoleHandler) GetData() *game.RoleInfo {
+func (this *RoleHandler) GetData() *protocol.RoleInfo {
 	return this.data
 }
 

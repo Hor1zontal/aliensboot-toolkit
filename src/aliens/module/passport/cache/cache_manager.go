@@ -15,8 +15,8 @@ import (
 	"aliens/module/passport/db"
 	"time"
 	"aliens/log"
-	"aliens/protocol/passport"
 	"aliens/exception"
+	"aliens/protocol"
 )
 
 var PassportCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -30,8 +30,8 @@ func Init() {
 
 	//其他服务器加载了缓存就不需要再加载到缓存了
 	if PassportCache.SetNX(FLAG_LOADUSER, 1) {
-		var users []*passport.User
-		db.DatabaseHandler.QueryAll(&passport.User{}, &users)
+		var users []*protocol.User
+		db.DatabaseHandler.QueryAll(&protocol.User{}, &users)
 		for _, user := range users {
 			PassportCache.SetUsernameUidMapping(user.GetUsername(), user.GetId())
 			PassportCache.HSetUser(user.GetId(), user)
@@ -61,8 +61,8 @@ func (this *cacheManager) SetNX(key string, value interface{}) bool {
 /**
  *  新建用户
  */
-func NewUser(username string, password string, ip string, channel string, channelUID string, openID string, avatar string) *passport.User {
-	user := &passport.User{
+func NewUser(username string, password string, ip string, channel string, channelUID string, openID string, avatar string) *protocol.User {
+	user := &protocol.User{
 		Username: username,
 		Password: password,
 		Salt:     "",
@@ -85,7 +85,7 @@ func NewUser(username string, password string, ip string, channel string, channe
 	err1 := db.DatabaseHandler.Insert(user)
 	if err1 != nil {
 		log.Debugf("insert user error %v", err1)
-		exception.GameException(passport.Code_DBExcetpion)
+		exception.GameException(protocol.Code_DBExcetpion)
 	}
 	PassportCache.SetUsernameUidMapping(user.Username, user.GetId())
 	PassportCache.HSetUser(user.GetId(), user)
@@ -95,12 +95,12 @@ func NewUser(username string, password string, ip string, channel string, channe
 /**
  *  获取用户数据
  */
-func GetUser(username string) *passport.User {
+func GetUser(username string) *protocol.User {
 	uid := PassportCache.GetUidByUsername(username)
 	if uid == 0 {
 		return nil
 	}
-	user := &passport.User{}
+	user := &protocol.User{}
 	PassportCache.HGetUser(uid, user)
 	user.Id = uid
 	return user
