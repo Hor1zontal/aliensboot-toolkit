@@ -12,13 +12,17 @@ package conf
 import (
 	"aliens/config"
 	"aliens/cluster/center/service"
+	"aliens/module/base"
 )
 
+const (
+	configPath = base.BaseConfPath + "scene/server.json"
+)
 
 var Config struct {
 	Service  service.Config
 }
 
 func init() {
-	config.LoadConfig(&Config, "conf/aliens/scene/server.json")
+	config.LoadConfig(&Config, configPath)
 }

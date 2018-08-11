@@ -1,32 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2017/8/4
+ *     2018/8/11
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
 package conf
 
-import (
-	"aliens/config"
-	"aliens/cache/redis"
-	"aliens/cluster/center"
-	"aliens/mq"
-	"aliens/module/base"
+
+const (
+	DB_DEBUG                 = true	 //是否开启数据库操作
+	DB_SIGAL_TIMEOUT float64 = 1 //数据库操作超时告警阈值 1秒
 )
-
-var configPath =  base.BaseConfPath + "cluster.json"
-
-var Config struct {
-	Cluster center.ClusterConfig
-	Cache   redis.CacheConfig
-	MQ mq.Config
-}
-
-
-func init() {
-	config.LoadConfig(&Config, configPath)
-}
-

@@ -66,11 +66,11 @@ func GetPushID(service string) uint16 {
 
 //未授权的消息转发
 func HandleMessage(request *base.Any) (*base.Any, error) {
-	serviceType, ok := seqServiceMapping[request.Id]
+	serviceName, ok := seqServiceMapping[request.Id]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
-	response, error := dispatch.RPC.Request(serviceType, request)
+	response, error := dispatch.RPC.Request(serviceName, request)
 	if error != nil {
 		return nil, error
 	}

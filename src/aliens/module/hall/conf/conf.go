@@ -3,10 +3,11 @@ package conf
 import (
 	"aliens/config"
 	"aliens/cluster/center/service"
+	"aliens/module/base"
 )
 
 
-var configPath = "conf/aliens/hall/server.json"
+var configPath = base.BaseConfPath + "hall/server.json"
 
 var Config struct {
 	Service  service.Config

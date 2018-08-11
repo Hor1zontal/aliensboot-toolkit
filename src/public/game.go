@@ -6,6 +6,8 @@ import (
 	"github.com/name5566/leaf"
 	"math/rand"
 	"aliens/module/game"
+	"aliens/module/statistics"
+	"aliens/module/database"
 )
 
 func init() {
@@ -18,6 +20,8 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	leaf.Run(
 		cluster.Module,
+		statistics.Module,
+		database.Module,
 		game.Module,
 	)
 }

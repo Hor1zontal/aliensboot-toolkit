@@ -25,58 +25,58 @@ type GRPCDispatcher struct {
 }
 
 //阻塞请求消息 - 根据负载均衡动态分配一个节点处理
-func (dispatcher *GRPCDispatcher) SyncRequest(serviceType string, message proto.Message) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) SyncRequest(serviceName string, message proto.Message) (interface{}, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
 	}
 	request := &base.Any{Value: data}
-	return dispatcher.Request(serviceType, request)
+	return dispatcher.Request(serviceName, request)
 }
 
 //同步阻塞请求
-func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceName string, serviceID string, message proto.Message) (interface{}, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
 	}
 	request := &base.Any{Value: data}
-	return dispatcher.RequestNode(serviceType, serviceID, request)
+	return dispatcher.RequestNode(serviceName, serviceID, request)
 }
 
 ////同步推送
-//func SyncPush(serviceType string, serviceID string, message proto.Message) error {
-//	_, err := SyncRequestNode(serviceType, serviceID, message)
+//func SyncPush(serviceName string, serviceID string, message proto.Message) error {
+//	_, err := SyncRequestNode(serviceName, serviceID, message)
 //	return err
 //}
 //
 ////同步阻塞广播
-//func SyncBroadcast(serviceType string, message proto.Message) error {
+//func SyncBroadcast(serviceName string, message proto.Message) error {
 //	data, err := proto.Marshal(message)
 //	if err != nil {
 //		return err
 //	}
 //	request := &protocol.Any{Value: data}
-//	service := allocService(serviceType)
+//	service := allocService(serviceName)
 //	service.BroadcastAll(request)
 //	return nil
 //}
 
-func (dispatcher *GRPCDispatcher) Request(serviceType string, message interface{}) (interface{}, error) {
-	service := dispatcher.allocService(serviceType)
-	return service.HandleMessage(message)
+func (dispatcher *GRPCDispatcher) Request(serviceName string, message interface{}) (interface{}, error) {
+	service := dispatcher.allocService(serviceName)
+	return service.HandleMessage(message, "")
 }
 
-func (dispatcher *GRPCDispatcher) RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error) {
-	service := dispatcher.allocService(serviceType)
+func (dispatcher *GRPCDispatcher) RequestNode(serviceName string, serviceID string, message interface{}) (interface{}, error) {
+	service := dispatcher.allocService(serviceName)
 	return service.HandleRemoteMessage(serviceID, message)
 }
 
-func (dispatcher *GRPCDispatcher) allocService(serviceID string) *message.RemoteService {
-	service := dispatcher.serviceMapping[serviceID]
+func (dispatcher *GRPCDispatcher) allocService(serviceName string) *message.RemoteService {
+	service := dispatcher.serviceMapping[serviceName]
 	if service == nil {
-		service = message.NewRemoteService(serviceID)
-		dispatcher.serviceMapping[serviceID] = service
+		service = message.NewRemoteService(serviceName)
+		dispatcher.serviceMapping[serviceName] = service
 	}
 	return service
 }

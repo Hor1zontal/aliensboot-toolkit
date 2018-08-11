@@ -21,22 +21,28 @@ import (
 	"github.com/pkg/errors"
 )
 
+var game = "gok"
+
 var format = &log.TextFormatter{}
 
-func init() {
-	//log.SetFormatter(&log.JSONFormatter{})
-	log.SetFormatter(format)
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
-	// Only log the warning severity or above.
-	log.SetLevel(log.DebugLevel)
+var logger = NewLogger(&log.TextFormatter{}, true)
 
-	ConfigLocalFilesystemLogger("", "kylin.log", 30 * 24 * time.Hour, 24 * time.Hour)
+
+func init() {
 }
 
-func Close() {
-	//log.Close()
+func NewLogger(formatter log.Formatter, local bool) *log.Logger {
+	logger := log.New()
+	logger.Formatter = formatter
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	logger.Out = os.Stdout
+	// Only log the warning severity or above.
+	logger.Level = log.DebugLevel
+	if local {
+		configLocalFilesystemLogger(logger, 30 * 24 * time.Hour, 24 * time.Hour)
+	}
+	return logger
 }
 
 // config logrus log to amqp  rabbitMQ
@@ -59,7 +65,9 @@ func Close() {
 //}
 
 //config logrus log to local file
-func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
+func configLocalFilesystemLogger(logger *log.Logger, maxAge time.Duration, rotationTime time.Duration) {
+	logPath := ""
+	logFileName := game + ".log"
 	baseLogPath := path.Join(logPath, logFileName)
 	writer, err := rotatelogs.New(
 		baseLogPath+".%Y%m%d%H%M",
@@ -78,70 +86,68 @@ func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time
 		log.FatalLevel: writer,
 		log.PanicLevel: writer,
 	}, format)
-	log.AddHook(lfHook)
+	logger.AddHook(lfHook)
 }
-
-
 
 //Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
 
 //做一层适配，方便后续切换到其他日志框架或者自己写
 func Debug(arg ...interface{}) {
-	log.Debug(arg...)
+	logger.Debug(arg...)
 }
 
 func Print(arg ...interface{}) {
-	log.Print(arg...)
+	logger.Print(arg...)
 }
 
 func Info(arg ...interface{}) {
-	log.Info(arg...)
+	logger.Info(arg...)
 }
 
 func Warn(arg ...interface{}) {
-	log.Warn(arg...)
+	logger.Warn(arg...)
 }
 
 func Error(arg ...interface{}) {
-	log.Error(arg...)
+	logger.Error(arg...)
 }
 
 func Panic(arg ...interface{}) {
-	log.Panic(arg...)
+	logger.Panic(arg...)
 }
 
 func Fatal(arg ...interface{}) {
-	log.Fatal(arg...)
+	logger.Fatal(arg...)
 }
 
 
 //-----------format
 
 func Debugf(format string, arg ...interface{}) {
-	log.Debugf(format, arg...)
+	logger.Debugf(format, arg...)
 }
 
 func Printf(format string, arg ...interface{}) {
-	log.Printf(format, arg...)
+	logger.Printf(format, arg...)
 }
 
 func Infof(format string, arg ...interface{}) {
-	log.Infof(format, arg...)
+	logger.Infof(format, arg...)
 }
 
 func Warnf(format string, arg ...interface{}) {
-	log.Warnf(format, arg...)
+	logger.Warnf(format, arg...)
 }
 
 func Errorf(format string, arg ...interface{}) {
-	log.Errorf(format, arg...)
+	logger.Errorf(format, arg...)
 }
 
 func Panicf(format string, arg ...interface{}) {
-	log.Panicf(format, arg...)
+	logger.Panicf(format, arg...)
 }
 
 func Fatalf(format string, arg ...interface{}) {
-	log.Fatalf(format, arg...)
+	logger.Fatalf(format, arg...)
 }
 

@@ -4,10 +4,11 @@ import (
 	"aliens/config"
 	"aliens/cluster/center/service"
 	"aliens/network"
+	"aliens/module/base"
 )
 
 
-var configPath = "conf/aliens/room/server.json"
+var configPath = base.BaseConfPath + "room/server.json"
 
 var Config struct {
 	Service  service.Config

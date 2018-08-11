@@ -17,7 +17,20 @@ import (
     "aliens/exception"
     "aliens/${package}/base"
     "aliens/${package}"
+    "aliens/cluster/center/service"
+    "aliens/module/${module}/conf"
+    "aliens/cluster/center"
 )
+
+var instance service.IService = nil
+
+func Init(chanRpc *chanrpc.Server) {
+	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
+}
+
+func Close() {
+	center.ReleaseService(instance)
+}
 
 func newService(chanRpc *chanrpc.Server) *${package}Service {
 	service := &${package}Service{}

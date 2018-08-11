@@ -15,7 +15,11 @@ import (
 	"github.com/name5566/leaf/module"
 )
 
+
+
 const (
+	BaseConfPath 	   = "conf/aliens/" //config base path
+
 	// skeleton conf
 	GoLen              = 10000
 	TimerDispatcherLen = 10000

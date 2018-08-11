@@ -42,6 +42,16 @@ func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Resp
 }
 
 
+func (this *passportRPCHandle) TokenLogin(request *protocol.TokenLogin) *protocol.TokenLoginRet {
+	message := &protocol.Request{
+		Passport:&protocol.Request_TokenLogin{
+			TokenLogin:request,
+		},
+	}
+	messageRet := this.request(message)
+	return messageRet.GetTokenLoginRet()
+}
+
 func (this *passportRPCHandle) LoginRegister(request *protocol.LoginRegister) *protocol.LoginRegisterRet {
 	message := &protocol.Request{
 		Passport:&protocol.Request_LoginRegister{
@@ -60,14 +70,4 @@ func (this *passportRPCHandle) LoginLogin(request *protocol.LoginLogin) *protoco
 	}
 	messageRet := this.request(message)
 	return messageRet.GetLoginLoginRet()
-}
-
-func (this *passportRPCHandle) TokenLogin(request *protocol.TokenLogin) *protocol.TokenLoginRet {
-	message := &protocol.Request{
-		Passport:&protocol.Request_TokenLogin{
-			TokenLogin:request,
-		},
-	}
-	messageRet := this.request(message)
-	return messageRet.GetTokenLoginRet()
 }

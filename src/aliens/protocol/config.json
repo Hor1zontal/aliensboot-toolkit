@@ -6,7 +6,7 @@
       "Outputs":[
         {
           "Template":"templates/passport_common.template",
-          "Output":"../module/passport/service/handle.go",
+          "Output":"../module/passport/service/service.go",
           "Prefix":"",
           "Overwrite":true
         },
@@ -15,12 +15,6 @@
           "Output":"../module/passport/service",
           "Prefix":"handle_${}.go",
           "Overwrite":false
-        },
-        {
-          "Template":"templates/service.template",
-          "Output":"../module/passport/service/service.go",
-          "Prefix":"",
-          "Overwrite":true
         },
         {
           "Template":"templates/common_rpc.template",
@@ -36,7 +30,7 @@
       "Outputs":[
         {
           "Template":"templates/common.template",
-          "Output":"../module/scene/service/handle.go",
+          "Output":"../module/scene/service/service.go",
           "Prefix":"",
           "Overwrite":true
         },
@@ -45,12 +39,6 @@
           "Output":"../module/scene/service",
           "Prefix":"handle_${}.go",
           "Overwrite":false
-        },
-        {
-          "Template":"templates/service.template",
-          "Output":"../module/scene/service/service.go",
-          "Prefix":"",
-          "Overwrite":true
         },
         {
           "Template":"templates/common_rpc.template",
@@ -66,7 +54,7 @@
       "Outputs":[
         {
           "Template":"templates/common.template",
-          "Output":"../module/game/service/handle.go",
+          "Output":"../module/game/service/service.go",
           "Prefix":"",
           "Overwrite":true
         },
@@ -75,12 +63,6 @@
           "Output":"../module/game/service",
           "Prefix":"handle_${}.go",
           "Overwrite":false
-        },
-        {
-          "Template":"templates/service.template",
-          "Output":"../module/game/service/service.go",
-          "Prefix":"",
-          "Overwrite":true
         },
         {
           "Template":"templates/common_rpc.template",

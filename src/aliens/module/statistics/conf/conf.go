@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2017/8/4
+ *     2018/5/10
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
@@ -11,22 +11,27 @@ package conf
 
 import (
 	"aliens/config"
-	"aliens/cache/redis"
-	"aliens/cluster/center"
-	"aliens/mq"
 	"aliens/module/base"
 )
 
-var configPath =  base.BaseConfPath + "cluster.json"
+const (
+	configPath = base.BaseConfPath + "statistics/config.json"
+	AnalysisFlag = false //是否开启性能分析
+	Game = "aliens" //日志索引信息
+)
 
 var Config struct {
-	Cluster center.ClusterConfig
-	Cache   redis.CacheConfig
-	MQ mq.Config
+	Enable			bool
+	ES 				ESConfig
 }
 
+type ESConfig struct {
+	Url string
+	Host string
+	Username string
+	Password string
+}
 
 func init() {
-	config.LoadConfig(&Config, configPath)
+	config.LoadConfig(&Config, configPath) //加载服务器配置
 }
-

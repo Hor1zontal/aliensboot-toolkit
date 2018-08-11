@@ -28,7 +28,7 @@ func (this *RemoteService) Init() {
 	center.ClusterCenter.SubscribeServices(this.serviceType)
 }
 
-func (this *RemoteService) HandleMessage(request interface{}) (interface{}, error) {
+func (this *RemoteService) HandleMessage(request interface{}, param string) (interface{}, error) {
 	service := center.ClusterCenter.AllocService(this.serviceType, "")
 	if service == nil {
 		return nil, invalidServiceError
