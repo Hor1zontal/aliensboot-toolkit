@@ -96,9 +96,9 @@ func (this *ETCDServiceCenter) ReleaseService(service service.IService) {
 	this.Container.RemoveService(service.GetName(), service.GetID())
 }
 
-func (this *ETCDServiceCenter) AddServiceListener(listener service.Listener) {
-	this.Container.AddServiceListener(listener)
-}
+//func (this *ETCDServiceCenter) AddServiceListener(listener service.Listener) {
+//	this.Container.AddServiceListener(listener)
+//}
 
 func (this *ETCDServiceCenter) PublicService(service service.IService, unique bool) bool {
 	if !service.IsLocal() {

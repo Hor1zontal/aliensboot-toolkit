@@ -10,7 +10,6 @@
 package service
 
 import (
-	"sort"
 	"aliens/cluster/center/lbs"
 	"aliens/log"
 )
@@ -27,7 +26,7 @@ func NewServiceCategory(category string, lbsStr string, desc string) *serviceCat
 		lbs:       lbs.GetLBS(lbsStr),
 		services:  make(map[string]IService),
 		nodes:     []string{},
-		listeners: []Listener{},
+		//listeners: []Listener{},
 		//seqs:     seqMaps,
 	}
 }
@@ -38,22 +37,22 @@ type serviceCategory struct {
 	services map[string]IService //服务节点名,和服务句柄
 	nodes    []string
 
-	listeners []Listener
+	//listeners []Listener
 	//seqs     map[int32]struct{} //能够处理的消息编号
 }
 
 //分配一个可用服务
-func (this *serviceCategory) allocService() IService {
-	nodeName := this.lbs.AllocNode()
+func (this *serviceCategory) allocService(key string) IService {
+	nodeName := this.lbs.GetNode(key)
 	if nodeName == "" {
 		return nil
 	}
 	return this.services[nodeName]
 }
 
-func (this *serviceCategory) AddListener(listener Listener) {
-	this.listeners = append(this.listeners, listener)
-}
+//func (this *serviceCategory) AddListener(listener Listener) {
+//	this.listeners = append(this.listeners, listener)
+//}
 
 //func (this *serviceCategory) canHandle(messageSeq int32) bool {
 //	_, ok := this.seqs[messageSeq]
@@ -61,15 +60,15 @@ func (this *serviceCategory) AddListener(listener Listener) {
 //}
 
 //初始化lbs节点信息
-func (this *serviceCategory) initLBSNode() {
-	nodes := []string{}
-	for node, _ := range this.services {
-		nodes = append(nodes, node)
-	}
-	sort.Strings(nodes)
-	this.nodes = nodes
-	this.lbs.Init(this.nodes)
-}
+//func (this *serviceCategory) initLBSNode() {
+//	nodes := []string{}
+//	for node, _ := range this.services {
+//		nodes = append(nodes, node)
+//	}
+//	sort.Strings(nodes)
+//	this.nodes = nodes
+//	this.lbs.Init(this.nodes)
+//}
 
 //更新服务
 func (this *serviceCategory) updateService(service IService, overwrite bool) bool {
@@ -90,10 +89,7 @@ func (this *serviceCategory) updateService(service IService, overwrite bool) boo
 	}
 
 	this.services[service.GetID()] = service
-	this.initLBSNode()
-	for _, listener := range this.listeners {
-		listener.AddNode(service.GetID())
-	}
+	this.handleAddNode(service.GetID())
 	return true
 }
 
@@ -109,19 +105,14 @@ func (this *serviceCategory) updateServices(services []IService) {
 		} else if service.Connect() {
 			newServices[service.GetID()] = service
 			log.Debugf("new connect service %v", service)
-			for _, listener := range this.listeners {
-				listener.AddNode(service.GetID())
-			}
+			this.handleAddNode(service.GetID())
 		}
 	}
 	for _, releaseService := range this.services {
 		releaseService.Close()
-		for _, listener := range this.listeners {
-			listener.RemoveNode(releaseService.GetID())
-		}
+		this.handleRemoveNode(releaseService.GetID())
 	}
 	this.services = newServices
-	this.initLBSNode()
 	//服务地址信息没有变，不需要再连接
 	//for key, service := range this.services {
 	//	if service.Equals(serviceConfig) {
@@ -151,11 +142,23 @@ func (this *serviceCategory) removeService(serviceID string) {
 		removeService.Close()
 	}
 	delete(this.services, serviceID)
-	this.initLBSNode()
-	for _, listener := range this.listeners {
-		listener.RemoveNode(serviceID)
-	}
+	this.handleRemoveNode(serviceID)
+}
 
+func (this *serviceCategory) handleRemoveNode(serviceID string) {
+	this.lbs.RemoveNode(serviceID)
+	log.Debugf("[lbs] remove node %v-%v", this.category, serviceID)
+	//for _, listener := range this.listeners {
+	//	listener.RemoveNode(serviceID)
+	//}
+}
+
+func (this *serviceCategory) handleAddNode(serviceID string) {
+	this.lbs.AddNode(serviceID, 1)
+	log.Debugf("[lbs] add node %v-%v", this.category, serviceID)
+	//for _, listener := range this.listeners {
+	//	listener.AddNode(service.GetID())
+	//}
 }
 
 func (this *serviceCategory) getNodes() []string {

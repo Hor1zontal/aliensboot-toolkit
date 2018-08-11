@@ -12,22 +12,28 @@
 package lbs
 
 const (
-	LBS_STRATEGY_POLLING string = "polling" //轮询
-	LBS_STRATEGY_IPHASH  string = "iphash"  //ip地址hash
-	LBS_STRATEGY_WEIGHT  string = "weight"  //权重
+	LbsStrategyPolling  string = "polling"  //轮询
+	LbsStrategyHashring string = "hashring" //一致性hash
 )
 
 func GetLBS(lbs string) LBStrategy {
-	if lbs == LBS_STRATEGY_POLLING {
+	if lbs == LbsStrategyPolling {
 		return NewPollingLBS()
+	} else if lbs == LbsStrategyHashring {
+		return NewHashRing(400)
 	} else {
 		return NewPollingLBS()
 	}
 }
 
 type LBStrategy interface {
-	Init(nodes []string) //更新所有的负载节点信息
 
-	AllocNode() string //分配可用节点
+	//Init(nodes []string) //更新所有的负载节点信息
+
+	AddNode(nodeKey string, weight int)
+
+	RemoveNode(nodeKey string)
+
+	GetNode(key string) string //分配可用节点
 
 }

@@ -24,9 +24,9 @@ type Container struct {
 	lbs string
 }
 
-func (this *Container) AddServiceListener(listener Listener) {
-	this.EnsureCategory(listener.GetServiceType()).AddListener(listener)
-}
+//func (this *Container) AddServiceListener(listener Listener) {
+//	this.EnsureCategory(listener.GetServiceType()).AddListener(listener)
+//}
 
 //更新服务
 func (this *Container) UpdateService(service IService, overwrite bool) bool {
@@ -97,7 +97,7 @@ func (this *Container) RemoveService(serviceName string, serviceID string) {
 }
 
 //根据服务类型获取一个空闲的服务节点
-func (this *Container) AllocService(serviceName string) IService {
+func (this *Container) AllocService(serviceName string, param string) IService {
 	this.RLock()
 	defer this.RUnlock()
 	//TODO 后续要优化，考虑负载、空闲等因素
@@ -105,7 +105,7 @@ func (this *Container) AllocService(serviceName string) IService {
 	if serviceCategory == nil {
 		return nil
 	}
-	return serviceCategory.allocService()
+	return serviceCategory.allocService(param)
 }
 
 //
@@ -119,6 +119,7 @@ func (this *Container) AllocService(serviceName string) IService {
 //	return serviceCategory.getMaster()
 //}
 
+//获取指定服务节点
 func (this *Container) GetService(serviceName string, serviceID string) IService {
 	this.RLock()
 	defer this.RUnlock()

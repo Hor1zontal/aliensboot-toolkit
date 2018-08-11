@@ -23,7 +23,7 @@ const SERVICE_NODE_NAME string = "service"
 
 const CONFIG_NODE_NAME string = "config"
 
-const DEFAULT_LBS string = lbs.LBS_STRATEGY_POLLING
+const DEFAULT_LBS string = lbs.LbsStrategyPolling
 
 func PublicService(config service.Config, handler interface{}) service.IService {
 	if !ClusterCenter.IsConnect() {
@@ -63,7 +63,9 @@ func ReleaseService(service service.IService) {
 type ConfigListener func(data []byte)
 
 type ServiceCenter interface {
+
 	GetNodeID() string
+
 	ConnectCluster(config ClusterConfig)
 
 	PublicConfig(configName string, content []byte) bool        //发布配置
@@ -71,12 +73,14 @@ type ServiceCenter interface {
 
 	ReleaseService(service service.IService)   //释放服务
 	PublicService(service service.IService, unique bool) bool  //发布服务
+
 	SubscribeServices(serviceNames ...string) //订阅服务
 	GetAllService(serviceName string) []service.IService  //获取所有的服务
-	GetService(serviceName string, serviceID string) service.IService //获取指定服务
-	AllocService(serviceName string) service.IService
 
-	AddServiceListener(listener service.Listener)
+	GetService(serviceName string, serviceID string) service.IService //获取指定服务
+	AllocService(serviceName string, param string) service.IService
+
+	//AddServiceListener(listener service.Listener)
 
 	IsConnect() bool
 	Close()

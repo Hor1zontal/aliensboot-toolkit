@@ -29,7 +29,7 @@ func (this *RemoteService) Init() {
 }
 
 func (this *RemoteService) HandleMessage(request interface{}) (interface{}, error) {
-	service := center.ClusterCenter.AllocService(this.serviceType)
+	service := center.ClusterCenter.AllocService(this.serviceType, "")
 	if service == nil {
 		return nil, invalidServiceError
 	}
@@ -47,7 +47,7 @@ func (this *RemoteService) HandleRemoteMessage(serviceID string, request interfa
 func (this *RemoteService) HandlePriorityRemoteMessage(serviceID string, request interface{}) (interface{}, error) {
 	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
 	if service == nil {
-		service = center.ClusterCenter.AllocService(this.serviceType)
+		service = center.ClusterCenter.AllocService(this.serviceType, "")
 	}
 	if service == nil {
 		return nil, invalidServiceError
