@@ -93,6 +93,11 @@ func (this *ETCDServiceCenter) ReleaseService(service service.IService) {
 	this.RLock()
 	delete(this.ttlCheck, servicePath)
 	this.RUnlock()
+	this.Container.RemoveService(service.GetName(), service.GetID())
+}
+
+func (this *ETCDServiceCenter) AddServiceListener(listener service.Listener) {
+	this.Container.AddServiceListener(listener)
 }
 
 func (this *ETCDServiceCenter) PublicService(service service.IService, unique bool) bool {
@@ -238,6 +243,8 @@ func (this *ETCDServiceCenter) handleService(eventType mvccpb.Event_EventType, v
 	}
 
 }
+
+
 
 func (this *ETCDServiceCenter) SubscribeConfig(configName string, configHandler ConfigListener) {
 	configPath := this.configRoot + NODE_SPLIT + configName

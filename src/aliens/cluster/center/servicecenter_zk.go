@@ -246,3 +246,9 @@ func (this *ZKServiceCenter) SubscribeConfig(configName string, configHandler Co
 	}()
 }
 
+
+
+func (this *ZKServiceCenter) AddServiceListener(listener service.Listener) {
+	this.Container.AddServiceListener(listener)
+}
+

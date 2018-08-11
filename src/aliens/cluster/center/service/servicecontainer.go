@@ -20,20 +20,33 @@ func NewContainer(lbs string) *Container {
 type Container struct {
 	sync.RWMutex
 	root map[string]*serviceCategory //服务容器 key 服务名
+	//serviceListeners map[string]Listener  //服务监听
 	lbs string
+}
+
+func (this *Container) AddServiceListener(listener Listener) {
+	this.EnsureCategory(listener.GetServiceType()).AddListener(listener)
 }
 
 //更新服务
 func (this *Container) UpdateService(service IService, overwrite bool) bool {
 	this.Lock()
 	defer this.Unlock()
-	serviceName := service.GetName()
-	if this.root[serviceName] == nil {
-		this.root[serviceName] = NewServiceCategory(serviceName, this.lbs, "")
-	}
-	return this.root[serviceName].updateService(service, overwrite)
+	category := this.EnsureCategory(service.GetName())
+	result := category.updateService(service, overwrite)
+	return result
 }
 
+
+func (this *Container) EnsureCategory(serviceName string) *serviceCategory {
+	category := this.root[serviceName]
+
+	if category == nil {
+		category = NewServiceCategory(serviceName, this.lbs, "")
+		this.root[serviceName] = category
+	}
+	return category
+}
 
 func (this *Container) UpdateServices(serviceName string, services []IService) {
 	this.Lock()
@@ -72,6 +85,16 @@ func (this *Container) UpdateServices(serviceName string, services []IService) {
 	//this.root[serviceName] = serviceCategory
 }
 
+//删除服务
+func (this *Container) RemoveService(serviceName string, serviceID string) {
+	this.Lock()
+	defer this.Unlock()
+	serviceCategory := this.root[serviceName]
+	if serviceCategory == nil {
+		return
+	}
+	serviceCategory.removeService(serviceID)
+}
 
 //根据服务类型获取一个空闲的服务节点
 func (this *Container) AllocService(serviceName string) IService {
@@ -95,19 +118,6 @@ func (this *Container) AllocService(serviceName string) IService {
 //	}
 //	return serviceCategory.getMaster()
 //}
-
-//更新服务
-func (this *Container) RemoveService(serviceName string, serviceID string) {
-	this.Lock()
-	defer this.Unlock()
-	serviceCategory := this.root[serviceName]
-	if serviceCategory == nil {
-		return
-	}
-	serviceCategory.removeService(serviceID)
-
-}
-
 
 func (this *Container) GetService(serviceName string, serviceID string) IService {
 	this.RLock()

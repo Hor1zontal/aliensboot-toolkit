@@ -181,3 +181,7 @@ func (this *ConsulServiceCenter) DiscoverService(healthyOnly bool, serviceName s
 	//servics_map[serviceName] = sers
 	//service_locker.Unlock()
 }
+
+func (this *ConsulServiceCenter) AddServiceListener(listener service.Listener) {
+	this.Container.AddServiceListener(listener)
+}

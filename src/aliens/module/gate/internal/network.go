@@ -41,6 +41,8 @@ type network struct {
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 
+	routes map[string]string //路由表 消息服务-服务节点
+
 	userData interface{}
 }
 

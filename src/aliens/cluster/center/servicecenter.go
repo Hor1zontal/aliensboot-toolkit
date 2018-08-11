@@ -76,6 +76,8 @@ type ServiceCenter interface {
 	GetService(serviceName string, serviceID string) service.IService //获取指定服务
 	AllocService(serviceName string) service.IService
 
+	AddServiceListener(listener service.Listener)
+
 	IsConnect() bool
 	Close()
 }

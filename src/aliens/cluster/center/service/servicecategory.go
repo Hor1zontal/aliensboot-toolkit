@@ -23,10 +23,11 @@ func NewServiceCategory(category string, lbsStr string, desc string) *serviceCat
 	//	seqMaps[seq] = struct{}{}
 	//}
 	return &serviceCategory{
-		category: category,
-		lbs:      lbs.GetLBS(lbsStr),
-		services: make(map[string]IService),
-		nodes:    []string{},
+		category:  category,
+		lbs:       lbs.GetLBS(lbsStr),
+		services:  make(map[string]IService),
+		nodes:     []string{},
+		listeners: []Listener{},
 		//seqs:     seqMaps,
 	}
 }
@@ -36,6 +37,8 @@ type serviceCategory struct {
 	lbs      lbs.LBStrategy      //负载均衡策略
 	services map[string]IService //服务节点名,和服务句柄
 	nodes    []string
+
+	listeners []Listener
 	//seqs     map[int32]struct{} //能够处理的消息编号
 }
 
@@ -46,6 +49,10 @@ func (this *serviceCategory) allocService() IService {
 		return nil
 	}
 	return this.services[nodeName]
+}
+
+func (this *serviceCategory) AddListener(listener Listener) {
+	this.listeners = append(this.listeners, listener)
 }
 
 //func (this *serviceCategory) canHandle(messageSeq int32) bool {
@@ -84,6 +91,9 @@ func (this *serviceCategory) updateService(service IService, overwrite bool) boo
 
 	this.services[service.GetID()] = service
 	this.initLBSNode()
+	for _, listener := range this.listeners {
+		listener.AddNode(service.GetID())
+	}
 	return true
 }
 
@@ -99,10 +109,16 @@ func (this *serviceCategory) updateServices(services []IService) {
 		} else if service.Connect() {
 			newServices[service.GetID()] = service
 			log.Debugf("new connect service %v", service)
+			for _, listener := range this.listeners {
+				listener.AddNode(service.GetID())
+			}
 		}
 	}
 	for _, releaseService := range this.services {
 		releaseService.Close()
+		for _, listener := range this.listeners {
+			listener.RemoveNode(releaseService.GetID())
+		}
 	}
 	this.services = newServices
 	this.initLBSNode()
@@ -127,12 +143,19 @@ func (this *serviceCategory) updateServices(services []IService) {
 }
 
 func (this *serviceCategory) removeService(serviceID string) {
-	removeService := this.services[serviceID]
+	removeService, ok := this.services[serviceID]
+	if !ok {
+		return
+	}
 	if removeService != nil {
 		removeService.Close()
 	}
 	delete(this.services, serviceID)
 	this.initLBSNode()
+	for _, listener := range this.listeners {
+		listener.RemoveNode(serviceID)
+	}
+
 }
 
 func (this *serviceCategory) getNodes() []string {
