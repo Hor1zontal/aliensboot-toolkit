@@ -55,7 +55,8 @@ func (this *cacheManager) Close() {
 }
 
 func (this *cacheManager) SetNX(key string, value interface{}) bool {
-	return this.redisClient.SetNX(key, value)
+	result, _ := this.redisClient.SetNX(key, value)
+	return result
 }
 
 /**

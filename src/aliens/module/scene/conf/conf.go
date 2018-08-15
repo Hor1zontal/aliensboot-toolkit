@@ -12,11 +12,11 @@ package conf
 import (
 	"aliens/config"
 	"aliens/cluster/center/service"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 const (
-	configPath = base.BaseConfPath + "scene/server.json"
+	configPath = module.BaseConfPath + "scene/server.json"
 )
 
 var Config struct {

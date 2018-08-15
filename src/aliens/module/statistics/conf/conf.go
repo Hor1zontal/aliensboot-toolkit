@@ -11,11 +11,11 @@ package conf
 
 import (
 	"aliens/config"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 const (
-	configPath = base.BaseConfPath + "statistics/config.json"
+	configPath = module.BaseConfPath + "statistics/config.json"
 	AnalysisFlag = false //是否开启性能分析
 	Game = "aliens" //日志索引信息
 )

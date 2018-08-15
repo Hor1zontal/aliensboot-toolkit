@@ -3,8 +3,7 @@ package internal
 import (
 	"aliens/module/scene/entity"
 	"aliens/module/scene/service"
-	"aliens/module/base"
-	"github.com/name5566/leaf/module"
+	"aliens/module"
 )
 
 
@@ -17,7 +16,7 @@ func (m *Module) IsEnable() bool {
 }
 
 func (m *Module) OnInit() {
-	m.Skeleton = base.NewSkeleton()
+	m.Skeleton = module.NewSkeleton()
 	entity.Init()
 	service.Init(m.ChanRPCServer)
 }

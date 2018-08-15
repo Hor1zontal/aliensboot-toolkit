@@ -5,11 +5,11 @@ import (
 	"aliens/cache/redis"
 	"aliens/database/dbconfig"
 	"aliens/cluster/center/service"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 
-var configPath = base.BaseConfPath + "game/server.json"
+var configPath = module.BaseConfPath + "game/server.json"
 
 var Config struct {
 	Service  service.Config

@@ -11,7 +11,6 @@ package service
 
 import (
 	"github.com/gogo/protobuf/proto"
-    "github.com/name5566/leaf/chanrpc"
     "aliens/log"
     "runtime/debug"
     "aliens/exception"
@@ -20,6 +19,7 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/game/conf"
     "aliens/cluster/center"
+	"aliens/chanrpc"
 )
 
 var instance service.IService = nil

@@ -1,13 +1,12 @@
 package internal
 
 import (
-	"github.com/name5566/leaf/module"
 	"aliens/module/statistics/analysis"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 var (
-	skeleton = base.NewSkeleton()
+	skeleton = module.NewSkeleton()
 	ChanRPC  = skeleton.ChanRPCServer
 )
 

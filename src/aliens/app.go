@@ -16,6 +16,7 @@ func Run(mods ...module.Module) {
 	for i := 0; i < len(mods); i++ {
 		module.Register(mods[i])
 	}
+
 	module.Init()
 	// console
 	console.Init()

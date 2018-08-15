@@ -1,10 +1,9 @@
 package internal
 
 import (
-	"github.com/name5566/leaf/module"
-	"aliens/module/base"
 	"aliens/module/game/db"
 	"aliens/module/game/service"
+	"aliens/module"
 )
 
 type Module struct {
@@ -16,7 +15,7 @@ func (m *Module) IsEnable() bool {
 }
 
 func (m *Module) OnInit() {
-	m.Skeleton = base.NewSkeleton()
+	m.Skeleton = module.NewSkeleton()
 	db.Init()
 	service.Init(m.ChanRPCServer)
 }

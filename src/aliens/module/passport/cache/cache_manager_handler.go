@@ -60,12 +60,13 @@ func (this *cacheManager) IsUsernameExist(username string) bool {
 	return this.GetUidByUsername(username) != 0
 }
 
-func (this *cacheManager) SetUsernameUidMapping(username string, uid int64) bool {
+func (this *cacheManager) SetUsernameUidMapping(username string, uid int64) error {
 	return this.redisClient.SetData(USERNAME_KEY_PREFIX + username, uid)
 }
 
 func (this *cacheManager) GetUidByUsername(username string) int64 {
-	return int64(this.redisClient.GetDataInt64(USERNAME_KEY_PREFIX + username))
+	result, _ := this.redisClient.GetDataInt64(USERNAME_KEY_PREFIX + username)
+	return result
 }
 
 //获取用户所有信息数据

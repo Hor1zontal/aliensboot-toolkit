@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"github.com/name5566/leaf/timer"
 	"aliens/log"
 	"github.com/sirupsen/logrus"
 	"aliens/module/statistics/model"
@@ -9,6 +8,7 @@ import (
 	"aliens/cluster/center"
 	"aliens/module/statistics/conf"
 	"aliens/module/statistics/constant"
+	"aliens/task"
 )
 
 
@@ -18,18 +18,19 @@ var esHandler = elastics.NewESHandler(conf.Game)
 var serviceStatistics = make(map[string]map[int32]*model.CallInfo) //服务名 - 服务编号 - 调用信息
 
 var serviceFields = logrus.Fields{}
+
 var onlineFields = logrus.Fields{}
 
 func init() {
 	skeleton.RegisterChanRPC(constant.INTERNAL_STATISTICS_SERVICE_CALL, handleServiceStatic)
 	skeleton.RegisterChanRPC(constant.INTERNAL_STATISTICS_ONLINE, handleOnlineStatic)
-	cron, err := timer.NewCronExpr("*/1 * * * *")
+	cron, err := task.NewCronExpr("*/1 * * * *")
 	if err != nil {
 		log.Error("init servcie statistics timer error : %v", err)
 	}
 
 	//每天凌晨12点执行一次
-	dayCron, err := timer.NewCronExpr("0 0 * * *")
+	dayCron, err := task.NewCronExpr("0 0 * * *")
 	if err != nil {
 		log.Error("init dump timer error : %v", err)
 	}
