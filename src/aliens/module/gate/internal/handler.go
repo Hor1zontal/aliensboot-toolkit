@@ -11,11 +11,11 @@ package internal
 
 import (
 	"aliens/module/gate/msg"
-	"github.com/name5566/leaf/gate"
 	//"aliens/module/cluster/dispatch"
 	//"aliens/module/gate/conf"
 	"aliens/module/gate/route"
 	"aliens/protocol/base"
+	"aliens/gate"
 )
 
 const (

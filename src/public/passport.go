@@ -2,10 +2,8 @@ package main
 
 import (
 	"aliens/module/cluster"
-	"time"
-	"github.com/name5566/leaf"
-	"math/rand"
 	"aliens/module/passport"
+	"aliens"
 )
 
 func init() {
@@ -13,10 +11,8 @@ func init() {
 }
 
 func main() {
-	//defer log.Close()
-	//log.Init("conf/aliens/log.xml")
-	rand.Seed(time.Now().UnixNano())
-	leaf.Run(
+
+	aliens.Run(
 		cluster.Module,
 		passport.Module,
 	)

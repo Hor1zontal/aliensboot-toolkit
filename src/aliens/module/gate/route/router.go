@@ -49,7 +49,7 @@ func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
 
 	serviceID := params[1]
 	request := &base.Any{TypeUrl:params[2], Value:requestData}
-	response, error := dispatch.RPC.Request(serviceID, request)
+	response, error := dispatch.RPC.Request(serviceID, request, "")
 	if error != nil {
 		return nil, error
 	}
@@ -64,13 +64,13 @@ func GetPushID(service string) uint16 {
 	return serviceSeqMapping[service]
 }
 
-//未授权的消息转发
-func HandleMessage(request *base.Any) (*base.Any, error) {
+
+func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
 	serviceName, ok := seqServiceMapping[request.Id]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
-	response, error := dispatch.RPC.Request(serviceName, request)
+	response, error := dispatch.RPC.Request(serviceName, request, hashKey)
 	if error != nil {
 		return nil, error
 	}

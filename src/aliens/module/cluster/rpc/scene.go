@@ -14,7 +14,6 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/protocol/base"
 )
 
 var Scene = &sceneRPCHandle{"scene"}
@@ -25,59 +24,61 @@ type sceneRPCHandle struct {
 }
 
 
-func (this *sceneRPCHandle) request(request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
+	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
 	if err != nil {
-		log.Error(err)
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	any, ok := rpcRet.(*base.Any)
-	if !ok {
-		log.Error("invalid rpc ret data")
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	messageRet := &protocol.Response{}
-	messageRet.Unmarshal(any.GetValue())
-	return  messageRet
+    	log.Error(err)
+    	exception.GameException(protocol.Code_InvalidService)
+    }
+    return rpcRet
 }
 
+//func (this *sceneRPCHandle) Request(request *protocol.Request) *protocol.Response {
+//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+//	if err != nil {
+//        log.Error(err)
+//        exception.GameException(protocol.Code_InvalidService)
+//    }
+//    return rpcRet
+//}
 
-func (this *sceneRPCHandle) GetState(request *protocol.GetState) *protocol.GetStateRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_GetState{
-			GetState:request,
-		},
-	}
-	messageRet := this.request(message)
-	return messageRet.GetGetStateRet()
-}
 
-func (this *sceneRPCHandle) SpaceMove(request *protocol.SpaceMove) *protocol.SpaceMoveRet {
+func (this *sceneRPCHandle) SpaceMove(node string, request *protocol.SpaceMove) *protocol.SpaceMoveRet {
 	message := &protocol.Request{
 		Scene:&protocol.Request_SpaceMove{
 			SpaceMove:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetSpaceMoveRet()
 }
 
-func (this *sceneRPCHandle) SpaceEnter(request *protocol.SpaceEnter) *protocol.SpaceEnterRet {
+func (this *sceneRPCHandle) SpaceEnter(node string, request *protocol.SpaceEnter) *protocol.SpaceEnterRet {
 	message := &protocol.Request{
 		Scene:&protocol.Request_SpaceEnter{
 			SpaceEnter:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetSpaceEnterRet()
 }
 
-func (this *sceneRPCHandle) SpaceLeave(request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
+func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
 	message := &protocol.Request{
 		Scene:&protocol.Request_SpaceLeave{
 			SpaceLeave:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetSpaceLeaveRet()
+}
+
+func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
+	message := &protocol.Request{
+		Scene:&protocol.Request_GetState{
+			GetState:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetGetStateRet()
 }

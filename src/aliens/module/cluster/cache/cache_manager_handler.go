@@ -20,16 +20,17 @@ func getAuthGateKey(authID int64) string {
 }
 
 //设置客户端所在的网关id
-func (this *cacheManager) SetAuthGateID(authID int64, gateID string) bool {
+func (this *cacheManager) SetAuthGateID(authID int64, gateID string) error {
 	return this.redisClient.SetData(getAuthGateKey(authID), gateID)
 }
 
 //清楚用户和网关的对应关系
-func (this *cacheManager) CleanAuthGateID(authID int64) bool {
+func (this *cacheManager) CleanAuthGateID(authID int64) error {
 	return this.redisClient.DelData(getAuthGateKey(authID))
 }
 
 //获取客户端所在的网关id
 func (this *cacheManager) GetAuthGateID(authID int64) string {
-	return this.redisClient.GetData(getAuthGateKey(authID))
+	result, _ := this.redisClient.GetData(getAuthGateKey(authID))
+	return result
 }

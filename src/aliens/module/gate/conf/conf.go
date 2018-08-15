@@ -14,12 +14,12 @@ import (
 	"aliens/config"
 	"aliens/module/gate/route"
 	"aliens/cluster/center/service"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 var (
 
-	configPath =  base.BaseConfPath + "gate/server.json"
+	configPath =  module.BaseConfPath + "gate/server.json"
 	// skeleton conf
 	GoLen              = 10000
 	TimerDispatcherLen = 10000

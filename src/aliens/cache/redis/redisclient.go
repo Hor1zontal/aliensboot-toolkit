@@ -11,63 +11,8 @@ package redis
 
 import (
 	"github.com/garyburd/redigo/redis"
-	"github.com/name5566/leaf/log"
 	"time"
-)
-
-//操作类型
-const (
-	PARAM_WITHSCORES string = "WITHSCORES"
-	PARAM_LIMIT      string = "limit"
-	PARAM_Z_MAX      string = "+inf"
-	PARAM_Z_MIN      string = "-inf"
-
-	OP_SELECT string = "SELECT"
-
-	OP_S_ADD        string = "SADD"
-	OP_S_RANDMENBER string = "SRANDMEMBER"
-	OP_S_ISMEMBER   string = "SISMEMBER"
-
-	OP_DUMP    string = "DUMP"
-	OP_RESTORE string = "RESTORE"
-
-	OP_SET    string = "SET"
-	OP_GET    string = "GET"
-	OP_DEL    string = "DEL"
-	OP_EXISTS string = "EXISTS"
-	OP_SETEX  string = "SETEX"
-	OP_SETNX  string = "SETNX"
-	OP_INCR   string = "INCR"     //自增长
-	OP_DECR   string = "DECR"   //自减
-
-	OP_EXPIRE string = "EXPIRE"
-
-	OP_FLUSHALL string = "FLUSHALL"
-
-	OP_H_SET     string = "HSET"
-	OP_H_GET     string = "HGET"
-	OP_H_GETALL  string = "HGETALL"
-	OP_H_MGET    string = "HMGET"
-	OP_H_MSET    string = "HMSET"
-	OP_H_DEL     string = "HDEL"
-	OP_H_HINCRBY string = "HINCRBY"
-	OP_H_EXISTS  string = "HEXISTS"
-
-	OP_L_PUSH  string = "LPUSH"
-	OP_R_PUSH  string = "RPUSH"
-	OP_L_RANGE string = "LRANGE"
-	OP_L_LEN   string = "LLEN"
-
-	OP_Z_ADD             string = "ZADD"
-	OP_Z_REM             string = "ZREM"
-	OP_Z_RANGE           string = "ZRANGE"
-	OP_Z_RANGEBYSCORE    string = "ZRANGEBYSCORE"
-	OP_Z_REVRANGEBYSCORE string = "ZREVRANGEBYSCORE"
-	OP_Z_REVRANGE        string = "ZREVRANGE"
-
-	OP_Z_REVRANK string = "ZREVRANK"
-
-	OP_PUBLISH string = "PUBLISH"
+	"aliens/log"
 )
 
 type RedisCacheClient struct {
@@ -118,13 +63,13 @@ func (this *RedisCacheClient) Start() {
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", this.Address)
 			if err != nil {
-				log.Fatal("start redis error : %v", err)
+				log.Fatalf("start redis error : %v", err)
 				return nil, err
 			}
 			if this.Password != "" {
 				if _, err := c.Do("AUTH", this.Password); err != nil {
 					c.Close()
-					log.Fatal("start redis error : %v", err)
+					log.Fatalf("start redis error : %v", err)
 					return nil, err
 				}
 			}
@@ -132,8 +77,10 @@ func (this *RedisCacheClient) Start() {
 		},
 	}
 	//测试连接
-	conn := this.pool.Get()
-	defer conn.Close()
+	err := this.SetData("____test____", "testdata")
+	if err != nil {
+		log.Fatalf("test redis connection error : %v", err)
+	}
 }
 
 //关闭缓存客户端
@@ -143,35 +90,31 @@ func (this *RedisCacheClient) Close() {
 	}
 }
 
-func (this *RedisCacheClient) SetNX(key string, value interface{}) bool {
+func (this *RedisCacheClient) SetNX(key string, value interface{}) (bool, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	result, _ := redis.Int(conn.Do(OP_SETNX, key, value))
-	return result == 1
+	result, err := redis.Int(conn.Do(OP_SETNX, key, value))
+	if err != nil {
+		return false, err
+	}
+	return result == 1, err
 
 }
 
 //设置数据过期时间
-func (this *RedisCacheClient) Expire(key string, seconds int) bool {
+func (this *RedisCacheClient) Expire(key string, seconds int) error {
 	conn := this.pool.Get()
 	defer conn.Close()
 	_, err := conn.Do(OP_EXPIRE, key, seconds)
-	if err != nil {
-		return false
-	}
-	return true
+	return err
 }
 
 //添加数据
-func (this *RedisCacheClient) SetData(key string, value interface{}) bool {
+func (this *RedisCacheClient) SetData(key string, value interface{}) error {
 	conn := this.pool.Get()
 	defer conn.Close()
 	_, err := conn.Do(OP_SET, key, value)
-	if err != nil {
-		//log.Debug("%v", err)
-		return false
-	}
-	return true
+	return err
 }
 
 func (this *RedisCacheClient) Incr(key string) (int, error) {
@@ -187,102 +130,67 @@ func (this *RedisCacheClient) Decr(key string) (int, error) {
 }
 
 
-func (this *RedisCacheClient) SelectDB(dbNumber int) bool {
+func (this *RedisCacheClient) SelectDB(dbNumber int) error {
 	conn := this.pool.Get()
 	defer conn.Close()
 	_, err := conn.Do(OP_SELECT, dbNumber)
-	if err != nil {
-		//log.Debug("%v", err)
-		return false
-	}
-	return true
+	return err
 }
 
-func (this *RedisCacheClient) GetDataInt32(key string) int {
+func (this *RedisCacheClient) GetDataInt32(key string) (int, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	value, err := redis.Int(conn.Do(OP_GET, key))
-	if err != nil {
-		//log.Debug("%v", err)
-		return 0
-	}
-	return value
+	return redis.Int(conn.Do(OP_GET, key))
 }
 
-func (this *RedisCacheClient) GetDataInt64(key string) int64 {
+func (this *RedisCacheClient) GetDataInt64(key string) (int64, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	value, err := redis.Int64(conn.Do(OP_GET, key))
-	if err != nil {
-		//log.Debug("%v", err)
-		return 0
-	}
-	return value
+	return redis.Int64(conn.Do(OP_GET, key))
 }
 
 //获取数据
-func (this *RedisCacheClient) GetData(key string) string {
+func (this *RedisCacheClient) GetData(key string) (string, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	value, err := redis.String(conn.Do(OP_GET, key))
-	if err != nil {
-		//log.Debug("%v", err)
-		return ""
-	}
-	return value
+	return redis.String(conn.Do(OP_GET, key))
 }
 
 //导出数据
-func (this *RedisCacheClient) Dump(key string) string {
+func (this *RedisCacheClient) Dump(key string) (string, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	value, err := redis.String(conn.Do(OP_DUMP, key))
-	if err != nil {
-		return ""
-	}
-	return value
+	return redis.String(conn.Do(OP_DUMP, key))
 }
 
 //导入数据
-func (this *RedisCacheClient) Restore(key string, data string) string {
+func (this *RedisCacheClient) Restore(key string, data string) (string, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	value, err := redis.String(conn.Do(OP_RESTORE, key, 0, data))
-	if err != nil {
-		return ""
-	}
-	return value
+	return redis.String(conn.Do(OP_RESTORE, key, 0, data))
 }
 
 //是否存在数据
 func (this *RedisCacheClient) Exists(key string) (bool, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	result, err := redis.Bool(conn.Do(OP_EXISTS, key))
-	if err != nil {
-		//log.Debug("%v", err)
-		return false, err
-	}
-	return result, err
+	return redis.Bool(conn.Do(OP_EXISTS, key))
 }
 
 //添加数据
-func (this *RedisCacheClient) DelData(key string) bool {
+func (this *RedisCacheClient) DelData(key string) error {
 	conn := this.pool.Get()
 	defer conn.Close()
 	_, err := conn.Do(OP_DEL, key)
-	if err != nil {
-		//log.Debug("%v", err)
-		return false
-	}
-	return true
+	return err
 }
 
 //清除所有数据
-func (this *RedisCacheClient) FlashAll() {
+func (this *RedisCacheClient) FlashAll() error {
 	conn := this.pool.Get()
 	defer conn.Close()
-	conn.Do(OP_FLUSHALL)
+	_, err := conn.Do(OP_FLUSHALL)
+	return err
 }
 
 //// 存map

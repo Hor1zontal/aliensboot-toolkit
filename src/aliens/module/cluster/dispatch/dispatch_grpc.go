@@ -13,6 +13,8 @@ import (
 	"aliens/cluster/message"
 	"github.com/gogo/protobuf/proto"
 	"aliens/protocol/base"
+	"aliens/protocol"
+	"errors"
 )
 
 
@@ -25,46 +27,46 @@ type GRPCDispatcher struct {
 }
 
 //阻塞请求消息 - 根据负载均衡动态分配一个节点处理
-func (dispatcher *GRPCDispatcher) SyncRequest(serviceName string, message proto.Message) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) SyncRequest(serviceName string, message  *protocol.Request, hashKey string) (*protocol.Response, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
 	}
 	request := &base.Any{Value: data}
-	return dispatcher.Request(serviceName, request)
+	response, err := dispatcher.Request(serviceName, request, hashKey)
+	if err != nil {
+		return nil, err
+	}
+	any, ok := response.(*base.Any)
+	if !ok {
+		return nil, errors.New("invalid rpc ret data")
+	}
+	messageRet := &protocol.Response{}
+	messageRet.Unmarshal(any.GetValue())
+	return  messageRet, nil
 }
 
 //同步阻塞请求
-func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceName string, serviceID string, message proto.Message) (interface{}, error) {
-	data, err := proto.Marshal(message)
+func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceName string, serviceID string, message *protocol.Request) (*protocol.Response, error) {
+	data, _ := message.Marshal()
+	request := &base.Any{Value: data}
+	response, err := dispatcher.RequestNode(serviceName, serviceID, request)
 	if err != nil {
 		return nil, err
 	}
-	request := &base.Any{Value: data}
-	return dispatcher.RequestNode(serviceName, serviceID, request)
+	any, ok := response.(*base.Any)
+	if !ok {
+		return nil, errors.New("invalid rpc ret data")
+	}
+	messageRet := &protocol.Response{}
+	messageRet.Unmarshal(any.GetValue())
+	return  messageRet, nil
+
 }
 
-////同步推送
-//func SyncPush(serviceName string, serviceID string, message proto.Message) error {
-//	_, err := SyncRequestNode(serviceName, serviceID, message)
-//	return err
-//}
-//
-////同步阻塞广播
-//func SyncBroadcast(serviceName string, message proto.Message) error {
-//	data, err := proto.Marshal(message)
-//	if err != nil {
-//		return err
-//	}
-//	request := &protocol.Any{Value: data}
-//	service := allocService(serviceName)
-//	service.BroadcastAll(request)
-//	return nil
-//}
-
-func (dispatcher *GRPCDispatcher) Request(serviceName string, message interface{}) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) Request(serviceName string, message interface{}, hashKey string) (interface{}, error) {
 	service := dispatcher.allocService(serviceName)
-	return service.HandleMessage(message, "")
+	return service.HandleMessage(message, hashKey)
 }
 
 func (dispatcher *GRPCDispatcher) RequestNode(serviceName string, serviceID string, message interface{}) (interface{}, error) {

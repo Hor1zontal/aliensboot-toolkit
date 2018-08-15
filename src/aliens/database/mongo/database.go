@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"aliens/database"
-	"github.com/name5566/leaf/db/mongodb"
 	"gopkg.in/mgo.v2"
 	"aliens/database/dbconfig"
 	"reflect"
@@ -19,8 +18,8 @@ import (
 
 type Database struct {
 	dbName    string
-	dbContext *mongodb.DialContext
-	dbSession *mongodb.Session
+	dbContext *DialContext
+	dbSession *Session
 	database  *mgo.Database
 	auth      *database.Authority
 
@@ -33,7 +32,7 @@ func (this *Database) Init(config dbconfig.DBConfig) error {
 	if config.MaxSession == 0 {
 		config.MaxSession = 100
 	}
-	c, err := mongodb.Dial(config.Address, int(config.MaxSession))
+	c, err := Dial(config.Address, int(config.MaxSession))
 	if err != nil {
 		return err
 	}

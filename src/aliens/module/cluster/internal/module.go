@@ -3,8 +3,7 @@ package internal
 import (
 	"aliens/module/cluster/cache"
 	"aliens/module/cluster/dispatch"
-	"github.com/name5566/leaf/module"
-	"aliens/module/base"
+	"aliens/module"
 )
 
 
@@ -17,7 +16,7 @@ func (m *Module) IsEnable() bool {
 }
 
 func (m *Module) OnInit() {
-	m.Skeleton = base.NewSkeleton()
+	m.Skeleton = module.NewSkeleton()
 	cache.Init()
 	dispatch.Init()
 

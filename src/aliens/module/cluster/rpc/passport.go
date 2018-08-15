@@ -14,7 +14,6 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/protocol/base"
 )
 
 var Passport = &passportRPCHandle{"passport"}
@@ -25,49 +24,51 @@ type passportRPCHandle struct {
 }
 
 
-func (this *passportRPCHandle) request(request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+func (this *passportRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
+	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
 	if err != nil {
-		log.Error(err)
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	any, ok := rpcRet.(*base.Any)
-	if !ok {
-		log.Error("invalid rpc ret data")
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	messageRet := &protocol.Response{}
-	messageRet.Unmarshal(any.GetValue())
-	return  messageRet
+    	log.Error(err)
+    	exception.GameException(protocol.Code_InvalidService)
+    }
+    return rpcRet
 }
 
+//func (this *passportRPCHandle) Request(request *protocol.Request) *protocol.Response {
+//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+//	if err != nil {
+//        log.Error(err)
+//        exception.GameException(protocol.Code_InvalidService)
+//    }
+//    return rpcRet
+//}
 
-func (this *passportRPCHandle) TokenLogin(request *protocol.TokenLogin) *protocol.TokenLoginRet {
-	message := &protocol.Request{
-		Passport:&protocol.Request_TokenLogin{
-			TokenLogin:request,
-		},
-	}
-	messageRet := this.request(message)
-	return messageRet.GetTokenLoginRet()
-}
 
-func (this *passportRPCHandle) LoginRegister(request *protocol.LoginRegister) *protocol.LoginRegisterRet {
-	message := &protocol.Request{
-		Passport:&protocol.Request_LoginRegister{
-			LoginRegister:request,
-		},
-	}
-	messageRet := this.request(message)
-	return messageRet.GetLoginRegisterRet()
-}
-
-func (this *passportRPCHandle) LoginLogin(request *protocol.LoginLogin) *protocol.LoginLoginRet {
+func (this *passportRPCHandle) LoginLogin(node string, request *protocol.LoginLogin) *protocol.LoginLoginRet {
 	message := &protocol.Request{
 		Passport:&protocol.Request_LoginLogin{
 			LoginLogin:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetLoginLoginRet()
+}
+
+func (this *passportRPCHandle) TokenLogin(node string, request *protocol.TokenLogin) *protocol.TokenLoginRet {
+	message := &protocol.Request{
+		Passport:&protocol.Request_TokenLogin{
+			TokenLogin:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetTokenLoginRet()
+}
+
+func (this *passportRPCHandle) LoginRegister(node string, request *protocol.LoginRegister) *protocol.LoginRegisterRet {
+	message := &protocol.Request{
+		Passport:&protocol.Request_LoginRegister{
+			LoginRegister:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetLoginRegisterRet()
 }

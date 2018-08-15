@@ -121,7 +121,7 @@ func (this *GRPCService) Equals(other IService) bool {
 
 //服务是否本进程启动的
 func (this *GRPCService) IsLocal() bool {
-	return this.server != nil
+	return this.handler != nil
 }
 
 //关闭服务
@@ -146,6 +146,8 @@ func (this *GRPCService) Request(request interface{}) (interface{}, error) {
 	if !ok {
 		return nil, errors.New("invalid request type")
 	}
+
+	//TODO 后续可以考虑如果服务是当前进程启动，可以直接调用服务句柄
 	//if this.IsLocal() {
 	//	return this.handler.re.Request(context.Background(), requestAny)
 	//} else {

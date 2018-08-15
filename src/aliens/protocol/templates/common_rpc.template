@@ -25,30 +25,32 @@ type ${module}RPCHandle struct {
 }
 
 
-func (this *${module}RPCHandle) request(request *${package}.Request) *${package}.Response {
-	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+func (this *${module}RPCHandle) RequestNode(node string, request *${package}.Request) *${package}.Response {
+	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
 	if err != nil {
-		log.Error(err)
-		exception.GameException(${package}.Code_InvalidService)
-	}
-	any, ok := rpcRet.(*base.Any)
-	if !ok {
-		log.Error("invalid rpc ret data")
-		exception.GameException(${package}.Code_InvalidService)
-	}
-	messageRet := &${package}.Response{}
-	messageRet.Unmarshal(any.GetValue())
-	return  messageRet
+    	log.Error(err)
+    	exception.GameException(protocol.Code_InvalidService)
+    }
+    return rpcRet
 }
 
+//func (this *${module}RPCHandle) Request(request *${package}.Request) *${package}.Response {
+//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+//	if err != nil {
+//        log.Error(err)
+//        exception.GameException(protocol.Code_InvalidService)
+//    }
+//    return rpcRet
+//}
+
 <message>
-func (this *${module}RPCHandle) ${o_request}(request *${package}.${o_request}) *${package}.${o_response} {
+func (this *${module}RPCHandle) ${o_request}(node string, request *${package}.${o_request}) *${package}.${o_response} {
 	message := &${package}.Request{
 		${Module}:&${package}.Request_${o_request}{
 			${o_request}:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.Get${o_response}()
 }
 <message>

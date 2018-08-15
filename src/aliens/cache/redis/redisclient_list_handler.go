@@ -15,29 +15,17 @@ import (
 )
 
 //获取列表长度
-func (this *RedisCacheClient) LLen(key string) int {
+func (this *RedisCacheClient) LLen(key string) (int, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	len, err := redis.Int(conn.Do(OP_L_LEN, key))
-	if err != nil {
-		//log.Debug("%v",err)
-	}
-	return len
+	return redis.Int(conn.Do(OP_L_LEN, key))
 }
 
 //列表添加多条数据
-func (this *RedisCacheClient) LPushString(key string, value string) int {
+func (this *RedisCacheClient) LPushString(key string, value string) (int, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	//for i := 0; i < len(values) ; i++  {
-	//	conn.Do(OP_L_PUSH,key,value...)
-	//}
-
-	len, err := redis.Int(conn.Do(OP_L_PUSH, key, value))
-	if err != nil {
-		//log.Debug("%v",err)
-	}
-	return len
+	return redis.Int(conn.Do(OP_L_PUSH, key, value))
 }
 
 func (this *RedisCacheClient) LPush(key string, value interface{}) (int, error) {
@@ -81,7 +69,7 @@ func (this *RedisCacheClient) LPush(key string, value interface{}) (int, error) 
 //}
 
 //获取列表所有数据
-func (this *RedisCacheClient) LRangeAll(key string) []string {
+func (this *RedisCacheClient) LRangeAll(key string) ([]string, error) {
 	return this.LRange(key, 0, -1)
 }
 
@@ -90,15 +78,10 @@ func (this *RedisCacheClient) LRangeAllByte(key string) ([][]byte, error) {
 }
 
 //获取列表指定范围内的数据
-func (this *RedisCacheClient) LRange(key string, star int, stop int) []string {
+func (this *RedisCacheClient) LRange(key string, star int, stop int) ([]string, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	values, err := redis.Strings(conn.Do(OP_L_RANGE, key, star, stop))
-	if err != nil {
-		//log.Debug("%v",err)
-		//return
-	}
-	return values
+	return redis.Strings(conn.Do(OP_L_RANGE, key, star, stop))
 }
 
 func (this *RedisCacheClient) LRangeBytes(key string, star int, stop int) ([][]byte, error) {

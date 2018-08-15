@@ -1,48 +1,10 @@
 package util
 
 import (
-	"fmt"
-	"math"
-	"math/rand"
 	"strconv"
-	"time"
 	"strings"
 	"unsafe"
 )
-
-var RANDOM_ARRAY []byte = []byte("0123456789abcdefghijklmnopqrstuvwxyz")
-
-func GetRandomString(l int) string {
-	result := []byte{}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	for i := 0; i < l; i++ {
-		result = append(result, RANDOM_ARRAY[r.Intn(len(RANDOM_ARRAY))])
-	}
-	return string(result)
-}
-
-//随机验证码
-func RandomVerifyCode() string {
-	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return fmt.Sprintf("%06v", rnd.Int31n(1000000))
-}
-
-func RandInt32Scop(min int32, max int32) int32 {
-	diff := max - min + 1
-	return min + rand.Int31n(diff)
-}
-
-func Round(value float64) int32 {
-	return int32(value + 0.5)
-}
-
-func Round64(value float64) int64 {
-	return int64(value + 0.5)
-}
-
-func RoundFloat64(value float64) float64 {
-	return float64(int64(value + 0.5))
-}
 
 func StringArray2Int32Array(array []string) []int32 {
 	var result []int32
@@ -54,7 +16,19 @@ func StringArray2Int32Array(array []string) []int32 {
 }
 
 func ContainsInt32(value int32, array []int32) bool {
-	if len(array) == 0 {
+	if array == nil || len(array) == 0 {
+		return false
+	}
+	for _, member := range array {
+		if member == value {
+			return true
+		}
+	}
+	return false
+}
+
+func ContainsString(value string, array []string) bool {
+	if array == nil || len(array) == 0 {
 		return false
 	}
 	for _, member := range array {
@@ -103,24 +77,12 @@ func Int64ToString(value int64) string {
 	return strconv.FormatInt(value, 10)
 }
 
-func Int32Max(a int32, b int32) int32 {
-	return int32(math.Max(float64(a), float64(b)))
-}
-
-func Int64Max(a int64, b int64) int64 {
-	return int64(math.Max(float64(a), float64(b)))
-}
-
-func Int32Min(a int32, b int32) int32 {
-	return int32(math.Min(float64(a), float64(b)))
-}
-
-func Int64Min(a int64, b int64) int64 {
-	return int64(math.Min(float64(a), float64(b)))
-}
 
 func FirstToUpper(str string) string {
 	length := len(str)
+	if length == 0 {
+		return str
+	}
 	return strings.ToUpper(str[0:1]) + str[1:length]
 	//temp := strings.Split(str, "_")
 	//var upperStr string
@@ -146,7 +108,7 @@ func Str2Bytes(s string) []byte {
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
 
-//类型转换  bytes to string
+//类型转换  byte slice to string
 func Bytes2Str(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }

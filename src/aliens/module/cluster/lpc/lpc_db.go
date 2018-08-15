@@ -10,8 +10,8 @@
 package lpc
 
 import (
-	"gok/constant"
-	"gok/module/database"
+	"aliens/module/database"
+	"aliens/module/database/constant"
 	database2 "aliens/database"
 )
 

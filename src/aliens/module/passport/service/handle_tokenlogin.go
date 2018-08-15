@@ -15,9 +15,10 @@ import (
 )
 
 
-//
+
 func handleTokenLogin(request *protocol.TokenLogin, response *protocol.TokenLoginRet) int64 {
-	if cache.PassportCache.GetUserToken(request.GetUid()) != request.GetToken() {
+	token, _ := cache.PassportCache.GetUserToken(request.GetUid())
+	if token != request.GetToken() {
 		response.Result = protocol.LoginResult_tokenExpire
 		return 0
 	}

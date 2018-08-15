@@ -10,71 +10,49 @@
 package cache
 
 import (
-	"aliens/common/util"
+	"aliens/protocol"
 )
 
 const (
-	USER_KEY_PREFIX string = "uid_"
-	USERNAME_KEY_PREFIX string = "username_"
-
-	UPROP_DESC string = "desc"          //用户签名
-	UPROP_NICKNAME string = "nname"     //用户昵称
-	UPROP_ICON string = "icon"      	//图标
-	UPROP_ONLINE string = "online"		//用户是否登录
-	UPROP_AVATAR string = "avatar"      //用户头像
-
-	FLAG_LOADUSER string = "flu_"   	//标识，是否加载用户数据到缓存
-	UPROP_TOKEN string = "token"      	//登录令牌
+	FLAG_LOADUSER string = "flag_user_load_"   	//标识，是否加载用户数据到缓存
+	USERNAME_KEY_PREFIX string = "unk_"
 )
 
-func GetUserKey(uid int64) string {
-	return USER_KEY_PREFIX + util.Int64ToString(uid)
-}
+var user = &protocol.User{}
 
 //设置用户会话token
-func (this *cacheManager) SetUserToken(uid int64, token string) bool {
-	return this.redisClient.HSet(GetUserKey(uid), UPROP_TOKEN, token)
+func (this *cacheManager) SetUserToken(uid int64, token string) error {
+	return this.redisClient.OSetFieldByID(user, uid, "Token", token)
 }
 
 //获取用户会话token
-func (this *cacheManager) GetUserToken(uid int64) string {
-	return this.redisClient.HGet(GetUserKey(uid), UPROP_TOKEN)
+func (this *cacheManager) GetUserToken(uid int64) (string, error) {
+	return this.redisClient.OGetFieldByID(user, uid, "Token")
 }
 
-//
-////设置用户属性
-//func (this *cacheManager) SetUserAttr(uid int64, propKey string, value interface{}) bool {
-//	return this.redisClient.HSet(GetUserKey(uid), propKey, value)
-//}
-
 //设置用户头像
-func (this *cacheManager) SetUserAvatar(uid int64, avatar string) bool {
-	return this.redisClient.HSet(GetUserKey(uid), UPROP_AVATAR, avatar)
+func (this *cacheManager) SetUserAvatar(uid int64, avatar string) error {
+	return this.redisClient.OSetFieldByID(user, uid, "Avatar", avatar)
 }
 
 //获取用户头像
-func (this *cacheManager) GetUserAvatar(uid int64) string {
-	return this.redisClient.HGet(GetUserKey(uid), UPROP_AVATAR)
+func (this *cacheManager) GetUserAvatar(uid int64) (string, error) {
+	return this.redisClient.OGetFieldByID(user, uid, "Avatar")
 }
 
 //设置用户会话token
-func (this *cacheManager) SetUserNickname(uid int64, nickname string) bool {
-	return this.redisClient.HSet(GetUserKey(uid), UPROP_NICKNAME, nickname)
+func (this *cacheManager) SetUserNickname(uid int64, nickname string) error {
+	return this.redisClient.OSetFieldByID(user, uid, "Nickname", nickname)
 }
 
 //获取用户昵称
-func (this *cacheManager) GetUserNickname(uid int64) string {
-	return this.redisClient.HGet(GetUserKey(uid), UPROP_NICKNAME)
+func (this *cacheManager) GetUserNickname(uid int64) (string, error) {
+	return this.redisClient.OGetFieldByID(user, uid, "Nickname")
 }
 
-//设置用户个人简介
-func (this *cacheManager) SetUserDesc(uid int64, desc string) bool {
-	return this.redisClient.HSet(GetUserKey(uid), UPROP_DESC, desc)
-}
-
-//获取用户个人简介
-func (this *cacheManager) GetUserDesc(uid int64) string {
-	return this.redisClient.HGet(GetUserKey(uid), UPROP_DESC)
+//用户是否在线
+func (this *cacheManager) GetUserOnline(uid int64) (bool, error) {
+	return this.redisClient.OGetBoolFieldByID(user, uid, "Online")
 }
 
 //用户名是否存在
@@ -92,27 +70,16 @@ func (this *cacheManager) GetUidByUsername(username string) int64 {
 
 //获取用户所有信息数据
 func (this *cacheManager) HSetUser(uid int64, data interface{}) {
-	this.redisClient.HSetData(GetUserKey(uid), data)
+	this.redisClient.OSetByID(data, uid)
 }
 
 //设置用户所有信息数据
 func (this *cacheManager) HGetUser(uid int64, data interface{}) {
-	this.redisClient.HGetData(GetUserKey(uid), data)
+	this.redisClient.OGetByID(data, uid)
 }
 
 //用户是否存在
 func (this *cacheManager) IsUserExist(uid int64) bool {
-	result, _ := this.redisClient.Exists(GetUserKey(uid))
+	result, _ := this.redisClient.OExists(user, uid)
 	return result
 }
-
-//用户是否在线
-func (this *cacheManager) IsUserOnline(uid int64) bool {
-	return this.GetUserAttrBool(uid, UPROP_ONLINE)
-}
-
-func (this *cacheManager) GetUserAttrBool(uid int64, propKey string) bool {
-	return this.redisClient.HGetBool(GetUserKey(uid), propKey)
-}
-
-

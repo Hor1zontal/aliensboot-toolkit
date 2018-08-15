@@ -12,11 +12,12 @@ package internal
 import (
 	"time"
 	"aliens/module/gate/conf"
-	"github.com/name5566/leaf/gate"
 	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
 	"aliens/protocol/base"
+	"aliens/common/util"
+	"aliens/gate"
 )
 
 //var id int64 = 0
@@ -28,7 +29,9 @@ import (
 
 func newNetwork(agent gate.Agent) *network {
 	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+	network.GetRemoteAddr()
 	network.channel = make(chan *base.Any, 5)
+	network.hashKey = agent.RemoteAddr().String()
 	go network.Start()
 	return network
 }
@@ -37,7 +40,9 @@ type network struct {
 	agent 	      gate.Agent
 	channel       chan *base.Any //消息管道
 
-	authID        int64     //用户标识 登录验证后
+	authID  int64  //用户标识 登录验证后
+	hashKey string //用来做一致性负载均衡的标识
+
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 
@@ -92,7 +97,7 @@ func (this *network) HandleMessage(request *base.Any) *base.Any {
 	} else {
 		request.AuthId = 0
 	}
-	response, error := route.HandleMessage(request)
+	response, error := route.HandleMessage(request, this.hashKey)
 	//log.Debugf("request %v - response %v", request, response)
 	if error != nil {
 		//TODO 返回服务不可用等处理方式
@@ -115,6 +120,7 @@ func (this *network) IsAuth() bool {
 
 func (this *network) Auth(id int64) {
 	this.authID = id
+	this.hashKey = util.Int64ToString(id)
 	Skeleton.ChanRPCServer.Go(CommandAgentAuth, id, this)
 }
 

@@ -14,7 +14,6 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/protocol/base"
 )
 
 var Game = &gameRPCHandle{"game"}
@@ -25,59 +24,61 @@ type gameRPCHandle struct {
 }
 
 
-func (this *gameRPCHandle) request(request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+func (this *gameRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
+	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
 	if err != nil {
-		log.Error(err)
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	any, ok := rpcRet.(*base.Any)
-	if !ok {
-		log.Error("invalid rpc ret data")
-		exception.GameException(protocol.Code_InvalidService)
-	}
-	messageRet := &protocol.Response{}
-	messageRet.Unmarshal(any.GetValue())
-	return  messageRet
+    	log.Error(err)
+    	exception.GameException(protocol.Code_InvalidService)
+    }
+    return rpcRet
 }
 
+//func (this *gameRPCHandle) Request(request *protocol.Request) *protocol.Response {
+//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
+//	if err != nil {
+//        log.Error(err)
+//        exception.GameException(protocol.Code_InvalidService)
+//    }
+//    return rpcRet
+//}
 
-func (this *gameRPCHandle) RemoveRole(request *protocol.RemoveRole) *protocol.RemoveRoleRet {
-	message := &protocol.Request{
-		Game:&protocol.Request_RemoveRole{
-			RemoveRole:request,
-		},
-	}
-	messageRet := this.request(message)
-	return messageRet.GetRemoveRoleRet()
-}
 
-func (this *gameRPCHandle) GetUserInfo(request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
+func (this *gameRPCHandle) GetUserInfo(node string, request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
 	message := &protocol.Request{
 		Game:&protocol.Request_GetUserInfo{
 			GetUserInfo:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetGetUserInfoRet()
 }
 
-func (this *gameRPCHandle) LoginRole(request *protocol.LoginRole) *protocol.LoginRoleRet {
+func (this *gameRPCHandle) LoginRole(node string, request *protocol.LoginRole) *protocol.LoginRoleRet {
 	message := &protocol.Request{
 		Game:&protocol.Request_LoginRole{
 			LoginRole:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetLoginRoleRet()
 }
 
-func (this *gameRPCHandle) CreateRole(request *protocol.CreateRole) *protocol.CreateRoleRet {
+func (this *gameRPCHandle) CreateRole(node string, request *protocol.CreateRole) *protocol.CreateRoleRet {
 	message := &protocol.Request{
 		Game:&protocol.Request_CreateRole{
 			CreateRole:request,
 		},
 	}
-	messageRet := this.request(message)
+	messageRet := this.RequestNode(node, message)
 	return messageRet.GetCreateRoleRet()
+}
+
+func (this *gameRPCHandle) RemoveRole(node string, request *protocol.RemoveRole) *protocol.RemoveRoleRet {
+	message := &protocol.Request{
+		Game:&protocol.Request_RemoveRole{
+			RemoveRole:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetRemoveRoleRet()
 }

@@ -6,15 +6,15 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 message User {
     int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\" gorm:\"AUTO_INCREMENT\""];
-    string username = 2 [(gogoproto.moretags) = "bson:\"username\" rorm:\"uname\"  unique:\"true\""];
-    string password = 3 [(gogoproto.moretags) = "bson:\"password\" rorm:\"pwd\""];
-    string salt = 4 [(gogoproto.moretags) = "bson:\"salt\" rorm:\"salt\""];
-    string channeluid = 5 [(gogoproto.moretags) = "bson:\"cuid\" rorm:\"cuid\""];
-    string channel = 6 [(gogoproto.moretags) = "bson:\"channel\" rorm:\"channel\""];
-    string avatar = 7 [(gogoproto.moretags) = "bson:\"avatar\" rorm:\"avatar\""];
-    string mobile = 8 [(gogoproto.moretags) = "bson:\"mobile\""];
+    string username = 2 [(gogoproto.moretags) = "bson:\"username\" unique:\"true\""];
+    string password = 3 [(gogoproto.moretags) = "bson:\"password\""];
+    string salt = 4 [(gogoproto.moretags) = "bson:\"salt\""];
+    string channeluid = 5 [(gogoproto.moretags) = "bson:\"cuid\""];
+    string channel = 6 [(gogoproto.moretags) = "bson:\"channel\""];
+    string avatar = 7 [(gogoproto.moretags) = "bson:\"avatar\""];
+    string mobile = 8 [(gogoproto.moretags) = "bson:\"mobile\"  rorm:\"-\""];
     string openid = 9 [(gogoproto.moretags) = "bson:\"openid\""];
     string ip = 10 [(gogoproto.moretags) = "bson:\"ip\""];
-    int32 status = 11 [(gogoproto.moretags) = "bson:\"status\" rorm:\"status\""];
+    int32 status = 11 [(gogoproto.moretags) = "bson:\"status\""];
     int64 regTime = 12 [(gogoproto.moretags) = "bson:\"regtime\""];
 }

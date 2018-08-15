@@ -10,17 +10,17 @@
 package util
 
 import (
-	"github.com/name5566/leaf/log"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"io"
+	"aliens/log"
 )
 
 func HttpGet(paramUrl string) string {
 	resp, err := http.Get(paramUrl)
 	if err != nil {
-		log.Error("%v", err)
+		log.Error(err)
 		return ""
 	}
 	defer resp.Body.Close()
@@ -34,7 +34,7 @@ func HttpGet(paramUrl string) string {
 func HttpPost(url string, param url.Values) string {
 	resp, err := http.PostForm(url, param)
 	if err != nil {
-		log.Error("%v", err)
+		log.Error(err)
 		return ""
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)
@@ -45,7 +45,7 @@ func HttpPost(url string, param url.Values) string {
 func HttpBodyPost(url string, body io.Reader) string {
 	resp, err := http.Post(url, "application/x-www-form-urlencoded", body)
 	if err != nil {
-		log.Error("%v", err)
+		log.Error(err)
 		return ""
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)

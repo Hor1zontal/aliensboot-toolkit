@@ -11,7 +11,7 @@ package message
 
 import (
 	"aliens/log"
-	"aliens/common/util"
+	"aliens/exception"
 )
 
 type MessageChannel struct {
@@ -38,7 +38,7 @@ func (this *MessageChannel) Open() {
 	this.channel = make(chan interface{}, this.messageLimit)
 	go func() {
 		defer func() {
-			util.CatchStackDetail()
+			exception.CatchStackDetail()
 		}()
 		for {
 			//只要消息管道没有关闭，就一直等待用户请求

@@ -3,7 +3,7 @@ package internal
 import (
 	"time"
 	"aliens/common/util"
-	"aliens/common/collection"
+	"aliens/common/data_structures/map"
 	"aliens/module/gate/conf"
 	"aliens/module/cluster/cache"
 	"aliens/cluster/center"
@@ -17,9 +17,9 @@ func init() {
 
 type NetworkManager struct {
 	//sync.RWMutex
-	networks  *collection.Map //存储所有未验权的网络连接
-	authNetworks map[int64]*network  //存储所有验权通过的网络连接
-	timeWheel *util.TimeWheel //验权检查时间轮
+	networks  *_map.Map   //存储所有未验权的网络连接
+	authNetworks map[int64]*network //存储所有验权通过的网络连接
+	timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
 //开启权限,心跳等验证机制
@@ -27,7 +27,7 @@ func (this *NetworkManager) Init() {
 	if this.timeWheel != nil {
 		this.timeWheel.Stop()
 	}
-	this.networks = &collection.Map{}
+	this.networks = &_map.Map{}
 	this.authNetworks = make(map[int64]*network)
 
 	//心跳精确到s

@@ -10,10 +10,10 @@
 package msg
 
 import (
-	"github.com/name5566/leaf/chanrpc"
 	"errors"
 	"encoding/binary"
 	"aliens/protocol/base"
+	"aliens/chanrpc"
 )
 
 var Processor = NewMsgProcessor() //protobuf.NewProcessor()

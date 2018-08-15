@@ -10,8 +10,8 @@
 package lpc
 
 import (
-	"gok/constant"
-	"gok/module/statistics"
+	"aliens/module/statistics/constant"
+	"aliens/module/statistics"
 )
 
 var StatisticsHandler = &statisticsHandler{}

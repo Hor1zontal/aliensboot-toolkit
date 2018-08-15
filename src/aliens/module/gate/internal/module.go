@@ -4,12 +4,12 @@ import (
 	"aliens/module/gate/http"
 	"aliens/module/gate/conf"
 	"time"
-	"github.com/name5566/leaf/gate"
 	"aliens/module/gate/msg"
-	"aliens/module/base"
+	"aliens/module"
+	"aliens/gate"
 )
 
-var Skeleton = base.NewSkeleton()
+var Skeleton = module.NewSkeleton()
 
 type Module struct {
 	*gate.Gate

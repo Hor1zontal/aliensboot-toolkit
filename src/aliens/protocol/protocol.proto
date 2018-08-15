@@ -8,7 +8,7 @@ import "game.proto";
 
 
 //request
-message Request {
+message C2S {
     int32 session = 1;     //消息序号
 
     //-----------------登录模块接口---------------
@@ -38,7 +38,7 @@ message Request {
 }
 
 //response
-message Response {
+message S2C {
     int32 session = 1;
 
     Code code = 2; //错误码

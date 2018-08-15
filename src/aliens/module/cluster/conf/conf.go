@@ -14,10 +14,10 @@ import (
 	"aliens/cache/redis"
 	"aliens/cluster/center"
 	"aliens/mq"
-	"aliens/module/base"
+	"aliens/module"
 )
 
-var configPath =  base.BaseConfPath + "cluster.json"
+var configPath =  module.BaseConfPath + "cluster.json"
 
 var Config struct {
 	Cluster center.ClusterConfig
