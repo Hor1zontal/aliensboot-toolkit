@@ -9,7 +9,10 @@
  *******************************************************************************/
 package message
 
-import "aliens/cluster/center"
+import (
+	"aliens/cluster/center"
+	"aliens/protocol/base"
+)
 
 func NewRemoteService(serviceType string) *RemoteService {
 	service := &RemoteService{
@@ -28,7 +31,7 @@ func (this *RemoteService) Init() {
 	center.ClusterCenter.SubscribeServices(this.serviceType)
 }
 
-func (this *RemoteService) HandleMessage(request interface{}, param string) (interface{}, error) {
+func (this *RemoteService) HandleMessage(request *base.Any, param string) (*base.Any, error) {
 	service := center.ClusterCenter.AllocService(this.serviceType, "")
 	if service == nil {
 		return nil, invalidServiceError
@@ -36,7 +39,7 @@ func (this *RemoteService) HandleMessage(request interface{}, param string) (int
 	return service.Request(request)
 }
 
-func (this *RemoteService) HandleRemoteMessage(serviceID string, request interface{}) (interface{}, error) {
+func (this *RemoteService) HandleRemoteMessage(serviceID string, request *base.Any) (*base.Any, error) {
 	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
 	if service == nil {
 		return nil, invalidServiceError
@@ -44,7 +47,7 @@ func (this *RemoteService) HandleRemoteMessage(serviceID string, request interfa
 	return service.Request(request)
 }
 
-func (this *RemoteService) HandlePriorityRemoteMessage(serviceID string, request interface{}) (interface{}, error) {
+func (this *RemoteService) HandlePriorityRemoteMessage(serviceID string, request *base.Any) (*base.Any, error) {
 	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
 	if service == nil {
 		service = center.ClusterCenter.AllocService(this.serviceType, "")
@@ -55,7 +58,7 @@ func (this *RemoteService) HandlePriorityRemoteMessage(serviceID string, request
 	return service.Request(request)
 }
 
-func (this *RemoteService) BroadcastAll(message interface{}) {
+func (this *RemoteService) BroadcastAll(message *base.Any) {
 	services := center.ClusterCenter.GetAllService(this.serviceType)
 	if services == nil || len(services) == 0 {
 		return

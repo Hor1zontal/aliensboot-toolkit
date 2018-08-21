@@ -20,25 +20,15 @@ import (
 	"aliens/gate"
 )
 
-//var id int64 = 0
-
-//func genClientID() string {
-//	id ++
-//	return center.ClusterCenter.GetNodeID() + "_" + util.Int64ToString(id)
-//}
-
 func newNetwork(agent gate.Agent) *network {
 	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
-	network.GetRemoteAddr()
-	network.channel = make(chan *base.Any, 5)
 	network.hashKey = agent.RemoteAddr().String()
-	go network.Start()
 	return network
 }
 
 type network struct {
 	agent 	      gate.Agent
-	channel       chan *base.Any //消息管道
+	//channel       chan *base.Any //消息管道
 
 	authID  int64  //用户标识 登录验证后
 	hashKey string //用来做一致性负载均衡的标识
@@ -46,9 +36,7 @@ type network struct {
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 
-	routes map[string]string //路由表 消息服务-服务节点
-
-	userData interface{}
+	bindRoutes map[string]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器
 }
 
 
@@ -57,40 +45,19 @@ type IAuthMessage interface {
 }
 
 //发送消息给客户端
-//func (this *network) SendMessage(msg interface{}) {
-//	this.agent.WriteMsg(msg)
-//}
-
-func (this *network) Start() {
-	for {
-		msg, ok := <-this.channel
-		if !ok {
-			return
-		}
-		//msg.Agent = this
-		response := this.HandleMessage(msg)
-		if response != nil {
-			this.agent.WriteMsg(response)
-		}
-	}
-}
-
-//发送消息给客户端
-func (this *network) Close() (isClosed bool) {
-	defer func() {
-		if recover() != nil {
-			isClosed = false
-		}
-	} ()
-	close(this.channel)
-	return true
+func (this *network) SendMessage(msg interface{}) {
+	this.agent.WriteMsg(msg)
 }
 
 func (this *network) AcceptMessage(msg *base.Any) {
-	this.channel <- msg
+	response := this.handleMessage(msg)
+	if response != nil {
+		this.agent.WriteMsg(response)
+	}
+	//this.channel <- msg
 }
 
-func (this *network) HandleMessage(request *base.Any) *base.Any {
+func (this *network) handleMessage(request *base.Any) *base.Any {
 	//未授权之前需要传递验权id
 	if this.IsAuth() {
 		request.AuthId = this.authID
@@ -136,16 +103,4 @@ func (this *network) IsHeartbeatTimeout() bool {
 
 func (this *network) HeartBeat () {
 	this.heartbeatTime = time.Now()
-}
-
-func (this *network) WriteMsg(msg interface{}) {
-	this.agent.WriteMsg(msg)
-}
-
-func (this *network) UserData() interface{} {
-	return this.userData
-}
-
-func (this *network) SetUserData(data interface{}) {
-	this.userData = data
 }

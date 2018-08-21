@@ -11,7 +11,6 @@ package route
 
 import (
 	"errors"
-	"strings"
 	"aliens/module/cluster/dispatch"
 	"fmt"
 	"aliens/protocol/base"
@@ -41,24 +40,24 @@ func LoadRoute(routes []Route) {
 	}
 }
 
-func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
-	params := strings.Split(requestURL, "/")
-	if len(params) < 3 {
-		return nil, errors.New("invalid param")
-	}
-
-	serviceID := params[1]
-	request := &base.Any{TypeUrl:params[2], Value:requestData}
-	response, error := dispatch.RPC.Request(serviceID, request, "")
-	if error != nil {
-		return nil, error
-	}
-	responseProxy, ok := response.(*base.Any)
-	if !ok {
-		return nil, errors.New("unexpect response type")
-	}
-	return responseProxy.Value, nil
-}
+//func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
+//	params := strings.Split(requestURL, "/")
+//	if len(params) < 3 {
+//		return nil, errors.New("invalid param")
+//	}
+//
+//	serviceID := params[1]
+//	request := &base.Any{TypeUrl:params[2], Value:requestData}
+//	response, error := dispatch.RPC.Request(serviceID, request, "")
+//	if error != nil {
+//		return nil, error
+//	}
+//	responseProxy, ok := response.(*base.Any)
+//	if !ok {
+//		return nil, errors.New("unexpect response type")
+//	}
+//	return responseProxy.Value, nil
+//}
 
 func GetPushID(service string) uint16 {
 	return serviceSeqMapping[service]
@@ -74,10 +73,6 @@ func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
 	if error != nil {
 		return nil, error
 	}
-	responseProxy, ok := response.(*base.Any)
-	if !ok {
-		return nil, errors.New("un expect response type")
-	}
-	responseProxy.Id = request.Id
-	return responseProxy, nil
+	response.Id = request.Id
+	return response, nil
 }

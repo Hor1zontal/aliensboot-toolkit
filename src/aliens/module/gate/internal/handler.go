@@ -11,9 +11,8 @@ package internal
 
 import (
 	"aliens/module/gate/msg"
-	//"aliens/module/cluster/dispatch"
-	//"aliens/module/gate/conf"
-	"aliens/module/gate/route"
+
+
 	"aliens/protocol/base"
 	"aliens/gate"
 )
@@ -28,8 +27,8 @@ const (
 
 func Init() {
 	msg.Processor.SetByteOrder(true)
-	Skeleton.RegisterChanRPC(CommandAgentNew, rpcNewAgent)
-	Skeleton.RegisterChanRPC(CommandAgentClose, rpcCloseAgent)
+	Skeleton.RegisterChanRPC(CommandAgentNew, newAgent)
+	Skeleton.RegisterChanRPC(CommandAgentClose, closeAgent)
 	Skeleton.RegisterChanRPC(CommandAgentPush, agentPush)
 	Skeleton.RegisterChanRPC(CommandAgentAuth, agentAuth)
 	Skeleton.RegisterChanRPC(CommandAgentMsg, handleMessage)
@@ -41,13 +40,13 @@ func Close() {
 }
 
 //只处理推送消息
-func HandlePush(request *base.Any) error {
-	if request.AuthId != 0 {
-		request.Id = route.GetPushID(request.TypeUrl)
-		Skeleton.ChanRPCServer.Go(CommandAgentPush, request.AuthId, request)
-	}
-	return nil
-}
+//func HandlePush(request *base.Any) error {
+//	if request.AuthId != 0 {
+//		request.Id = route.GetPushID(request.TypeUrl)
+//		Skeleton.ChanRPCServer.Go(CommandAgentPush, request.AuthId, request)
+//	}
+//	return nil
+//}
 
 //授权
 func agentAuth(args []interface{}) {
@@ -60,7 +59,7 @@ func agentPush(args []interface{}) {
 }
 
 //新的连接处理
-func rpcNewAgent(args []interface{}) {
+func newAgent(args []interface{}) {
 	agent := args[0].(gate.Agent)
 	if agent.UserData() == nil {
 		//打开缓存大小为5的收消息管道
@@ -71,7 +70,7 @@ func rpcNewAgent(args []interface{}) {
 }
 
 //关闭连接处理
-func rpcCloseAgent(args []interface{}) {
+func closeAgent(args []interface{}) {
 	a := args[0].(gate.Agent)
 	networkManager.removeNetwork(a.UserData().(*network))
 	a.SetUserData(nil)

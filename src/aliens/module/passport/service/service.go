@@ -25,38 +25,18 @@ import (
 var instance service.IService = nil
 
 func Init(chanRpc *chanrpc.Server) {
-	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
+	instance = center.PublicService(conf.Config.Service, service.NewRpcHandler(chanRpc, handle))
 }
 
 func Close() {
 	center.ReleaseService(instance)
 }
 
-func newService(chanRpc *chanrpc.Server) *protocolService {
-	service := &protocolService{}
-	service.chanRpc = chanRpc
-	service.chanRpc.Register("m", service.handle)
-	return service
-}
-
-type protocolService struct {
-	chanRpc *chanrpc.Server
-}
-
-func (this *protocolService) Request(request *base.Any, server base.RPCService_RequestServer) error {
-	if this.chanRpc != nil {
-		this.chanRpc.Call0("m", request, server)
-		return nil
-	}
-	return nil
-}
-
-
-func (this *protocolService) handle(args []interface{}) {
-	request := args[0].(*base.Any)
-	server := args[1].(base.RPCService_RequestServer)
+func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
 	responseProxy := &protocol.Response{}
+	response := &base.Any{}
+
 	authID := request.GetAuthId()
 	defer func() {
 		//处理消息异常
@@ -73,13 +53,15 @@ func (this *protocolService) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&base.Any{AuthId:authID, TypeUrl:"", Value:data})
+		response.AuthId = authID
+		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	authID = handleRequest(requestProxy, responseProxy)
+	return response
 }
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {

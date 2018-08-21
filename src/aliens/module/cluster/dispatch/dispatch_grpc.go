@@ -14,7 +14,6 @@ import (
 	"github.com/gogo/protobuf/proto"
 	"aliens/protocol/base"
 	"aliens/protocol"
-	"errors"
 )
 
 
@@ -37,12 +36,8 @@ func (dispatcher *GRPCDispatcher) SyncRequest(serviceName string, message  *prot
 	if err != nil {
 		return nil, err
 	}
-	any, ok := response.(*base.Any)
-	if !ok {
-		return nil, errors.New("invalid rpc ret data")
-	}
 	messageRet := &protocol.Response{}
-	messageRet.Unmarshal(any.GetValue())
+	messageRet.Unmarshal(response.GetValue())
 	return  messageRet, nil
 }
 
@@ -54,22 +49,18 @@ func (dispatcher *GRPCDispatcher) SyncRequestNode(serviceName string, serviceID 
 	if err != nil {
 		return nil, err
 	}
-	any, ok := response.(*base.Any)
-	if !ok {
-		return nil, errors.New("invalid rpc ret data")
-	}
 	messageRet := &protocol.Response{}
-	messageRet.Unmarshal(any.GetValue())
+	messageRet.Unmarshal(response.GetValue())
 	return  messageRet, nil
 
 }
 
-func (dispatcher *GRPCDispatcher) Request(serviceName string, message interface{}, hashKey string) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) Request(serviceName string, message *base.Any, hashKey string) (*base.Any, error) {
 	service := dispatcher.allocService(serviceName)
 	return service.HandleMessage(message, hashKey)
 }
 
-func (dispatcher *GRPCDispatcher) RequestNode(serviceName string, serviceID string, message interface{}) (interface{}, error) {
+func (dispatcher *GRPCDispatcher) RequestNode(serviceName string, serviceID string, message *base.Any) (*base.Any, error) {
 	service := dispatcher.allocService(serviceName)
 	return service.HandleRemoteMessage(serviceID, message)
 }

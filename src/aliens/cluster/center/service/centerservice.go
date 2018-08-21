@@ -9,6 +9,8 @@
  *******************************************************************************/
 package service
 
+import "aliens/protocol/base"
+
 //调用方式
 const (
 	WEBSOCKET string = "websocket"
@@ -33,7 +35,10 @@ type IService interface {
 
 	Equals(other IService) bool                       //比较服务
 	IsLocal() bool                                    //是否本机服务
-	Request(request interface{}) (interface{}, error) //请求服务
+
+	Request(request *base.Any) (*base.Any, error) //请求 响应服务 - 同步rpc
+	Send(request *base.Any) error //发送接收服务，不需要响应 - 异步请求
+
 	SetHandler(handler interface{})  //设置处理句柄
 	//Push(request interface{}) error //服务推送
 }

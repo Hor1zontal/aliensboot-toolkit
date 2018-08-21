@@ -26,12 +26,14 @@ type GRPCService struct {
 
 	//调用服务参数
 	client *grpc.ClientConn
-	caller base.RPCServiceClient
 
 	//启动服务参数
 	server  *grpc.Server      //
 
-	handler base.RPCServiceServer //处理句柄
+	requestClient base.RPCServiceClient
+	receiveClient base.RPCService_ReceiveClient
+
+	handler *rpcHandler //处理句柄
 }
 
 func (this *GRPCService) GetConfig() *CenterService {
@@ -43,9 +45,9 @@ func (this *GRPCService) GetDesc() string {
 }
 
 func (this *GRPCService) SetHandler(handler interface{}) {
-	result, ok := handler.(base.RPCServiceServer)
+	result, ok := handler.(*rpcHandler)
 	if !ok {
-		log.Fatalf("invalid grpc service handle %v", reflect.TypeOf(handler))
+		log.Fatalf("invalid grpc service request %v", reflect.TypeOf(handler))
 	}
 	this.handler = result
 }
@@ -105,7 +107,14 @@ func (this *GRPCService) Connect() bool {
 		return false
 	}
 	this.client = conn
-	this.caller = base.NewRPCServiceClient(this.client)
+	this.requestClient = base.NewRPCServiceClient(this.client)
+
+	receiveClient, err := this.requestClient.Receive(context.Background())
+	if err != nil {
+		log.Errorf("init receive handler error : %v", err)
+		return false
+	}
+	this.receiveClient = receiveClient
 	log.Infof("connect grpc service %v-%v success", this.Name, address)
 	return true
 }
@@ -137,42 +146,28 @@ func (this *GRPCService) Close() {
 }
 
 //向服务请求消息
-func (this *GRPCService) Request(request interface{}) (interface{}, error) {
+func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 	//服务为本机，直接处理
-	if this.client == nil {
+	if this.requestClient == nil {
 		return nil, errors.New("service is not initial")
 	}
-	requestAny, ok := request.(*base.Any)
-	if !ok {
-		return nil, errors.New("invalid request type")
+	//TODO 后续可以考虑如果服务是当前进程启动，可以直接调用服务句柄
+	if this.IsLocal() {
+		//return this.handler
 	}
 
-	//TODO 后续可以考虑如果服务是当前进程启动，可以直接调用服务句柄
-	//if this.IsLocal() {
-	//	return this.handler.re.Request(context.Background(), requestAny)
-	//} else {
-	//	client, err := this.caller.Request(context.Background(), requestAny)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	return client.Recv()
-	//}
-	client, err := this.caller.Request(context.Background(), requestAny)
+	client, err := this.requestClient.Request(context.Background(), request)
 	if err != nil {
 		return nil, err
 	}
 	return client.Recv()
 }
 
-func (this *GRPCService) AsyncRequest(request interface{}) error {
+//让服务接收消息，不需要响应
+func (this *GRPCService) Send(request *base.Any) error {
 	//服务为本机，直接处理
-	if this.client == nil {
+	if this.receiveClient == nil {
 		return errors.New("service is not initial")
 	}
-	requestAny, ok := request.(*base.Any)
-	if !ok {
-		return errors.New("invalid request type")
-	}
-	_, err := this.caller.Request(context.Background(), requestAny)
-	return err
+	return this.receiveClient.Send(request)
 }

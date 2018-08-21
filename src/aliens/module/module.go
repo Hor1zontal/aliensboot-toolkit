@@ -21,13 +21,12 @@ type module struct {
 var mods []*module
 
 func Register(mi Module) {
-	if (!mi.IsEnable()) {
+	if !mi.IsEnable() {
 		return
 	}
 	m := new(module)
 	m.mi = mi
 	m.closeSig = make(chan bool, 1)
-
 	mods = append(mods, m)
 }
 

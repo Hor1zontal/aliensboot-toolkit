@@ -59,7 +59,7 @@ func (this *NetworkManager) push(id int64, message interface{}) {
 	if auth == nil {
 		return
 	}
-	auth.WriteMsg(message)
+	auth.SendMessage(message)
 }
 
 func (this *NetworkManager) addNetwork(network *network) {
@@ -70,7 +70,6 @@ func (this *NetworkManager) addNetwork(network *network) {
 }
 
 func (this *NetworkManager) removeNetwork(network *network) {
-	network.Close()
 	if network.IsAuth() {
 		delete(this.authNetworks, network.authID)
 		cache.ClusterCache.CleanAuthGateID(network.authID)
