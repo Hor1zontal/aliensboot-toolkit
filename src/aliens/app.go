@@ -17,9 +17,18 @@ import (
 	"aliens/log"
 	"aliens/console"
 	"fmt"
+	"flag"
+)
+
+var (
+	debug = false
 )
 
 func Run(mods ...module.Module) {
+	flag.BoolVar(&debug, "debug", false, "debug flag")
+	flag.Parse()
+	log.SetDebug(debug)
+
 
 	logo := `
 	╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝

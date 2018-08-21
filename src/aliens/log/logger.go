@@ -21,14 +21,16 @@ import (
 	"github.com/pkg/errors"
 )
 
-var game = "gok"
+var game = "aliens"
 
 var format = &log.TextFormatter{}
 
-var logger = NewLogger(&log.TextFormatter{}, true)
+var logger = NewLogger(format, true)
 
-
-func init() {
+//调试版本日志带颜色
+func SetDebug(debug bool) {
+	format.ForceColors = debug
+	format.DisableTimestamp = debug
 }
 
 func NewLogger(formatter log.Formatter, local bool) *log.Logger {

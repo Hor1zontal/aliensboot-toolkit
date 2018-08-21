@@ -13,7 +13,7 @@ import (
     "aliens/chanrpc"
     "aliens/protocol/base"
     "aliens/cluster/center/service"
-    "aliens/module/game/conf"
+    "aliens/module/gate/conf"
     "aliens/cluster/center"
 )
 

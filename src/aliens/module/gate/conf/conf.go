@@ -36,7 +36,7 @@ var (
 
 var Config struct {
 	//Enable              bool   //网络模块是否开启
-	Service 			service.CenterService
+	Service 			service.Config
 
 	MaxConnNum          int
 	WSAddr              string //

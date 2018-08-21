@@ -22,10 +22,12 @@ import (
 
 var tag = ""
 
+var format = &logrus.JSONFormatter{DisableTimestamp:true}
+
 func init() {
 	//flag.StringVar(&tag, "etag", "", "testcase tag")  //测试用例标识
 	//flag.Parse()
-	log.Debug("statistics tag is %v", tag)
+	//log.Debug("statistics tag is %v", tag)
 }
 
 func NewESHandler(prefix string) *esHandler {
@@ -69,7 +71,7 @@ func (this *esHandler) HandleDayESLog(index string, msg string, fields logrus.Fi
 func (this *esHandler) getESLogger(index string) *logrus.Logger {
 	logger := this.esLogs[index]
 	if logger == nil {
-		logger = log.NewLogger(new(logrus.JSONFormatter), true)
+		logger = log.NewLogger(format, true)
 		err := this.attachES(logger, index)
 		if err != nil {
 

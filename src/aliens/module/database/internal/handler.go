@@ -54,13 +54,13 @@ func conditionUpdate(args []interface{}) {
 }
 
 func debugLog(opt string, data interface{}, startTime time.Time, err error) {
-	if conf.DB_DEBUG {
+	if conf.DBDebug {
 		typeName := reflect.TypeOf(data).Name()
 		if err != nil {
 			log.Debug("[%v] %v err %v", typeName, err)
 		}
 		duration := time.Now().Sub(startTime)
-		if duration.Seconds() >= conf.DB_SIGAL_TIMEOUT {
+		if duration.Seconds() >= conf.DBTimeoutThreshold {
 			log.Debug("[%v] %v too long %v",opt, typeName, duration.Seconds())
 		}
 	}
