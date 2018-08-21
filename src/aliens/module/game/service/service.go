@@ -11,6 +11,7 @@ package service
 
 import (
 	"github.com/gogo/protobuf/proto"
+    "aliens/chanrpc"
     "aliens/log"
     "runtime/debug"
     "aliens/exception"
@@ -19,44 +20,23 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/game/conf"
     "aliens/cluster/center"
-	"aliens/chanrpc"
 )
 
 var instance service.IService = nil
 
 func Init(chanRpc *chanrpc.Server) {
-	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
+	instance = center.PublicService(conf.Config.Service, service.NewRpcHandler(chanRpc, handle))
 }
 
 func Close() {
 	center.ReleaseService(instance)
 }
 
-func newService(chanRpc *chanrpc.Server) *protocolService {
-	service := &protocolService{}
-	service.chanRpc = chanRpc
-	service.chanRpc.Register("m", service.handle)
-	return service
-}
 
-type protocolService struct {
-	chanRpc *chanrpc.Server
-}
-
-func (this *protocolService) Request(request *base.Any, server base.RPCService_RequestServer) error {
-	if this.chanRpc != nil {
-		this.chanRpc.Call0("m", request, server)
-		return nil
-	}
-	return nil
-}
-
-
-func (this *protocolService) handle(args []interface{}) {
-	request := args[0].(*base.Any)
-	server := args[1].(base.RPCService_RequestServer)
+func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
 	responseProxy := &protocol.Response{}
+	response := &base.Any{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -72,13 +52,14 @@ func (this *protocolService) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&base.Any{Value:data})
+		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	return response
 }
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
@@ -87,24 +68,28 @@ func handleRequest(authID int64, request *protocol.Request, response *protocol.R
 		messageRet := &protocol.GetUserInfoRet{}
 		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
 		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
+		return
 	}
 	
 	if request.GetLoginRole() != nil {
 		messageRet := &protocol.LoginRoleRet{}
 		handleLoginRole(authID, request.GetLoginRole(), messageRet)
 		response.Game = &protocol.Response_LoginRoleRet{messageRet}
+		return
 	}
 	
 	if request.GetCreateRole() != nil {
 		messageRet := &protocol.CreateRoleRet{}
 		handleCreateRole(authID, request.GetCreateRole(), messageRet)
 		response.Game = &protocol.Response_CreateRoleRet{messageRet}
+		return
 	}
 	
 	if request.GetRemoveRole() != nil {
 		messageRet := &protocol.RemoveRoleRet{}
 		handleRemoveRole(authID, request.GetRemoveRole(), messageRet)
 		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
+		return
 	}
 	
 	response.Code = protocol.Code_InvalidRequest

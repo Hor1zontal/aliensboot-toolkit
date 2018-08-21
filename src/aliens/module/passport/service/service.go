@@ -11,15 +11,13 @@ package service
 
 import (
 	"github.com/gogo/protobuf/proto"
-    "aliens/log"
-    "runtime/debug"
+    "aliens/chanrpc"
     "aliens/exception"
     "aliens/protocol/base"
     "aliens/protocol"
     "aliens/cluster/center/service"
     "aliens/module/passport/conf"
     "aliens/cluster/center"
-	"aliens/chanrpc"
 )
 
 var instance service.IService = nil
@@ -36,7 +34,6 @@ func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
 	responseProxy := &protocol.Response{}
 	response := &base.Any{}
-
 	authID := request.GetAuthId()
 	defer func() {
 		//处理消息异常
@@ -46,14 +43,13 @@ func handle(request *base.Any) *base.Any {
 				responseProxy.Code = err.(protocol.Code)
 				break
 			default:
-				log.Error("%v", err)
-				debug.PrintStack()
+				exception.PrintStackDetail(err)
 				responseProxy.Code = protocol.Code_ServerException
 			}
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		response.AuthId = authID
+        response.AuthId = authID
 		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)

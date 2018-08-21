@@ -7,6 +7,7 @@ import (
 	"aliens/module/gate/msg"
 	"aliens/module"
 	"aliens/gate"
+	"aliens/module/gate/service"
 )
 
 var Skeleton = module.NewSkeleton()
@@ -34,13 +35,13 @@ func (m *Module) OnInit() {
 		Processor:       msg.Processor,
 		AgentChanRPC:    Skeleton.ChanRPCServer,
 	}
-	Init()
+	service.Init(Skeleton.ChanRPCServer)
 	http.Init()
 }
 
 func (m *Module) OnDestroy() {
 	http.Close()
-	Close()
+	service.Close()
 }
 
 func (m *Module) Run(closeSig chan bool) {

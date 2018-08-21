@@ -14,6 +14,7 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
+	"aliens/protocol/base"
 )
 
 var Passport = &passportRPCHandle{"passport"}
@@ -43,6 +44,16 @@ func (this *passportRPCHandle) RequestNode(node string, request *protocol.Reques
 //}
 
 
+func (this *passportRPCHandle) LoginRegister(node string, request *protocol.LoginRegister) *protocol.LoginRegisterRet {
+	message := &protocol.Request{
+		Passport:&protocol.Request_LoginRegister{
+			LoginRegister:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetLoginRegisterRet()
+}
+
 func (this *passportRPCHandle) LoginLogin(node string, request *protocol.LoginLogin) *protocol.LoginLoginRet {
 	message := &protocol.Request{
 		Passport:&protocol.Request_LoginLogin{
@@ -61,14 +72,4 @@ func (this *passportRPCHandle) TokenLogin(node string, request *protocol.TokenLo
 	}
 	messageRet := this.RequestNode(node, message)
 	return messageRet.GetTokenLoginRet()
-}
-
-func (this *passportRPCHandle) LoginRegister(node string, request *protocol.LoginRegister) *protocol.LoginRegisterRet {
-	message := &protocol.Request{
-		Passport:&protocol.Request_LoginRegister{
-			LoginRegister:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetLoginRegisterRet()
 }

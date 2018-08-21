@@ -25,7 +25,6 @@ type WSClient struct {
 
 func (client *WSClient) Start() {
 	client.init()
-
 	for i := 0; i < client.ConnNum; i++ {
 		client.wg.Add(1)
 		go client.connect()

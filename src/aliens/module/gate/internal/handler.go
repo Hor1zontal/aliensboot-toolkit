@@ -11,33 +11,19 @@ package internal
 
 import (
 	"aliens/module/gate/msg"
-
-
 	"aliens/protocol/base"
 	"aliens/gate"
+	"aliens/module/gate/service"
 )
 
-const (
-	CommandAgentNew   = "NewAgent" //新建agent
-	CommandAgentClose = "CloseAgent" //关闭agent
-	CommandAgentPush  = "Push"  //推送消息给agent
-	CommandAgentAuth  = "auth"  //验证agent权限
-	CommandAgentMsg  = "Msg" //接受agent消息
-)
-
-func Init() {
+func init() {
 	msg.Processor.SetByteOrder(true)
-	Skeleton.RegisterChanRPC(CommandAgentNew, newAgent)
-	Skeleton.RegisterChanRPC(CommandAgentClose, closeAgent)
-	Skeleton.RegisterChanRPC(CommandAgentPush, agentPush)
-	Skeleton.RegisterChanRPC(CommandAgentAuth, agentAuth)
-	Skeleton.RegisterChanRPC(CommandAgentMsg, handleMessage)
+	Skeleton.RegisterChanRPC(gate.CommandAgentNew, newAgent)
+	Skeleton.RegisterChanRPC(gate.CommandAgentClose, closeAgent)
+	Skeleton.RegisterChanRPC(gate.CommandAgentMsg, handleMessage)
 	//dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
 }
 
-func Close() {
-	//dispatch.MQ.UNRegisterConsumer(constant.SERVICE_GATE)
-}
 
 //只处理推送消息
 //func HandlePush(request *base.Any) error {
@@ -48,31 +34,27 @@ func Close() {
 //	return nil
 //}
 
-//授权
-func agentAuth(args []interface{}) {
-	networkManager.auth(args[0].(int64), args[1].(*network))
-}
 
 //推送消息
-func agentPush(args []interface{}) {
-	networkManager.push(args[0].(int64), args[1])
-}
+//func agentPush(args []interface{}) {
+//	networkManager.push(args[0].(int64), args[1])
+//}
 
 //新的连接处理
 func newAgent(args []interface{}) {
 	agent := args[0].(gate.Agent)
 	if agent.UserData() == nil {
 		//打开缓存大小为5的收消息管道
-		network := newNetwork(agent)
+		network := service.NewNetwork(agent)
 		agent.SetUserData(network)
-		networkManager.addNetwork(network)
+		service.Manager.AddNetwork(network)
 	}
 }
 
 //关闭连接处理
 func closeAgent(args []interface{}) {
 	a := args[0].(gate.Agent)
-	networkManager.removeNetwork(a.UserData().(*network))
+	service.Manager.RemoveNetwork(a.UserData().(*service.Network))
 	a.SetUserData(nil)
 }
 
@@ -83,8 +65,8 @@ func handleMessage(args []interface{}) {
 	gateAgent := args[1].(gate.Agent)
 	data := gateAgent.UserData()
 	switch data.(type) {
-	case *network:
-		data.(*network).AcceptMessage(request.(*base.Any))
+	case *service.Network:
+		data.(*service.Network).AcceptMessage(request.(*base.Any))
 		break
 	}
 }

@@ -58,10 +58,10 @@ func LoadRoute(routes []Route) {
 //	}
 //	return responseProxy.Value, nil
 //}
-
-func GetPushID(service string) uint16 {
-	return serviceSeqMapping[service]
-}
+//
+//func GetPushID(service string) uint16 {
+//	return serviceSeqMapping[service]
+//}
 
 
 func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"io/ioutil"
 	"os"
-	"github.com/name5566/leaf/log"
+	"fmt"
 )
 
 const (
@@ -24,12 +24,12 @@ const (
 func Convert(config *Config) {
 	message := ParseProto(config.ProtoPath)
 
-	log.Debug("proto data %v", message.modules["passport"].Handlers[6])
+	//fmt.Printf("proto data %v", message.modules["passport"].Handlers[6])
 
 	for _, moduleConfig := range config.Modules {
 		module := message.modules[moduleConfig.Name]
 		if module == nil {
-			log.Debug("module %v is nou found in proto file %v", moduleConfig.Name, config.ProtoPath)
+			fmt.Printf("module %v is nou found in proto file %v \n", moduleConfig.Name, config.ProtoPath)
 			continue
 		}
 
@@ -44,7 +44,7 @@ func convertModule(moduleConfig *ModuleConfig, module *Module) {
 	for _, outputConfig := range moduleConfig.Outputs {
 		b, err := ioutil.ReadFile(outputConfig.Template)
 		if err != nil {
-			log.Error(err.Error())
+			fmt.Printf(err.Error())
 			return
 		}
 		templateContent := string(b)
@@ -92,22 +92,22 @@ func writeFile(filePath string, content string, overwrite bool) {
 		//文件存在不允许覆盖
 		_, err := os.Stat(filePath)
 		if err == nil {
-			log.Debug("file " + filePath + " alread exist, skip it!")
+			fmt.Printf("file " + filePath + " alread exist, skip it! \n")
 			return
 		}
 	}
 	f, err := os.Create(filePath) //创建文件
 	if err != nil {
-		log.Error(err.Error())
+		fmt.Printf(err.Error())
 		return
 	}
 	defer f.Close()
 	_, err1 := f.Write([]byte(content)) //写入文件(字节数组)
 	if err1 != nil {
-		log.Error(err1.Error())
+		fmt.Printf(err1.Error())
 		return
 	}
-	log.Debug("gen code file " + filePath + " success!")
+	fmt.Printf("gen code file " + filePath + " success! \n")
 }
 
 

@@ -11,6 +11,7 @@ package service
 
 import (
 	"github.com/gogo/protobuf/proto"
+    "aliens/chanrpc"
     "aliens/log"
     "runtime/debug"
     "aliens/exception"
@@ -19,44 +20,23 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/scene/conf"
     "aliens/cluster/center"
-	"aliens/chanrpc"
 )
 
 var instance service.IService = nil
 
 func Init(chanRpc *chanrpc.Server) {
-	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
+	instance = center.PublicService(conf.Config.Service, service.NewRpcHandler(chanRpc, handle))
 }
 
 func Close() {
 	center.ReleaseService(instance)
 }
 
-func newService(chanRpc *chanrpc.Server) *protocolService {
-	service := &protocolService{}
-	service.chanRpc = chanRpc
-	service.chanRpc.Register("m", service.handle)
-	return service
-}
 
-type protocolService struct {
-	chanRpc *chanrpc.Server
-}
-
-func (this *protocolService) Request(request *base.Any, server base.RPCService_RequestServer) error {
-	if this.chanRpc != nil {
-		this.chanRpc.Call0("m", request, server)
-		return nil
-	}
-	return nil
-}
-
-
-func (this *protocolService) handle(args []interface{}) {
-	request := args[0].(*base.Any)
-	server := args[1].(base.RPCService_RequestServer)
+func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
 	responseProxy := &protocol.Response{}
+	response := &base.Any{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -72,39 +52,44 @@ func (this *protocolService) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&base.Any{Value:data})
+		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	return response
 }
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
+	
+	if request.GetGetState() != nil {
+		messageRet := &protocol.GetStateRet{}
+		handleGetState(authID, request.GetGetState(), messageRet)
+		response.Scene = &protocol.Response_GetStateRet{messageRet}
+		return
+	}
 	
 	if request.GetSpaceMove() != nil {
 		messageRet := &protocol.SpaceMoveRet{}
 		handleSpaceMove(authID, request.GetSpaceMove(), messageRet)
 		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
+		return
 	}
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &protocol.SpaceEnterRet{}
 		handleSpaceEnter(authID, request.GetSpaceEnter(), messageRet)
 		response.Scene = &protocol.Response_SpaceEnterRet{messageRet}
+		return
 	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &protocol.SpaceLeaveRet{}
 		handleSpaceLeave(authID, request.GetSpaceLeave(), messageRet)
 		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
-	}
-	
-	if request.GetGetState() != nil {
-		messageRet := &protocol.GetStateRet{}
-		handleGetState(authID, request.GetGetState(), messageRet)
-		response.Scene = &protocol.Response_GetStateRet{messageRet}
+		return
 	}
 	
 	response.Code = protocol.Code_InvalidRequest

@@ -14,6 +14,7 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
+	"aliens/protocol/base"
 )
 
 var Game = &gameRPCHandle{"game"}

@@ -42,7 +42,7 @@ func (gate *Gate) Run(closeSig chan bool) {
 		wsServer.NewAgent = func(conn *network.WSConn) network.Agent {
 			a := &agent{conn: conn, gate: gate}
 			if gate.AgentChanRPC != nil {
-				gate.AgentChanRPC.Go("NewAgent", a)
+				gate.AgentChanRPC.Go(CommandAgentNew, a)
 			}
 			return a
 		}
@@ -60,7 +60,7 @@ func (gate *Gate) Run(closeSig chan bool) {
 		tcpServer.NewAgent = func(conn *network.TCPConn) network.Agent {
 			a := &agent{conn: conn, gate: gate}
 			if gate.AgentChanRPC != nil {
-				gate.AgentChanRPC.Go("NewAgent", a)
+				gate.AgentChanRPC.Go(CommandAgentNew, a)
 			}
 			return a
 		}
@@ -104,7 +104,7 @@ func (a *agent) Run() {
 				break
 			}
 			//msgType := reflect.TypeOf(msg)
-			a.gate.AgentChanRPC.Go("Msg", msg, a)
+			a.gate.AgentChanRPC.Go(CommandAgentMsg, msg, a)
 			//err = a.gate.Processor.Route(msg, a)
 			//if err != nil {
 			//	log.Debug("route message error: %v", err)
@@ -116,7 +116,7 @@ func (a *agent) Run() {
 
 func (a *agent) OnClose() {
 	if a.gate.AgentChanRPC != nil {
-		err := a.gate.AgentChanRPC.Call0("CloseAgent", a)
+		err := a.gate.AgentChanRPC.Call0(CommandAgentClose, a)
 		if err != nil {
 			log.Errorf("chanrpc error: %v", err)
 		}

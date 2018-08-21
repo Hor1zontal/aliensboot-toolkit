@@ -25,38 +25,18 @@ import (
 var instance service.IService = nil
 
 func Init(chanRpc *chanrpc.Server) {
-	instance = center.PublicService(conf.Config.Service, newService(chanRpc))
+	instance = center.PublicService(conf.Config.Service, service.NewRpcHandler(chanRpc, handle))
 }
 
 func Close() {
 	center.ReleaseService(instance)
 }
 
-func newService(chanRpc *chanrpc.Server) *${package}Service {
-	service := &${package}Service{}
-	service.chanRpc = chanRpc
-	service.chanRpc.Register("m", service.handle)
-	return service
-}
 
-type ${package}Service struct {
-	chanRpc *chanrpc.Server
-}
-
-func (this *${package}Service) Request(request *base.Any, server base.RPCService_RequestServer) error {
-	if this.chanRpc != nil {
-		this.chanRpc.Call0("m", request, server)
-		return nil
-	}
-	return nil
-}
-
-
-func (this *${package}Service) handle(args []interface{}) {
-	request := args[0].(*base.Any)
-	server := args[1].(base.RPCService_RequestServer)
+func handle(request *base.Any) *base.Any {
 	requestProxy := &${package}.Request{}
 	responseProxy := &${package}.Response{}
+	response := &base.Any{}
 	defer func() {
 		//处理消息异常
 		if err := recover(); err != nil {
@@ -72,13 +52,14 @@ func (this *${package}Service) handle(args []interface{}) {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-		server.Send(&base.Any{Value:data})
+		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
 		exception.GameException(${package}.Code_InvalidRequest)
 	}
 	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	return response
 }
 
 func handleRequest(authID int64, request *${package}.Request, response *${package}.Response) {
@@ -87,6 +68,7 @@ func handleRequest(authID int64, request *${package}.Request, response *${packag
 		messageRet := &${package}.${o_response}{}
 		handle${o_request}(authID, request.Get${o_request}(), messageRet)
 		response.${Module} = &${package}.Response_${o_response}{messageRet}
+		return
 	}
 	<message>
 	response.Code = ${package}.Code_InvalidRequest

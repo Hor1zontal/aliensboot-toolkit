@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package internal
+package service
 
 import (
 	"time"
@@ -20,13 +20,13 @@ import (
 	"aliens/gate"
 )
 
-func newNetwork(agent gate.Agent) *network {
-	network := &network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+func NewNetwork(agent gate.Agent) *Network {
+	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
 	network.hashKey = agent.RemoteAddr().String()
 	return network
 }
 
-type network struct {
+type Network struct {
 	agent 	      gate.Agent
 	//channel       chan *base.Any //消息管道
 
@@ -45,11 +45,11 @@ type IAuthMessage interface {
 }
 
 //发送消息给客户端
-func (this *network) SendMessage(msg interface{}) {
+func (this *Network) SendMessage(msg interface{}) {
 	this.agent.WriteMsg(msg)
 }
 
-func (this *network) AcceptMessage(msg *base.Any) {
+func (this *Network) AcceptMessage(msg *base.Any) {
 	response := this.handleMessage(msg)
 	if response != nil {
 		this.agent.WriteMsg(response)
@@ -57,7 +57,7 @@ func (this *network) AcceptMessage(msg *base.Any) {
 	//this.channel <- msg
 }
 
-func (this *network) handleMessage(request *base.Any) *base.Any {
+func (this *Network) handleMessage(request *base.Any) *base.Any {
 	//未授权之前需要传递验权id
 	if this.IsAuth() {
 		request.AuthId = this.authID
@@ -77,30 +77,31 @@ func (this *network) handleMessage(request *base.Any) *base.Any {
 	return response
 }
 
-func (this *network) GetRemoteAddr() net.Addr {
+func (this *Network) GetRemoteAddr() net.Addr {
 	return this.agent.RemoteAddr()
 }
 
-func (this *network) IsAuth() bool {
+func (this *Network) IsAuth() bool {
 	return this.authID != 0
 }
 
-func (this *network) Auth(id int64) {
+func (this *Network) Auth(id int64) {
 	this.authID = id
 	this.hashKey = util.Int64ToString(id)
-	Skeleton.ChanRPCServer.Go(CommandAgentAuth, id, this)
+	Manager.auth(id, this)
+	//Skeleton.ChanRPCServer.Go(CommandAgentAuth, id, this)
 }
 
 //是否没有验权超时 释放多余的空连接
-func (this *network) IsAuthTimeout() bool {
+func (this *Network) IsAuthTimeout() bool {
 	return !this.IsAuth() && time.Now().Sub(this.createTime).Seconds() >= conf.Config.AuthTimeout
 }
 
 //是否心跳超时
-func (this *network) IsHeartbeatTimeout() bool {
+func (this *Network) IsHeartbeatTimeout() bool {
 	return time.Now().Sub(this.heartbeatTime).Seconds() >= conf.Config.HeartbeatTimeout
 }
 
-func (this *network) HeartBeat () {
+func (this *Network) HeartBeat () {
 	this.heartbeatTime = time.Now()
 }

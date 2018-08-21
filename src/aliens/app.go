@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * All rights reserved.
+ * Date:
+ *     2018/8/21
+ * Contributors:
+ *     aliens idea(xiamen) Corporation - initial API and implementation
+ *     jialin.he <kylinh@gmail.com>
+ *******************************************************************************/
 package aliens
 
 import (
@@ -7,9 +16,17 @@ import (
 	"aliens/module"
 	"aliens/log"
 	"aliens/console"
+	"fmt"
 )
 
 func Run(mods ...module.Module) {
+
+	logo := `
+	╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝
+	╔═║║  ║╔═╝║ ║══║╔═║║ ║ ║
+	╝ ╝══╝╝══╝╝ ╝══╝══ ══╝ ╝
+	`
+	fmt.Println(logo)
 
 	log.Infof("AliensBot %v starting up", config.Version)
 	// module

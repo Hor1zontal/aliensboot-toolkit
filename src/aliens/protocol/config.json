@@ -71,6 +71,30 @@
           "Overwrite":true
         }
       ]
+    },
+
+    {
+      "Name":"gate",
+      "Outputs":[
+        {
+          "Template":"templates/common.template",
+          "Output":"../module/gate/service/service.go",
+          "Prefix":"",
+          "Overwrite":true
+        },
+        {
+          "Template":"templates/common_handle.template",
+          "Output":"../module/gate/service",
+          "Prefix":"handle_${}.go",
+          "Overwrite":false
+        },
+        {
+          "Template":"templates/common_rpc.template",
+          "Output":"../module/cluster/rpc/gate.go",
+          "Prefix":"",
+          "Overwrite":true
+        }
+      ]
     }
   ]
 }
