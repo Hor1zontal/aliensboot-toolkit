@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"aliens/log"
+	"path/filepath"
 )
 
 
@@ -25,6 +26,7 @@ var (
 	//LogLevel string
 	//LogPath  string
 	//LogFlag  int
+	ModuleConfigRoot = ""
 
 	// console
 	ConsolePort   int
@@ -32,15 +34,24 @@ var (
 	ProfilePath   string
 )
 
+func Init(configPath string) {
+	dir, _ := filepath.Abs(filepath.Base(configPath))
+	//log.Debugf("configuration path is %v", dir)
+	ModuleConfigRoot = dir + string(filepath.Separator) + "modules" + string(filepath.Separator)
+}
 
-func LoadConfig(config interface{}, path string) {
+
+func LoadConfigData(name string, config interface{}) {
+	if config == nil {
+		return
+	}
+	path := ModuleConfigRoot + name + ".json"
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return
+		log.Fatalf("module %v config file is not found %v", name, path)
 	}
 	err = json.Unmarshal(data, config)
 	if err != nil {
 		log.Fatalf("load config %v err %v", path, err)
 	}
-	//log.Debug("json init success %v", config)
 }

@@ -14,8 +14,12 @@ type Module struct {
 }
 
 
-func (m *Module) IsEnable() bool {
-	return true
+func (m *Module) GetName() string {
+	return "database"
+}
+
+func (m *Module) GetConfig() interface{} {
+	return nil
 }
 
 func (m *Module) OnInit() {

@@ -10,23 +10,13 @@
 package conf
 
 import (
-	"aliens/config"
 	"aliens/cache/redis"
 	"aliens/cluster/center"
 	"aliens/mq"
-	"aliens/module"
 )
-
-var configPath =  module.BaseConfPath + "cluster.json"
 
 var Config struct {
 	Cluster center.ClusterConfig
 	Cache   redis.CacheConfig
 	MQ mq.Config
 }
-
-
-func init() {
-	config.LoadConfig(&Config, configPath)
-}
-

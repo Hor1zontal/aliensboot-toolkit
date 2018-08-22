@@ -11,20 +11,18 @@ package conf
 
 import (
 	"time"
-	"aliens/config"
-	"aliens/module/gate/route"
 	"aliens/cluster/center/service"
-	"aliens/module"
 )
 
-var (
 
-	configPath =  module.BaseConfPath + "gate/server.json"
-	// skeleton conf
-	GoLen              = 10000
-	TimerDispatcherLen = 10000
-	AsynCallLen        = 10000
-	ChanRPCLen         = 10000
+type Route struct
+{
+	Service string `json:"service"`
+	Seq uint16 `json:"seq"`
+	Auth bool `json:"auth"`
+}
+
+var (
 
 	// aliens conf
 	PendingWriteNum        = 2000
@@ -46,10 +44,9 @@ var Config struct {
 	MessageChannelLimit int
 	AuthTimeout         float64
 	HeartbeatTimeout    float64
-	Route	[]route.Route   //路由配置
+	Route	[]Route   //路由配置
 }
 
-func Init() {
-	config.LoadConfig(&Config, configPath)
-	route.LoadRoute(Config.Route)
+func Init(name string) {
+	Config.Service.Name = name
 }

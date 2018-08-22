@@ -8,6 +8,7 @@ import (
 	"aliens/module"
 	"aliens/gate"
 	"aliens/module/gate/service"
+	"aliens/module/gate/route"
 )
 
 var Skeleton = module.NewSkeleton()
@@ -16,13 +17,16 @@ type Module struct {
 	*gate.Gate
 }
 
-func (m *Module) IsEnable() bool {
-	return true
+func (m *Module) GetName() string {
+	return "gate"
 }
 
+func (m *Module) GetConfig() interface{} {
+	return &conf.Config
+}
 
 func (m *Module) OnInit() {
-	conf.Init()
+	conf.Init(m.GetName())
 	m.Gate = &gate.Gate{
 		MaxConnNum:      conf.Config.MaxConnNum,
 		PendingWriteNum: conf.PendingWriteNum,
@@ -35,6 +39,7 @@ func (m *Module) OnInit() {
 		Processor:       msg.Processor,
 		AgentChanRPC:    Skeleton.ChanRPCServer,
 	}
+	route.Init()
 	service.Init(Skeleton.ChanRPCServer)
 	http.Init()
 }

@@ -9,13 +9,7 @@
  *******************************************************************************/
 package conf
 
-import (
-	"aliens/config"
-	"aliens/module"
-)
-
 const (
-	configPath = module.BaseConfPath + "statistics/config.json"
 	AnalysisFlag = false //是否开启性能分析
 	Game = "aliens" //日志索引信息
 )
@@ -30,8 +24,4 @@ type ESConfig struct {
 	Host string
 	Username string
 	Password string
-}
-
-func init() {
-	config.LoadConfig(&Config, configPath) //加载服务器配置
 }

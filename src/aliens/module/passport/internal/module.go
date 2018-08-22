@@ -5,14 +5,19 @@ import (
 	"aliens/module/passport/db"
 	"aliens/module/passport/service"
 	"aliens/module"
+	"aliens/module/passport/conf"
 )
 
 type Module struct {
 	*module.Skeleton
 }
 
-func (m *Module) IsEnable() bool {
-	return true
+func (m *Module) GetName() string {
+	return "passport"
+}
+
+func (m *Module) GetConfig() interface{} {
+	return &conf.Config
 }
 
 func (m *Module) OnInit() {

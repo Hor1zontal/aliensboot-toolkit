@@ -3,10 +3,13 @@ package module
 import (
 	"sync"
 	"aliens/exception"
+	"aliens/config"
 )
 
 type Module interface {
-	IsEnable() bool
+	GetName() string  //module name
+	GetConfig() interface{}  //module config data
+
 	OnInit()
 	OnDestroy()
 	Run(closeSig chan bool)
@@ -21,9 +24,6 @@ type module struct {
 var mods []*module
 
 func Register(mi Module) {
-	if !mi.IsEnable() {
-		return
-	}
 	m := new(module)
 	m.mi = mi
 	m.closeSig = make(chan bool, 1)
@@ -31,6 +31,10 @@ func Register(mi Module) {
 }
 
 func Init() {
+	for i := 0; i < len(mods); i++ {
+		config.LoadConfigData(mods[i].mi.GetName(), mods[i].mi.GetConfig())
+	}
+
 	for i := 0; i < len(mods); i++ {
 		mods[i].mi.OnInit()
 	}

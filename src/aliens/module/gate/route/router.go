@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"aliens/protocol/base"
 	"aliens/cluster/center/dispatch"
+	"aliens/module/gate/conf"
 )
 
 //requestID - service
@@ -23,14 +24,9 @@ var seqServiceMapping = make(map[uint16]string)
 var serviceSeqMapping = make(map[string]uint16)
 
 
-type Route struct
-{
-	Service string `json:"service"`
-	Seq uint16 `json:"seq"`
-	Auth bool `json:"auth"`
-}
 
-func LoadRoute(routes []Route) {
+func Init() {
+	routes := conf.Config.Route
 	for _, route := range routes {
 		if route.Service == "" {
 			continue

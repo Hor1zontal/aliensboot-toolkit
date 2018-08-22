@@ -21,8 +21,6 @@ import (
 
 
 const (
-	BaseConfPath 	   = "conf/aliens/" //config base path
-
 	// skeleton conf
 	GoLen              = 10000
 	TimerDispatcherLen = 10000

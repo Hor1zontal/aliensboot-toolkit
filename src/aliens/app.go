@@ -22,13 +22,17 @@ import (
 
 var (
 	debug = false
+	configPath = ""
+	moduleConfigPath = ""
 )
 
 func Run(mods ...module.Module) {
 	flag.BoolVar(&debug, "debug", false, "debug flag")
+	flag.StringVar(&configPath, "config", "config", "configuration path")
 	flag.Parse()
-	log.SetDebug(debug)
 
+	config.Init(configPath)
+	log.Init(debug)
 
 	logo := `
 	╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝

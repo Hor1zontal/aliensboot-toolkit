@@ -3,6 +3,7 @@ package internal
 import (
 	"aliens/module/statistics/analysis"
 	"aliens/module"
+	"aliens/module/statistics/conf"
 )
 
 var (
@@ -14,9 +15,12 @@ type Module struct {
 	*module.Skeleton
 }
 
+func (m *Module) GetConfig() interface{} {
+	return conf.Config
+}
 
-func (m *Module) IsEnable() bool {
-	return true
+func (m *Module) GetName() string {
+	return "statistics"
 }
 
 func (m *Module) OnInit() {

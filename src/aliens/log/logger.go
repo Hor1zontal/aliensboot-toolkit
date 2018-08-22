@@ -28,7 +28,7 @@ var format = &log.TextFormatter{}
 var logger = NewLogger(format, true)
 
 //调试版本日志带颜色
-func SetDebug(debug bool) {
+func Init(debug bool) {
 	format.ForceColors = debug
 	format.DisableTimestamp = debug
 }
