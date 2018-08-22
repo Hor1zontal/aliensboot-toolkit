@@ -33,7 +33,6 @@ func (this *dbHandler) ForceUpdate(data interface{}, dbHandler database2.IDataba
 	database.ChanRPC.Go(constant.DB_COMMAND_FUPDATE, data, dbHandler)
 }
 
-
 func (this *dbHandler) Delete(data interface{}, dbHandler database2.IDatabaseHandler) {
 	database.ChanRPC.Go(constant.DB_COMMAND_DELETE, data, dbHandler)
 }

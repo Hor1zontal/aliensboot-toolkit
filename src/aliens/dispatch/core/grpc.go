@@ -15,18 +15,7 @@ import (
 	"aliens/protocol/base"
 	"github.com/gogo/protobuf/proto"
 	"aliens/cluster/center/dispatch"
-	"aliens/cluster/center"
-	"aliens/module/cluster/conf"
 )
-
-func Init() {
-	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
-}
-
-func Close() {
-	center.ClusterCenter.Close()
-}
-
 
 //阻塞请求消息 - 根据负载均衡动态分配一个节点处理
 func Request(serviceName string, message  *protocol.Request, hashKey string) (*protocol.Response, error) {

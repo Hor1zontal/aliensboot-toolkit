@@ -1,10 +1,9 @@
 package internal
 
 import (
-	"aliens/module/cluster/cache"
 	"aliens/module"
-	"aliens/module/cluster/core"
 	"aliens/module/cluster/conf"
+	"aliens/cluster/center"
 )
 
 
@@ -23,12 +22,12 @@ func (m *Module) GetConfig() interface{} {
 
 func (m *Module) OnInit() {
 	m.Skeleton = module.NewSkeleton()
-	cache.Init()
-	core.Init()
+	//cache.Init()
+	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
 
 }
 
 func (m *Module) OnDestroy() {
-	core.Close()
-	cache.Close()
+	center.ClusterCenter.Close()
+	//cache.Close()
 }
