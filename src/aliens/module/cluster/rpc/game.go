@@ -10,11 +10,10 @@
 package rpc
 
 import (
-	"aliens/module/cluster/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/protocol/base"
+	"aliens/module/cluster/core"
 )
 
 var Game = &gameRPCHandle{"game"}
@@ -26,7 +25,7 @@ type gameRPCHandle struct {
 
 
 func (this *gameRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
+	rpcRet, err := core.RequestNode(this.name, node, request)
 	if err != nil {
     	log.Error(err)
     	exception.GameException(protocol.Code_InvalidService)

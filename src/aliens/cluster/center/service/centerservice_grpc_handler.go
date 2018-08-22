@@ -34,8 +34,8 @@ func NewRpcHandler(chanRpc *chanrpc.Server, handler handler) *rpcHandler {
 }
 
 type rpcHandler struct {
-	chanRpc *chanrpc.Server
-	handler handler
+	chanRpc   *chanrpc.Server
+	handler   handler
 	suspended bool
 }
 
@@ -43,7 +43,9 @@ func (this *rpcHandler) request(args []interface{}) {
 	request := args[0].(*base.Any)
 	server := args[1].(base.RPCService_RequestServer)
 	response := this.handler(request)
-	server.Send(response)
+	if response != nil {
+		server.Send(response)
+	}
 }
 
 func (this *rpcHandler) receive(args []interface{}) {

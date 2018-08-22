@@ -13,8 +13,8 @@ type IMessageService interface {
 //type IRemoteService interface {
 //	GetType() string                          //获取消息服务类型
 //	BroadcastAll(message interface{}) //广播所有消息服务
-//	HandleRemoteMessage(serviceID string, request interface{}) (interface{}, error)      //阻塞调用指定服务ID接口，
-//	HandlePriorityRemoteMessage(serviceID string, request interface{}) (interface{}, error) //阻塞调用指定服务接口,优先发送到serviceID节点，没有会分配一个节点处理
+//	RequestNode(serviceID string, request interface{}) (interface{}, error)      //阻塞调用指定服务ID接口，
+//	RequestPriorityNode(serviceID string, request interface{}) (interface{}, error) //阻塞调用指定服务接口,优先发送到serviceID节点，没有会分配一个节点处理
 //}
 
 type ISeqMessage interface {

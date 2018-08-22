@@ -64,20 +64,6 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
 	
-	if request.GetGetUserInfo() != nil {
-		messageRet := &protocol.GetUserInfoRet{}
-		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
-		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
-		return
-	}
-	
-	if request.GetLoginRole() != nil {
-		messageRet := &protocol.LoginRoleRet{}
-		handleLoginRole(authID, request.GetLoginRole(), messageRet)
-		response.Game = &protocol.Response_LoginRoleRet{messageRet}
-		return
-	}
-	
 	if request.GetCreateRole() != nil {
 		messageRet := &protocol.CreateRoleRet{}
 		handleCreateRole(authID, request.GetCreateRole(), messageRet)
@@ -89,6 +75,20 @@ func handleRequest(authID int64, request *protocol.Request, response *protocol.R
 		messageRet := &protocol.RemoveRoleRet{}
 		handleRemoveRole(authID, request.GetRemoveRole(), messageRet)
 		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
+		return
+	}
+	
+	if request.GetGetUserInfo() != nil {
+		messageRet := &protocol.GetUserInfoRet{}
+		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
+		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
+		return
+	}
+	
+	if request.GetLoginRole() != nil {
+		messageRet := &protocol.LoginRoleRet{}
+		handleLoginRole(authID, request.GetLoginRole(), messageRet)
+		response.Game = &protocol.Response_LoginRoleRet{messageRet}
 		return
 	}
 	

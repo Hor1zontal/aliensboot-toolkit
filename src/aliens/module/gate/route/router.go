@@ -11,9 +11,9 @@ package route
 
 import (
 	"errors"
-	"aliens/module/cluster/dispatch"
 	"fmt"
 	"aliens/protocol/base"
+	"aliens/cluster/center/dispatch"
 )
 
 //requestID - service
@@ -69,7 +69,7 @@ func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
-	response, error := dispatch.RPC.Request(serviceName, request, hashKey)
+	response, error := dispatch.Request(serviceName, request, hashKey)
 	if error != nil {
 		return nil, error
 	}

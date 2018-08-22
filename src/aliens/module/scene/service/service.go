@@ -64,6 +64,13 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
 	
+	if request.GetSpaceLeave() != nil {
+		messageRet := &protocol.SpaceLeaveRet{}
+		handleSpaceLeave(authID, request.GetSpaceLeave(), messageRet)
+		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
+		return
+	}
+	
 	if request.GetGetState() != nil {
 		messageRet := &protocol.GetStateRet{}
 		handleGetState(authID, request.GetGetState(), messageRet)
@@ -82,13 +89,6 @@ func handleRequest(authID int64, request *protocol.Request, response *protocol.R
 		messageRet := &protocol.SpaceEnterRet{}
 		handleSpaceEnter(authID, request.GetSpaceEnter(), messageRet)
 		response.Scene = &protocol.Response_SpaceEnterRet{messageRet}
-		return
-	}
-	
-	if request.GetSpaceLeave() != nil {
-		messageRet := &protocol.SpaceLeaveRet{}
-		handleSpaceLeave(authID, request.GetSpaceLeave(), messageRet)
-		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
 		return
 	}
 	

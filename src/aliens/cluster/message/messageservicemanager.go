@@ -55,33 +55,33 @@ package message
 //
 //
 ////处理模块消息
-//func (this *MessageServiceManager) HandleMessage(serviceType string, request interface{}) error, out interface{} {
+//func (this *MessageServiceManager) Request(serviceType string, request interface{}) error, out interface{} {
 //	service := this.services[serviceType]
 //	if service != nil {
-//		return service.HandleMessage(in, out)
+//		return service.Request(in, out)
 //	}
 //	return invalidServiceError
 //}
 //
 ////处理远程模块消息
-//func (this *MessageServiceManager) HandleRemoteMessage(serviceType string, serviceID string, request interface{}, out interface{}) error {
+//func (this *MessageServiceManager) RequestNode(serviceType string, serviceID string, request interface{}, out interface{}) error {
 //	service := this.services[serviceType]
 //	if service != nil {
 //		remoteService, ok := service.(IRemoteService)
 //		if ok {
-//			return remoteService.HandleRemoteMessage(serviceID, in, out)
+//			return remoteService.RequestNode(serviceID, in, out)
 //		}
 //	}
 //	return invalidServiceError
 //}
 //
 ////优先发送到指定的serviceID,如果没有发送到其他节点
-//func (this *MessageServiceManager) HandlePriorityRemoteMessage(serviceType string, serviceID string, request interface{}, out interface{}) error {
+//func (this *MessageServiceManager) RequestPriorityNode(serviceType string, serviceID string, request interface{}, out interface{}) error {
 //	service := this.services[serviceType]
 //	if service != nil {
 //		remoteService, ok := service.(IRemoteService)
 //		if ok {
-//			return remoteService.HandlePriorityRemoteMessage(serviceID, in, out)
+//			return remoteService.RequestPriorityNode(serviceID, in, out)
 //		}
 //	}
 //	return invalidServiceError

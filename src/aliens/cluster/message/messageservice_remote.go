@@ -31,40 +31,62 @@ func (this *RemoteService) Init() {
 	center.ClusterCenter.SubscribeServices(this.serviceType)
 }
 
-func (this *RemoteService) HandleMessage(request *base.Any, param string) (*base.Any, error) {
+
+//同步调用服务, 请求节点采用内部的负载均衡策略分配
+func (this *RemoteService) Request(request *base.Any, param string) (*base.Any, error) {
+	service := center.ClusterCenter.AllocService(this.serviceType, param)
+	if service == nil {
+		return nil, invalidServiceError
+	}
+	return service.Request(request)
+}
+
+//同步调用服务，请求到指定节点
+func (this *RemoteService) RequestNode(serviceID string, request *base.Any) (*base.Any, error) {
+	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
+	if service == nil {
+		return nil, invalidServiceError
+	}
+	return service.Request(request)
+}
+
+//func (this *RemoteService) RequestPriorityNode(serviceID string, request *base.Any) (*base.Any, error) {
+//	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
+//	if service == nil {
+//		service = center.ClusterCenter.AllocService(this.serviceType, "")
+//	}
+//	if service == nil {
+//		return nil, invalidServiceError
+//	}
+//	return service.Request(request)
+//}
+
+//异步调用服务, 请求节点采用内部的负载均衡策略分配
+func (this *RemoteService) Send(request *base.Any, param string) error {
 	service := center.ClusterCenter.AllocService(this.serviceType, "")
 	if service == nil {
-		return nil, invalidServiceError
+		return invalidServiceError
 	}
-	return service.Request(request)
+	return service.Send(request)
 }
 
-func (this *RemoteService) HandleRemoteMessage(serviceID string, request *base.Any) (*base.Any, error) {
+//异步调用服务，请求到指定节点
+func (this *RemoteService) SendNode(serviceID string, request *base.Any) error {
 	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
 	if service == nil {
-		return nil, invalidServiceError
+		return invalidServiceError
 	}
-	return service.Request(request)
+	return service.Send(request)
 }
 
-func (this *RemoteService) HandlePriorityRemoteMessage(serviceID string, request *base.Any) (*base.Any, error) {
-	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
-	if service == nil {
-		service = center.ClusterCenter.AllocService(this.serviceType, "")
-	}
-	if service == nil {
-		return nil, invalidServiceError
-	}
-	return service.Request(request)
-}
-
+//广播到所有节点
 func (this *RemoteService) BroadcastAll(message *base.Any) {
 	services := center.ClusterCenter.GetAllService(this.serviceType)
 	if services == nil || len(services) == 0 {
 		return
 	}
 	for _, service := range services {
-		service.Request(message)
+		service.Send(message)
 	}
 	return
 }

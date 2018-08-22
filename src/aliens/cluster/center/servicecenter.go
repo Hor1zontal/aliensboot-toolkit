@@ -64,7 +64,7 @@ type ConfigListener func(data []byte)
 
 type ServiceCenter interface {
 
-	GetNodeID() string
+	GetNodeID() string //获取当前节点id
 
 	ConnectCluster(config ClusterConfig)
 
@@ -78,7 +78,7 @@ type ServiceCenter interface {
 	GetAllService(serviceName string) []service.IService  //获取所有的服务
 
 	GetService(serviceName string, serviceID string) service.IService //获取指定服务
-	AllocService(serviceName string, param string) service.IService
+	AllocService(serviceName string, param string) service.IService //按照负载均衡策略 分配一个可用的服务
 
 	//AddServiceListener(listener service.Listener)
 
@@ -87,12 +87,12 @@ type ServiceCenter interface {
 }
 
 type ClusterConfig struct {
-	ID 		string   //集群中的节点id 需要保证整个集群中唯一
+	ID 		string     //集群中的节点id 需要保证整个集群中唯一
 	Name    string     //集群名称，不用业务使用不同的集群
 	Servers []string   //集群服务器列表
 	Timeout uint
-	LBS     string   //负载均衡策略  polling 轮询
-	TTL     int64   //
+	LBS     string     //负载均衡策略  polling 轮询
+	TTL     int64      //
 	//CertFile string
 	//KeyFile  string
 	//CommonName string

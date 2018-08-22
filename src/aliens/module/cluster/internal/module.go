@@ -2,8 +2,8 @@ package internal
 
 import (
 	"aliens/module/cluster/cache"
-	"aliens/module/cluster/dispatch"
 	"aliens/module"
+	"aliens/module/cluster/core"
 )
 
 
@@ -18,11 +18,11 @@ func (m *Module) IsEnable() bool {
 func (m *Module) OnInit() {
 	m.Skeleton = module.NewSkeleton()
 	cache.Init()
-	dispatch.Init()
+	core.Init()
 
 }
 
 func (m *Module) OnDestroy() {
-	dispatch.Close()
+	core.Close()
 	cache.Close()
 }

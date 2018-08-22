@@ -7,8 +7,24 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package dispatch
+package core
 
+
+//var MQ = newMQDispatcher(conf.Config.MQ)
+//
+//type Dispatcher interface {
+//	//RegisterConsumer(consumerID string, handle func(data *protocol.Any) error) //注册消息消费者
+//	//UNRegisterConsumer(consumerID string)  //注销消息消费者
+//
+//	AsyncBroadcast(serviceType string, message proto.Message) error
+//	AsyncPush(serviceType string, serviceID string, message proto.Message) error //异步推送
+//
+//	SyncRequest(serviceType string, message proto.Message) (interface{}, error)
+//	SyncRequestNode(serviceType string, serviceID string, message proto.Message) (interface{}, error)
+//	Request(serviceType string, message interface{}) (interface{}, error)
+//	RequestNode(serviceType string, serviceID string, message interface{}) (interface{}, error)
+//}
+//
 //func newMQDispatcher(config mq.Config) *MQDispatcher {
 //	log.Debugf("%v", config.Address)
 //	producer, err := mq.NewProducer(config)
@@ -35,7 +51,7 @@ package dispatch
 //		return
 //	}
 //
-//	handleProxy := NewProtobufHandler(handle).HandleMessage
+//	handleProxy := NewProtobufHandler(handle).Request
 //	consumer, err := mq.NewConsumer(dispatcher.config, serviceType, center.ClusterCenter.GetNodeID(), handleProxy)
 //	if err != nil {
 //		log.Fatal(err)
@@ -65,7 +81,7 @@ package dispatch
 //	proxy func(message *protocol.Any) error
 //}
 //
-//func (this *protobufHandler) HandleMessage(data []byte) error {
+//func (this *protobufHandler) Request(data []byte) error {
 //	requestProxy := &protocol.Any{}
 //	error := proto.Unmarshal(data, requestProxy)
 //	if error != nil {
