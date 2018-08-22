@@ -15,7 +15,6 @@ const (
 )
 
 var Config struct {
-	Enable			bool
 	ES 				ESConfig
 }
 

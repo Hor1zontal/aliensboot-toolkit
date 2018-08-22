@@ -10,19 +10,9 @@
 package conf
 
 import (
-	"aliens/config"
 	"aliens/cluster/center/service"
-	"aliens/module"
-)
-
-const (
-	configPath = module.BaseConfPath + "scene/server.json"
 )
 
 var Config struct {
 	Service  service.Config
-}
-
-func init() {
-	config.LoadConfig(&Config, configPath)
 }

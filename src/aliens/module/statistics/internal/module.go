@@ -16,7 +16,7 @@ type Module struct {
 }
 
 func (m *Module) GetConfig() interface{} {
-	return conf.Config
+	return &conf.Config
 }
 
 func (m *Module) GetName() string {
