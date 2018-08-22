@@ -31,7 +31,7 @@ func Close() {
 func handle(request *base.Any) *base.Any {
 	pushID := request.GetAuthId()
 	if pushID > 0 {
-		Manager.push(request.GetAuthId(), request)
+		Manager.push(pushID, request)
 	}
 	return nil
 }

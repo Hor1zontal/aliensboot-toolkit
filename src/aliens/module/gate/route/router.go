@@ -60,12 +60,30 @@ func Init() {
 //}
 
 
+func GetServiceSeq(serviceName string) uint16 {
+	return serviceSeqMapping[serviceName]
+}
+
 func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
 	serviceName, ok := seqServiceMapping[request.Id]
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
 	}
 	response, error := dispatch.Request(serviceName, request, hashKey)
+	if error != nil {
+		return nil, error
+	}
+	response.Id = request.Id
+	return response, nil
+}
+
+//发送到指定节点
+func HandleNodeMessage(request *base.Any, node string) (*base.Any, error) {
+	serviceName, ok := seqServiceMapping[request.Id]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+	}
+	response, error := dispatch.RequestNode(serviceName, node, request)
 	if error != nil {
 		return nil, error
 	}

@@ -18,11 +18,14 @@ import (
 	"aliens/protocol/base"
 	"aliens/common/util"
 	"aliens/gate"
+	"errors"
+	"fmt"
 )
 
 func NewNetwork(agent gate.Agent) *Network {
 	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
 	network.hashKey = agent.RemoteAddr().String()
+	network.bindRoutes = make(map[uint16]string)
 	return network
 }
 
@@ -36,7 +39,7 @@ type Network struct {
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 
-	bindRoutes map[string]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器
+	bindRoutes map[uint16]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器需要固定转发服务器
 }
 
 
@@ -57,6 +60,16 @@ func (this *Network) AcceptMessage(msg *base.Any) {
 	//this.channel <- msg
 }
 
+//绑定服务节点,固定转发
+func (this *Network) BindServiceNode(serviceName string, serviceNode string) error {
+	serviceSeq := route.GetServiceSeq(serviceName)
+	if serviceSeq <= 0 {
+		return errors.New(fmt.Sprintf("bind service node error , service %v seq not found", serviceName))
+	}
+	this.bindRoutes[serviceSeq] = serviceNode
+	return nil
+}
+
 func (this *Network) handleMessage(request *base.Any) *base.Any {
 	//未授权之前需要传递验权id
 	if this.IsAuth() {
@@ -64,7 +77,15 @@ func (this *Network) handleMessage(request *base.Any) *base.Any {
 	} else {
 		request.AuthId = 0
 	}
-	response, error := route.HandleMessage(request, this.hashKey)
+
+	node, ok := this.bindRoutes[request.Id]
+	var response *base.Any = nil
+	var error error = nil
+	if ok {
+		response, error = route.HandleNodeMessage(request, node)
+	} else {
+		response, error = route.HandleMessage(request, this.hashKey)
+	}
 	//log.Debugf("request %v - response %v", request, response)
 	if error != nil {
 		//TODO 返回服务不可用等处理方式
