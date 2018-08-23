@@ -1,130 +1,80 @@
 package service
 
 import (
+	"time"
 	"aliens/common/util"
 	"aliens/common/data_structures/map"
-	"github.com/AsynkronIT/protoactor-go/actor"
-	"aliens/gate"
-	"aliens/chanrpc"
+	"aliens/module/gate/conf"
+	"aliens/module/cluster/cache"
+	"aliens/cluster/center"
 )
 
-var manager = &NetworkManager{}
+var Manager = &NetworkManager{}
 
-var chanRpc *chanrpc.Server = nil
-
-const (
-	CommandAgentRemote = "removeAgent"
-	CommandAgentAuth = "authAgent"
-)
+func init() {
+	Manager.Init()
+}
 
 type NetworkManager struct {
 	//sync.RWMutex
-	networks  *_map.Map               //存储所有未验权的网络连接
-	authNetworks map[int64]*actor.PID //存储所有验权通过的网络连接
-	//timeWheel *util.TimeWheel       //验权检查时间轮
+	networks  *_map.Map             //存储所有未验权的网络连接
+	authNetworks map[int64]*Network //存储所有验权通过的网络连接
+	timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
 //开启权限,心跳等验证机制
-func (this *NetworkManager) Init(chanRpc *chanrpc.Server) {
-	//if this.timeWheel != nil {
-	//	this.timeWheel.Stop()
-	//}
-	chanRpc = chanRpc
+func (this *NetworkManager) Init() {
+	if this.timeWheel != nil {
+		this.timeWheel.Stop()
+	}
 	this.networks = &_map.Map{}
-	this.authNetworks = make(map[int64]*actor.PID)
-
-	chanRpc.Register(CommandAgentRemote, this.removeAgent)
-	chanRpc.Register(CommandAgentAuth, this.authAgent)
-	chanRpc.Register(gate.CommandAgentNew, this.newAgent)
-	chanRpc.Register(gate.CommandAgentClose, this.closeAgent)
-	chanRpc.Register(gate.CommandAgentMsg, this.handleMessage)
+	this.authNetworks = make(map[int64]*Network)
 
 	//心跳精确到s
-	//this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
-	//this.timeWheel.Start()
+	this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
+	this.timeWheel.Start()
 }
 
 func (this *NetworkManager) dealAuthTimeout(data util.TaskData) {
-	//network := data[0].(*network)
+	//Network := data[0].(*Network)
 	//超过固定时长没有验证权限需要退出
-	//if network.IsAuthTimeout() {
-	//	log.Debug("network auth timeout : %v", network.GetRemoteAddr())
-	//	network.Close()
-	//	this.networks.Del(network)
+	//if Network.IsAuthTimeout() {
+	//	log.Debug("Network auth timeout : %v", Network.GetRemoteAddr())
+	//	Network.Close()
+	//	this.networks.Del(Network)
 	//}
 }
 
-//推送消息给指定玩家
+//验权限
+func (this *NetworkManager) auth(authID int64, network *Network) {
+	this.timeWheel.RemoveTimer(network)
+	this.networks.Del(network)
+	this.authNetworks[authID] = network
+	cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())
+}
+
+//推送消息
 func (this *NetworkManager) push(id int64, message interface{}) {
 	auth := this.authNetworks[id]
 	if auth == nil {
-		//TODO 推送的玩家不在线的处理方式
 		return
 	}
-	auth.Tell(&userPush{pushMsg:message})
+	auth.SendMessage(message)
 }
 
-//
-func (this *NetworkManager) broadcast(message interface{}) {
-	msg := &userPush{pushMsg:message}
-	for _, network := range this.authNetworks {
-		network.Tell(msg)
-	}
+func (this *NetworkManager) AddNetwork(network *Network) {
+	data := make(util.TaskData)
+	data[0] = network
+	this.timeWheel.AddTimer(time.Duration(conf.Config.AuthTimeout)*time.Second, network, data)
+	this.networks.Set(network, &struct{}{})
 }
 
-//新的agent处理
-func (this *NetworkManager) newAgent(args []interface{}) {
-	agent := args[0].(gate.Agent)
-	if agent.UserData() == nil {
-		pid := actor.Spawn(actor.FromProducer(func() actor.Actor {return &network{}}))
-		//data := make(util.TaskData)
-		//data[0] = network
-		//this.timeWheel.AddTimer(time.Duration(conf.Config.AuthTimeout)*time.Second, network, data)
-		this.networks.Set(pid, &struct{}{})
-		pid.Tell(&NetworkInit{agent:agent,pid:pid})
-		agent.SetUserData(pid)
-	}
-}
-
-//agent授权
-func (this *NetworkManager) authAgent(args []interface{}) {
-	authID := args[0].(int64)
-	pid := args[1].(*actor.PID)
-	this.networks.Del(pid)
-	this.authNetworks[authID] = pid
-}
-
-//由network 处理释放流程后主动通知
-func (this *NetworkManager) removeAgent(args []interface{}) {
-	authID := args[0].(int64)
-	pid := args[1].(*actor.PID)
-	if authID != 0 {
-		delete(this.authNetworks, authID)
+func (this *NetworkManager) RemoveNetwork(network *Network) {
+	if network.IsAuth() {
+		delete(this.authNetworks, network.authID)
+		cache.ClusterCache.CleanAuthGateID(network.authID)
 	} else {
-		this.networks.Del(pid)
+		this.timeWheel.RemoveTimer(network)
+		this.networks.Del(network)
 	}
 }
-
-//关闭连接处理
-func (this *NetworkManager) closeAgent(args []interface{}) {
-	a := args[0].(gate.Agent)
-	pid, ok := a.UserData().(*actor.PID)
-	a.SetUserData(nil)
-	if ok {
-		pid.Stop()
-	}
-}
-
-//消息处理
-func (this *NetworkManager) handleMessage(args []interface{}) {
-	request := args[0]
-	//消息的发送者
-	gateAgent := args[1].(gate.Agent)
-	pid, ok := gateAgent.UserData().(*actor.PID)
-	if ok {
-		pid.Tell(request)
-	}
-}
-
-
-

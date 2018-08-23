@@ -12,6 +12,7 @@ package service
 import (
 	"time"
 	"aliens/module/gate/conf"
+	"net"
 	"aliens/module/gate/route"
 	"aliens/log"
 	"aliens/protocol/base"
@@ -19,11 +20,16 @@ import (
 	"aliens/gate"
 	"errors"
 	"fmt"
-	"github.com/AsynkronIT/protoactor-go/actor"
-	"net"
 )
 
-type network struct {
+func NewNetwork(agent gate.Agent) *Network {
+	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+	network.hashKey = agent.RemoteAddr().String()
+	network.bindRoutes = make(map[uint16]string)
+	return network
+}
+
+type Network struct {
 	agent 	      gate.Agent
 	//channel       chan *base.Any //消息管道
 
@@ -33,35 +39,20 @@ type network struct {
 	createTime    time.Time //创建时间
 	heartbeatTime time.Time //上次的心跳时间
 
-	pid *actor.PID //actor 句柄
-
 	bindRoutes map[uint16]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器需要固定转发服务器
 }
 
 
-//发送消息给客户端
-func (this *network) Receive(context actor.Context) {
-	switch msg := context.Message().(type) {
-	case *base.Any:
-		this.acceptMessage(msg)
-	case *userPush:
-		this.agent.WriteMsg(msg.pushMsg)
-	case *NetworkInit:
-		this.agent = msg.agent
-		this.createTime = time.Now()
-		this.heartbeatTime = time.Now()
-		this.agent = msg.agent
-		this.hashKey = this.agent.RemoteAddr().String()
-		this.bindRoutes = make(map[uint16]string)
-		this.pid = msg.pid
-	case *actor.Stopped:
-		log.Debugf("%v stop", this.getRemoteAddr())
-		//TODO 如果授权 通知其他模块用户下线
-		chanRpc.Go(CommandAgentRemote, this.authID, this.pid)
-	}
+type IAuthMessage interface {
+	GetUserID() uint32
 }
 
-func (this *network) acceptMessage(msg *base.Any) {
+//发送消息给客户端
+func (this *Network) SendMessage(msg interface{}) {
+	this.agent.WriteMsg(msg)
+}
+
+func (this *Network) AcceptMessage(msg *base.Any) {
 	response := this.handleMessage(msg)
 	if response != nil {
 		this.agent.WriteMsg(response)
@@ -70,7 +61,7 @@ func (this *network) acceptMessage(msg *base.Any) {
 }
 
 //绑定服务节点,固定转发
-func (this *network) bindServiceNode(serviceName string, serviceNode string) error {
+func (this *Network) BindServiceNode(serviceName string, serviceNode string) error {
 	serviceSeq := route.GetServiceSeq(serviceName)
 	if serviceSeq <= 0 {
 		return errors.New(fmt.Sprintf("bind service node error , service %v seq not found", serviceName))
@@ -79,9 +70,9 @@ func (this *network) bindServiceNode(serviceName string, serviceNode string) err
 	return nil
 }
 
-func (this *network) handleMessage(request *base.Any) *base.Any {
+func (this *Network) handleMessage(request *base.Any) *base.Any {
 	//未授权之前需要传递验权id
-	if this.isAuth() {
+	if this.IsAuth() {
 		request.AuthId = this.authID
 	} else {
 		request.AuthId = 0
@@ -102,36 +93,36 @@ func (this *network) handleMessage(request *base.Any) *base.Any {
 	}
 	//更新验权id
 	if response.GetAuthId() > 0 {
-		this.auth(response.GetAuthId())
+		this.Auth(response.GetAuthId())
 	}
 	return response
 }
 
-func (this *network) getRemoteAddr() net.Addr {
+func (this *Network) GetRemoteAddr() net.Addr {
 	return this.agent.RemoteAddr()
 }
 
-func (this *network) isAuth() bool {
+func (this *Network) IsAuth() bool {
 	return this.authID != 0
 }
 
-func (this *network) auth(id int64) {
+func (this *Network) Auth(id int64) {
 	this.authID = id
 	this.hashKey = util.Int64ToString(id)
-	chanRpc.Go(CommandAgentAuth, this.authID, this.pid)
+	Manager.auth(id, this)
 	//Skeleton.ChanRPCServer.Go(CommandAgentAuth, id, this)
 }
 
 //是否没有验权超时 释放多余的空连接
-func (this *network) IsAuthTimeout() bool {
-	return !this.isAuth() && time.Now().Sub(this.createTime).Seconds() >= conf.Config.AuthTimeout
+func (this *Network) IsAuthTimeout() bool {
+	return !this.IsAuth() && time.Now().Sub(this.createTime).Seconds() >= conf.Config.AuthTimeout
 }
 
 //是否心跳超时
-func (this *network) IsHeartbeatTimeout() bool {
+func (this *Network) IsHeartbeatTimeout() bool {
 	return time.Now().Sub(this.heartbeatTime).Seconds() >= conf.Config.HeartbeatTimeout
 }
 
-func (this *network) HeartBeat () {
+func (this *Network) HeartBeat () {
 	this.heartbeatTime = time.Now()
 }

@@ -77,7 +77,7 @@ func (this *rpcHandler) Receive(server base.RPCService_ReceiveServer) error {
 		}
 		request, err := server.Recv()
 		if err != nil {
-			log.Debugf("accept async message error : %v", err)
+			log.Debug("accept async message error : %v", request)
 			continue
 		}
 		if this.chanRpc != nil {

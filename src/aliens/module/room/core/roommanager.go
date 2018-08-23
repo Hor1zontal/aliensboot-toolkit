@@ -79,7 +79,7 @@ func (this *manager) AcceptRoomMessage(roomID string, request interface{}, respo
 //	if authMessage != nil {
 //		room := this.rooms[authMessage.GetRoomID()]
 //		if room != nil {
-//			room.acceptMessage().acceptFrameMessage(message, agent)
+//			room.AcceptMessage().acceptFrameMessage(message, agent)
 //		}
 //	} else {
 //		player, ok := agent.UserData().(*Player)
