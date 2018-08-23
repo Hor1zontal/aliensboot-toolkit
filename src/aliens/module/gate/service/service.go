@@ -15,11 +15,13 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/gate/conf"
     "aliens/cluster/center"
+	"aliens/log"
 )
 
 var instance service.IService = nil
 
 func Init(chanRpc *chanrpc.Server) {
+	manager.Init(chanRpc)
 	instance = center.PublicService(conf.Config.Service, service.NewRpcHandler(chanRpc, handle))
 }
 
@@ -30,8 +32,13 @@ func Close() {
 
 func handle(request *base.Any) *base.Any {
 	pushID := request.GetAuthId()
-	if pushID > 0 {
-		Manager.push(pushID, request)
+	if pushID == -1 {
+		manager.broadcast(request)
+	} else if pushID > 0 {
+		manager.push(pushID, request)
+	} else {
+		log.Warnf("un expect push authID %v", pushID)
 	}
 	return nil
 }
+

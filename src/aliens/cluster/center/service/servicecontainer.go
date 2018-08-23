@@ -9,16 +9,14 @@
  *******************************************************************************/
 package service
 
-import (
-	"sync"
-)
+import "sync"
 
 func NewContainer(lbs string) *Container {
 	return &Container{root:make(map[string]*serviceCategory), lbs:lbs}
 }
 
 type Container struct {
-	sync.RWMutex
+	mu sync.RWMutex
 	root map[string]*serviceCategory //服务容器 key 服务名
 	//serviceListeners map[string]Listener  //服务监听
 	lbs string
@@ -30,8 +28,8 @@ type Container struct {
 
 //更新服务
 func (this *Container) UpdateService(service IService, overwrite bool) bool {
-	this.Lock()
-	defer this.Unlock()
+	this.mu.Lock()
+	defer this.mu.Unlock()
 	category := this.EnsureCategory(service.GetName())
 	result := category.updateService(service, overwrite)
 	return result
@@ -49,8 +47,8 @@ func (this *Container) EnsureCategory(serviceName string) *serviceCategory {
 }
 
 func (this *Container) UpdateServices(serviceName string, services []IService) {
-	this.Lock()
-	defer this.Unlock()
+	this.mu.Lock()
+	defer this.mu.Unlock()
 	category := this.root[serviceName]
 	if category == nil {
 		category = NewServiceCategory(serviceName, this.lbs, "")
@@ -87,8 +85,8 @@ func (this *Container) UpdateServices(serviceName string, services []IService) {
 
 //删除服务
 func (this *Container) RemoveService(serviceName string, serviceID string) {
-	this.Lock()
-	defer this.Unlock()
+	this.mu.Lock()
+	defer this.mu.Unlock()
 	serviceCategory := this.root[serviceName]
 	if serviceCategory == nil {
 		return
@@ -98,8 +96,8 @@ func (this *Container) RemoveService(serviceName string, serviceID string) {
 
 //根据服务类型获取一个空闲的服务节点
 func (this *Container) AllocService(serviceName string, param string) IService {
-	this.RLock()
-	defer this.RUnlock()
+	this.mu.RLock()
+	defer this.mu.RUnlock()
 	//TODO 后续要优化，考虑负载、空闲等因素
 	serviceCategory := this.root[serviceName]
 	if serviceCategory == nil {
@@ -121,8 +119,8 @@ func (this *Container) AllocService(serviceName string, param string) IService {
 
 //获取指定服务节点
 func (this *Container) GetService(serviceName string, serviceID string) IService {
-	this.RLock()
-	defer this.RUnlock()
+	this.mu.RLock()
+	defer this.mu.RUnlock()
 	serviceCategory := this.root[serviceName]
 	if serviceCategory == nil {
 		return nil
@@ -131,8 +129,8 @@ func (this *Container) GetService(serviceName string, serviceID string) IService
 }
 
 func (this *Container) GetAllService(serviceType string) []IService {
-	this.RLock()
-	defer this.RUnlock()
+	this.mu.RLock()
+	defer this.mu.RUnlock()
 	serviceCategory := this.root[serviceType]
 	if serviceCategory == nil {
 		return nil
@@ -141,8 +139,8 @@ func (this *Container) GetAllService(serviceType string) []IService {
 }
 
 func (this *Container) GetServiceInfo(serviceType string) []string {
-	this.RLock()
-	defer this.RUnlock()
+	this.mu.RLock()
+	defer this.mu.RUnlock()
 	serviceCategory := this.root[serviceType]
 	if serviceCategory == nil {
 		return nil

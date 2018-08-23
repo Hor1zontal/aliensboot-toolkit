@@ -27,6 +27,8 @@ func (m *Module) GetConfig() interface{} {
 
 func (m *Module) OnInit() {
 	conf.Init(m.GetName())
+
+	msg.Processor.SetByteOrder(true)
 	m.Gate = &gate.Gate{
 		MaxConnNum:      conf.Config.MaxConnNum,
 		PendingWriteNum: conf.PendingWriteNum,
