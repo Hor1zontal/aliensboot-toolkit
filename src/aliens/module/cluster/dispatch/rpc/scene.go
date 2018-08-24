@@ -25,7 +25,7 @@ type sceneRPCHandle struct {
 
 
 func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RPC.SyncRequestNode(this.name, node, request)
+	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
 	if err != nil {
     	log.Error(err)
     	exception.GameException(protocol.Code_InvalidService)

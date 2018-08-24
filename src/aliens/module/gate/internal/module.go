@@ -9,6 +9,7 @@ import (
 	"aliens/gate"
 	"aliens/module/gate/service"
 	"aliens/module/gate/route"
+	"aliens/module/gate/network"
 )
 
 var Skeleton = module.NewSkeleton()
@@ -40,6 +41,7 @@ func (m *Module) OnInit() {
 		AgentChanRPC:    Skeleton.ChanRPCServer,
 	}
 	route.Init()
+	network.Manager.Init(Skeleton.ChanRPCServer)
 	service.Init(Skeleton.ChanRPCServer)
 	http.Init()
 }

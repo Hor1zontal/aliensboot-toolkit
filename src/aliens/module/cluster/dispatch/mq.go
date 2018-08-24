@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package core
+package dispatch
 
 
 //var MQ = newMQDispatcher(conf.Config.MQ)

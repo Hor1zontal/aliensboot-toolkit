@@ -3,9 +3,7 @@ package chanrpc
 import (
 	"errors"
 	"fmt"
-	"runtime"
 	"aliens/log"
-	"aliens/config"
 	"aliens/exception"
 )
 
@@ -99,15 +97,9 @@ func (s *Server) ret(ci *CallInfo, ri *RetInfo) (err error) {
 
 func (s *Server) exec(ci *CallInfo) (err error) {
 	defer func() {
-		if r := recover(); r != nil {
-			if config.LenStackBuf > 0 {
-				buf := make([]byte, config.LenStackBuf)
-				l := runtime.Stack(buf, false)
-				err = fmt.Errorf("%v: %s", r, buf[:l])
-			} else {
-				err = fmt.Errorf("%v", r)
-			}
 
+		if r := recover(); r != nil {
+			exception.PrintStackDetail(r)
 			s.ret(ci, &RetInfo{err: fmt.Errorf("%v", r)})
 		}
 	}()

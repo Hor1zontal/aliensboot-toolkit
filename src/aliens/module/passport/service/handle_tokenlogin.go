@@ -23,5 +23,6 @@ func handleTokenLogin(request *protocol.TokenLogin, response *protocol.TokenLogi
 		return 0
 	}
 	response.Result = protocol.LoginResult_loginSuccess
+	request.Uid = 2
 	return request.GetUid()
 }

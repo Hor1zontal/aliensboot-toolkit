@@ -13,6 +13,7 @@ import (
 	"aliens/cluster/center/service"
 	"aliens/log"
 	"aliens/cluster/center/lbs"
+	"aliens/common/util"
 )
 
 var ClusterCenter ServiceCenter = &ETCDServiceCenter{} //服务调度中心
@@ -30,9 +31,11 @@ func PublicService(config service.Config, handler interface{}) service.IService 
 		log.Fatal(config.Name + " cluster center is not connected")
 		return nil
 	}
-
 	config.ID = ClusterCenter.GetNodeID() //节点id
-
+	//地址没有发布到外网 采用内网地址
+	if config.Address == "" {
+		config.Address = util.GetIP()
+	}
 	service := service.NewService(config)
 	if service == nil {
 		log.Fatalf( "un expect service protocol %v", config.Protocol)
@@ -50,14 +53,15 @@ func PublicService(config service.Config, handler interface{}) service.IService 
 
 
 func ReleaseService(service service.IService) {
+	//if !ClusterCenter.IsConnect() {
+	//	log.Errorf(" cluster center is not connected")
+	//	return
+	//}
+	//先从中心释放，再内部关闭，缓解关闭期间其他服务请求转发过来
+	ClusterCenter.ReleaseService(service)
 	if service != nil {
 		service.Close()
 	}
-	if !ClusterCenter.IsConnect() {
-		log.Errorf(" cluster center is not connected")
-		return
-	}
-	ClusterCenter.ReleaseService(service)
 }
 
 type ConfigListener func(data []byte)

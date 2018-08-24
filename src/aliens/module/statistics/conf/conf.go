@@ -11,7 +11,9 @@ package conf
 
 const (
 	AnalysisFlag = false //是否开启性能分析
-	Game = "aliens" //日志索引信息
+	Game = "aliens" //统计日志索引前缀
+	Local = true  //是否存储到本地
+	LocalPrefix = "aliens_statistics" //本地日志存储的前缀
 )
 
 var Config struct {

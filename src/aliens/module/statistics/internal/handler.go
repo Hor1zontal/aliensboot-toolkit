@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"aliens/module/statistics/model"
 	"aliens/module/statistics/elastics"
-	"aliens/cluster/center"
+	//"aliens/cluster/center"
 	"aliens/module/statistics/conf"
 	"aliens/module/statistics/constant"
 	"aliens/task"
@@ -41,7 +41,7 @@ func init() {
 func handleOnlineStatic(args []interface{}) {
 	userCount := args[0].(int)   //用户数量
 	visitorCount := args[1].(int)   //空连接数量
-	onlineFields["node"] = center.ClusterCenter.GetNodeID()
+	onlineFields["node"] = "node1" //center.ClusterCenter.GetNodeID()
 	onlineFields["u_count"] = userCount
 	onlineFields["v_count"] = visitorCount
 	esHandler.HandleDayESLog("online", "", onlineFields)
@@ -70,7 +70,7 @@ func handleTimer() {
 	for service, callInfos := range serviceStatistics {
 		for serviceNo, callInfo := range callInfos {
 			serviceFields["service"] = service
-			serviceFields["node"] = center.ClusterCenter.GetNodeID()
+			serviceFields["node"] = "node1" //center.ClusterCenter.GetNodeID()
 			serviceFields["no"] = serviceNo
 			result, count, avg := callInfo.DumpData()
 			if !result {

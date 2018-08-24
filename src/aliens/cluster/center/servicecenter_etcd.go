@@ -22,7 +22,7 @@ import (
 )
 
 type ETCDServiceCenter struct {
-	sync.RWMutex
+	//sync.RWMutex
 
 	*service.Container //服务容器 key 服务名
 	client *clientv3.Client
@@ -33,7 +33,7 @@ type ETCDServiceCenter struct {
 	configRoot  string //配置根节点
 	serviceRoot string //服务根节点
 	ttl         int64
-	ttlCheck    map[string]string
+	ttlCheck    *sync.Map//map[string]string
 	ticker      *time.Ticker
 }
 
@@ -57,7 +57,7 @@ func (this *ETCDServiceCenter) ConnectCluster(config ClusterConfig) {
 		log.Fatal(err)
 	}
 	this.client = client
-	this.ttlCheck = make(map[string]string)
+	this.ttlCheck = &sync.Map{} //make(map[string]string)
 	this.serviceRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + SERVICE_NODE_NAME
 	this.configRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + CONFIG_NODE_NAME
 
@@ -90,9 +90,10 @@ func (this *ETCDServiceCenter) Close() {
 func (this *ETCDServiceCenter) ReleaseService(service service.IService) {
 	servicePath := this.serviceRoot + NODE_SPLIT + service.GetName() + NODE_SPLIT + service.GetID()
 	this.client.Delete(newTimeoutContext(), servicePath)
-	this.RLock()
-	delete(this.ttlCheck, servicePath)
-	this.RUnlock()
+	//this.RLock()
+	//defer this.RUnlock()
+	//delete(this.ttlCheck, servicePath)
+	this.ttlCheck.Delete(servicePath)
 	this.Container.RemoveService(service.GetName(), service.GetID())
 }
 
@@ -128,10 +129,11 @@ func (this *ETCDServiceCenter) PublicService(service service.IService, unique bo
 		}
 	}
 
-	this.RLock()
-	ttlData := this.ttlCheck[servicePath]
-	this.RUnlock()
-	if ttlData != "" {
+	_, ok := this.ttlCheck.Load(servicePath)
+	//this.RLock()
+	//ttlData := this.ttlCheck[servicePath]
+	//this.RUnlock()
+	if ok {
 		log.Errorf("service %v already public : %v", servicePath)
 		return false
 	}
@@ -152,9 +154,10 @@ func (this *ETCDServiceCenter) PublicService(service service.IService, unique bo
 		return false
 	}
 
-	this.Lock()
-	this.ttlCheck[servicePath] = serviceData
-	this.Unlock()
+	this.ttlCheck.Store(servicePath, serviceData)
+	//this.Lock()
+	//this.ttlCheck[servicePath] = serviceData
+	//this.Unlock()
 
 	//服务注册在容器
 	if this.UpdateService(service, false) {
@@ -174,20 +177,17 @@ func (this *ETCDServiceCenter) openTTLCheck() {
 	for {
 		select {
 		case <-this.ticker.C:
-			this.check()
+			this.ttlCheck.Range(this.check)
+
 		}
 	}
 }
 
-func (this *ETCDServiceCenter) check() {
-	this.RLock()
-	defer this.RUnlock()
-	for path, data := range this.ttlCheck {
-		resp, _ := this.client.Grant(context.TODO(), this.ttl)
-		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-		this.client.Put(ctx, path, data, clientv3.WithLease(resp.ID))
-		//log.Debug(err)
-	}
+func (this *ETCDServiceCenter) check(path, data interface{}) bool {
+	resp, _ := this.client.Grant(context.TODO(), this.ttl)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	this.client.Put(ctx, path.(string), data.(string), clientv3.WithLease(resp.ID))
+	return true
 }
 
 func (this *ETCDServiceCenter) SubscribeServices(serviceNames ...string) {

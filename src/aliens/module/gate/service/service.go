@@ -15,6 +15,7 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/gate/conf"
     "aliens/cluster/center"
+	"aliens/module/gate/network"
 )
 
 var instance service.IService = nil
@@ -27,11 +28,10 @@ func Close() {
 	center.ReleaseService(instance)
 }
 
-
 func handle(request *base.Any) *base.Any {
 	pushID := request.GetAuthId()
 	if pushID > 0 {
-		Manager.push(pushID, request)
+		network.Manager.Push(pushID, request)
 	}
 	return nil
 }

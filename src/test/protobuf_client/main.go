@@ -83,10 +83,12 @@ func main() {
 
 	fmt.Println("##Sync data")
 
-	for {
-		for _, p := range g_Players {
-			p.AcceptOp(base.OP_SYNC)
-		}
-		time.Sleep(time.Duration(synctime) * time.Second)
+	for _, p := range g_Players {
+		p.AcceptOp(base.OP_SYNC)
 	}
+	time.Sleep(time.Hour)
+	//for {
+	//
+	//	//time.Sleep(time.Duration(synctime) * time.Second)
+	//}
 }

@@ -16,12 +16,12 @@ import (
 
 
 //
-func handleLoginRegister(request *protocol.LoginRegister, result *protocol.LoginRegisterRet) int64 {
+func handleLoginRegister(request *protocol.LoginRegister, response *protocol.LoginRegisterRet) int64 {
 	username := request.GetUsername()
 	passwd := request.GetPassword()
 	if cache.PassportCache.IsUsernameExist(username) {
-		result.Msg = "用户名已存在"
-		result.Result = protocol.RegisterResult_userExists
+		response.Msg = "用户名已存在"
+		response.Result = protocol.RegisterResult_userExists
 		return 0
 	}
 
@@ -29,10 +29,10 @@ func handleLoginRegister(request *protocol.LoginRegister, result *protocol.Login
 	//TODO 有风险最好查询 数据库再加一层判断
 	userCache := cache.NewUser(username, passwd, "ip address", "", "", "", "")
 
-	result.Result = protocol.RegisterResult_registerSuccess
-	result.Uid = userCache.Id
+	response.Result = protocol.RegisterResult_registerSuccess
+	response.Uid = userCache.Id
 	token := NewToken()
 	cache.PassportCache.SetUserToken(userCache.Id, token)
-	result.Token = token
-	return result.GetUid()
+	response.Token = token
+	return response.GetUid()
 }

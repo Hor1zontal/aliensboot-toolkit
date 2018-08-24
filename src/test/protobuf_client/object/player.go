@@ -10,9 +10,9 @@ import (
 	"github.com/gogo/protobuf/proto"
 	"sync"
 	"time"
-	"aliens/protocol/service1"
-	"strconv"
+
 	"test/protobuf_client/base"
+	"aliens/protocol"
 )
 
 type Player struct {
@@ -186,7 +186,7 @@ func (this *Player) Connect() bool {
 			}
 
 
-			recv := &service1.Response1{}
+			recv := &protocol.Response{}
 			err = proto.Unmarshal(data, recv)
 			if err != nil {
 				fmt.Printf("unmarshaling error: %v\n", err.Error())
@@ -277,8 +277,8 @@ func (this *Player) syncData() {
 	this.seq++
 	sessionID := this.seq*10000 + this.m_Idx
 	this.syncStartTime = time.Now()
-	this._send_Message(2, BuildRequest1(sessionID, this.Username, strconv.Itoa(int(this.seq))))
-	this._send_Message(4, BuildRequest2(sessionID, this.Username, strconv.Itoa(int(this.seq))))
+	this._send_Message(1, BuildLoginRequest(this.Username, "111111", sessionID))
+	//this._send_Message(4, BuildRequest2(sessionID, this.Username, strconv.Itoa(int(this.seq))))
 }
 
 //func (this *Player)_deal_register(){//进行登录测试
@@ -310,7 +310,7 @@ func (this *Player) _send_Message(id uint16, message proto.Message) { //发送�
 		fmt.Printf(">> send message err = %v\n", err.Error())
 		return
 	}
-	fmt.Printf("%v => send: %v - %v %v\n", this.Username, id, message, time.Now())
+	//fmt.Printf("%v => send: %v - %v %v\n", this.Username, id, message, time.Now())
 	if this.isCipher() {
 		buff = xxtea.Encrypt(buff, []byte(this.secretkey))
 		//fmt.Printf("key %v", this.secretkey)
@@ -326,8 +326,9 @@ func (this *Player) _send_Message(id uint16, message proto.Message) { //发送�
 }
 
 func (this *Player) _receive_Message(message proto.Message) { //接收消息
-	//code := message.GetSequence()
 	fmt.Printf("%v => receive: %v %v\n", this.Username, message, time.Now())
+	this.syncData()
+	//code := message.GetSequence()
 }
 
 

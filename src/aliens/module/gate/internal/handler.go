@@ -13,7 +13,7 @@ import (
 	"aliens/module/gate/msg"
 	"aliens/protocol/base"
 	"aliens/gate"
-	"aliens/module/gate/service"
+	"aliens/module/gate/network"
 )
 
 func init() {
@@ -45,16 +45,16 @@ func newAgent(args []interface{}) {
 	agent := args[0].(gate.Agent)
 	if agent.UserData() == nil {
 		//打开缓存大小为5的收消息管道
-		network := service.NewNetwork(agent)
-		agent.SetUserData(network)
-		service.Manager.AddNetwork(network)
+		networker := network.NewNetwork(agent)
+		agent.SetUserData(networker)
+		network.Manager.AddNetwork(networker)
 	}
 }
 
 //关闭连接处理
 func closeAgent(args []interface{}) {
 	a := args[0].(gate.Agent)
-	service.Manager.RemoveNetwork(a.UserData().(*service.Network))
+	network.Manager.RemoveNetwork(a.UserData().(*network.Network))
 	a.SetUserData(nil)
 }
 
@@ -65,8 +65,8 @@ func handleMessage(args []interface{}) {
 	gateAgent := args[1].(gate.Agent)
 	data := gateAgent.UserData()
 	switch data.(type) {
-	case *service.Network:
-		data.(*service.Network).AcceptMessage(request.(*base.Any))
+	case *network.Network:
+		data.(*network.Network).HandleMessage(request.(*base.Any))
 		break
 	}
 }

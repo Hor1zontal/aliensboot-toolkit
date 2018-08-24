@@ -6,6 +6,7 @@ import (
 	"aliens/cluster/center"
 )
 
+var Skeleton = module.NewSkeleton()
 
 type Module struct {
 	*module.Skeleton
@@ -21,7 +22,7 @@ func (m *Module) GetConfig() interface{} {
 
 
 func (m *Module) OnInit() {
-	m.Skeleton = module.NewSkeleton()
+	m.Skeleton = Skeleton
 	//cache.Init()
 	center.ClusterCenter.ConnectCluster(conf.Config.Cluster)
 

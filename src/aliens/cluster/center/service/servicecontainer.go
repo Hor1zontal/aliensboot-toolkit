@@ -98,8 +98,8 @@ func (this *Container) RemoveService(serviceName string, serviceID string) {
 
 //根据服务类型获取一个空闲的服务节点
 func (this *Container) AllocService(serviceName string, param string) IService {
-	this.RLock()
-	defer this.RUnlock()
+	this.Lock()
+	defer this.Unlock()
 	//TODO 后续要优化，考虑负载、空闲等因素
 	serviceCategory := this.root[serviceName]
 	if serviceCategory == nil {

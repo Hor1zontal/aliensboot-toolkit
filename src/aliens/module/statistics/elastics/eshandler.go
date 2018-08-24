@@ -71,7 +71,7 @@ func (this *esHandler) HandleDayESLog(index string, msg string, fields logrus.Fi
 func (this *esHandler) getESLogger(index string) *logrus.Logger {
 	logger := this.esLogs[index]
 	if logger == nil {
-		logger = log.NewLogger(format, true)
+		logger = log.NewLogger(conf.LocalPrefix, format, conf.Local)
 		err := this.attachES(logger, index)
 		if err != nil {
 

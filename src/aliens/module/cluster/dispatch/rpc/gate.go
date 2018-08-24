@@ -15,8 +15,7 @@ import (
 	"aliens/log"
 	"aliens/protocol/base"
 	"github.com/gogo/protobuf/proto"
-	"aliens/cluster/center/dispatch"
-	"aliens/module/cluster/core"
+	"aliens/module/cluster/dispatch"
 )
 
 var Gate = &gateRPCHandle{"gate"}
@@ -28,7 +27,7 @@ type gateRPCHandle struct {
 
 
 func (this *gateRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
-	rpcRet, err := core.RequestNode(this.name, node, request)
+	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
 	if err != nil {
     	log.Error(err)
     	exception.GameException(protocol.Code_InvalidService)

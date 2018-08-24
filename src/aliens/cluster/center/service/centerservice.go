@@ -18,6 +18,7 @@ const (
 	GRPC string = "grpc"
 )
 
+type Callback func(any *base.Any, err error)
 
 type IService interface {
 	GetID() string
@@ -36,12 +37,15 @@ type IService interface {
 	Equals(other IService) bool                       //比较服务
 	IsLocal() bool                                    //是否本机服务
 
-	Request(request *base.Any) (*base.Any, error) //请求 响应服务 - 同步rpc
+	Request(request *base.Any) (*base.Any, error) //同步请求 阻塞
 	Send(request *base.Any) error //发送接收服务，不需要响应 - 异步请求
+
+	AsyncRequest(request *base.Any, callback Callback) //异步请求，响应采用回调
 
 	SetHandler(handler interface{})  //设置处理句柄
 	//Push(request interface{}) error //服务推送
 }
+
 
 type Config struct {
 	ID   string		//服务器的id
@@ -65,7 +69,6 @@ func (this *CenterService) GetAddress() string {
 	return this.Address
 }
 
-
 func (this *CenterService) SetAddress(address string) {
 	this.Address = address
 }
@@ -77,7 +80,6 @@ func (this *CenterService) GetPort() int {
 func (this *CenterService) SetPort(port int) {
 	this.Port = port
 }
-
 
 func (this *CenterService) GetID() string {
 	return this.ID

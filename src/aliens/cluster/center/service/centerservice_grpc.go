@@ -12,28 +12,30 @@ package service
 import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"net"
-	"strconv"
 	"aliens/log"
 	"golang.org/x/net/context"
 	"aliens/common/util"
 	"reflect"
 	"aliens/protocol/base"
+	"github.com/AsynkronIT/protoactor-go/actor"
+)
+
+const (
+
 )
 
 type GRPCService struct {
 	*CenterService
 
-	//调用服务参数
+	pid *actor.PID
+
+	server *rpcServer //grpc服务端处理句柄
+
 	client *grpc.ClientConn
 
-	//启动服务参数
-	server  *grpc.Server      //
 
 	requestClient base.RPCServiceClient
 	receiveClient base.RPCService_ReceiveClient
-
-	handler *rpcHandler //处理句柄
 }
 
 func (this *GRPCService) GetConfig() *CenterService {
@@ -45,11 +47,11 @@ func (this *GRPCService) GetDesc() string {
 }
 
 func (this *GRPCService) SetHandler(handler interface{}) {
-	result, ok := handler.(*rpcHandler)
+	result, ok := handler.(*rpcServer)
 	if !ok {
 		log.Fatalf("invalid grpc service request %v", reflect.TypeOf(handler))
 	}
-	this.handler = result
+	this.server = result
 }
 
 //启动服务
@@ -65,25 +67,7 @@ func (this *GRPCService) Start() bool {
 	//} else {
 	//	server = grpc.NewServer()
 	//}
-
-	server := grpc.NewServer()
-	base.RegisterRPCServiceServer(server, this.handler)
-	if this.Address == "" {
-		this.Address = util.GetIP()
-	}
-	this.server = server
-
-	address := ":" + strconv.Itoa(this.Port)
-	lis, err := net.Listen("tcp", address)
-	if err != nil {
-		log.Errorf("failed to listen: %v", err)
-		return false
-	}
-	go func() {
-		this.server.Serve(lis)
-		log.Infof("rpc service %v stop", this.Name)
-	}()
-	return true
+	return this.server.start(this.Name, this.Port)
 }
 
 //连接服务
@@ -115,6 +99,15 @@ func (this *GRPCService) Connect() bool {
 		return false
 	}
 	this.receiveClient = receiveClient
+
+	props := actor.FromProducer(func() actor.Actor {return &rpcClient{client : this.requestClient}})
+	pid, err := actor.SpawnNamed(props, this.Name + this.ID)
+	if err != nil {
+		log.Errorf("init service pid error : %v", err)
+		return false
+	}
+	this.pid = pid
+
 	log.Infof("connect grpc service %v-%v success", this.Name, address)
 	return true
 }
@@ -130,13 +123,17 @@ func (this *GRPCService) Equals(other IService) bool {
 
 //服务是否本进程启动的
 func (this *GRPCService) IsLocal() bool {
-	return this.handler != nil
+	return this.server != nil
 }
 
 //关闭服务
 func (this *GRPCService) Close() {
+	if this.pid != nil {
+		this.pid.Stop()
+		this.pid = nil
+	}
 	if this.server != nil {
-		this.server.Stop()
+		this.server.close()
 		this.server = nil
 	}
 	if this.client != nil {
@@ -155,8 +152,9 @@ func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 	if this.IsLocal() {
 		//return this.handler
 	}
-
-	client, err := this.requestClient.Request(context.Background(), request)
+	//加入超时机制，防止卡死
+	ctx, _ := context.WithTimeout(context.Background(), requestTimeout)
+	client, err := this.requestClient.Request(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -170,4 +168,36 @@ func (this *GRPCService) Send(request *base.Any) error {
 		return errors.New("service is not initial")
 	}
 	return this.receiveClient.Send(request)
+}
+
+func (this *GRPCService) AsyncRequest(request *base.Any, callback Callback) {
+	this.pid.Tell(&call{request, callback})
+}
+
+type call struct {
+	request *base.Any
+	callback Callback
+}
+
+type rpcClient struct {
+	client base.RPCServiceClient
+}
+
+func (this *rpcClient) Receive(actorContext actor.Context) {
+	switch msg := actorContext.Message().(type) {
+	//case *actor.Stopped:
+	//	//fmt.Println("")
+	case *call:
+		ctx, _ := context.WithTimeout(context.Background(), requestTimeout)
+		client, err := this.client.Request(ctx, msg.request)
+		if err != nil {
+			msg.callback(nil, err)
+			break
+		}
+		response, err := client.Recv()
+		if response != nil {
+			response.Id = msg.request.Id
+		}
+		msg.callback(response, err)
+	}
 }

@@ -10,13 +10,13 @@
 package service
 
 import (
-	"aliens/module/passport/cache"
 	"aliens/protocol"
+	"aliens/module/passport/cache"
 )
 
 
 //
-func handleLoginLogin(request *protocol.LoginLogin, result *protocol.LoginLoginRet) int64 {
+func handleLoginLogin(request *protocol.LoginLogin, response *protocol.LoginLoginRet) int64 {
 	username := request.GetUsername()
 	password := request.GetPassword()
 
@@ -33,7 +33,7 @@ func handleLoginLogin(request *protocol.LoginLogin, result *protocol.LoginLoginR
 	passwordHash := PasswordHash(username, password)
 	//密码不对
 	if passwordHash != userCache.Password {
-		result.Result = protocol.LoginResult_invalidPwd
+		response.Result = protocol.LoginResult_invalidPwd
 		return 0
 	}
 
@@ -41,10 +41,10 @@ func handleLoginLogin(request *protocol.LoginLogin, result *protocol.LoginLoginR
 	//qdoc := bson.M{"_id": userCache.ID}
 	//udoc := bson.M{"$set": bson.M{"ip": getNetworkAddress(network)}}
 	//db.DatabaseHandler.Update(userCache.Name(), qdoc, udoc)
-	result.Uid = userCache.GetId()
+	response.Uid = userCache.GetId()
 	token := NewToken()
 	cache.PassportCache.SetUserToken(userCache.GetId(), token)
-	result.Token = token
-	result.Result = protocol.LoginResult_loginSuccess
-	return result.GetUid()
+	response.Token = token
+	response.Result = protocol.LoginResult_loginSuccess
+	return response.GetUid()
 }

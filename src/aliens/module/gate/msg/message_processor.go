@@ -55,7 +55,7 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 // must goroutine safe
 func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
 	any, ok := msg.(*base.Any)
-	if !ok {
+	if !ok || any == nil{
 		return nil, errors.New("invalid any type")
 	}
 	id := make([]byte, 2)

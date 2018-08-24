@@ -13,19 +13,23 @@ import (
 	"aliens/chanrpc"
 	"aliens/protocol/base"
 	"time"
+	"google.golang.org/grpc"
 	"aliens/log"
+	"net"
+	"strconv"
 )
 
 const (
 	suspendedTimeOut = time.Millisecond * 500
+	requestTimeout = time.Second * 5
 	commandRequest = "request"
 	commandReceive = "receive"
 )
 
 type handler func(request *base.Any) *base.Any
 
-func NewRpcHandler(chanRpc *chanrpc.Server, handler handler) *rpcHandler {
-	service := &rpcHandler{}
+func NewRpcHandler(chanRpc *chanrpc.Server, handler handler) *rpcServer {
+	service := &rpcServer{}
 	service.chanRpc = chanRpc
 	service.handler = handler
 	service.chanRpc.Register(commandRequest, service.request)
@@ -33,13 +37,39 @@ func NewRpcHandler(chanRpc *chanrpc.Server, handler handler) *rpcHandler {
 	return service
 }
 
-type rpcHandler struct {
+type rpcServer struct {
 	chanRpc   *chanrpc.Server
 	handler   handler
 	suspended bool
+	//启动服务参数
+	server  *grpc.Server      //
 }
 
-func (this *rpcHandler) request(args []interface{}) {
+func (this *rpcServer) start(name string, port int) bool {
+	server := grpc.NewServer()
+	base.RegisterRPCServiceServer(server, this)
+	address := ":" + strconv.Itoa(port)
+	lis, err := net.Listen("tcp", address)
+
+	if err != nil {
+		log.Errorf("failed to listen: %v", err)
+		return false
+	}
+	go func() {
+		server.Serve(lis)
+		log.Infof("rpc service %v stop", name)
+	}()
+	this.server = server
+	return true
+}
+
+func (this *rpcServer) close() {
+	if this.server != nil {
+		this.server.Stop()
+	}
+}
+
+func (this *rpcServer) request(args []interface{}) {
 	request := args[0].(*base.Any)
 	server := args[1].(base.RPCService_RequestServer)
 	response := this.handler(request)
@@ -48,20 +78,20 @@ func (this *rpcHandler) request(args []interface{}) {
 	}
 }
 
-func (this *rpcHandler) receive(args []interface{}) {
+func (this *rpcServer) receive(args []interface{}) {
 	request := args[0].(*base.Any)
 	this.handler(request)
 }
 
-//func (this *rpcHandler) LocalRequest(request *base.Any) (*base.Any, error) {
+//func (this *rpcServer) LocalRequest(request *base.Any) (*base.Any, error) {
 //	this.chanRpc.Call0(commandRequest, request, server)
 //}
 //
-//func (this *rpcHandler) LocalReceive(request *base.Any) error {
+//func (this *rpcServer) LocalReceive(request *base.Any) error {
 //
 //}
 
-func (this *rpcHandler) Request(request *base.Any, server base.RPCService_RequestServer) error {
+func (this *rpcServer) Request(request *base.Any, server base.RPCService_RequestServer) error {
 	if this.chanRpc != nil {
 		this.chanRpc.Call0(commandRequest, request, server)
 		return nil
@@ -69,7 +99,7 @@ func (this *rpcHandler) Request(request *base.Any, server base.RPCService_Reques
 	return nil
 }
 
-func (this *rpcHandler) Receive(server base.RPCService_ReceiveServer) error {
+func (this *rpcServer) Receive(server base.RPCService_ReceiveServer) error {
 	for {
 		if this.suspended {
 			time.Sleep(suspendedTimeOut)
@@ -77,8 +107,8 @@ func (this *rpcHandler) Receive(server base.RPCService_ReceiveServer) error {
 		}
 		request, err := server.Recv()
 		if err != nil {
-			log.Debug("accept async message error : %v", request)
-			continue
+			//log.Debugf("accept async message error : %v", err)
+			return err
 		}
 		if this.chanRpc != nil {
 			this.chanRpc.Go(commandReceive, request)

@@ -13,7 +13,7 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/module/cluster/core"
+	"aliens/module/cluster/dispatch"
 )
 
 var Game = &gameRPCHandle{"game"}
@@ -25,7 +25,7 @@ type gameRPCHandle struct {
 
 
 func (this *gameRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
-	rpcRet, err := core.RequestNode(this.name, node, request)
+	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
 	if err != nil {
     	log.Error(err)
     	exception.GameException(protocol.Code_InvalidService)

@@ -12,6 +12,7 @@ package message
 import (
 	"aliens/cluster/center"
 	"aliens/protocol/base"
+	"aliens/cluster/center/service"
 )
 
 func NewRemoteService(serviceType string) *RemoteService {
@@ -48,6 +49,26 @@ func (this *RemoteService) RequestNode(serviceID string, request *base.Any) (*ba
 		return nil, invalidServiceError
 	}
 	return service.Request(request)
+}
+
+//同步调用服务, 请求节点采用内部的负载均衡策略分配
+func (this *RemoteService) AsyncRequest(request *base.Any, param string, callback service.Callback) error {
+	service := center.ClusterCenter.AllocService(this.serviceType, param)
+	if service == nil {
+		return invalidServiceError
+	}
+	service.AsyncRequest(request, callback)
+	return nil
+}
+
+//同步调用服务，请求到指定节点
+func (this *RemoteService) AsyncRequestNode(serviceID string, request *base.Any, callback service.Callback) error {
+	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
+	if service == nil {
+		return invalidServiceError
+	}
+	service.AsyncRequest(request, callback)
+	return nil
 }
 
 //func (this *RemoteService) RequestPriorityNode(serviceID string, request *base.Any) (*base.Any, error) {

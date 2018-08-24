@@ -10,9 +10,7 @@
 package object
 
 import (
-	"github.com/gogo/protobuf/proto"
-	"aliens/protocol/service1"
-	"aliens/protocol/service2"
+	"aliens/protocol"
 )
 
 //构建注册消息
@@ -31,23 +29,36 @@ import (
 //optional string msg = 5;                //反馈消息 登录失败返回
 //}
 
-
-func BuildRequest1(session int32, uid string, content string) *service1.Request1 {
-	message := &service1.Request1{
-		Session:  proto.Int32(session),
-		No: proto.Int(1),
-		Request:proto.String(uid + content),
+func BuildLoginRequest(username string, pwd string, sessionID int32) *protocol.Request {
+	message := &protocol.Request{
+		Session:sessionID,
+		Passport:&protocol.Request_LoginLogin{
+			LoginLogin:&protocol.LoginLogin{
+				Username:username,
+				Password:pwd,
+			},
+		},
 	}
-
 	return message
 }
 
-func BuildRequest2(session int32, uid string, content string) *service2.Request2 {
-	message := &service2.Request2{
-		Session:  proto.Int32(session),
-		No: proto.Int(1),
-		Request:proto.String(uid + content),
-	}
 
-	return message
-}
+//func BuildRequest1(session int32, uid string, content string) *service1.Request1 {
+//	message := &service1.Request1{
+//		Session:  proto.Int32(session),
+//		No: proto.Int(1),
+//		Request:proto.String(uid + content),
+//	}
+//
+//	return message
+//}
+//
+//func BuildRequest2(session int32, uid string, content string) *service2.Request2 {
+//	message := &service2.Request2{
+//		Session:  proto.Int32(session),
+//		No: proto.Int(1),
+//		Request:proto.String(uid + content),
+//	}
+//
+//	return message
+//}
