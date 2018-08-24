@@ -50,6 +50,7 @@ func Destroy() {
 	for i := len(mods) - 1; i >= 0; i-- {
 		m := mods[i]
 		m.closeSig <- true
+		m.closeSig <- true
 		m.wg.Wait()
 		destroy(m)
 	}

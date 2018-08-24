@@ -21,7 +21,6 @@ import (
 
 const (
 	suspendedTimeOut = time.Millisecond * 500
-	requestTimeout = time.Second * 5
 	commandRequest = "request"
 	commandReceive = "receive"
 )
@@ -29,6 +28,9 @@ const (
 type handler func(request *base.Any) *base.Any
 
 func NewRpcHandler(chanRpc *chanrpc.Server, handler handler) *rpcServer {
+	if chanRpc == nil {
+		log.Fatalf("chanRpc can not be nil")
+	}
 	service := &rpcServer{}
 	service.chanRpc = chanRpc
 	service.handler = handler
@@ -92,11 +94,7 @@ func (this *rpcServer) receive(args []interface{}) {
 //}
 
 func (this *rpcServer) Request(request *base.Any, server base.RPCService_RequestServer) error {
-	if this.chanRpc != nil {
-		this.chanRpc.Call0(commandRequest, request, server)
-		return nil
-	}
-	return nil
+	return this.chanRpc.Call0(commandRequest, request, server)
 }
 
 func (this *rpcServer) Receive(server base.RPCService_ReceiveServer) error {
@@ -110,9 +108,7 @@ func (this *rpcServer) Receive(server base.RPCService_ReceiveServer) error {
 			//log.Debugf("accept async message error : %v", err)
 			return err
 		}
-		if this.chanRpc != nil {
-			this.chanRpc.Go(commandReceive, request)
-		}
+		this.chanRpc.Go(commandReceive, request)
 	}
 	return nil
 }

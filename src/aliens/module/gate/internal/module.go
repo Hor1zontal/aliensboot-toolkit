@@ -53,7 +53,7 @@ func (m *Module) OnDestroy() {
 
 func (m *Module) Run(closeSig chan bool) {
 	go m.Gate.Run(closeSig)
-	go Skeleton.Run(closeSig)
+ 	Skeleton.Run(closeSig)
 }
 
 

@@ -159,11 +159,12 @@ func (this *ETCDServiceCenter) PublicService(service service.IService, unique bo
 	//this.ttlCheck[servicePath] = serviceData
 	//this.Unlock()
 
+	//TODO 后续考虑本地服务放入本地
 	//服务注册在容器
-	if this.UpdateService(service, false) {
-		log.Infof("public %v success", servicePath)
-	}
-
+	//if this.UpdateService(service, false) {
+	//	log.Infof("public %v success", servicePath)
+	//}
+	log.Infof("public %v success", servicePath)
 	return true
 }
 

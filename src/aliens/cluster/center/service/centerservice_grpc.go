@@ -18,10 +18,11 @@ import (
 	"reflect"
 	"aliens/protocol/base"
 	"github.com/AsynkronIT/protoactor-go/actor"
+	"time"
 )
 
 const (
-
+	requestTimeout = 10 * time.Second
 )
 
 type GRPCService struct {
@@ -148,10 +149,13 @@ func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 	if this.requestClient == nil {
 		return nil, errors.New("service is not initial")
 	}
-	//TODO 后续可以考虑如果服务是当前进程启动，可以直接调用服务句柄
-	if this.IsLocal() {
-		//return this.handler
-	}
+
+	//本地启动的服务直接调用，不需要经过grpc中转
+	//TODO 后续考虑直接调用本地的优化
+	//if this.IsLocal() {
+	//	return this.server.SyncRequest(request)
+	//}
+
 	//加入超时机制，防止卡死
 	ctx, _ := context.WithTimeout(context.Background(), requestTimeout)
 	client, err := this.requestClient.Request(ctx, request)
@@ -172,32 +176,4 @@ func (this *GRPCService) Send(request *base.Any) error {
 
 func (this *GRPCService) AsyncRequest(request *base.Any, callback Callback) {
 	this.pid.Tell(&call{request, callback})
-}
-
-type call struct {
-	request *base.Any
-	callback Callback
-}
-
-type rpcClient struct {
-	client base.RPCServiceClient
-}
-
-func (this *rpcClient) Receive(actorContext actor.Context) {
-	switch msg := actorContext.Message().(type) {
-	//case *actor.Stopped:
-	//	//fmt.Println("")
-	case *call:
-		ctx, _ := context.WithTimeout(context.Background(), requestTimeout)
-		client, err := this.client.Request(ctx, msg.request)
-		if err != nil {
-			msg.callback(nil, err)
-			break
-		}
-		response, err := client.Recv()
-		if response != nil {
-			response.Id = msg.request.Id
-		}
-		msg.callback(response, err)
-	}
 }

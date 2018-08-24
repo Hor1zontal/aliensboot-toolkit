@@ -1,9 +1,7 @@
 package network
 
 import (
-	"time"
 	"aliens/common/util"
-	"aliens/module/gate/conf"
 	"aliens/common/data_structures/set"
 	"aliens/chanrpc"
 	"aliens/protocol/base"
@@ -19,28 +17,28 @@ type networkManager struct {
 	chanRpc *chanrpc.Server
 	networks  *set.HashSet             //存储所有未验权的网络连接
 	authNetworks map[int64]*Network //存储所有验权通过的网络连接
-	timeWheel *util.TimeWheel       //验权检查时间轮
+	//timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
 //开启权限,心跳等验证机制
 func (this *networkManager) Init(chanRpc *chanrpc.Server) {
 	this.chanRpc = chanRpc
 	this.chanRpc.Register(CommandRpcResponse, this.handleResponse)
-	if this.timeWheel != nil {
-		this.timeWheel.Stop()
-	}
+	//if this.timeWheel != nil {
+	//	this.timeWheel.Stop()
+	//}
 	this.networks = set.NewHashSet()
 	this.authNetworks = make(map[int64]*Network)
 
 	//心跳精确到s
-	this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
-	this.timeWheel.Start()
+	//this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
+	//this.timeWheel.Start()
 }
 
 func (this *networkManager) acceptResponse(network *Network, response *base.Any, err error) {
+	//TODO 在关闭服务器的时候会有 data race的风险
 	this.chanRpc.Go(CommandRpcResponse, network, response, err)
 }
-
 
 func (this *networkManager) handleResponse(args []interface{}) {
 	network := args[0].(*Network)
@@ -65,7 +63,7 @@ func (this *networkManager) Push(id int64, message interface{}) {
 func (this *networkManager) AddNetwork(network *Network) {
 	data := make(util.TaskData)
 	data[0] = network
-	this.timeWheel.AddTimer(time.Duration(conf.Config.AuthTimeout)*time.Second, network, data)
+	//this.timeWheel.AddTimer(time.Duration(conf.Config.AuthTimeout)*time.Second, network, data)
 	this.networks.Add(network)
 }
 
@@ -74,7 +72,7 @@ func (this *networkManager) RemoveNetwork(network *Network) {
 		delete(this.authNetworks, network.authID)
 		//cache.ClusterCache.CleanAuthGateID(network.authID)
 	} else {
-		this.timeWheel.RemoveTimer(network)
+		//this.timeWheel.RemoveTimer(network)
 		this.networks.Remove(network)
 	}
 }
@@ -92,7 +90,7 @@ func (this *networkManager) dealAuthTimeout(data util.TaskData) {
 //验权限
 func (this *networkManager) auth(authID int64, network *Network) {
 	//TODO T人
-	this.timeWheel.RemoveTimer(network)
+	//this.timeWheel.RemoveTimer(network)
 	this.networks.Remove(network)
 	this.authNetworks[authID] = network
 	//cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())

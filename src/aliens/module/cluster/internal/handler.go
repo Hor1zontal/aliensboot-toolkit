@@ -9,33 +9,36 @@
  *******************************************************************************/
 package internal
 
-import (
-	"aliens/module/cluster/dispatch"
-	"aliens/protocol/base"
-)
-
 const (
-	commandRequest = "request"
-	commandRequestNode = "requestNode"
-	commandSend = "send"
-	commandSendNode = "sendNode"
-	commandPublicService = ""
+	//commandRequest = "request"
+	//commandRequestNode = "requestNode"
+	//commandSend = "send"
+	//commandSendNode = "sendNode"
+	//commandPublicService = ""
 )
 
 func init() {
-	Skeleton.RegisterChanRPC(commandRequest, handleRequest)
-	Skeleton.RegisterChanRPC(commandRequestNode, handleRequest)
-	Skeleton.RegisterChanRPC(commandSend, handleRequest)
-	Skeleton.RegisterChanRPC(commandSendNode, handleRequest)
-	Skeleton.RegisterChanRPC(commandPublicService, handleRequest)
+	//Skeleton.RegisterChanRPC(commandRequest, handleRequest)
+	//Skeleton.RegisterChanRPC(commandRequestNode, handleRequest)
+	//Skeleton.RegisterChanRPC(commandSend, handleRequest)
+	//Skeleton.RegisterChanRPC(commandSendNode, handleRequest)
+	//Skeleton.RegisterChanRPC(commandPublicService, handleRequest)
 	//dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
 }
 
 
-func handleRequest(args []interface{}) []interface{} {
-	serviceName := args[0].(string)
-	request := args[1].(*base.Any)
-	hashKey := args[2].(string)
-	response, err := dispatch.Request(serviceName, request, hashKey)
-	return []interface{} {response, err}
-}
+//func handleRequest(args []interface{}) []interface{} {
+//	serviceName := args[0].(string)
+//	request := args[1].(*base.Any)
+//	hashKey := args[2].(string)
+//	response, err := dispatch.Request(serviceName, request, hashKey)
+//	return []interface{} {response, err}
+//}
+//
+//func handleRequestNode(args []interface{}) []interface{} {
+//	serviceName := args[0].(string)
+//	serviceID := args[2].(string)
+//	request := args[1].(*base.Any)
+//	response, err := dispatch.RequestNode(serviceName, serviceID, request)
+//	return []interface{} {response, err}
+//}
