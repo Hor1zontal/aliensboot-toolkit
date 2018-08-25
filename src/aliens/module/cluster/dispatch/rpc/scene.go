@@ -33,35 +33,6 @@ func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) 
     return rpcRet
 }
 
-//func (this *sceneRPCHandle) Request(request *protocol.Request) *protocol.Response {
-//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
-//	if err != nil {
-//        log.Error(err)
-//        exception.GameException(protocol.Code_InvalidService)
-//    }
-//    return rpcRet
-//}
-
-
-func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_SpaceLeave{
-			SpaceLeave:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetSpaceLeaveRet()
-}
-
-func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_GetState{
-			GetState:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetGetStateRet()
-}
 
 func (this *sceneRPCHandle) SpaceMove(node string, request *protocol.SpaceMove) *protocol.SpaceMoveRet {
 	message := &protocol.Request{
@@ -81,4 +52,24 @@ func (this *sceneRPCHandle) SpaceEnter(node string, request *protocol.SpaceEnter
 	}
 	messageRet := this.RequestNode(node, message)
 	return messageRet.GetSpaceEnterRet()
+}
+
+func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
+	message := &protocol.Request{
+		Scene:&protocol.Request_SpaceLeave{
+			SpaceLeave:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetSpaceLeaveRet()
+}
+
+func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
+	message := &protocol.Request{
+		Scene:&protocol.Request_GetState{
+			GetState:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetGetStateRet()
 }

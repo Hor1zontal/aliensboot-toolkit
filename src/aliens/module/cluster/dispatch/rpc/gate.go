@@ -10,12 +10,8 @@
 package rpc
 
 import (
-	"aliens/protocol"
-	"aliens/exception"
-	"aliens/log"
-	"aliens/protocol/base"
-	"github.com/gogo/protobuf/proto"
 	"aliens/module/cluster/dispatch"
+	"aliens/protocol"
 )
 
 var Gate = &gateRPCHandle{"gate"}
@@ -26,30 +22,21 @@ type gateRPCHandle struct {
 }
 
 
-func (this *gateRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
-	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
-	if err != nil {
-    	log.Error(err)
-    	exception.GameException(protocol.Code_InvalidService)
-    }
-    return rpcRet
+
+func (this *gateRPCHandle) KickOut(node string, request *protocol.KickOut) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_KickOut{
+			KickOut:request,
+		},
+	}
+	return dispatch.SendNodeMessage(this.name, node, message)
 }
 
-//func (this *sceneRPCHandle) Request(request *protocol.Request) *protocol.Response {
-//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
-//	if err != nil {
-//        log.Error(err)
-//        exception.GameException(protocol.Code_InvalidService)
-//    }
-//    return rpcRet
-//}
-
-//推送玩家消息
-func (this *gateRPCHandle) Push(uid int64, gateID string, response *protocol.Response) error {
-	data, err := proto.Marshal(response)
-	if err != nil {
-		return err
+func (this *gateRPCHandle) BindService(node string, request *protocol.BindService) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_BindService{
+			BindService:request,
+		},
 	}
-	pushMessage := &base.Any{AuthId: uid, Value: data}
-	return dispatch.SendNode(this.name, gateID, pushMessage)
+	return dispatch.SendNodeMessage(this.name, node, message)
 }

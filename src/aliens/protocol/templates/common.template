@@ -45,8 +45,7 @@ func handle(request *base.Any) *base.Any {
 				responseProxy.Code = err.(${package}.Code)
 				break
 			default:
-				log.Error("%v", err)
-				debug.PrintStack()
+				exception.PrintStackDetail(err)
 				responseProxy.Code = ${package}.Code_ServerException
 			}
 		}

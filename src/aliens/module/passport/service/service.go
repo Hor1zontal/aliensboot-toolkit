@@ -18,6 +18,7 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/passport/conf"
     "aliens/cluster/center"
+	"aliens/log"
 )
 
 var instance service.IService = nil
@@ -54,6 +55,7 @@ func handle(request *base.Any) *base.Any {
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
+		log.Debug(error)
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	authID = handleRequest(requestProxy, responseProxy)

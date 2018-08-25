@@ -16,11 +16,11 @@ import (
 	"aliens/module/gate/route"
 	"aliens/common/util"
 	"aliens/gate"
-	"errors"
-	"fmt"
 	"aliens/protocol/base"
 	"aliens/log"
 	"aliens/module/cluster/dispatch/lpc"
+	"aliens/cluster/center"
+	"aliens/protocol"
 )
 
 func NewNetwork(agent gate.Agent) *Network {
@@ -35,19 +35,31 @@ type Network struct {
 	//channel       chan *base.Any //消息管道
 
 	authID  int64  //用户标识 登录验证后
+
 	hashKey string //用来做一致性负载均衡的标识
 
 	createTime    time.Time //创建时间
-	heartbeatTime time.Time //上次的心跳时间
 
-	lastRequestSeq uint16
+	heartbeatTime time.Time //上次的心跳时间
 
 	bindRoutes map[uint16]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器需要固定转发服务器
 }
 
 //发送消息给客户端
-func (this *Network) SendMessage(msg interface{}) {
+func (this *Network) Push(msg *base.Any) {
+	msg.Id = 1000
 	this.agent.WriteMsg(msg)
+}
+
+func (this *Network) KickOut(kickType protocol.KickType) {
+	pushMsg := &protocol.Response{
+		Push:&protocol.Push{
+			Kick:kickType,
+		},
+	}
+	data, _ := pushMsg.Marshal()
+	this.Push(&base.Any{Value:data})
+	this.agent.Close()
 }
 
 func (this *Network) requestCallback(request *base.Any, err error) {
@@ -76,6 +88,7 @@ func (this *Network) HandleMessage(request *base.Any) {
 	} else {
 		request.AuthId = 0
 	}
+	request.GateId = center.ClusterCenter.GetNodeID()
 
 	node, _ := this.bindRoutes[request.Id]
 	var err error = nil
@@ -111,15 +124,16 @@ func (this *Network) HandleMessage(request *base.Any) {
 	//lpc.StatisticsHandler.AddServiceStatistic("passport", int32(request.Id), time.Now().Sub(start).Seconds())
 }
 
-
 //绑定服务节点,固定转发
-func (this *Network) BindServiceNode(serviceName string, serviceNode string) error {
-	serviceSeq := route.GetServiceSeq(serviceName)
-	if serviceSeq <= 0 {
-		return errors.New(fmt.Sprintf("bind service node error , service %v seq not found", serviceName))
+func (this *Network) BindService(binds map[string]string) {
+	for serviceName, serviceID := range binds {
+		serviceSeq := route.GetServiceSeq(serviceName)
+		if serviceSeq <= 0 {
+			log.Errorf("bind service node error , service %v seq not found", serviceName)
+			continue
+		}
+		this.bindRoutes[serviceSeq] = serviceID
 	}
-	this.bindRoutes[serviceSeq] = serviceNode
-	return nil
 }
 
 func (this *Network) GetRemoteAddr() net.Addr {

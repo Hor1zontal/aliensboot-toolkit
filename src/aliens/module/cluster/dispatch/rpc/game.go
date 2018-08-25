@@ -10,10 +10,10 @@
 package rpc
 
 import (
+	"aliens/module/cluster/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/module/cluster/dispatch"
 )
 
 var Game = &gameRPCHandle{"game"}
@@ -32,15 +32,6 @@ func (this *gameRPCHandle) RequestNode(node string, request *protocol.Request) *
     }
     return rpcRet
 }
-
-//func (this *gameRPCHandle) Request(request *protocol.Request) *protocol.Response {
-//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
-//	if err != nil {
-//        log.Error(err)
-//        exception.GameException(protocol.Code_InvalidService)
-//    }
-//    return rpcRet
-//}
 
 
 func (this *gameRPCHandle) GetUserInfo(node string, request *protocol.GetUserInfo) *protocol.GetUserInfoRet {

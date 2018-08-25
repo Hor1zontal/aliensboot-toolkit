@@ -13,7 +13,8 @@ import (
 	"aliens/tools/protobuf/template"
 	"flag"
 	"fmt"
-	"aliens/config"
+	"io/ioutil"
+	"encoding/json"
 )
 
 
@@ -26,6 +27,17 @@ var (
 
 	configPath string
 )
+
+func loadConfig(config interface{}, path string) {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		fmt.Printf("module %v config file is not found %v", path)
+	}
+	err = json.Unmarshal(data, config)
+	if err != nil {
+		fmt.Printf("load config %v err %v", path, err)
+	}
+}
 
 func main() {
 	//flag.StringVar(&proto, "proto", "", "protobuf file path")
@@ -50,7 +62,7 @@ func main() {
 	//}
 
 	configObject := &template.Config{}
-	config.LoadConfig(configObject, configPath) //加载服务器配置
+	loadConfig(configObject, configPath) //加载服务器配置
 
 	template.Convert(configObject)
 

@@ -11,8 +11,12 @@ message Any {
 
     //string type_url = 3; //json request
 
+    string gate_id = 5; //dispatch cluster unique gate service node id
+
     // Must be a valid serialized protocol buffer of the above specified type.
     bytes value = 4;
+
+    bool gate = 3; //是否网关需要处理的消息
 
     //bytes Agent = 5[(gogoproto.customtype) = "aliens/network.Agent",(gogoproto.nullable) = false]; //
 }

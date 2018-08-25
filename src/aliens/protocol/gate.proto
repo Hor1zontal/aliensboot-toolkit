@@ -1,0 +1,21 @@
+syntax = "proto3";
+package protocol;
+
+enum KickType {
+    None = 0;     //无
+    OtherSession = 1; //其他会话登录
+    Timeout = 2;      //长时间没有操作
+    ServerClose = 3;  //服务器关闭
+    ServerStop = 4;   //停服
+    ServerMaintain = 5; //服务器维护
+}
+
+message kick_out {
+    int64 authID = 1;
+    KickType kickType = 2;
+}
+
+message bind_service {
+    int64 authID = 1;
+    map<string, string> binds = 2;  //绑定的服务-绑定的服务节点名
+}

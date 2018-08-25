@@ -9,17 +9,11 @@
  *******************************************************************************/
 package service
 
-import (
-	"aliens/module/game/core"
-	"time"
-	"aliens/protocol"
-)
+import "aliens/protocol"
 
+<message>
+//${o_desc}
+func handle${o_request}(authID int64, request *${package}.${o_request}) {
 
-//
-func handleLoginRole(authID int64, gateID string, request *protocol.LoginRole, response *protocol.LoginRoleRet) {
-	userSession := core.UserManager.EnsureUser(authID)
-	roleHandler := userSession.LoginRole(request.GetRoleID())
-	response.RoleInfo = roleHandler.GetData()
-	response.ServerTime = time.Now().Unix()
 }
+<message>

@@ -12,14 +12,13 @@ package service
 import (
 	"github.com/gogo/protobuf/proto"
     "aliens/chanrpc"
-    "aliens/log"
-    "runtime/debug"
     "aliens/exception"
     "aliens/${package}/base"
     "aliens/${package}"
     "aliens/cluster/center/service"
     "aliens/module/${module}/conf"
     "aliens/cluster/center"
+    "aliens/log"
 )
 
 var instance service.IService = nil
@@ -56,6 +55,7 @@ func handle(request *base.Any) *base.Any {
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
+	    log.Debug(error)
 		exception.GameException(${package}.Code_InvalidRequest)
 	}
 	authID = handleRequest(requestProxy, responseProxy)

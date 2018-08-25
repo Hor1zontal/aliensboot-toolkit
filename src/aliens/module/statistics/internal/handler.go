@@ -26,7 +26,7 @@ func init() {
 	skeleton.RegisterChanRPC(constant.INTERNAL_STATISTICS_ONLINE, handleOnlineStatic)
 	cron, err := task.NewCronExpr("*/1 * * * *")
 	if err != nil {
-		log.Error("init servcie statistics timer error : %v", err)
+		log.Error("init service statistics timer error : %v", err)
 	}
 
 	//每天凌晨12点执行一次

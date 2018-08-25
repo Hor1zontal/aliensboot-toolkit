@@ -10,16 +10,12 @@
 package service
 
 import (
-	"aliens/module/game/core"
-	"time"
 	"aliens/protocol"
+	"aliens/module/gate/network"
 )
 
 
 //
-func handleLoginRole(authID int64, gateID string, request *protocol.LoginRole, response *protocol.LoginRoleRet) {
-	userSession := core.UserManager.EnsureUser(authID)
-	roleHandler := userSession.LoginRole(request.GetRoleID())
-	response.RoleInfo = roleHandler.GetData()
-	response.ServerTime = time.Now().Unix()
+func handleBindService(authID int64, request *protocol.BindService) {
+	network.Manager.BindService(request.GetAuthID(), request.GetBinds())
 }

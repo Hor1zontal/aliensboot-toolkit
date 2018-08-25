@@ -18,7 +18,7 @@
         },
         {
           "Template":"templates/common_rpc.template",
-          "Output":"../module/cluster/rpc/passport.go",
+          "Output":"../module/cluster/dispatch/rpc/passport.go",
           "Prefix":"",
           "Overwrite":true
         }
@@ -42,7 +42,7 @@
         },
         {
           "Template":"templates/common_rpc.template",
-          "Output":"../module/cluster/rpc/scene.go",
+          "Output":"../module/cluster/dispatch/rpc/scene.go",
           "Prefix":"",
           "Overwrite":true
         }
@@ -66,7 +66,7 @@
         },
         {
           "Template":"templates/common_rpc.template",
-          "Output":"../module/cluster/rpc/game.go",
+          "Output":"../module/cluster/dispatch/rpc/game.go",
           "Prefix":"",
           "Overwrite":true
         }
@@ -77,20 +77,20 @@
       "Name":"gate",
       "Outputs":[
         {
-          "Template":"templates/common.template",
+          "Template":"templates/gate_common.template",
           "Output":"../module/gate/service/service.go",
           "Prefix":"",
           "Overwrite":true
         },
         {
-          "Template":"templates/common_handle.template",
+          "Template":"templates/gate_common_handle.template",
           "Output":"../module/gate/service",
           "Prefix":"handle_${}.go",
           "Overwrite":false
         },
         {
-          "Template":"templates/common_rpc.template",
-          "Output":"../module/cluster/rpc/gate.go",
+          "Template":"templates/gate_common_rpc.template",
+          "Output":"../module/cluster/dispatch/rpc/gate.go",
           "Prefix":"",
           "Overwrite":true
         }

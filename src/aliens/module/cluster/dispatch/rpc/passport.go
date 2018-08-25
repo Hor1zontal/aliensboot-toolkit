@@ -10,10 +10,10 @@
 package rpc
 
 import (
+	"aliens/module/cluster/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/module/cluster/dispatch"
 )
 
 var Passport = &passportRPCHandle{"passport"}
@@ -32,15 +32,6 @@ func (this *passportRPCHandle) RequestNode(node string, request *protocol.Reques
     }
     return rpcRet
 }
-
-//func (this *passportRPCHandle) Request(request *protocol.Request) *protocol.Response {
-//	rpcRet, err := dispatch.RPC.SyncRequest(this.name, request)
-//	if err != nil {
-//        log.Error(err)
-//        exception.GameException(protocol.Code_InvalidService)
-//    }
-//    return rpcRet
-//}
 
 
 func (this *passportRPCHandle) LoginRegister(node string, request *protocol.LoginRegister) *protocol.LoginRegisterRet {

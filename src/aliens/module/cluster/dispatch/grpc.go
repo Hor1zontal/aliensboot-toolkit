@@ -37,6 +37,14 @@ func RequestMessage(serviceName string, message  *protocol.Request, hashKey stri
 	return  messageRet, nil
 }
 
+//异步发送信息
+func SendNodeMessage(serviceName string, serviceID string, message *protocol.Request) error {
+	data, _ := message.Marshal()
+	request := &base.Any{Value: data}
+	return SendNode(serviceName, serviceID, request)
+}
+
+
 //同步阻塞请求
 func RequestNodeMessage(serviceName string, serviceID string, message *protocol.Request) (*protocol.Response, error) {
 	data, _ := message.Marshal()

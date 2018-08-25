@@ -14,6 +14,7 @@ import (
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
+	"aliens/protocol/base"
 )
 
 var ${Module} = &${module}RPCHandle{"${module}"}
@@ -24,23 +25,13 @@ type ${module}RPCHandle struct {
 }
 
 
-func (this *${module}RPCHandle) RequestNode(node string, request *${package}.Request) *${package}.Response {
-	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
-	if err != nil {
-    	log.Error(err)
-    	exception.GameException(protocol.Code_InvalidService)
-    }
-    return rpcRet
-}
-
 <message>
-func (this *${module}RPCHandle) ${o_request}(node string, request *${package}.${o_request}) *${package}.${o_response} {
+func (this *${module}RPCHandle) ${o_request}(node string, request *${package}.${o_request}) error {
 	message := &${package}.Request{
 		${Module}:&${package}.Request_${o_request}{
 			${o_request}:request,
 		},
 	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.Get${o_response}()
+	return dispatch.SendNodeMessage(this.name, node, message)
 }
 <message>

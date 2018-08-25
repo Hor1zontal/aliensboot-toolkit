@@ -7,6 +7,7 @@
 	It is generated from these files:
 		game.proto
 		game_model.proto
+		gate.proto
 		passport.proto
 		passport_model.proto
 		protocol.proto
@@ -28,6 +29,8 @@
 		RoleInfo
 		Equip
 		Skill
+		KickOut
+		BindService
 		LoginRegister
 		LoginRegisterRet
 		LoginLogin
@@ -39,7 +42,7 @@
 		User
 		Request
 		Response
-		Push
+		KickOut
 		SpaceEnter
 		SpaceEnterRet
 		SpaceMove

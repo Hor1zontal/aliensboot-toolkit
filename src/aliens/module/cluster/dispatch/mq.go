@@ -115,7 +115,7 @@ package dispatch
 //	if err != nil {
 //		return err
 //	}
-//	dispatcher.producer.SendMessage(serviceType, serviceID, data)
+//	dispatcher.producer.Push(serviceType, serviceID, data)
 //	return nil
 //}
 //

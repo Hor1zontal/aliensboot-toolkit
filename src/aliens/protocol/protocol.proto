@@ -2,6 +2,7 @@ syntax = "proto3";
 package protocol;
 
 import "resultcode.proto";
+import "gate.proto";
 import "passport.proto";
 import "scene.proto";
 import "game.proto";
@@ -11,12 +12,18 @@ import "game.proto";
 message Request {
     int32 session = 1;     //消息序号
 
+    //----------------网关模块接口-----------
+    oneof gate {
+        kick_out kickOut = 4; //T人
+        bind_service bindService = 5; //绑定服务-定向转发
+    }
+
     //-----------------登录模块接口---------------
 
     oneof passport {
-        login_register loginRegister = 6;
-        login_login loginLogin = 7;
-        token_login tokenLogin = 8; //token登录
+        login_register loginRegister = 10;
+        login_login loginLogin = 11;
+        token_login tokenLogin = 12; //token登录
     }
 
     //-----------------游戏模块接口---------------
@@ -36,6 +43,7 @@ message Request {
         get_state getState = 503;
     }
 
+
 }
 
 //response
@@ -47,9 +55,10 @@ message Response {
     //-----------------登录模块响应接口---------------
 
     oneof passport {
-        login_register_ret loginRegisterRet = 6;
-        login_login_ret loginLoginRet = 7;
-        token_login_ret tokenLoginRet = 8; //token登录结果
+        login_register_ret loginRegisterRet = 10;
+        login_login_ret loginLoginRet = 11;
+        token_login_ret tokenLoginRet = 12; //token登录结果
+
     }
 
     //-----------------游戏模块接口---------------
@@ -60,8 +69,6 @@ message Response {
         remove_role_ret removeRoleRet = 53;
     }
 
-
-
     oneof scene {
         space_move_ret spaceMoveRet = 500;
         space_enter_ret spaceEnterRet = 501;
@@ -69,4 +76,10 @@ message Response {
         get_state_ret getStateRet = 503;
     }
 
+
+    Push push = 1000; //推送消息
+}
+
+message Push {
+    KickType kick = 1; //T人
 }

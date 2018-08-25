@@ -43,7 +43,7 @@ type IService interface {
 	AsyncRequest(request *base.Any, callback Callback) //异步请求，响应采用回调
 
 	SetHandler(handler interface{})  //设置处理句柄
-	//Push(request interface{}) error //服务推送
+	//KickOut(request interface{}) error //服务推送
 }
 
 

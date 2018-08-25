@@ -12,8 +12,6 @@ package service
 import (
 	"github.com/gogo/protobuf/proto"
     "aliens/chanrpc"
-    "aliens/log"
-    "runtime/debug"
     "aliens/exception"
     "aliens/protocol/base"
     "aliens/protocol"
@@ -45,8 +43,7 @@ func handle(request *base.Any) *base.Any {
 				responseProxy.Code = err.(protocol.Code)
 				break
 			default:
-				log.Error("%v", err)
-				debug.PrintStack()
+				exception.PrintStackDetail(err)
 				responseProxy.Code = protocol.Code_ServerException
 			}
 		}
@@ -63,13 +60,6 @@ func handle(request *base.Any) *base.Any {
 }
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
-	
-	if request.GetCreateRole() != nil {
-		messageRet := &protocol.CreateRoleRet{}
-		handleCreateRole(authID, request.GetCreateRole(), messageRet)
-		response.Game = &protocol.Response_CreateRoleRet{messageRet}
-		return
-	}
 	
 	if request.GetRemoveRole() != nil {
 		messageRet := &protocol.RemoveRoleRet{}
@@ -89,6 +79,13 @@ func handleRequest(authID int64, request *protocol.Request, response *protocol.R
 		messageRet := &protocol.LoginRoleRet{}
 		handleLoginRole(authID, request.GetLoginRole(), messageRet)
 		response.Game = &protocol.Response_LoginRoleRet{messageRet}
+		return
+	}
+	
+	if request.GetCreateRole() != nil {
+		messageRet := &protocol.CreateRoleRet{}
+		handleCreateRole(authID, request.GetCreateRole(), messageRet)
+		response.Game = &protocol.Response_CreateRoleRet{messageRet}
 		return
 	}
 	

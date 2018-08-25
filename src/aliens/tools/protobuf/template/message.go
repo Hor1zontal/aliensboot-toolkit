@@ -54,5 +54,6 @@ type ProtoHandler struct {
 }
 
 func (this *ProtoHandler) IsValid() bool {
-	return this.ORequest != "" && this.OResponse != ""
+	return this.ORequest != ""
+	//return this.ORequest != "" && this.OResponse != ""
 }

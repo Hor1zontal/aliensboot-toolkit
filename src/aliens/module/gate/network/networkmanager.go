@@ -5,6 +5,10 @@ import (
 	"aliens/common/data_structures/set"
 	"aliens/chanrpc"
 	"aliens/protocol/base"
+	"aliens/protocol"
+	"aliens/module/cluster/cache"
+	"aliens/cluster/center"
+	"aliens/module/cluster/dispatch/rpc"
 )
 
 var Manager = &networkManager{}
@@ -17,6 +21,7 @@ type networkManager struct {
 	chanRpc *chanrpc.Server
 	networks  *set.HashSet             //存储所有未验权的网络连接
 	authNetworks map[int64]*Network //存储所有验权通过的网络连接
+	node string //当前节点名
 	//timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
@@ -24,6 +29,7 @@ type networkManager struct {
 func (this *networkManager) Init(chanRpc *chanrpc.Server) {
 	this.chanRpc = chanRpc
 	this.chanRpc.Register(CommandRpcResponse, this.handleResponse)
+	this.node = center.ClusterCenter.GetNodeID()
 	//if this.timeWheel != nil {
 	//	this.timeWheel.Stop()
 	//}
@@ -51,13 +57,29 @@ func (this *networkManager) handleResponse(args []interface{}) {
 	}
 }
 
-//推送消息
-func (this *networkManager) Push(id int64, message interface{}) {
-	auth := this.authNetworks[id]
+func (this *networkManager) BindService(authID int64, binds map[string]string) {
+	auth := this.authNetworks[authID]
 	if auth == nil {
 		return
 	}
-	auth.SendMessage(message)
+	auth.BindService(binds)
+}
+
+func (this *networkManager) KickOut(authID int64, kickType protocol.KickType) {
+	auth := this.authNetworks[authID]
+	if auth == nil {
+		return
+	}
+	auth.KickOut(kickType)
+}
+
+//推送消息
+func (this *networkManager) Push(authID int64, message *base.Any) {
+	auth := this.authNetworks[authID]
+	if auth == nil {
+		return
+	}
+	auth.Push(message)
 }
 
 func (this *networkManager) AddNetwork(network *Network) {
@@ -70,11 +92,12 @@ func (this *networkManager) AddNetwork(network *Network) {
 func (this *networkManager) RemoveNetwork(network *Network) {
 	if network.IsAuth() {
 		delete(this.authNetworks, network.authID)
-		//cache.ClusterCache.CleanAuthGateID(network.authID)
+		cache.ClusterCache.CleanAuthGateID(network.authID)
 	} else {
 		//this.timeWheel.RemoveTimer(network)
 		this.networks.Remove(network)
 	}
+
 }
 
 func (this *networkManager) dealAuthTimeout(data util.TaskData) {
@@ -89,9 +112,25 @@ func (this *networkManager) dealAuthTimeout(data util.TaskData) {
 
 //验权限
 func (this *networkManager) auth(authID int64, network *Network) {
-	//TODO T人
 	//this.timeWheel.RemoveTimer(network)
 	this.networks.Remove(network)
+	oldNetwork, ok := this.authNetworks[authID]
+
+	//顶号处理
+	if ok {
+		oldNetwork.KickOut(protocol.KickType_OtherSession)
+	} else {
+		node := cache.ClusterCache.GetAuthGateID(authID)
+		//用户在其他网关节点登录 需要远程T人
+		if node != this.node {
+			kickMsg := &protocol.KickOut{
+				AuthID:authID,
+				KickType:protocol.KickType_OtherSession,
+			}
+			rpc.Gate.KickOut(node, kickMsg)
+		}
+	}
+	cache.ClusterCache.SetAuthGateID(authID, this.node)
 	this.authNetworks[authID] = network
 	//cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())
 }

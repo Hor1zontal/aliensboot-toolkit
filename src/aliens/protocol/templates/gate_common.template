@@ -14,10 +14,10 @@ import (
     "aliens/chanrpc"
     "aliens/log"
     "aliens/exception"
-    "aliens/protocol/base"
-    "aliens/protocol"
+    "aliens/${package}/base"
+    "aliens/${package}"
     "aliens/cluster/center/service"
-    "aliens/module/gate/conf"
+    "aliens/module/${module}/conf"
     "aliens/cluster/center"
     "aliens/module/gate/network"
 )
@@ -35,7 +35,7 @@ func Close() {
 
 func handle(request *base.Any) *base.Any {
     if request.GetGate() {
-        requestProxy := &protocol.Request{}
+        requestProxy := &${package}.Request{}
         defer func() {
             exception.CatchStackDetail()
         }()
@@ -52,18 +52,13 @@ func handle(request *base.Any) *base.Any {
 	return nil
 }
 
-func handleRequest(authID int64, request *protocol.Request) {
-	
-	if request.GetKickOut() != nil {
-		handleKickOut(authID, request.GetKickOut())
+func handleRequest(authID int64, request *${package}.Request) {
+	<message>
+	if request.Get${o_request}() != nil {
+		handle${o_request}(authID, request.Get${o_request}())
 		return
 	}
-	
-	if request.GetBindService() != nil {
-		handleBindService(authID, request.GetBindService())
-		return
-	}
-	
+	<message>
 	exception.GameException(protocol.Code_InvalidRequest)
 }
 

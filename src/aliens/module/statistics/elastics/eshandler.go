@@ -22,7 +22,7 @@ import (
 
 var tag = ""
 
-var format = &logrus.JSONFormatter{DisableTimestamp:true}
+var format = &logrus.JSONFormatter{DisableTimestamp:true, DisableField:true}
 
 func init() {
 	//flag.StringVar(&tag, "etag", "", "testcase tag")  //测试用例标识
