@@ -7,14 +7,14 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package entity
+package core
 
 import (
 	"bytes"
 )
 
 // EntityMap is the data structure for maintaining entity IDs to entities
-type EntityMap map[int32]*Entity
+type EntityMap map[EntityID]*Entity
 
 // Add adds a new entity to EntityMap
 func (em EntityMap) Add(entity *Entity) {
@@ -22,12 +22,12 @@ func (em EntityMap) Add(entity *Entity) {
 }
 
 // Del deletes an entity from EntityMap
-func (em EntityMap) Del(id int32) {
+func (em EntityMap) Del(id EntityID) {
 	delete(em, id)
 }
 
 // Get returns the Entity of specified entity id in EntityMap
-func (em EntityMap) Get(id int32) *Entity {
+func (em EntityMap) Get(id EntityID) *Entity {
 	return em[id]
 }
 
@@ -42,6 +42,10 @@ func (es EntitySet) Add(entity *Entity) {
 // Del deletes an entity from the EntitySet
 func (es EntitySet) Del(entity *Entity) {
 	delete(es, entity)
+}
+
+func (es EntitySet) Len() int {
+	return len(es)
 }
 
 // Contains returns if the entity is in the EntitySet
@@ -66,31 +70,31 @@ func (es EntitySet) String() string {
 	return b.String()
 }
 
-// EntityIDSet is the data structure for a collection of entity IDs
-type EntityIDSet map[int32]struct{}
-
-// Add adds an entity id to EntityIDSet
-func (es EntityIDSet) Add(id int32) {
-	es[id] = struct{}{}
-}
-
-// Del removes an entity id from EntityIDSet
-func (es EntityIDSet) Del(id int32) {
-	delete(es, id)
-}
-
-// Contains checks if entity id is in EntityIDSet
-func (es EntityIDSet) Contains(id int32) bool {
-	_, ok := es[id]
-	return ok
-}
-
-// ToList convert EntityIDSet to a slice of entity IDs
-func (es EntityIDSet) ToList() []int32 {
-	list := make([]int32, 0, len(es))
-	for eid := range es {
-		list = append(list, eid)
-	}
-	return list
-}
+//// EntityIDSet is the data structure for a collection of entity IDs
+//type EntityIDSet map[int32]struct{}
+//
+//// Add adds an entity id to EntityIDSet
+//func (es EntityIDSet) Add(id int32) {
+//	es[id] = struct{}{}
+//}
+//
+//// Del removes an entity id from EntityIDSet
+//func (es EntityIDSet) Del(id int32) {
+//	delete(es, id)
+//}
+//
+//// Contains checks if entity id is in EntityIDSet
+//func (es EntityIDSet) Contains(id int32) bool {
+//	_, ok := es[id]
+//	return ok
+//}
+//
+//// ToList convert EntityIDSet to a slice of entity IDs
+//func (es EntityIDSet) ToList() []int32 {
+//	list := make([]int32, 0, len(es))
+//	for eid := range es {
+//		list = append(list, eid)
+//	}
+//	return list
+//}
 

@@ -11,12 +11,12 @@ package template
 
 import "strings"
 
-type ProtoMessage struct {
+type ServiceMessage struct {
 	PackageName string
 	modules     map[string]*Module
 }
 
-func (this *ProtoMessage) EnsureModule(name string) *Module {
+func (this *ServiceMessage) EnsureModule(name string) *Module {
 	if this.modules == nil {
 		this.modules = make(map[string]*Module)
 	}

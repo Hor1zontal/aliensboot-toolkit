@@ -14,7 +14,6 @@ import (
 	"aliens/protocol"
 )
 
-
 //
 func handleLoginRegister(request *protocol.LoginRegister, response *protocol.LoginRegisterRet) int64 {
 	username := request.GetUsername()

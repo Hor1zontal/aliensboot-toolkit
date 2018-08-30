@@ -1,22 +1,24 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
+ * All rights reserved. 
  * Date:
- *     2018/3/30
+ *     2018/8/29
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package service
-
-import (
-	"aliens/protocol"
-	"aliens/mmorpg/core"
-)
+package template
 
 
-//
-func handleSpaceLeave(authID int64, request *protocol.SpaceLeave, response *protocol.SpaceLeaveRet) {
-	core.SpaceManager.LeaveEntity(core.EntityID(authID))
+type Type int
 
+
+type ModelMessage struct {
+	models  map[string]*Model //模型
 }
+
+type Model struct {
+	Name string  //
+	Props map[string]
+}
+

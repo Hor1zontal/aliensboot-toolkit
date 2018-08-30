@@ -11,12 +11,11 @@ package service
 
 import (
 	"aliens/protocol"
-	"aliens/mmorpg"
-	"aliens/module/scene/util"
+	"aliens/mmorpg/core"
 )
 
 
 //ignore d s
 func handleSpaceMove(authID int64, request *protocol.SpaceMove, response *protocol.SpaceMoveRet) {
-	mmorpg.SpaceManager.MoveEntity(request.GetSpaceID(), request.GetEntityID(), util.TransVector(request.GetPosition()), util.TransVector(request.GetDirection()))
+	core.SpaceManager.MoveEntity(core.EntityID(authID), request.GetPosition(), request.GetDirection())
 }

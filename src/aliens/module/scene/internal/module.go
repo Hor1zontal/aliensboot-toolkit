@@ -1,10 +1,10 @@
 package internal
 
 import (
-	"aliens/module/scene/entity"
 	"aliens/module/scene/service"
 	"aliens/module"
 	"aliens/module/scene/conf"
+	"aliens/module/scene/core"
 )
 
 
@@ -23,7 +23,7 @@ func (m *Module) GetConfig() interface{} {
 
 func (m *Module) OnInit() {
 	m.Skeleton = module.NewSkeleton()
-	entity.Init()
+	core.Init()
 	service.Init(m.ChanRPCServer)
 }
 

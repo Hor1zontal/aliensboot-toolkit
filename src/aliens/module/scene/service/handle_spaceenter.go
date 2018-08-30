@@ -11,15 +11,16 @@ package service
 
 import (
 	"aliens/protocol"
-	"aliens/mmorpg"
 	"aliens/module/scene/entity"
-	"aliens/module/scene/util"
+	"aliens/mmorpg/core"
 )
 
 func handleSpaceEnter(authID int64, request *protocol.SpaceEnter, response *protocol.SpaceEnterRet) {
-	entity := mmorpg.SpaceManager.CreateEntity(request.GetSpaceID(), &entity.PlayerEntity{}, util.TransVector(request.GetPosition()), util.TransVector(request.GetDirection()))
-	response.EntityID = entity.GetID()
-
+	player := entity.NewPlayerEntity(authID)
+	entity, err := core.SpaceManager.CreateEntity(core.SpaceID(request.GetSpaceID()), player, request.GetPosition(), request.GetDirection())
+	if entity != nil && err != nil {
+		response.EntityID = int32(entity.GetID())
+	}
 	//GatePush(serviceType string, clientID string, message proto.Message) error {
 	//dispatch.MQ.GatePush(constant.SERVICE_SCENE, "1_1", &scene.SceneResponse{
 	//	SpacePush:

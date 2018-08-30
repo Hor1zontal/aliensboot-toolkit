@@ -10,15 +10,13 @@
 package entity
 
 import (
-	"aliens/mmorpg/entity"
 	"aliens/log"
+	"aliens/mmorpg/core"
 )
 
-//玩家实体
+//怪物
 type MonsterEntity struct {
-	clientID string //客户端ID
-	gateID string //网关ID
-	uid uint32 //用户id
+	*Stats
 }
 
 
@@ -28,21 +26,21 @@ func (this * MonsterEntity) GetDist() float32 {
 }
 
 
-func (this * MonsterEntity) OnEntityEnter(entity *entity.Entity) {
+func (this * MonsterEntity) OnEntityEnter(entity *core.Entity) {
 	log.Debugf("entity enter %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
-func (this * MonsterEntity) OnEntityLeave(entity *entity.Entity) {
+func (this * MonsterEntity) OnEntityLeave(entity *core.Entity) {
 	log.Debugf("entity leave %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
-func (this * MonsterEntity) OnEntityMove(entity *entity.Entity) {
+func (this * MonsterEntity) OnEntityMove(entity *core.Entity) {
 	log.Debugf("entity move %v", entity.GetID())
 
 }

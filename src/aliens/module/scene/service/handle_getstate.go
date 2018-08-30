@@ -11,13 +11,17 @@ package service
 
 import (
 	"aliens/protocol"
-	"aliens/mmorpg"
+
 	"aliens/module/scene/util"
+	"aliens/mmorpg/core"
 )
 
 
 //
 func handleGetState(authID int64, request *protocol.GetState, response *protocol.GetStateRet) {
-	neighbors := mmorpg.SpaceManager.GetEntityState(request.GetSpaceID(), request.GetEntityID())
+	neighbors, err := core.SpaceManager.GetEntityState(core.EntityID(authID))
+	if err != nil {
+		//玩家不在任何场景内
+	}
 	response.Neighbors = util.BuildEntities(neighbors)
 }

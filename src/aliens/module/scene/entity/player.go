@@ -10,17 +10,29 @@
 package entity
 
 import (
-	"aliens/mmorpg/entity"
 	"aliens/log"
+	"aliens/mmorpg/core"
 )
+
+func NewPlayerEntity(authID int64) *PlayerEntity {
+	player := &PlayerEntity{
+		authID:authID,
+		entityID:core.EntityID(authID),
+	}
+	return player
+}
 
 //玩家实体
 type PlayerEntity struct {
-	clientID string //客户端ID
-	gateID string //网关ID
-	uid uint32 //用户id
+	authID int64  //
+	entityID core.EntityID
+	gateID string //玩家所在的网关ID
+	*Stats
 }
 
+func (this * PlayerEntity) GetID() core.EntityID {
+	return this.entityID
+}
 
 //可视距离
 func (this * PlayerEntity) GetDist() float32 {
@@ -28,21 +40,21 @@ func (this * PlayerEntity) GetDist() float32 {
 }
 
 
-func (this * PlayerEntity) OnEntityEnter(entity *entity.Entity) {
+func (this * PlayerEntity) OnEntityEnter(entity *core.Entity) {
 	log.Debugf("entity enter %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
-func (this * PlayerEntity) OnEntityLeave(entity *entity.Entity) {
+func (this * PlayerEntity) OnEntityLeave(entity *core.Entity) {
 	log.Debugf("entity leave %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
 
-func (this * PlayerEntity) OnEntityMove(entity *entity.Entity) {
+func (this * PlayerEntity) OnEntityMove(entity *core.Entity) {
 	log.Debugf("entity move %v", entity.GetID())
 
 }

@@ -1,8 +1,8 @@
 package aoi
 
-//九宫格灯塔
+//九宫格灯塔模型
 
-func NewTowerAOIManager(minX, maxX, minY, maxY float32, towerRange float32) AOIManager {
+func NewTowerAOIManager(minX, maxX, minY, maxY float32, towerRange float32) Manager {
 	this := &TowerAOIManager{minX: minX, maxX: maxX, minY: minY, maxY: maxY, towerRadius: towerRange}
 	this.init()
 	return this
@@ -71,7 +71,6 @@ func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y float32) {
 			if xi >= xMin && xi <= xMax && yi >= yMin && yi <= yMax {
 				continue
 			}
-
 			tower := &this.towers[xi][yi]
 			tower.removeWatcher(aoiNode)
 		}
@@ -82,7 +81,6 @@ func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y float32) {
 			if xi >= oxMin && xi <= oxMax && yi >= oyMin && yi <= oyMax {
 				continue
 			}
-
 			tower := &this.towers[xi][yi]
 			tower.addWatcher(aoiNode)
 		}

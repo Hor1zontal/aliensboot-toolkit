@@ -12,8 +12,6 @@ package service
 import (
 	"github.com/gogo/protobuf/proto"
     "aliens/chanrpc"
-    "aliens/log"
-    "runtime/debug"
     "aliens/exception"
     "aliens/${package}/base"
     "aliens/${package}"

@@ -14,7 +14,7 @@ message Vector {
 }
 
 message Entity {
-    int32 id = 1;  //实体id
+    int64 id = 1;  //实体id
     Vector position = 2; //玩家的位置
     Vector direction = 3; //玩家的向量
     string data = 4;  //实体数据 json

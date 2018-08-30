@@ -22,13 +22,13 @@ const (
 	PUSH_TAG = "push"
 )
 
-var message = &ProtoMessage{}
+var message = &ServiceMessage{}
 
 
 //Handlers:make( map[int]*ProtoHandler)
 
-func ParseProto(protoPath string) *ProtoMessage {
-	message = &ProtoMessage{modules:make(map[string]*Module)}
+func ParseProto(protoPath string) *ServiceMessage {
+	message = &ServiceMessage{modules:make(map[string]*Module)}
 	//"/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
 	reader, _ := os.Open(protoPath)
 	defer reader.Close()

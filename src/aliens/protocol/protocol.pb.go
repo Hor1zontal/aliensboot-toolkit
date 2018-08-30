@@ -1066,7 +1066,7 @@ func (m *Push) GetKick() KickType {
 func init() {
 	proto.RegisterType((*Request)(nil), "protocol.Request")
 	proto.RegisterType((*Response)(nil), "protocol.Response")
-	proto.RegisterType((*Push)(nil), "protocol.KickOut")
+	proto.RegisterType((*Push)(nil), "protocol.Push")
 }
 func (m *Request) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -2770,7 +2770,7 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 1000:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field KickOut", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Push", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2845,10 +2845,10 @@ func (m *Push) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: KickOut: wiretype end group for non-group")
+			return fmt.Errorf("proto: Push: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: KickOut: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: Push: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

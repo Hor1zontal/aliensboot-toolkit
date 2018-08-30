@@ -18,7 +18,7 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/passport/conf"
     "aliens/cluster/center"
-	"aliens/log"
+    "aliens/log"
 )
 
 var instance service.IService = nil
@@ -55,7 +55,7 @@ func handle(request *base.Any) *base.Any {
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
-		log.Debug(error)
+	    log.Debug(error)
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	authID = handleRequest(requestProxy, responseProxy)
@@ -63,6 +63,13 @@ func handle(request *base.Any) *base.Any {
 }
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
+	
+	if request.GetTokenLogin() != nil {
+		messageRet := &protocol.TokenLoginRet{}
+		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
+		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
+		return result
+	}
 	
 	if request.GetLoginRegister() != nil {
 		messageRet := &protocol.LoginRegisterRet{}
@@ -75,13 +82,6 @@ func handleRequest(request *protocol.Request, response *protocol.Response) int64
 		messageRet := &protocol.LoginLoginRet{}
 		result := handleLoginLogin(request.GetLoginLogin(), messageRet)
 		response.Passport = &protocol.Response_LoginLoginRet{messageRet}
-		return result
-	}
-	
-	if request.GetTokenLogin() != nil {
-		messageRet := &protocol.TokenLoginRet{}
-		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
-		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
 		return result
 	}
 	

@@ -73,7 +73,7 @@ func (this *Network) handleResponse(response *base.Any, err error) {
 		return
 	}
 	//更新验权id
-	if response.GetAuthId() > 0 {
+	if response.GetAuthId() > 0 && !this.IsAuth() {
 		this.Auth(response.GetAuthId())
 	}
 	this.agent.WriteMsg(response)

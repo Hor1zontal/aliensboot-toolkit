@@ -6,10 +6,9 @@ package protocol;
 import "scene_model.proto";
 
 message space_enter {
-    int32 clientID = 1; //
-    int32 spaceID = 2; //空间ID
-    Vector position = 3; //移动的位置
-    Vector direction = 4; //玩家的向量
+    int32 spaceID = 1; //空间ID
+    Vector position = 2; //移动的位置
+    Vector direction = 3; //玩家的向量
 }
 
 message space_enter_ret {
@@ -17,10 +16,8 @@ message space_enter_ret {
 }
 
 message space_move {
-    int32 spaceID = 1;
-    int32 entityID = 2;
-    Vector position = 3; //玩家的位置
-    Vector direction = 4; //玩家的向量
+    Vector position = 1; //玩家的位置
+    Vector direction = 2; //玩家的向量
 }
 
 message space_move_ret {
@@ -28,8 +25,6 @@ message space_move_ret {
 }
 
 message space_leave {
-    int32 spaceID = 1; //空间id
-    int32 entityID = 2; //实体id
 }
 
 message space_leave_ret {
@@ -37,17 +32,13 @@ message space_leave_ret {
 }
 
 message get_state {
-    int32 spaceID = 1;
-    int32 entityID = 2;
 }
 
 message get_state_ret {
-    repeated Entity neighbors = 1; //周围的玩家信息
+    repeated Entity neighbors = 1; //周围的实体信息
 }
 
 //场景信息变更推送
 message space_push {
     repeated Entity neighbors = 1; //周围的变更玩家信息
 }
-
-

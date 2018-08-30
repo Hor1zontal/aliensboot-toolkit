@@ -12,8 +12,6 @@ package service
 import (
 	"github.com/gogo/protobuf/proto"
     "aliens/chanrpc"
-    "aliens/log"
-    "runtime/debug"
     "aliens/exception"
     "aliens/protocol/base"
     "aliens/protocol"
@@ -63,20 +61,6 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
 	
-	if request.GetGetState() != nil {
-		messageRet := &protocol.GetStateRet{}
-		handleGetState(authID, request.GetGetState(), messageRet)
-		response.Scene = &protocol.Response_GetStateRet{messageRet}
-		return
-	}
-	
-	if request.GetSpaceMove() != nil {
-		messageRet := &protocol.SpaceMoveRet{}
-		handleSpaceMove(authID, request.GetSpaceMove(), messageRet)
-		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
-		return
-	}
-	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &protocol.SpaceEnterRet{}
 		handleSpaceEnter(authID, request.GetSpaceEnter(), messageRet)
@@ -88,6 +72,20 @@ func handleRequest(authID int64, request *protocol.Request, response *protocol.R
 		messageRet := &protocol.SpaceLeaveRet{}
 		handleSpaceLeave(authID, request.GetSpaceLeave(), messageRet)
 		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
+		return
+	}
+	
+	if request.GetGetState() != nil {
+		messageRet := &protocol.GetStateRet{}
+		handleGetState(authID, request.GetGetState(), messageRet)
+		response.Scene = &protocol.Response_GetStateRet{messageRet}
+		return
+	}
+	
+	if request.GetSpaceMove() != nil {
+		messageRet := &protocol.SpaceMoveRet{}
+		handleSpaceMove(authID, request.GetSpaceMove(), messageRet)
+		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
 		return
 	}
 	

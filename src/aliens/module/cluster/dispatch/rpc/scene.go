@@ -34,6 +34,16 @@ func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) 
 }
 
 
+func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
+	message := &protocol.Request{
+		Scene:&protocol.Request_GetState{
+			GetState:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetGetStateRet()
+}
+
 func (this *sceneRPCHandle) SpaceMove(node string, request *protocol.SpaceMove) *protocol.SpaceMoveRet {
 	message := &protocol.Request{
 		Scene:&protocol.Request_SpaceMove{
@@ -62,14 +72,4 @@ func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave
 	}
 	messageRet := this.RequestNode(node, message)
 	return messageRet.GetSpaceLeaveRet()
-}
-
-func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_GetState{
-			GetState:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetGetStateRet()
 }

@@ -10,32 +10,33 @@
 package entity
 
 import (
-	"aliens/mmorpg/entity"
-	"aliens/mmorpg"
+	"aliens/mmorpg/core"
+	"aliens/mmorpg/config"
 )
 
 type MySpace struct {
-	id int32
+	id core.SpaceID
 }
 
+func (this *MySpace) GetConfig() config.SpaceConfig {
+	return config.SpaceConfig{"map1",-400, 400, -300, 300, 200}
+}
 
-func (this *MySpace) GetID() int32 {
+func (this *MySpace) GetID() core.SpaceID {
 	return this.id
 }
 
-func (this *MySpace) OnEntityEnter(entity *entity.Entity) {
+func (this *MySpace) OnEntityEnter(entity *core.Entity) {
 
 }
 
-func (this *MySpace) OnEntityLeave(entity *entity.Entity) {
+func (this *MySpace) OnEntityLeave(entity *core.Entity) {
 
 }
 
-func (this *MySpace) OnEntityMove(entity *entity.Entity) {
+func (this *MySpace) OnEntityMove(entity *core.Entity) {
 	//dispatch.gate
 }
 
-func Init() {
-	mmorpg.SpaceManager.CreateSpace(&MySpace{id:1}, -400, 400, -300, 300, 200)
-}
+
 

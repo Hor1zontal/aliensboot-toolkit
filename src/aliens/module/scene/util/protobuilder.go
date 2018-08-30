@@ -10,39 +10,38 @@
 package util
 
 import (
-	"aliens/mmorpg/entity"
 	"aliens/protocol"
+	"aliens/mmorpg/core"
 )
 
-
-func BuildEntities(entitySet entity.EntitySet) []*protocol.Entity {
-	results := []*protocol.Entity{}
+func BuildEntities(entitySet core.EntitySet) []*protocol.Entity {
+	results := make([]*protocol.Entity, entitySet.Len())
 	for entity, _ := range entitySet {
 		results = append(results, BuildEntityProtocol(entity))
 	}
 	return results
 }
 
-func BuildEntityProtocol(entity *entity.Entity) *protocol.Entity {
+func BuildEntityProtocol(entity *core.Entity) *protocol.Entity {
 	return &protocol.Entity{
-		Id:        entity.GetID(),
-		Position:  BuildVector(entity.GetPosition()),
-		Direction: BuildVector(entity.GetDirection()),
+		Id:       int64(entity.GetID()),
+		Position: entity.GetPosition(),
+		Direction: entity.GetDirection(),
 	}
 }
 
-func BuildVector(vector entity.Vector3) *protocol.Vector {
-	return &protocol.Vector{
-		X: vector.X,
-		Y: vector.Y,
-		Z: vector.Z,
-	}
-}
-
-func TransVector(vector *protocol.Vector) entity.Vector3 {
-	return entity.Vector3{
-		X: vector.GetX(),
-		Y: vector.GetY(),
-		Z: vector.GetZ(),
-	}
-}
+//func BuildVector(vector entity.Vector3) *protocol.Vector {
+//	return &protocol.Vector{
+//		X: vector.X,
+//		Y: vector.Y,
+//		Z: vector.Z,
+//	}
+//}
+//
+//func TransVector(vector *protocol.Vector) entity.Vector3 {
+//	return entity.Vector3{
+//		X: vector.GetX(),
+//		Y: vector.GetY(),
+//		Z: vector.GetZ(),
+//	}
+//}

@@ -1,6 +1,7 @@
 syntax = "proto3";
 package protocol;
 
+import "scene_model.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 enum profession {

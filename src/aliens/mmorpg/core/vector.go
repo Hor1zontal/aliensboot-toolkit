@@ -7,53 +7,53 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package entity
+package core
 
 import (
-"fmt"
 "math"
+	"aliens/protocol"
 )
 
 // Yaw is the type of entity direction
 type Yaw float32
 
 
-// Vector3 is type of entity position
-type Vector3 struct {
-	X float32
-	Y float32
-	Z float32
-}
-
-func (p Vector3) String() string {
-	return fmt.Sprintf("(%.2f, %.2f, %.2f)", p.X, p.Y, p.Z)
-}
+// protocol.Vector is type of entity position
+//type protocol.Vector struct {
+//	X float32
+//	Y float32
+//	Z float32
+//}
+//
+//func (p Vector) String() string {
+//	return fmt.Sprintf("(%.2f, %.2f, %.2f)", p.X, p.Y, p.Z)
+//}
 
 // DistanceTo calculates distance between two positions
-func (p Vector3) DistanceTo(o Vector3) float32 {
+func DistanceTo(p protocol.Vector, o protocol.Vector) float32 {
 	dx := p.X - o.X
 	dy := p.Y - o.Y
 	dz := p.Z - o.Z
 	return float32(math.Sqrt(float64(dx*dx + dy*dy + dz*dz)))
 }
 
-// Sub calculates Vector3 p - Vector3 o
-func (p Vector3) Sub(o Vector3) Vector3 {
-	return Vector3{p.X - o.X, p.Y - o.Y, p.Z - o.Z}
+// Sub calculates protocol.Vector p - protocol.Vector o
+func Sub(p protocol.Vector, o protocol.Vector) protocol.Vector {
+	return protocol.Vector{p.X - o.X, p.Y - o.Y, p.Z - o.Z}
 }
 
-func (p Vector3) Add(o Vector3) Vector3 {
-	return Vector3{p.X + o.X, p.Y + o.Y, p.Z + o.Z}
+func Add(p protocol.Vector, o protocol.Vector) protocol.Vector {
+	return protocol.Vector{p.X + o.X, p.Y + o.Y, p.Z + o.Z}
 }
 
-// Mul calculates Vector3 p * m
-func (p Vector3) Mul(m float32) Vector3 {
-	return Vector3{p.X * m, p.Y * m, p.Z * m}
+// Mul calculates protocol.Vector p * m
+func Mul(p protocol.Vector, m float32) protocol.Vector {
+	return protocol.Vector{p.X * m, p.Y * m, p.Z * m}
 }
 
-// DirToYaw convert direction represented by Vector3 to Yaw
-func (dir Vector3) DirToYaw() Yaw {
-	dir.Normalize()
+// DirToYaw convert direction represented by protocol.Vector to Yaw
+func DirToYaw(dir protocol.Vector) Yaw {
+	Normalized(&dir)
 	yaw := math.Acos(float64(dir.X))
 	if dir.Z < 0 {
 		yaw = math.Pi*2 - yaw
@@ -68,7 +68,7 @@ func (dir Vector3) DirToYaw() Yaw {
 	return Yaw(yaw)
 }
 
-func (p *Vector3) Normalize() {
+func Normalize(p *protocol.Vector)  {
 	d := float32(math.Sqrt(float64(p.X*p.X + p.Y + p.Y + p.Z*p.Z)))
 	if d == 0 {
 		return
@@ -78,8 +78,7 @@ func (p *Vector3) Normalize() {
 	p.Z /= d
 }
 
-func (p Vector3) Normalized() Vector3 {
-	p.Normalize()
-	return p
+func  Normalized(p *protocol.Vector) {
+	Normalize(p)
 }
 
