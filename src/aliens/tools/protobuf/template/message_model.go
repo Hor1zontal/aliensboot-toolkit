@@ -19,6 +19,6 @@ type ModelMessage struct {
 
 type Model struct {
 	Name string  //
-	Props map[string]
+	//Props map[string]
 }
 

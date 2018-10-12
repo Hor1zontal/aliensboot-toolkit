@@ -34,32 +34,32 @@ func (this *passportRPCHandle) RequestNode(node string, request *protocol.Reques
 }
 
 
-func (this *passportRPCHandle) LoginRegister(node string, request *protocol.LoginRegister) *protocol.LoginRegisterRet {
+func (this *passportRPCHandle) C2S_UserRegister(node string, request *protocol.C2S_UserRegister) *protocol.S2C_UserRegister {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginRegister{
-			LoginRegister:request,
+		Passport:&protocol.Request_C2S_UserRegister{
+			C2S_UserRegister:request,
 		},
 	}
 	messageRet := this.RequestNode(node, message)
-	return messageRet.GetLoginRegisterRet()
+	return messageRet.GetS2C_UserRegister()
 }
 
-func (this *passportRPCHandle) LoginLogin(node string, request *protocol.LoginLogin) *protocol.LoginLoginRet {
+func (this *passportRPCHandle) C2S_UserLogin(node string, request *protocol.C2S_UserLogin) *protocol.S2C_UserLogin {
 	message := &protocol.Request{
-		Passport:&protocol.Request_LoginLogin{
-			LoginLogin:request,
+		Passport:&protocol.Request_C2S_UserLogin{
+			C2S_UserLogin:request,
 		},
 	}
 	messageRet := this.RequestNode(node, message)
-	return messageRet.GetLoginLoginRet()
+	return messageRet.GetS2C_UserLogin()
 }
 
-func (this *passportRPCHandle) TokenLogin(node string, request *protocol.TokenLogin) *protocol.TokenLoginRet {
+func (this *passportRPCHandle) C2S_TokenLogin(node string, request *protocol.C2S_TokenLogin) *protocol.S2C_TokenLogin {
 	message := &protocol.Request{
-		Passport:&protocol.Request_TokenLogin{
-			TokenLogin:request,
+		Passport:&protocol.Request_C2S_TokenLogin{
+			C2S_TokenLogin:request,
 		},
 	}
 	messageRet := this.RequestNode(node, message)
-	return messageRet.GetTokenLoginRet()
+	return messageRet.GetS2C_TokenLogin()
 }

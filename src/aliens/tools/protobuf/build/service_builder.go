@@ -10,11 +10,11 @@
 package main
 
 import (
-	"aliens/tools/protobuf/template"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
+	"flag"
+	"aliens/tools/protobuf/template"
 )
 
 
@@ -40,11 +40,13 @@ func loadConfig(config interface{}, path string) {
 }
 
 func main() {
-	//flag.StringVar(&proto, "proto", "", "protobuf file path")
-	//flag.StringVar(&templatePath,"template", "", "output template path")
-	//flag.StringVar(&output,"output", "", "output path")
-	//flag.StringVar(&prefix,"prefix", "", "output file prefix")
-	//flag.BoolVar(&overwrite,"overwrite", false, "is overwrite ?")
+	//template.ParseEntityProto("/Users/hejialin/git/server/aliensbot/src/aliens/protocol/entity/player.proto")
+
+	flag.StringVar(&proto, "proto", "", "protobuf file path")
+	flag.StringVar(&templatePath,"template", "", "output template path")
+	flag.StringVar(&output,"output", "", "output path")
+	flag.StringVar(&prefix,"prefix", "", "output file prefix")
+	flag.BoolVar(&overwrite,"overwrite", false, "is overwrite ?")
 
 	flag.StringVar(&configPath,"configPath", "", "config file path")
 	flag.Parse()
@@ -67,8 +69,8 @@ func main() {
 	template.Convert(configObject)
 
 	//template.Convert(proto, templatePath, output, prefix, overwrite)
-	//genSceneProto()
-	//genPassportProto()
+	genSceneProto()
+	genPassportProto()
 }
 
 func genSceneProto() {

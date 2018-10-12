@@ -66,7 +66,7 @@ func handleRequest(request *${package}.Request, response *${package}.Response) i
 	<message>
 	if request.Get${o_request}() != nil {
 		messageRet := &${package}.${o_response}{}
-		result := handle${o_request}(request.Get${o_request}(), messageRet)
+		result := handle${o_name}(request.Get${o_request}(), messageRet)
 		response.${Module} = &${package}.Response_${o_response}{messageRet}
 		return result
 	}

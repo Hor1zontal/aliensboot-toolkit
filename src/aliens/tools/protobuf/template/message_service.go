@@ -46,14 +46,22 @@ type Module struct {
 }
 
 type ProtoHandler struct {
-	//Name string
+	Name string
 	Desc string
 	ORequest string
 	OResponse string
-	OPush string
+	//OPush string
 }
 
 func (this *ProtoHandler) IsValid() bool {
 	return this.ORequest != ""
 	//return this.ORequest != "" && this.OResponse != ""
 }
+
+func (this *ProtoHandler) GetName() string {
+	if this.ORequest != "" && this.Name == "" {
+		this.Name = strings.Replace(this.ORequest, "C2S_", "", 1)
+	}
+	return this.Name
+}
+

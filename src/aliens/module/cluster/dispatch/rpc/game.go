@@ -34,16 +34,6 @@ func (this *gameRPCHandle) RequestNode(node string, request *protocol.Request) *
 }
 
 
-func (this *gameRPCHandle) GetUserInfo(node string, request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
-	message := &protocol.Request{
-		Game:&protocol.Request_GetUserInfo{
-			GetUserInfo:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetGetUserInfoRet()
-}
-
 func (this *gameRPCHandle) LoginRole(node string, request *protocol.LoginRole) *protocol.LoginRoleRet {
 	message := &protocol.Request{
 		Game:&protocol.Request_LoginRole{
@@ -72,4 +62,14 @@ func (this *gameRPCHandle) RemoveRole(node string, request *protocol.RemoveRole)
 	}
 	messageRet := this.RequestNode(node, message)
 	return messageRet.GetRemoveRoleRet()
+}
+
+func (this *gameRPCHandle) GetUserInfo(node string, request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
+	message := &protocol.Request{
+		Game:&protocol.Request_GetUserInfo{
+			GetUserInfo:request,
+		},
+	}
+	messageRet := this.RequestNode(node, message)
+	return messageRet.GetGetUserInfoRet()
 }

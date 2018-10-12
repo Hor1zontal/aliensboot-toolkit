@@ -14,24 +14,17 @@ import (
 	"aliens/mmorpg/core"
 )
 
-func NewPlayerEntity(authID int64) *PlayerEntity {
-	player := &PlayerEntity{
-		authID:authID,
-		entityID:core.EntityID(authID),
-	}
-	return player
-}
+//func NewPlayerEntity(authID int64) *PlayerEntity {
+//	player := &PlayerEntity{
+//		authID:authID,
+//		entityID:core.EntityID(authID),
+//	}
+//	return player
+//}
 
 //玩家实体
 type PlayerEntity struct {
-	authID int64  //
-	entityID core.EntityID
-	gateID string //玩家所在的网关ID
-	*Stats
-}
-
-func (this * PlayerEntity) GetID() core.EntityID {
-	return this.entityID
+	*core.Entity
 }
 
 //可视距离

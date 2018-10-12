@@ -28,6 +28,11 @@ func (ss StringSet) Remove(elem string) {
 	delete(ss, elem)
 }
 
+// Remove removes the string from StringList
+func (ss StringSet) IsEmpty() bool {
+	return len(ss) == 0
+}
+
 // ToList convert StringSet to string slice
 func (ss StringSet) ToList() []string {
 	keys := make([]string, 0, len(ss))

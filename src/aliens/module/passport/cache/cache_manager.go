@@ -62,7 +62,7 @@ func (this *cacheManager) SetNX(key string, value interface{}) bool {
 /**
  *  新建用户
  */
-func NewUser(username string, password string, ip string, channel string, channelUID string, openID string, avatar string) *protocol.User {
+func NewUser(username string, password string, channel string, channelUID string, openID string, avatar string) *protocol.User {
 	user := &protocol.User{
 		Username: username,
 		Password: password,
@@ -70,12 +70,10 @@ func NewUser(username string, password string, ip string, channel string, channe
 		Channel:  channel,
 		Channeluid: channelUID,
 		Mobile:   "",
-		Ip:       ip,
 		Openid:   openID,
 		Status:   0,
 		Avatar:   avatar,
 		RegTime:  time.Now().Unix(),
-		//LastLogin:time.Now(),
 	}
 	//uid, err := db.DatabaseHandler.GenTimestampId(user)
 	//if err != nil {

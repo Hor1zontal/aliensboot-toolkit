@@ -140,6 +140,44 @@ func (this *Database) Insert(data interface{}) error {
 }
 
 
+func (this *Database) QueryAllLimit(data interface{}, result interface{}, limit int, callback func(interface{}) bool) error {
+	this.validateConnection()
+	tableMeta, err := this.GetTableMeta(data)
+	if err != nil {
+		return err
+	}
+	skip := 0
+	for {
+		err := this.database.C(tableMeta.Name).Find(nil).Limit(limit).Skip(skip).All(result)
+		if err != nil {
+			return err
+		}
+		skip += limit
+		if callback(result) {
+			return nil
+		}
+	}
+}
+
+//按条件多条查询
+func (this *Database) QueryAllConditionLimit(data interface{}, condition string, value interface{}, result interface{}, limit int, callback func(interface{}) bool) error {
+	this.validateConnection()
+	tableMeta, err := this.GetTableMeta(data)
+	if err != nil {
+		return err
+	}
+	skip := 0
+	for {
+		err := this.database.C(tableMeta.Name).Find(bson.M{condition: value}).Limit(limit).Skip(skip).All(result)
+		if err != nil {
+			return err
+		}
+		skip += limit
+		if callback(result) {
+			return nil
+		}
+	}
+}
 
 //查询所有数据
 func (this *Database) QueryAll(data interface{}, result interface{}) error {

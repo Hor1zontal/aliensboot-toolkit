@@ -55,36 +55,36 @@ func handle(request *base.Any) *base.Any {
 	if error != nil {
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
-	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	handleRequest(request.GetAuthId(), request.GetGateId(), requestProxy, responseProxy)
 	return response
 }
 
-func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
+func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
 	
 	if request.GetGetUserInfo() != nil {
 		messageRet := &protocol.GetUserInfoRet{}
-		handleGetUserInfo(authID, request.GetGetUserInfo(), messageRet)
+		handleGetUserInfo(authID, gateID, request.GetGetUserInfo(), messageRet)
 		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
 		return
 	}
 	
 	if request.GetLoginRole() != nil {
 		messageRet := &protocol.LoginRoleRet{}
-		handleLoginRole(authID, request.GetLoginRole(), messageRet)
+		handleLoginRole(authID, gateID, request.GetLoginRole(), messageRet)
 		response.Game = &protocol.Response_LoginRoleRet{messageRet}
 		return
 	}
 	
 	if request.GetCreateRole() != nil {
 		messageRet := &protocol.CreateRoleRet{}
-		handleCreateRole(authID, request.GetCreateRole(), messageRet)
+		handleCreateRole(authID, gateID, request.GetCreateRole(), messageRet)
 		response.Game = &protocol.Response_CreateRoleRet{messageRet}
 		return
 	}
 	
 	if request.GetRemoveRole() != nil {
 		messageRet := &protocol.RemoveRoleRet{}
-		handleRemoveRole(authID, request.GetRemoveRole(), messageRet)
+		handleRemoveRole(authID, gateID, request.GetRemoveRole(), messageRet)
 		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
 		return
 	}

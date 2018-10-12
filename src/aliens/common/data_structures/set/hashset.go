@@ -33,6 +33,12 @@ func (set *HashSet) Contains(e interface{}) bool {
 	return set.m[e]
 }
 
+func (set *HashSet) Range(callback func(element interface{})) {
+	for _, element := range set.m {
+		callback(element)
+	}
+}
+
 func (set *HashSet) Len() int {
 	return len(set.m)
 }

@@ -9,13 +9,8 @@
  *******************************************************************************/
 package core
 
-import (
-	"aliens/mmorpg/core"
-	"aliens/module/scene/entity"
-)
-
 
 //TODO 初始化需要管理的所有场景
 func Init() {
-	core.SpaceManager.CreateSpace(&entity.MySpace{})
+	//core.SpaceManager.CreateSpace(&entity.MySpace{})
 }

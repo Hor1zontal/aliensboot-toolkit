@@ -55,37 +55,37 @@ func handle(request *base.Any) *base.Any {
 	if error != nil {
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
-	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	handleRequest(request.GetAuthId(), request.GetGateId(), requestProxy, responseProxy)
 	return response
 }
 
-func handleRequest(authID int64, request *protocol.Request, response *protocol.Response) {
+func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
+	
+	if request.GetSpaceMove() != nil {
+		messageRet := &protocol.SpaceMoveRet{}
+		handleSpaceMove(authID, gateID, request.GetSpaceMove(), messageRet)
+		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
+		return
+	}
 	
 	if request.GetSpaceEnter() != nil {
 		messageRet := &protocol.SpaceEnterRet{}
-		handleSpaceEnter(authID, request.GetSpaceEnter(), messageRet)
+		handleSpaceEnter(authID, gateID, request.GetSpaceEnter(), messageRet)
 		response.Scene = &protocol.Response_SpaceEnterRet{messageRet}
 		return
 	}
 	
 	if request.GetSpaceLeave() != nil {
 		messageRet := &protocol.SpaceLeaveRet{}
-		handleSpaceLeave(authID, request.GetSpaceLeave(), messageRet)
+		handleSpaceLeave(authID, gateID, request.GetSpaceLeave(), messageRet)
 		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
 		return
 	}
 	
 	if request.GetGetState() != nil {
 		messageRet := &protocol.GetStateRet{}
-		handleGetState(authID, request.GetGetState(), messageRet)
+		handleGetState(authID, gateID, request.GetGetState(), messageRet)
 		response.Scene = &protocol.Response_GetStateRet{messageRet}
-		return
-	}
-	
-	if request.GetSpaceMove() != nil {
-		messageRet := &protocol.SpaceMoveRet{}
-		handleSpaceMove(authID, request.GetSpaceMove(), messageRet)
-		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
 		return
 	}
 	

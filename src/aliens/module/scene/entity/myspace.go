@@ -15,15 +15,11 @@ import (
 )
 
 type MySpace struct {
-	id core.SpaceID
+	*core.Space
 }
 
 func (this *MySpace) GetConfig() config.SpaceConfig {
 	return config.SpaceConfig{"map1",-400, 400, -300, 300, 200}
-}
-
-func (this *MySpace) GetID() core.SpaceID {
-	return this.id
 }
 
 func (this *MySpace) OnEntityEnter(entity *core.Entity) {

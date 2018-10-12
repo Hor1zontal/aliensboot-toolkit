@@ -10,19 +10,18 @@
 package service
 
 import (
-	"aliens/module/passport/cache"
 	"aliens/protocol"
+	"aliens/module/passport/cache"
 )
 
 
-
-func handleTokenLogin(request *protocol.TokenLogin, response *protocol.TokenLoginRet) int64 {
+//
+func handleTokenLogin(request *protocol.C2S_TokenLogin, response *protocol.S2C_TokenLogin) int64 {
 	token, _ := cache.PassportCache.GetUserToken(request.GetUid())
 	if token != request.GetToken() {
 		response.Result = protocol.LoginResult_tokenExpire
 		return 0
 	}
 	response.Result = protocol.LoginResult_loginSuccess
-	request.Uid = 2
 	return request.GetUid()
 }

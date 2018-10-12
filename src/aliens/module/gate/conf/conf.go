@@ -40,8 +40,7 @@ var Config struct {
 	WSAddr              string //
 	TCPAddr             string //
 	HTTPAddr			string //
-	SecretKey           string
-	MessageChannelLimit int
+	SecretKey           string //
 	AuthTimeout         float64
 	HeartbeatTimeout    float64
 	Route	[]Route   //路由配置

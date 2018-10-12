@@ -26,7 +26,7 @@ func (t *tower) addAOINode(aoiNode *AOI, fromOtherTower *tower) {
 			if watcher == aoiNode {
 				continue
 			}
-			watcher.Data.OnEnterAOI(aoiNode)
+			watcher.Callback.OnEnterAOI(aoiNode)
 		}
 	} else {
 		// aoiNode moved from other tower to this tower
@@ -37,7 +37,7 @@ func (t *tower) addAOINode(aoiNode *AOI, fromOtherTower *tower) {
 			if _, ok := t.watchers[watcher]; ok {
 				continue
 			}
-			watcher.Data.OnLeaveAOI(aoiNode)
+			watcher.Callback.OnLeaveAOI(aoiNode)
 		}
 		for watcher := range t.watchers {
 			if watcher == aoiNode {
@@ -46,7 +46,7 @@ func (t *tower) addAOINode(aoiNode *AOI, fromOtherTower *tower) {
 			if _, ok := fromOtherTower.watchers[watcher]; ok {
 				continue
 			}
-			watcher.Data.OnEnterAOI(aoiNode)
+			watcher.Callback.OnEnterAOI(aoiNode)
 		}
 	}
 }
@@ -60,7 +60,7 @@ func (t *tower) removeAOINode(aoiNode *AOI, notifyWatchers bool) {
 			if watcher == aoiNode {
 				continue
 			}
-			watcher.Data.OnLeaveAOI(aoiNode)
+			watcher.Callback.OnLeaveAOI(aoiNode)
 		}
 	}
 }
@@ -68,6 +68,7 @@ func (t *tower) removeAOINode(aoiNode *AOI, notifyWatchers bool) {
 func (t *tower) addWatcher(aoiNode *AOI) {
 	if _, ok := t.watchers[aoiNode]; ok {
 		log.Info("duplicate add watcher")
+		return
 	}
 	//log.Info("观测台 %v-%v 进入可视范围", t.indexX, t.indexY)
 	t.watchers[aoiNode] = struct{}{}
@@ -76,13 +77,14 @@ func (t *tower) addWatcher(aoiNode *AOI) {
 		if neighbor == aoiNode {
 			continue
 		}
-		aoiNode.Data.OnEnterAOI(neighbor)
+		aoiNode.Callback.OnEnterAOI(neighbor)
 	}
 }
 
 func (t *tower) removeWatcher(aoiNode *AOI) {
 	if _, ok := t.watchers[aoiNode]; !ok {
 		log.Info("duplicate remove watcher")
+		return
 	}
 	//log.Info("观测台 %v-%v 退出可视范围", t.indexX, t.indexY)
 	delete(t.watchers, aoiNode)
@@ -90,6 +92,6 @@ func (t *tower) removeWatcher(aoiNode *AOI) {
 		if neighbor == aoiNode {
 			continue
 		}
-		aoiNode.Data.OnLeaveAOI(neighbor)
+		aoiNode.Callback.OnLeaveAOI(neighbor)
 	}
 }

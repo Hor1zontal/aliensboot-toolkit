@@ -15,7 +15,9 @@ import (
 	"aliens/mmorpg/core"
 )
 
-func handleSpaceEnter(authID int64, request *protocol.SpaceEnter, response *protocol.SpaceEnterRet) {
+func handleSpaceEnter(authID int64, gateID string, request *protocol.SpaceEnter, response *protocol.SpaceEnterRet) {
+	core.EntityManager.GetEntity(core.EntityID(authID))
+
 	player := entity.NewPlayerEntity(authID)
 	entity, err := core.SpaceManager.CreateEntity(core.SpaceID(request.GetSpaceID()), player, request.GetPosition(), request.GetDirection())
 	if entity != nil && err != nil {

@@ -24,7 +24,7 @@ func BuildEntities(entitySet core.EntitySet) []*protocol.Entity {
 
 func BuildEntityProtocol(entity *core.Entity) *protocol.Entity {
 	return &protocol.Entity{
-		Id:       int64(entity.GetID()),
+		//Id:       int64(entity.GetID()),
 		Position: entity.GetPosition(),
 		Direction: entity.GetDirection(),
 	}

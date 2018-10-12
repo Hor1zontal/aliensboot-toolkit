@@ -67,7 +67,7 @@ func convertModule(moduleConfig *ModuleConfig, module *Module) {
 				}
 				handleStr = replaceHandle(handleStr, handler)
 				if outputConfig.Prefix != "" {
-					filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler.ORequest), -1)
+					filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler.GetName()), -1)
 					//单独写文件
 					writeFile(filePath, header + handleStr + tailf, outputConfig.Overwrite)
 				} else {
@@ -124,5 +124,6 @@ func replaceHandle(content string, handler *ProtoHandler) string {
 	content = strings.Replace(content, "${o_desc}", handler.Desc, -1)
 	content = strings.Replace(content, "${o_request}", handler.ORequest, -1)
 	content = strings.Replace(content, "${o_response}", handler.OResponse, -1)
+	content = strings.Replace(content, "${o_name}", handler.GetName(), -1)
 	return content
 }

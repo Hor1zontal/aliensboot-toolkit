@@ -236,10 +236,12 @@ func (this *ZKServiceCenter) SubscribeConfig(configName string, configHandler Co
 			event, _ := <-ch
 			//更新配置节点信息
 			if event.Type == zk.EventNodeDataChanged {
-				content, _, err := this.zkCon.Get(path)
+				content, _, chw, err := this.zkCon.GetW(path)
+				//content, _, err := this.zkCon.Get(path)
 				if err == nil {
 					configHandler(content)
 				}
+				ch = chw
 			}
 		}
 

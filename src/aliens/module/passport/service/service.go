@@ -64,24 +64,24 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
 	
-	if request.GetTokenLogin() != nil {
-		messageRet := &protocol.TokenLoginRet{}
-		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
-		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
+	if request.GetC2S_UserRegister() != nil {
+		messageRet := &protocol.S2C_UserRegister{}
+		result := handleUserRegister(request.GetC2S_UserRegister(), messageRet)
+		response.Passport = &protocol.Response_S2C_UserRegister{messageRet}
 		return result
 	}
 	
-	if request.GetLoginRegister() != nil {
-		messageRet := &protocol.LoginRegisterRet{}
-		result := handleLoginRegister(request.GetLoginRegister(), messageRet)
-		response.Passport = &protocol.Response_LoginRegisterRet{messageRet}
+	if request.GetC2S_UserLogin() != nil {
+		messageRet := &protocol.S2C_UserLogin{}
+		result := handleUserLogin(request.GetC2S_UserLogin(), messageRet)
+		response.Passport = &protocol.Response_S2C_UserLogin{messageRet}
 		return result
 	}
 	
-	if request.GetLoginLogin() != nil {
-		messageRet := &protocol.LoginLoginRet{}
-		result := handleLoginLogin(request.GetLoginLogin(), messageRet)
-		response.Passport = &protocol.Response_LoginLoginRet{messageRet}
+	if request.GetC2S_TokenLogin() != nil {
+		messageRet := &protocol.S2C_TokenLogin{}
+		result := handleTokenLogin(request.GetC2S_TokenLogin(), messageRet)
+		response.Passport = &protocol.Response_S2C_TokenLogin{messageRet}
 		return result
 	}
 	

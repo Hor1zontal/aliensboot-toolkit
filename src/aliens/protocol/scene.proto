@@ -5,40 +5,33 @@ package protocol;
 //import "google/protobuf/timestamp.proto";
 import "scene_model.proto";
 
-message space_enter {
-    int32 spaceID = 1; //空间ID
-    Vector position = 2; //移动的位置
-    Vector direction = 3; //玩家的向量
+//message space_enter {
+//    int32 spaceID = 1; //空间ID
+//    Vector position = 2; //移动的位置
+//    Vector direction = 3; //玩家的向量
+//}
+//
+//message space_enter_ret {
+//    string entityID = 1;
+//    repeated Entity neighbors = 1; //变更属性或新增的实体
+//}
+
+//message get_state {
+//}
+//
+//message get_state_ret {
+//    repeated Entity neighbors = 1; //周围的实体信息
+//}
+
+//调用实体方法
+message entity_call {
+    string callID = 1;
+    string method = 2;
+    bytes args = 3;  //内部编解码
 }
 
-message space_enter_ret {
-    int32 entityID = 1;
-}
-
-message space_move {
-    Vector position = 1; //玩家的位置
-    Vector direction = 2; //玩家的向量
-}
-
-message space_move_ret {
-
-}
-
-message space_leave {
-}
-
-message space_leave_ret {
-
-}
-
-message get_state {
-}
-
-message get_state_ret {
-    repeated Entity neighbors = 1; //周围的实体信息
-}
-
-//场景信息变更推送
-message space_push {
-    repeated Entity neighbors = 1; //周围的变更玩家信息
+//场景数据变更推送
+message entity_push {
+    repeated Entity neighbors = 1; //变更属性或新增的实体
+    repeated string distoryEntities = 2; //销毁的实体
 }

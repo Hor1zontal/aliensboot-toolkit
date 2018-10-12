@@ -12,9 +12,6 @@ package rpc
 import (
 	"aliens/module/cluster/dispatch"
 	"aliens/protocol"
-	"aliens/exception"
-	"aliens/log"
-	"aliens/protocol/base"
 )
 
 var Gate = &gateRPCHandle{"gate"}

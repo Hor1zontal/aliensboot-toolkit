@@ -5,19 +5,26 @@ type AOI struct {
 	y        float32
 	tower    *tower
 
-	dist float32 //视野范围
-	Data Data
+	viewRadius float32 //视野范围
+
+	Callback AOICallback
+
+	implData interface{}
 	//implData interface{}
 }
 
-func NewAOI(data Data, dist float32) *AOI {
+func (this *AOI) GetViewRadius() float32 {
+	return this.viewRadius
+}
+
+func NewAOI(data AOICallback, viewRadius float32) *AOI {
 	return &AOI{
-		dist:  dist,
-		Data : data,
+		viewRadius: viewRadius,
+		Callback:   data,
 	}
 }
 
-type Data interface {
+type AOICallback interface {
 	OnEnterAOI(other *AOI)
 	OnLeaveAOI(other *AOI)
 }

@@ -14,6 +14,8 @@ import (
 	"aliens/protocol/base"
 	"aliens/gate"
 	"aliens/module/gate/network"
+	"aliens/task"
+	"aliens/log"
 )
 
 func init() {
@@ -21,6 +23,15 @@ func init() {
 	Skeleton.RegisterChanRPC(gate.CommandAgentNew, newAgent)
 	Skeleton.RegisterChanRPC(gate.CommandAgentClose, closeAgent)
 	Skeleton.RegisterChanRPC(gate.CommandAgentMsg, handleMessage)
+
+	cron, err := task.NewCronExpr("*/1 * * * *")
+	if err != nil {
+		log.Error("init gate timer error : %v", err)
+	}
+
+	Skeleton.CronFunc(cron, network.Manager.DealAuthTimeout)
+
+
 	//dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
 }
 

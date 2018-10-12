@@ -18,7 +18,12 @@ import (
 
 
 //
-func handleGetState(authID int64, request *protocol.GetState, response *protocol.GetStateRet) {
+func handleGetState(authID int64, gateID string, request *protocol.GetState, response *protocol.GetStateRet) {
+	entity := core.EntityManager.GetEntity(core.EntityID(authID))
+
+	if entity == nil {
+
+	}
 	neighbors, err := core.SpaceManager.GetEntityState(core.EntityID(authID))
 	if err != nil {
 		//玩家不在任何场景内

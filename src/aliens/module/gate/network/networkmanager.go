@@ -19,7 +19,7 @@ const (
 
 type networkManager struct {
 	chanRpc *chanrpc.Server
-	networks  *set.HashSet             //存储所有未验权的网络连接
+	networks  *set.HashSet          //存储所有未验权的网络连接
 	authNetworks map[int64]*Network //存储所有验权通过的网络连接
 	node string //当前节点名
 	//timeWheel *util.TimeWheel       //验权检查时间轮
@@ -100,20 +100,23 @@ func (this *networkManager) RemoveNetwork(network *Network) {
 
 }
 
-func (this *networkManager) dealAuthTimeout(data util.TaskData) {
-	//Network := data[0].(*Network)
-	//超过固定时长没有验证权限需要退出
-	//if Network.IsAuthTimeout() {
-	//	log.Debug("Network auth timeout : %v", Network.GetRemoteAddr())
-	//	Network.Close()
-	//	this.networks.Del(Network)
-	//}
+func (this *networkManager) DealAuthTimeout() {
+	this.networks.Range(func (element interface{}) {
+		network := element.(*Network)
+		//连接超过固定时长没有验证权限需要退出
+		if network.IsAuthTimeout() {
+			//log.Debug("Network auth timeout : %v", networker.GetRemoteAddr())
+			network.KickOut(protocol.KickType_Timeout)
+			this.networks.Remove(network)
+		}
+	})
 }
 
 //验权限
 func (this *networkManager) auth(authID int64, network *Network) {
 	//this.timeWheel.RemoveTimer(network)
 	this.networks.Remove(network)
+
 	oldNetwork, ok := this.authNetworks[authID]
 
 	//顶号处理
@@ -121,7 +124,7 @@ func (this *networkManager) auth(authID int64, network *Network) {
 		oldNetwork.KickOut(protocol.KickType_OtherSession)
 	} else {
 		node := cache.ClusterCache.GetAuthGateID(authID)
-		//用户在其他网关节点登录 需要远程T人
+		//用户在其他网关节点登录 需要发送远程T人
 		if node != this.node {
 			kickMsg := &protocol.KickOut{
 				AuthID:authID,

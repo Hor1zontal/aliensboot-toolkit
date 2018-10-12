@@ -14,7 +14,6 @@ message User {
     string avatar = 7 [(gogoproto.moretags) = "bson:\"avatar\""];
     string mobile = 8 [(gogoproto.moretags) = "bson:\"mobile\"  rorm:\"-\""];
     string openid = 9 [(gogoproto.moretags) = "bson:\"openid\""];
-    string ip = 10 [(gogoproto.moretags) = "bson:\"ip\""];
-    int32 status = 11 [(gogoproto.moretags) = "bson:\"status\""];
-    int64 regTime = 12 [(gogoproto.moretags) = "bson:\"regtime\""];
+    int32 status = 10 [(gogoproto.moretags) = "bson:\"status\""];
+    int64 regTime = 11 [(gogoproto.moretags) = "bson:\"regtime\""];
 }

@@ -55,7 +55,7 @@ func handle(request *base.Any) *base.Any {
 func handleRequest(authID int64, request *${package}.Request) {
 	<message>
 	if request.Get${o_request}() != nil {
-		handle${o_request}(authID, request.Get${o_request}())
+		handle${o_name}(authID, request.Get${o_request}())
 		return
 	}
 	<message>

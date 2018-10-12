@@ -55,15 +55,15 @@ func handle(request *base.Any) *base.Any {
 	if error != nil {
 		exception.GameException(${package}.Code_InvalidRequest)
 	}
-	handleRequest(request.GetAuthId(), requestProxy, responseProxy)
+	handleRequest(request.GetAuthId(), request.GetGateId(), requestProxy, responseProxy)
 	return response
 }
 
-func handleRequest(authID int64, request *${package}.Request, response *${package}.Response) {
+func handleRequest(authID int64, gateID string, request *${package}.Request, response *${package}.Response) {
 	<message>
 	if request.Get${o_request}() != nil {
 		messageRet := &${package}.${o_response}{}
-		handle${o_request}(authID, request.Get${o_request}(), messageRet)
+		handle${o_name}(authID, gateID, request.Get${o_request}(), messageRet)
 		response.${Module} = &${package}.Response_${o_response}{messageRet}
 		return
 	}

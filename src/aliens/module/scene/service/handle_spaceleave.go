@@ -16,7 +16,8 @@ import (
 
 
 //
-func handleSpaceLeave(authID int64, request *protocol.SpaceLeave, response *protocol.SpaceLeaveRet) {
+func handleSpaceLeave(authID int64, gateID string, request *protocol.SpaceLeave, response *protocol.SpaceLeaveRet) {
+	core.EntityManager.RegisterEntity()
 	core.SpaceManager.LeaveEntity(core.EntityID(authID))
 
 }

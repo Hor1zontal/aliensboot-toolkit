@@ -16,6 +16,6 @@ import (
 
 
 //ignore d s
-func handleSpaceMove(authID int64, request *protocol.SpaceMove, response *protocol.SpaceMoveRet) {
+func handleSpaceMove(authID int64, gateID string, request *protocol.SpaceMove, response *protocol.SpaceMoveRet) {
 	core.SpaceManager.MoveEntity(core.EntityID(authID), request.GetPosition(), request.GetDirection())
 }

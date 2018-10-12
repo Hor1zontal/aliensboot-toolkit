@@ -4,92 +4,164 @@ import (
 	"aliens/mmorpg/aoi"
 	"fmt"
 	"aliens/protocol"
+	"reflect"
+	"aliens/log"
+	"unsafe"
 )
 
-type EntityID int64
-//var currID int32 = 0
-//
-//func GenEntityID () int32 {
-//	currID++
-//	return currID
-//}
 
-type IEntity interface {
-	GetDist() float32 //可视距离
-	OnEntityEnter(entity *Entity) //call it when other entity EntityEnter
-	OnEntityLeave(entity *Entity) //call it when other entity EntityLeave
-	OnEntityMove(entity *Entity)  //call it when other entity EntityMove
-}
+//type IEntity interface {
+//	OnInit(self *Entity)
+//	OnEntityEnter(entity *Entity) //call it when other entity EntityEnter
+//	OnEntityLeave(entity *Entity) //call it when other entity EntityLeave
+//	OnEntityMove(entity *Entity)  //call it when other entity EntityMove
+//	OnReceive(entity *Entity, event interface{}) //call it when listener event happen
+//}
 
 type Entity struct {
 	//client Client
 	//space *Space   //
 
-	id    EntityID
+	*protocol.Entity  //sync data
 
-	spaceId SpaceID  //实体所在的空间id
+	clientID *ClientID
+
+	I    IEntity
+
+	V    reflect.Value
+
+	space *Space  //实体所在的空间id
 
 	aoi   *aoi.AOI //one entity , one aoi!
 
-	position  *protocol.Vector   //entity position
+	attrs Attr //属性列表
 
-	direction *protocol.Vector   //entity direction
+	interestedIn         EntitySet //当前实体视野范围内的实体
 
-	layer int8	//玩家当前的层级
+	interestedBy         EntitySet //视野内存在当前实体的对象
 
-	topSpeed float32 //实体XY轴最大速度
+	destroyed bool
 
-	topSpeedZ float32 //实体Z轴最大的速度
-
-	neighbors EntitySet //aoi entity
-
-	proxy IEntity
 }
 
 func (e *Entity) GetID() EntityID {
-	return e.id
+	return EntityID(e.Id)
 }
 
-func (e *Entity) GetPosition() *protocol.Vector {
-	return e.position
+// SetPosition sets the entity position
+func (e *Entity) SetPosition(pos *protocol.Vector) {
+	e.setPositionYaw(pos, e.Yaw)
 }
 
-func (e *Entity) GetDirection() *protocol.Vector {
-	return e.direction
+func (e *Entity) setPositionYaw(pos *protocol.Vector, yaw float32) {
+	space := e.space
+	if space == nil {
+		log.Warnf("%s.SetPosition(%s): space is nil", e, pos)
+		return
+	}
+	space.move(e, pos)
+	//e.yaw = yaw
 }
 
-func (e *Entity) Init(space *Space, proxy IEntity, position *protocol.Vector, direction *protocol.Vector) {
-	e.aoi = aoi.NewAOI(e, proxy.GetDist())
-	e.proxy = proxy
-	e.neighbors = make(EntitySet)
-	e.position = position
-	//TODO 初始化位置如果越界 需要修正
-	e.direction = direction
+func (e *Entity) init(typeName string, entityID EntityID, entityInstance reflect.Value, attrs Attr) {
+	e.Id = string(entityID)
+	e.V = entityInstance
+	e.I = entityInstance.Interface().(IEntity)
+	e.TypeName = typeName
+	//e.typeDesc = registeredEntityTypes[typeName]
+	if attrs != nil {
+		e.attrs = attrs
+	} else {
+		e.attrs = make(Attr)
+	}
+	e.interestedIn = make(EntitySet)
+	e.interestedBy = make(EntitySet)
+	e.aoi = aoi.NewAOI(e, 500)
+	//e.I.OnAttrsReady()
+	//e.I.OnCreated()
+	e.I.OnInit()
 }
+
 
 func (e *Entity) OnEnterAOI(otherAoi *aoi.AOI) {
-	otherEntity := otherAoi.Data.(*Entity)
-	e.neighbors.Add(otherEntity)
-	e.proxy.OnEntityEnter(otherEntity)
-	//e.client.sendCreateEntity(other, false)
+	e.interest(otherAoi.Callback.(*Entity))
 }
 
 func (e *Entity) OnLeaveAOI(otherAoi *aoi.AOI) {
-	otherEntity := otherAoi.Data.(*Entity)
-	e.neighbors.Del(otherEntity)
-	e.proxy.OnEntityLeave(otherEntity)
+	e.uninterest(otherAoi.Callback.(*Entity))
 }
 
-// IsNeighbor checks if other entity is a neighbor
-func (e *Entity) IsNeighbor(other *Entity) bool {
-	return e.neighbors.Contains(other)
+
+// Destroy destroys the entity
+func (e *Entity) Destroy() {
+	if e.destroyed {
+		return
+	}
+	log.Debugf("%s.Destroy ...", e)
+	e.destroyEntity(false)
+	//TODO
+	//dispatchercluster.SendNotifyDestroyEntity(e.id)
+}
+
+func (e *Entity) destroyEntity(isMigrate bool) {
+	e.space.leave(e)
+	if !isMigrate {
+		e.I.OnDestroy()
+	} else {
+		e.I.OnMigrateOut()
+	}
+	if !isMigrate {
+		//e.SetClient(nil) // always set Client to nil before destroy
+		//e.Save()
+	} else {
+		//e.assignClient(nil)
+	}
+	e.destroyed = true
+	EntityManager.del(e)
+}
+
+
+// IsInterestedIn checks if other entity is interested by this entity
+func (e *Entity) IsInterestedIn(other *Entity) bool {
+	return e.interestedIn.Contains(other)
 }
 
 // DistanceTo calculates the distance between two entities
-//func (e *Entity) DistanceTo(other *Entity) float32 {
-//	return entity.DistanceTo(e.position, other.position)
+//func (e *Entity) DistanceTo(other *Entity) Coord {
+//	return e.Position.DistanceTo(other.Position)
 //}
+
 
 func (e *Entity) String() string {
 	return fmt.Sprintf("%s<%s>", e, e.GetID())
+}
+
+//// IsSpaceEntity returns if the entity is actually a space
+//func (e *Entity) IsSpaceEntity() bool {
+//	return e.typeName == _SPACE_ENTITY_TYPE
+//}
+
+// AsSpace converts entity to space (only works for space entity)
+func (e *Entity) AsSpace() *Space {
+	//if !e.IsSpaceEntity() {
+	//	gwlog.Panicf("%s is not a space", e)
+	//}
+
+	return (*Space)(unsafe.Pointer(e))
+}
+
+
+// Interests and Uninterest among entities
+func (e *Entity) interest(other *Entity) {
+	e.interestedIn.Add(other)
+	other.interestedBy.Add(e)
+	//e.proxy.OnEntityEnter(other)
+	//e.client.sendCreateEntity(other, false)
+}
+
+func (e *Entity) uninterest(other *Entity) {
+	e.interestedIn.Del(other)
+	other.interestedBy.Del(e)
+	//e.proxy.OnEntityLeave(other)
+	//e.client.sendDestroyEntity(other)
 }

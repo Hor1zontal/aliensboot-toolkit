@@ -18,6 +18,20 @@ import (
 )
 
 
+
+func VisitTag(meta interface{}, tag string, callback func(fieldName string, tagValue string)) {
+	dataValue := reflect.ValueOf(meta).Elem()
+	dataType := reflect.TypeOf(meta).Elem()
+	for i := 0; i < dataValue.NumField(); i++ {
+		//field := dataValue.Field(i)
+		fieldType := dataType.Field(i)
+		tagValue := fieldType.Tag.Get(tag)
+
+		callback(fieldType.Name, tagValue)
+	}
+}
+
+
 func GetReflectValue(value reflect.Value) (interface{}, error) {
 	data := value.Interface()
 	if !IsStructType(value.Kind()) {

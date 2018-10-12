@@ -49,10 +49,15 @@ func (m *Vector) GetZ() float32 {
 }
 
 type Entity struct {
-	Id        int64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Position  *Vector `protobuf:"bytes,2,opt,name=position" json:"position,omitempty"`
-	Direction *Vector `protobuf:"bytes,3,opt,name=direction" json:"direction,omitempty"`
-	Data      string  `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
+	Id        string  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	TypeName  string  `protobuf:"bytes,2,opt,name=typeName,proto3" json:"typeName,omitempty"`
+	Position  *Vector `protobuf:"bytes,3,opt,name=position" json:"position,omitempty"`
+	Direction *Vector `protobuf:"bytes,4,opt,name=direction" json:"direction,omitempty"`
+	Layer     uint32  `protobuf:"varint,5,opt,name=layer,proto3" json:"layer,omitempty"`
+	Yaw       float32 `protobuf:"fixed32,6,opt,name=yaw,proto3" json:"yaw,omitempty"`
+	TopSpeed  float32 `protobuf:"fixed32,7,opt,name=topSpeed,proto3" json:"topSpeed,omitempty"`
+	TopSpeedY float32 `protobuf:"fixed32,8,opt,name=topSpeedY,proto3" json:"topSpeedY,omitempty"`
+	Attr      []byte  `protobuf:"bytes,9,opt,name=attr,proto3" json:"attr,omitempty"`
 }
 
 func (m *Entity) Reset()                    { *m = Entity{} }
@@ -60,11 +65,18 @@ func (m *Entity) String() string            { return proto.CompactTextString(m) 
 func (*Entity) ProtoMessage()               {}
 func (*Entity) Descriptor() ([]byte, []int) { return fileDescriptorSceneModel, []int{1} }
 
-func (m *Entity) GetId() int64 {
+func (m *Entity) GetId() string {
 	if m != nil {
 		return m.Id
 	}
-	return 0
+	return ""
+}
+
+func (m *Entity) GetTypeName() string {
+	if m != nil {
+		return m.TypeName
+	}
+	return ""
 }
 
 func (m *Entity) GetPosition() *Vector {
@@ -81,11 +93,39 @@ func (m *Entity) GetDirection() *Vector {
 	return nil
 }
 
-func (m *Entity) GetData() string {
+func (m *Entity) GetLayer() uint32 {
 	if m != nil {
-		return m.Data
+		return m.Layer
 	}
-	return ""
+	return 0
+}
+
+func (m *Entity) GetYaw() float32 {
+	if m != nil {
+		return m.Yaw
+	}
+	return 0
+}
+
+func (m *Entity) GetTopSpeed() float32 {
+	if m != nil {
+		return m.TopSpeed
+	}
+	return 0
+}
+
+func (m *Entity) GetTopSpeedY() float32 {
+	if m != nil {
+		return m.TopSpeedY
+	}
+	return 0
+}
+
+func (m *Entity) GetAttr() []byte {
+	if m != nil {
+		return m.Attr
+	}
+	return nil
 }
 
 func init() {
@@ -143,13 +183,20 @@ func (m *Entity) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Id != 0 {
-		dAtA[i] = 0x8
+	if len(m.Id) > 0 {
+		dAtA[i] = 0xa
 		i++
-		i = encodeVarintSceneModel(dAtA, i, uint64(m.Id))
+		i = encodeVarintSceneModel(dAtA, i, uint64(len(m.Id)))
+		i += copy(dAtA[i:], m.Id)
+	}
+	if len(m.TypeName) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintSceneModel(dAtA, i, uint64(len(m.TypeName)))
+		i += copy(dAtA[i:], m.TypeName)
 	}
 	if m.Position != nil {
-		dAtA[i] = 0x12
+		dAtA[i] = 0x1a
 		i++
 		i = encodeVarintSceneModel(dAtA, i, uint64(m.Position.Size()))
 		n1, err := m.Position.MarshalTo(dAtA[i:])
@@ -159,7 +206,7 @@ func (m *Entity) MarshalTo(dAtA []byte) (int, error) {
 		i += n1
 	}
 	if m.Direction != nil {
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
 		i++
 		i = encodeVarintSceneModel(dAtA, i, uint64(m.Direction.Size()))
 		n2, err := m.Direction.MarshalTo(dAtA[i:])
@@ -168,11 +215,34 @@ func (m *Entity) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += n2
 	}
-	if len(m.Data) > 0 {
-		dAtA[i] = 0x22
+	if m.Layer != 0 {
+		dAtA[i] = 0x28
 		i++
-		i = encodeVarintSceneModel(dAtA, i, uint64(len(m.Data)))
-		i += copy(dAtA[i:], m.Data)
+		i = encodeVarintSceneModel(dAtA, i, uint64(m.Layer))
+	}
+	if m.Yaw != 0 {
+		dAtA[i] = 0x35
+		i++
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.Yaw))))
+		i += 4
+	}
+	if m.TopSpeed != 0 {
+		dAtA[i] = 0x3d
+		i++
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.TopSpeed))))
+		i += 4
+	}
+	if m.TopSpeedY != 0 {
+		dAtA[i] = 0x45
+		i++
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.TopSpeedY))))
+		i += 4
+	}
+	if len(m.Attr) > 0 {
+		dAtA[i] = 0x4a
+		i++
+		i = encodeVarintSceneModel(dAtA, i, uint64(len(m.Attr)))
+		i += copy(dAtA[i:], m.Attr)
 	}
 	return i, nil
 }
@@ -204,8 +274,13 @@ func (m *Vector) Size() (n int) {
 func (m *Entity) Size() (n int) {
 	var l int
 	_ = l
-	if m.Id != 0 {
-		n += 1 + sovSceneModel(uint64(m.Id))
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovSceneModel(uint64(l))
+	}
+	l = len(m.TypeName)
+	if l > 0 {
+		n += 1 + l + sovSceneModel(uint64(l))
 	}
 	if m.Position != nil {
 		l = m.Position.Size()
@@ -215,7 +290,19 @@ func (m *Entity) Size() (n int) {
 		l = m.Direction.Size()
 		n += 1 + l + sovSceneModel(uint64(l))
 	}
-	l = len(m.Data)
+	if m.Layer != 0 {
+		n += 1 + sovSceneModel(uint64(m.Layer))
+	}
+	if m.Yaw != 0 {
+		n += 5
+	}
+	if m.TopSpeed != 0 {
+		n += 5
+	}
+	if m.TopSpeedY != 0 {
+		n += 5
+	}
+	l = len(m.Attr)
 	if l > 0 {
 		n += 1 + l + sovSceneModel(uint64(l))
 	}
@@ -348,10 +435,10 @@ func (m *Entity) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
 			}
-			m.Id = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowSceneModel
@@ -361,12 +448,51 @@ func (m *Entity) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Id |= (int64(b) & 0x7F) << shift
+				stringLen |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthSceneModel
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TypeName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowSceneModel
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthSceneModel
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TypeName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Position", wireType)
 			}
@@ -399,7 +525,7 @@ func (m *Entity) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 3:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Direction", wireType)
 			}
@@ -432,11 +558,11 @@ func (m *Entity) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Layer", wireType)
 			}
-			var stringLen uint64
+			m.Layer = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowSceneModel
@@ -446,20 +572,74 @@ func (m *Entity) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				m.Layer |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+		case 6:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Yaw", wireType)
+			}
+			var v uint32
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+			iNdEx += 4
+			m.Yaw = float32(math.Float32frombits(v))
+		case 7:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TopSpeed", wireType)
+			}
+			var v uint32
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+			iNdEx += 4
+			m.TopSpeed = float32(math.Float32frombits(v))
+		case 8:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TopSpeedY", wireType)
+			}
+			var v uint32
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+			iNdEx += 4
+			m.TopSpeedY = float32(math.Float32frombits(v))
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Attr", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowSceneModel
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
 				return ErrInvalidLengthSceneModel
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + byteLen
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Data = string(dAtA[iNdEx:postIndex])
+			m.Attr = append(m.Attr[:0], dAtA[iNdEx:postIndex]...)
+			if m.Attr == nil {
+				m.Attr = []byte{}
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -590,18 +770,22 @@ var (
 func init() { proto.RegisterFile("scene_model.proto", fileDescriptorSceneModel) }
 
 var fileDescriptorSceneModel = []byte{
-	// 196 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0x4e, 0x4e, 0xcd,
-	0x4b, 0x8d, 0xcf, 0xcd, 0x4f, 0x49, 0xcd, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x00,
-	0x53, 0xc9, 0xf9, 0x39, 0x4a, 0x46, 0x5c, 0x6c, 0x61, 0xa9, 0xc9, 0x25, 0xf9, 0x45, 0x42, 0x3c,
-	0x5c, 0x8c, 0x15, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x4c, 0x41, 0x8c, 0x15, 0x20, 0x5e, 0xa5, 0x04,
-	0x13, 0x84, 0x57, 0x09, 0xe2, 0x55, 0x49, 0x30, 0x43, 0x78, 0x55, 0x4a, 0x5d, 0x8c, 0x5c, 0x6c,
-	0xae, 0x79, 0x25, 0x99, 0x25, 0x95, 0x42, 0x7c, 0x5c, 0x4c, 0x99, 0x29, 0x60, 0x5d, 0xcc, 0x41,
-	0x4c, 0x99, 0x29, 0x42, 0x3a, 0x5c, 0x1c, 0x05, 0xf9, 0xc5, 0x99, 0x25, 0x99, 0xf9, 0x79, 0x60,
-	0xdd, 0xdc, 0x46, 0x02, 0x7a, 0x30, 0xbb, 0xf4, 0x20, 0x16, 0x05, 0xc1, 0x55, 0x08, 0xe9, 0x71,
-	0x71, 0xa6, 0x64, 0x16, 0xa5, 0x26, 0x83, 0x95, 0x33, 0xe3, 0x50, 0x8e, 0x50, 0x22, 0x24, 0xc4,
-	0xc5, 0x92, 0x92, 0x58, 0x92, 0x28, 0xc1, 0xa2, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0x66, 0x3b, 0x09,
-	0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x33, 0x1e, 0xcb,
-	0x31, 0x24, 0xb1, 0x81, 0x4d, 0x30, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xeb, 0x92, 0xe2, 0xc2,
-	0xf8, 0x00, 0x00, 0x00,
+	// 266 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x8e, 0xc1, 0x4a, 0xc3, 0x40,
+	0x10, 0x86, 0xdd, 0xb4, 0x8d, 0xc9, 0x58, 0x25, 0x0e, 0x1e, 0x16, 0x91, 0x10, 0x7a, 0xca, 0x41,
+	0x72, 0xa8, 0x6f, 0x20, 0x78, 0xf5, 0xb0, 0x82, 0xe0, 0x49, 0x62, 0x32, 0x87, 0x85, 0x34, 0x1b,
+	0xb6, 0x0b, 0x76, 0xfb, 0x04, 0x3e, 0x82, 0x8f, 0xe4, 0xd1, 0x47, 0x90, 0xf8, 0x22, 0x92, 0x09,
+	0x4d, 0x4f, 0x9e, 0xf6, 0xff, 0x66, 0xff, 0x19, 0x3e, 0xb8, 0xdc, 0x56, 0xd4, 0xd2, 0xeb, 0xc6,
+	0xd4, 0xd4, 0x14, 0x9d, 0x35, 0xce, 0x60, 0xc4, 0x4f, 0x65, 0x9a, 0xd5, 0x1a, 0xc2, 0x67, 0xaa,
+	0x9c, 0xb1, 0xb8, 0x04, 0xb1, 0x93, 0x22, 0x13, 0x79, 0xa0, 0xc4, 0x6e, 0x20, 0x2f, 0x83, 0x91,
+	0xfc, 0x40, 0x7b, 0x39, 0x1b, 0x69, 0xbf, 0xfa, 0x08, 0x20, 0x7c, 0x68, 0x9d, 0x76, 0x1e, 0x2f,
+	0x20, 0xd0, 0x35, 0x6f, 0xc5, 0x2a, 0xd0, 0x35, 0x5e, 0x43, 0xe4, 0x7c, 0x47, 0x8f, 0xe5, 0x86,
+	0x78, 0x3b, 0x56, 0x13, 0xe3, 0x2d, 0x44, 0x9d, 0xd9, 0x6a, 0xa7, 0x4d, 0xcb, 0xb7, 0xce, 0xd6,
+	0x49, 0x71, 0xf0, 0x28, 0x46, 0x09, 0x35, 0x35, 0xb0, 0x80, 0xb8, 0xd6, 0x96, 0x2a, 0xae, 0xcf,
+	0xff, 0xa9, 0x1f, 0x2b, 0x78, 0x05, 0x8b, 0xa6, 0xf4, 0x64, 0xe5, 0x22, 0x13, 0xf9, 0xb9, 0x1a,
+	0x01, 0x13, 0x98, 0xf9, 0xf2, 0x5d, 0x86, 0xac, 0x3e, 0x44, 0x36, 0x34, 0xdd, 0x53, 0x47, 0x54,
+	0xcb, 0x53, 0x1e, 0x4f, 0x8c, 0x37, 0x10, 0x1f, 0xf2, 0x8b, 0x8c, 0xf8, 0xf3, 0x38, 0x40, 0x84,
+	0x79, 0xe9, 0x9c, 0x95, 0x71, 0x26, 0xf2, 0xa5, 0xe2, 0x7c, 0x9f, 0x7c, 0xf5, 0xa9, 0xf8, 0xee,
+	0x53, 0xf1, 0xd3, 0xa7, 0xe2, 0xf3, 0x37, 0x3d, 0x79, 0x0b, 0xd9, 0xf1, 0xee, 0x2f, 0x00, 0x00,
+	0xff, 0xff, 0xe4, 0xa9, 0x43, 0x55, 0x76, 0x01, 0x00, 0x00,
 }

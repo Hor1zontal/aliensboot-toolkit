@@ -13,6 +13,7 @@
 		protocol.proto
 		resultcode.proto
 		scene.proto
+		scene_entity.proto
 		scene_model.proto
 
 	It has these top-level messages:
@@ -31,14 +32,14 @@
 		Skill
 		KickOut
 		BindService
-		LoginRegister
-		LoginRegisterRet
-		LoginLogin
-		LoginLoginRet
-		ChannelLogin
-		ChannelLoginRet
-		TokenLogin
-		TokenLoginRet
+		C2S_UserRegister
+		S2C_UserRegister
+		C2S_UserLogin
+		S2C_UserLogin
+		C2S_ChannelLogin
+		S2C_ChannelLogin
+		C2S_TokenLogin
+		S2C_TokenLogin
 		User
 		Request
 		Response
@@ -52,6 +53,9 @@
 		GetState
 		GetStateRet
 		SpacePush
+		EntityCall
+		Entity_Player
+		Entity_Monster
 		Vector
 		Entity
 */

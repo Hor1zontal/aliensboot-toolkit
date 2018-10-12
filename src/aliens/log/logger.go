@@ -19,14 +19,19 @@ import (
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/pkg/errors"
+	"fmt"
+	"runtime"
 )
 
 var format = &log.TextFormatter{}
 
 var logger = NewLogger("aliens", format, true)
 
+var DEBUG = false
+
 //调试版本日志带颜色
 func Init(debug bool) {
+	DEBUG = debug
 	format.ForceColors = debug
 	format.DisableTimestamp = debug
 }
@@ -89,6 +94,15 @@ func configLocalFilesystemLogger(name string, logger *log.Logger, maxAge time.Du
 	logger.AddHook(lfHook)
 }
 
+func getLocation() string {
+	pc, _, lineno, ok := runtime.Caller(2)
+	src := ""
+	if ok {
+		src = fmt.Sprintf("[%s:%d] ", runtime.FuncForPC(pc).Name(), lineno)
+	}
+	return src
+}
+
 //Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
 
 //做一层适配，方便后续切换到其他日志框架或者自己写
@@ -124,30 +138,51 @@ func Fatal(arg ...interface{}) {
 //-----------format
 
 func Debugf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Debugf(format, arg...)
 }
 
 func Printf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Printf(format, arg...)
 }
 
 func Infof(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Infof(format, arg...)
 }
 
 func Warnf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Warnf(format, arg...)
 }
 
 func Errorf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Errorf(format, arg...)
 }
 
 func Panicf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Panicf(format, arg...)
 }
 
 func Fatalf(format string, arg ...interface{}) {
+	if DEBUG {
+		format = getLocation() + format
+	}
 	logger.Fatalf(format, arg...)
 }
 

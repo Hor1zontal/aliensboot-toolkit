@@ -13,10 +13,32 @@ message Vector {
     float z = 3;
 }
 
+
+//id    EntityID   //id
+//
+//typeName string  //类型名
+//
+//position  *protocol.Vector   //entity position
+//
+//direction *protocol.Vector   //entity direction
+//
+//yaw Yaw
+//
+//layer int8	//玩家当前的层级
+//
+//topSpeed float32 //实体XY轴最大速度
+//
+//topSpeedZ float32 //实体Z轴最大的速度
+
 message Entity {
-    int64 id = 1;  //实体id
-    Vector position = 2; //玩家的位置
-    Vector direction = 3; //玩家的向量
-    string data = 4;  //实体数据 json
+    string id = 1;  //实体id uid,uuid
+    string typeName = 2; //实体类型
+    Vector position = 3; //实体位置
+    Vector direction = 4; //实体的方向
+    uint32 layer = 5; //实体层级
+    float yaw = 6; //向量
+    float topSpeed = 7; // 实体XZ轴最大速度
+    float topSpeedY = 8; // 实体Y轴最大速度
+    bytes attr = 9; //实体属性
     //google.protobuf.Timestamp nullableTimestamp = 5 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
 }

@@ -4,7 +4,6 @@ package protocol;
 import "resultcode.proto";
 import "gate.proto";
 import "passport.proto";
-import "scene.proto";
 import "game.proto";
 
 
@@ -21,9 +20,9 @@ message Request {
     //-----------------登录模块接口---------------
 
     oneof passport {
-        login_register loginRegister = 10;
-        login_login loginLogin = 11;
-        token_login tokenLogin = 12; //token登录
+        C2S_UserRegister C2S_UserRegister = 10;
+        C2S_UserLogin C2S_UserLogin = 11;
+        C2S_TokenLogin C2S_TokenLogin = 12; //token登录
     }
 
     //-----------------游戏模块接口---------------
@@ -36,12 +35,12 @@ message Request {
 
 
     //-----------------场景模块接口------------------
-    oneof scene {
-        space_move spaceMove = 500;
-        space_enter spaceEnter = 501;
-        space_leave spaceLeave = 502;
-        get_state getState = 503;
-    }
+//    oneof scene {
+//        space_move spaceMove = 500;
+//        space_enter spaceEnter = 501;
+//        space_leave spaceLeave = 502;
+//        get_state getState = 503;
+//    }
 
 
 }
@@ -55,10 +54,9 @@ message Response {
     //-----------------登录模块响应接口---------------
 
     oneof passport {
-        login_register_ret loginRegisterRet = 10;
-        login_login_ret loginLoginRet = 11;
-        token_login_ret tokenLoginRet = 12; //token登录结果
-
+        S2C_UserRegister S2C_UserRegister = 10;
+        S2C_UserLogin S2C_UserLogin = 11;
+        S2C_TokenLogin S2C_TokenLogin = 12; //token登录
     }
 
     //-----------------游戏模块接口---------------
@@ -69,12 +67,12 @@ message Response {
         remove_role_ret removeRoleRet = 53;
     }
 
-    oneof scene {
-        space_move_ret spaceMoveRet = 500;
-        space_enter_ret spaceEnterRet = 501;
-        space_leave_ret spaceLeaveRet = 502;
-        get_state_ret getStateRet = 503;
-    }
+//    oneof scene {
+////        space_move_ret spaceMoveRet = 500;
+////        space_enter_ret spaceEnterRet = 501;
+////        space_leave_ret spaceLeaveRet = 502;
+////        get_state_ret getStateRet = 503;
+//    }
 
 
     Push push = 1000; //推送消息

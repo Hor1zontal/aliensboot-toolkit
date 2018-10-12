@@ -32,9 +32,11 @@ type IDatabaseHandler interface {
 	Insert(data interface{}) error
 	QueryAll(data interface{}, result interface{}) error
 	QueryAllCondition(data interface{}, condition string, value interface{}, result interface{}) error
-	IDExist(data interface{}) (bool, error)
+	QueryAllLimit(data interface{}, result interface{}, limit int, callback func(interface{}) bool) error
+	QueryAllConditionLimit(data interface{}, condition string, value interface{}, result interface{}, limit int, callback func(interface{}) bool) error
 	QueryOne(data interface{}) error
 	QueryOneCondition(data interface{}, condition string, value interface{}) error
+	IDExist(data interface{}) (bool, error)
 	DeleteOne(data interface{}) error
 	DeleteOneCondition(data interface{}, selector interface{}) error
 	UpdateOne(data interface{}) error

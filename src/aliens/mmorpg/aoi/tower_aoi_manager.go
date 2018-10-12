@@ -30,12 +30,32 @@ type TowerAOIManager struct {
 	xTowerNum, yTowerNum   int       //灯塔的横向和纵向的数量
 }
 
+//update aoi when change view radius
+func (this *TowerAOIManager) ChangeViewRadius(aoi *AOI, newDist float32) {
+	diff := newDist - aoi.viewRadius
+	if diff == 0 {
+		return
+	}
+	aoi.viewRadius = newDist
+	//TODO 优化计算、通过增量查找新增和删除的灯塔的wathcer
+	//视野变大
+	if diff > 0 {
+		this.visitWatchedTowers(aoi.x, aoi.y, aoi.viewRadius, func(tower *tower) {
+			tower.addWatcher(aoi)
+		})
+	} else {
+		this.visitWatchedTowers(aoi.x, aoi.y, aoi.viewRadius, func(tower *tower) {
+			tower.removeWatcher(aoi)
+		})
+	}
+}
+
 //add AOI node
 func (this *TowerAOIManager) Enter(aoi *AOI, x, y float32) {
 	aoi.x = x
 	aoi.y = y
 
-	this.visitWatchedTowers(x, y, aoi.dist, func(tower *tower) {
+	this.visitWatchedTowers(x, y, aoi.viewRadius, func(tower *tower) {
 		tower.addWatcher(aoi)
 	})
 
@@ -45,7 +65,7 @@ func (this *TowerAOIManager) Enter(aoi *AOI, x, y float32) {
 
 func (this *TowerAOIManager) Leave(aoi *AOI) {
 	aoi.tower.removeAOINode(aoi, true)
-	this.visitWatchedTowers(aoi.x, aoi.y, aoi.dist, func(tower *tower) {
+	this.visitWatchedTowers(aoi.x, aoi.y, aoi.viewRadius, func(tower *tower) {
 		tower.removeWatcher(aoi)
 	})
 }
@@ -63,8 +83,8 @@ func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y float32) {
 		newTower.addAOINode(aoiNode, oldTower)
 	}
 
-	oxMin, oxMax, oyMin, oyMax := this.getWatchedTowers(oldX, oldY, aoiNode.dist)
-	xMin, xMax, yMin, yMax := this.getWatchedTowers(x, y, aoiNode.dist)
+	oxMin, oxMax, oyMin, oyMax := this.getWatchedTowers(oldX, oldY, aoiNode.viewRadius)
+	xMin, xMax, yMin, yMax := this.getWatchedTowers(x, y, aoiNode.viewRadius)
 
 	for xi := oxMin; xi <= oxMax; xi++ {
 		for yi := oyMin; yi <= oyMax; yi++ {

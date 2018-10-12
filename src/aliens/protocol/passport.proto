@@ -23,14 +23,14 @@ enum RegisterResult {
 
 
 //普通注册账号
-message login_register{
+message C2S_UserRegister {
     string username = 1; //用户名
     string password = 2; //密码
     int32 server = 3; //服务器id
 }
 
 //登录服务器注册账号返回
-message login_register_ret {
+message S2C_UserRegister {
     RegisterResult result = 1;    //注册结果
     int64 uid = 2;                 //用户id 注册成功返回此字段
     string token = 3;              //登录令牌 注册成功返回此字段
@@ -38,13 +38,13 @@ message login_register_ret {
 }
 
 //用户名密码登录服务器
-message login_login{
+message C2S_UserLogin {
     string username = 1;		//用户名
     string password = 2;		//密码
 }
 
 //登录服务器返回
-message login_login_ret{
+message S2C_UserLogin {
     LoginResult result = 1;	//登录结果
     int64 uid = 2;             //用户id
     string token = 3;          //登录令牌
@@ -52,7 +52,7 @@ message login_login_ret{
 }
 
 //渠道登录
-message channel_login {
+message C2S_ChannelLogin {
     string channel = 1; //渠道编号
     string channelUID = 2; //渠道用户id
     string sdk = 3; //sdk信息
@@ -61,7 +61,7 @@ message channel_login {
 }
 
 //渠道登录结果
-message channel_login_ret {
+message S2C_ChannelLogin {
     int64 uid = 1; //登录成功后游戏的uid
     string token = 2; //登录成功后的token信息
     //string gameServer = 3; //游戏服务器地址信息
@@ -69,12 +69,12 @@ message channel_login_ret {
 
 
 //token 登录
-message token_login {
+message C2S_TokenLogin {
     int64 uid = 1;
     string token = 2;
 }
 
-message token_login_ret {
+message S2C_TokenLogin {
     LoginResult result = 1;	//登录结果
 }
 
