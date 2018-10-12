@@ -64,13 +64,6 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
 	
-	if request.GetC2S_UserRegister() != nil {
-		messageRet := &protocol.S2C_UserRegister{}
-		result := handleUserRegister(request.GetC2S_UserRegister(), messageRet)
-		response.Passport = &protocol.Response_S2C_UserRegister{messageRet}
-		return result
-	}
-	
 	if request.GetC2S_UserLogin() != nil {
 		messageRet := &protocol.S2C_UserLogin{}
 		result := handleUserLogin(request.GetC2S_UserLogin(), messageRet)
@@ -82,6 +75,13 @@ func handleRequest(request *protocol.Request, response *protocol.Response) int64
 		messageRet := &protocol.S2C_TokenLogin{}
 		result := handleTokenLogin(request.GetC2S_TokenLogin(), messageRet)
 		response.Passport = &protocol.Response_S2C_TokenLogin{messageRet}
+		return result
+	}
+	
+	if request.GetC2S_UserRegister() != nil {
+		messageRet := &protocol.S2C_UserRegister{}
+		result := handleUserRegister(request.GetC2S_UserRegister(), messageRet)
+		response.Passport = &protocol.Response_S2C_UserRegister{messageRet}
 		return result
 	}
 	

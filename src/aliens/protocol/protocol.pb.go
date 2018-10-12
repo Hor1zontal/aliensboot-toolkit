@@ -3,7 +3,7 @@
 
 package protocol
 
-import proto "github.com/golang/protobuf/proto"
+import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
@@ -22,6 +22,7 @@ type Request struct {
 	// Types that are valid to be assigned to Gate:
 	//	*Request_KickOut
 	//	*Request_BindService
+	//	*Request_PushMessage
 	Gate isRequest_Gate `protobuf_oneof:"gate"`
 	// Types that are valid to be assigned to Passport:
 	//	*Request_C2S_UserRegister
@@ -36,14 +37,6 @@ type Request struct {
 	//	*Request_CreateRole
 	//	*Request_RemoveRole
 	Game isRequest_Game `protobuf_oneof:"game"`
-	// -----------------场景模块接口------------------
-	//
-	// Types that are valid to be assigned to Scene:
-	//	*Request_SpaceMove
-	//	*Request_SpaceEnter
-	//	*Request_SpaceLeave
-	//	*Request_GetState
-	Scene isRequest_Scene `protobuf_oneof:"scene"`
 }
 
 func (m *Request) Reset()                    { *m = Request{} }
@@ -66,17 +59,15 @@ type isRequest_Game interface {
 	MarshalTo([]byte) (int, error)
 	Size() int
 }
-type isRequest_Scene interface {
-	isRequest_Scene()
-	MarshalTo([]byte) (int, error)
-	Size() int
-}
 
 type Request_KickOut struct {
 	KickOut *KickOut `protobuf:"bytes,4,opt,name=kickOut,oneof"`
 }
 type Request_BindService struct {
 	BindService *BindService `protobuf:"bytes,5,opt,name=bindService,oneof"`
+}
+type Request_PushMessage struct {
+	PushMessage *PushMessage `protobuf:"bytes,6,opt,name=pushMessage,oneof"`
 }
 type Request_C2S_UserRegister struct {
 	C2S_UserRegister *C2S_UserRegister `protobuf:"bytes,10,opt,name=C2S_UserRegister,json=C2SUserRegister,oneof"`
@@ -99,21 +90,10 @@ type Request_CreateRole struct {
 type Request_RemoveRole struct {
 	RemoveRole *RemoveRole `protobuf:"bytes,53,opt,name=removeRole,oneof"`
 }
-type Request_SpaceMove struct {
-	SpaceMove *SpaceMove `protobuf:"bytes,500,opt,name=spaceMove,oneof"`
-}
-type Request_SpaceEnter struct {
-	SpaceEnter *SpaceEnter `protobuf:"bytes,501,opt,name=spaceEnter,oneof"`
-}
-type Request_SpaceLeave struct {
-	SpaceLeave *SpaceLeave `protobuf:"bytes,502,opt,name=spaceLeave,oneof"`
-}
-type Request_GetState struct {
-	GetState *GetState `protobuf:"bytes,503,opt,name=getState,oneof"`
-}
 
 func (*Request_KickOut) isRequest_Gate()              {}
 func (*Request_BindService) isRequest_Gate()          {}
+func (*Request_PushMessage) isRequest_Gate()          {}
 func (*Request_C2S_UserRegister) isRequest_Passport() {}
 func (*Request_C2S_UserLogin) isRequest_Passport()    {}
 func (*Request_C2S_TokenLogin) isRequest_Passport()   {}
@@ -121,10 +101,6 @@ func (*Request_GetUserInfo) isRequest_Game()          {}
 func (*Request_LoginRole) isRequest_Game()            {}
 func (*Request_CreateRole) isRequest_Game()           {}
 func (*Request_RemoveRole) isRequest_Game()           {}
-func (*Request_SpaceMove) isRequest_Scene()           {}
-func (*Request_SpaceEnter) isRequest_Scene()          {}
-func (*Request_SpaceLeave) isRequest_Scene()          {}
-func (*Request_GetState) isRequest_Scene()            {}
 
 func (m *Request) GetGate() isRequest_Gate {
 	if m != nil {
@@ -141,12 +117,6 @@ func (m *Request) GetPassport() isRequest_Passport {
 func (m *Request) GetGame() isRequest_Game {
 	if m != nil {
 		return m.Game
-	}
-	return nil
-}
-func (m *Request) GetScene() isRequest_Scene {
-	if m != nil {
-		return m.Scene
 	}
 	return nil
 }
@@ -168,6 +138,13 @@ func (m *Request) GetKickOut() *KickOut {
 func (m *Request) GetBindService() *BindService {
 	if x, ok := m.GetGate().(*Request_BindService); ok {
 		return x.BindService
+	}
+	return nil
+}
+
+func (m *Request) GetPushMessage() *PushMessage {
+	if x, ok := m.GetGate().(*Request_PushMessage); ok {
+		return x.PushMessage
 	}
 	return nil
 }
@@ -221,39 +198,12 @@ func (m *Request) GetRemoveRole() *RemoveRole {
 	return nil
 }
 
-func (m *Request) GetSpaceMove() *SpaceMove {
-	if x, ok := m.GetScene().(*Request_SpaceMove); ok {
-		return x.SpaceMove
-	}
-	return nil
-}
-
-func (m *Request) GetSpaceEnter() *SpaceEnter {
-	if x, ok := m.GetScene().(*Request_SpaceEnter); ok {
-		return x.SpaceEnter
-	}
-	return nil
-}
-
-func (m *Request) GetSpaceLeave() *SpaceLeave {
-	if x, ok := m.GetScene().(*Request_SpaceLeave); ok {
-		return x.SpaceLeave
-	}
-	return nil
-}
-
-func (m *Request) GetGetState() *GetState {
-	if x, ok := m.GetScene().(*Request_GetState); ok {
-		return x.GetState
-	}
-	return nil
-}
-
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*Request) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _Request_OneofMarshaler, _Request_OneofUnmarshaler, _Request_OneofSizer, []interface{}{
 		(*Request_KickOut)(nil),
 		(*Request_BindService)(nil),
+		(*Request_PushMessage)(nil),
 		(*Request_C2S_UserRegister)(nil),
 		(*Request_C2S_UserLogin)(nil),
 		(*Request_C2S_TokenLogin)(nil),
@@ -261,10 +211,6 @@ func (*Request) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error
 		(*Request_LoginRole)(nil),
 		(*Request_CreateRole)(nil),
 		(*Request_RemoveRole)(nil),
-		(*Request_SpaceMove)(nil),
-		(*Request_SpaceEnter)(nil),
-		(*Request_SpaceLeave)(nil),
-		(*Request_GetState)(nil),
 	}
 }
 
@@ -280,6 +226,11 @@ func _Request_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	case *Request_BindService:
 		_ = b.EncodeVarint(5<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.BindService); err != nil {
+			return err
+		}
+	case *Request_PushMessage:
+		_ = b.EncodeVarint(6<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.PushMessage); err != nil {
 			return err
 		}
 	case nil:
@@ -333,32 +284,6 @@ func _Request_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	default:
 		return fmt.Errorf("Request.Game has unexpected type %T", x)
 	}
-	// scene
-	switch x := m.Scene.(type) {
-	case *Request_SpaceMove:
-		_ = b.EncodeVarint(500<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceMove); err != nil {
-			return err
-		}
-	case *Request_SpaceEnter:
-		_ = b.EncodeVarint(501<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceEnter); err != nil {
-			return err
-		}
-	case *Request_SpaceLeave:
-		_ = b.EncodeVarint(502<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceLeave); err != nil {
-			return err
-		}
-	case *Request_GetState:
-		_ = b.EncodeVarint(503<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.GetState); err != nil {
-			return err
-		}
-	case nil:
-	default:
-		return fmt.Errorf("Request.Scene has unexpected type %T", x)
-	}
 	return nil
 }
 
@@ -380,6 +305,14 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		msg := new(BindService)
 		err := b.DecodeMessage(msg)
 		m.Gate = &Request_BindService{msg}
+		return true, err
+	case 6: // gate.pushMessage
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(PushMessage)
+		err := b.DecodeMessage(msg)
+		m.Gate = &Request_PushMessage{msg}
 		return true, err
 	case 10: // passport.C2S_UserRegister
 		if wire != proto.WireBytes {
@@ -437,38 +370,6 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Game = &Request_RemoveRole{msg}
 		return true, err
-	case 500: // scene.spaceMove
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceMove)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Request_SpaceMove{msg}
-		return true, err
-	case 501: // scene.spaceEnter
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceEnter)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Request_SpaceEnter{msg}
-		return true, err
-	case 502: // scene.spaceLeave
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceLeave)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Request_SpaceLeave{msg}
-		return true, err
-	case 503: // scene.getState
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(GetState)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Request_GetState{msg}
-		return true, err
 	default:
 		return false, nil
 	}
@@ -486,6 +387,11 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 	case *Request_BindService:
 		s := proto.Size(x.BindService)
 		n += proto.SizeVarint(5<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_PushMessage:
+		s := proto.Size(x.PushMessage)
+		n += proto.SizeVarint(6<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -539,32 +445,6 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
-	// scene
-	switch x := m.Scene.(type) {
-	case *Request_SpaceMove:
-		s := proto.Size(x.SpaceMove)
-		n += proto.SizeVarint(500<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Request_SpaceEnter:
-		s := proto.Size(x.SpaceEnter)
-		n += proto.SizeVarint(501<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Request_SpaceLeave:
-		s := proto.Size(x.SpaceLeave)
-		n += proto.SizeVarint(502<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Request_GetState:
-		s := proto.Size(x.GetState)
-		n += proto.SizeVarint(503<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case nil:
-	default:
-		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
-	}
 	return n
 }
 
@@ -572,6 +452,11 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 type Response struct {
 	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
 	Code    Code  `protobuf:"varint,2,opt,name=code,proto3,enum=protocol.Code" json:"code,omitempty"`
+	// -----------------登录模块响应接口---------------
+	//
+	// Types that are valid to be assigned to Gate:
+	//	*Response_BindServiceRet
+	Gate isResponse_Gate `protobuf_oneof:"gate"`
 	// Types that are valid to be assigned to Passport:
 	//	*Response_S2C_UserRegister
 	//	*Response_S2C_UserLogin
@@ -585,13 +470,6 @@ type Response struct {
 	//	*Response_CreateRoleRet
 	//	*Response_RemoveRoleRet
 	Game isResponse_Game `protobuf_oneof:"game"`
-	// Types that are valid to be assigned to Scene:
-	//	*Response_SpaceMoveRet
-	//	*Response_SpaceEnterRet
-	//	*Response_SpaceLeaveRet
-	//	*Response_GetStateRet
-	Scene isResponse_Scene `protobuf_oneof:"scene"`
-	Push  *Push            `protobuf:"bytes,1000,opt,name=push" json:"push,omitempty"`
 }
 
 func (m *Response) Reset()                    { *m = Response{} }
@@ -599,6 +477,11 @@ func (m *Response) String() string            { return proto.CompactTextString(m
 func (*Response) ProtoMessage()               {}
 func (*Response) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{1} }
 
+type isResponse_Gate interface {
+	isResponse_Gate()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
 type isResponse_Passport interface {
 	isResponse_Passport()
 	MarshalTo([]byte) (int, error)
@@ -609,12 +492,10 @@ type isResponse_Game interface {
 	MarshalTo([]byte) (int, error)
 	Size() int
 }
-type isResponse_Scene interface {
-	isResponse_Scene()
-	MarshalTo([]byte) (int, error)
-	Size() int
-}
 
+type Response_BindServiceRet struct {
+	BindServiceRet *BindServiceRet `protobuf:"bytes,5,opt,name=bindServiceRet,oneof"`
+}
 type Response_S2C_UserRegister struct {
 	S2C_UserRegister *S2C_UserRegister `protobuf:"bytes,10,opt,name=S2C_UserRegister,json=S2CUserRegister,oneof"`
 }
@@ -636,19 +517,8 @@ type Response_CreateRoleRet struct {
 type Response_RemoveRoleRet struct {
 	RemoveRoleRet *RemoveRoleRet `protobuf:"bytes,53,opt,name=removeRoleRet,oneof"`
 }
-type Response_SpaceMoveRet struct {
-	SpaceMoveRet *SpaceMoveRet `protobuf:"bytes,500,opt,name=spaceMoveRet,oneof"`
-}
-type Response_SpaceEnterRet struct {
-	SpaceEnterRet *SpaceEnterRet `protobuf:"bytes,501,opt,name=spaceEnterRet,oneof"`
-}
-type Response_SpaceLeaveRet struct {
-	SpaceLeaveRet *SpaceLeaveRet `protobuf:"bytes,502,opt,name=spaceLeaveRet,oneof"`
-}
-type Response_GetStateRet struct {
-	GetStateRet *GetStateRet `protobuf:"bytes,503,opt,name=getStateRet,oneof"`
-}
 
+func (*Response_BindServiceRet) isResponse_Gate()       {}
 func (*Response_S2C_UserRegister) isResponse_Passport() {}
 func (*Response_S2C_UserLogin) isResponse_Passport()    {}
 func (*Response_S2C_TokenLogin) isResponse_Passport()   {}
@@ -656,11 +526,13 @@ func (*Response_GetUserInfoRet) isResponse_Game()       {}
 func (*Response_LoginRoleRet) isResponse_Game()         {}
 func (*Response_CreateRoleRet) isResponse_Game()        {}
 func (*Response_RemoveRoleRet) isResponse_Game()        {}
-func (*Response_SpaceMoveRet) isResponse_Scene()        {}
-func (*Response_SpaceEnterRet) isResponse_Scene()       {}
-func (*Response_SpaceLeaveRet) isResponse_Scene()       {}
-func (*Response_GetStateRet) isResponse_Scene()         {}
 
+func (m *Response) GetGate() isResponse_Gate {
+	if m != nil {
+		return m.Gate
+	}
+	return nil
+}
 func (m *Response) GetPassport() isResponse_Passport {
 	if m != nil {
 		return m.Passport
@@ -670,12 +542,6 @@ func (m *Response) GetPassport() isResponse_Passport {
 func (m *Response) GetGame() isResponse_Game {
 	if m != nil {
 		return m.Game
-	}
-	return nil
-}
-func (m *Response) GetScene() isResponse_Scene {
-	if m != nil {
-		return m.Scene
 	}
 	return nil
 }
@@ -692,6 +558,13 @@ func (m *Response) GetCode() Code {
 		return m.Code
 	}
 	return Code_Success
+}
+
+func (m *Response) GetBindServiceRet() *BindServiceRet {
+	if x, ok := m.GetGate().(*Response_BindServiceRet); ok {
+		return x.BindServiceRet
+	}
+	return nil
 }
 
 func (m *Response) GetS2C_UserRegister() *S2C_UserRegister {
@@ -743,44 +616,10 @@ func (m *Response) GetRemoveRoleRet() *RemoveRoleRet {
 	return nil
 }
 
-func (m *Response) GetSpaceMoveRet() *SpaceMoveRet {
-	if x, ok := m.GetScene().(*Response_SpaceMoveRet); ok {
-		return x.SpaceMoveRet
-	}
-	return nil
-}
-
-func (m *Response) GetSpaceEnterRet() *SpaceEnterRet {
-	if x, ok := m.GetScene().(*Response_SpaceEnterRet); ok {
-		return x.SpaceEnterRet
-	}
-	return nil
-}
-
-func (m *Response) GetSpaceLeaveRet() *SpaceLeaveRet {
-	if x, ok := m.GetScene().(*Response_SpaceLeaveRet); ok {
-		return x.SpaceLeaveRet
-	}
-	return nil
-}
-
-func (m *Response) GetGetStateRet() *GetStateRet {
-	if x, ok := m.GetScene().(*Response_GetStateRet); ok {
-		return x.GetStateRet
-	}
-	return nil
-}
-
-func (m *Response) GetPush() *Push {
-	if m != nil {
-		return m.Push
-	}
-	return nil
-}
-
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*Response) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _Response_OneofMarshaler, _Response_OneofUnmarshaler, _Response_OneofSizer, []interface{}{
+		(*Response_BindServiceRet)(nil),
 		(*Response_S2C_UserRegister)(nil),
 		(*Response_S2C_UserLogin)(nil),
 		(*Response_S2C_TokenLogin)(nil),
@@ -788,15 +627,22 @@ func (*Response) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) erro
 		(*Response_LoginRoleRet)(nil),
 		(*Response_CreateRoleRet)(nil),
 		(*Response_RemoveRoleRet)(nil),
-		(*Response_SpaceMoveRet)(nil),
-		(*Response_SpaceEnterRet)(nil),
-		(*Response_SpaceLeaveRet)(nil),
-		(*Response_GetStateRet)(nil),
 	}
 }
 
 func _Response_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	m := msg.(*Response)
+	// gate
+	switch x := m.Gate.(type) {
+	case *Response_BindServiceRet:
+		_ = b.EncodeVarint(5<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.BindServiceRet); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Response.Gate has unexpected type %T", x)
+	}
 	// passport
 	switch x := m.Passport.(type) {
 	case *Response_S2C_UserRegister:
@@ -844,38 +690,20 @@ func _Response_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	default:
 		return fmt.Errorf("Response.Game has unexpected type %T", x)
 	}
-	// scene
-	switch x := m.Scene.(type) {
-	case *Response_SpaceMoveRet:
-		_ = b.EncodeVarint(500<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceMoveRet); err != nil {
-			return err
-		}
-	case *Response_SpaceEnterRet:
-		_ = b.EncodeVarint(501<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceEnterRet); err != nil {
-			return err
-		}
-	case *Response_SpaceLeaveRet:
-		_ = b.EncodeVarint(502<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.SpaceLeaveRet); err != nil {
-			return err
-		}
-	case *Response_GetStateRet:
-		_ = b.EncodeVarint(503<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.GetStateRet); err != nil {
-			return err
-		}
-	case nil:
-	default:
-		return fmt.Errorf("Response.Scene has unexpected type %T", x)
-	}
 	return nil
 }
 
 func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
 	m := msg.(*Response)
 	switch tag {
+	case 5: // gate.bindServiceRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(BindServiceRet)
+		err := b.DecodeMessage(msg)
+		m.Gate = &Response_BindServiceRet{msg}
+		return true, err
 	case 10: // passport.S2C_UserRegister
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
@@ -932,38 +760,6 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Game = &Response_RemoveRoleRet{msg}
 		return true, err
-	case 500: // scene.spaceMoveRet
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceMoveRet)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Response_SpaceMoveRet{msg}
-		return true, err
-	case 501: // scene.spaceEnterRet
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceEnterRet)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Response_SpaceEnterRet{msg}
-		return true, err
-	case 502: // scene.spaceLeaveRet
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(SpaceLeaveRet)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Response_SpaceLeaveRet{msg}
-		return true, err
-	case 503: // scene.getStateRet
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(GetStateRet)
-		err := b.DecodeMessage(msg)
-		m.Scene = &Response_GetStateRet{msg}
-		return true, err
 	default:
 		return false, nil
 	}
@@ -971,6 +767,17 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 
 func _Response_OneofSizer(msg proto.Message) (n int) {
 	m := msg.(*Response)
+	// gate
+	switch x := m.Gate.(type) {
+	case *Response_BindServiceRet:
+		s := proto.Size(x.BindServiceRet)
+		n += proto.SizeVarint(5<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
 	// passport
 	switch x := m.Passport.(type) {
 	case *Response_S2C_UserRegister:
@@ -1018,35 +825,10 @@ func _Response_OneofSizer(msg proto.Message) (n int) {
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
-	// scene
-	switch x := m.Scene.(type) {
-	case *Response_SpaceMoveRet:
-		s := proto.Size(x.SpaceMoveRet)
-		n += proto.SizeVarint(500<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Response_SpaceEnterRet:
-		s := proto.Size(x.SpaceEnterRet)
-		n += proto.SizeVarint(501<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Response_SpaceLeaveRet:
-		s := proto.Size(x.SpaceLeaveRet)
-		n += proto.SizeVarint(502<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Response_GetStateRet:
-		s := proto.Size(x.GetStateRet)
-		n += proto.SizeVarint(503<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case nil:
-	default:
-		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
-	}
 	return n
 }
 
+// 推送消息支持多条结构
 type Push struct {
 	Kick KickType `protobuf:"varint,1,opt,name=kick,proto3,enum=protocol.KickType" json:"kick,omitempty"`
 }
@@ -1109,13 +891,6 @@ func (m *Request) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += nn3
 	}
-	if m.Scene != nil {
-		nn4, err := m.Scene.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += nn4
-	}
 	return i, nil
 }
 
@@ -1125,11 +900,11 @@ func (m *Request_KickOut) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x22
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.KickOut.Size()))
-		n5, err := m.KickOut.MarshalTo(dAtA[i:])
+		n4, err := m.KickOut.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n5
+		i += n4
 	}
 	return i, nil
 }
@@ -1139,7 +914,21 @@ func (m *Request_BindService) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x2a
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.BindService.Size()))
-		n6, err := m.BindService.MarshalTo(dAtA[i:])
+		n5, err := m.BindService.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	return i, nil
+}
+func (m *Request_PushMessage) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.PushMessage != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.PushMessage.Size()))
+		n6, err := m.PushMessage.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
@@ -1253,70 +1042,6 @@ func (m *Request_RemoveRole) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
-func (m *Request_SpaceMove) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceMove != nil {
-		dAtA[i] = 0xa2
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceMove.Size()))
-		n14, err := m.SpaceMove.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n14
-	}
-	return i, nil
-}
-func (m *Request_SpaceEnter) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceEnter != nil {
-		dAtA[i] = 0xaa
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceEnter.Size()))
-		n15, err := m.SpaceEnter.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n15
-	}
-	return i, nil
-}
-func (m *Request_SpaceLeave) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceLeave != nil {
-		dAtA[i] = 0xb2
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceLeave.Size()))
-		n16, err := m.SpaceLeave.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n16
-	}
-	return i, nil
-}
-func (m *Request_GetState) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.GetState != nil {
-		dAtA[i] = 0xba
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.GetState.Size()))
-		n17, err := m.GetState.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n17
-	}
-	return i, nil
-}
 func (m *Response) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1342,53 +1067,55 @@ func (m *Response) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.Code))
 	}
-	if m.Passport != nil {
-		nn18, err := m.Passport.MarshalTo(dAtA[i:])
+	if m.Gate != nil {
+		nn14, err := m.Gate.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn18
+		i += nn14
+	}
+	if m.Passport != nil {
+		nn15, err := m.Passport.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn15
 	}
 	if m.Game != nil {
-		nn19, err := m.Game.MarshalTo(dAtA[i:])
+		nn16, err := m.Game.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn19
-	}
-	if m.Scene != nil {
-		nn20, err := m.Scene.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += nn20
-	}
-	if m.Push != nil {
-		dAtA[i] = 0xc2
-		i++
-		dAtA[i] = 0x3e
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.Push.Size()))
-		n21, err := m.Push.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n21
+		i += nn16
 	}
 	return i, nil
 }
 
+func (m *Response_BindServiceRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.BindServiceRet != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.BindServiceRet.Size()))
+		n17, err := m.BindServiceRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n17
+	}
+	return i, nil
+}
 func (m *Response_S2C_UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	if m.S2C_UserRegister != nil {
 		dAtA[i] = 0x52
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.S2C_UserRegister.Size()))
-		n22, err := m.S2C_UserRegister.MarshalTo(dAtA[i:])
+		n18, err := m.S2C_UserRegister.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n22
+		i += n18
 	}
 	return i, nil
 }
@@ -1398,11 +1125,11 @@ func (m *Response_S2C_UserLogin) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x5a
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.S2C_UserLogin.Size()))
-		n23, err := m.S2C_UserLogin.MarshalTo(dAtA[i:])
+		n19, err := m.S2C_UserLogin.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n23
+		i += n19
 	}
 	return i, nil
 }
@@ -1412,11 +1139,11 @@ func (m *Response_S2C_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x62
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.S2C_TokenLogin.Size()))
-		n24, err := m.S2C_TokenLogin.MarshalTo(dAtA[i:])
+		n20, err := m.S2C_TokenLogin.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n24
+		i += n20
 	}
 	return i, nil
 }
@@ -1428,11 +1155,11 @@ func (m *Response_GetUserInfoRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.GetUserInfoRet.Size()))
-		n25, err := m.GetUserInfoRet.MarshalTo(dAtA[i:])
+		n21, err := m.GetUserInfoRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n25
+		i += n21
 	}
 	return i, nil
 }
@@ -1444,11 +1171,11 @@ func (m *Response_LoginRoleRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRoleRet.Size()))
-		n26, err := m.LoginRoleRet.MarshalTo(dAtA[i:])
+		n22, err := m.LoginRoleRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n26
+		i += n22
 	}
 	return i, nil
 }
@@ -1460,11 +1187,11 @@ func (m *Response_CreateRoleRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.CreateRoleRet.Size()))
-		n27, err := m.CreateRoleRet.MarshalTo(dAtA[i:])
+		n23, err := m.CreateRoleRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n27
+		i += n23
 	}
 	return i, nil
 }
@@ -1476,75 +1203,11 @@ func (m *Response_RemoveRoleRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.RemoveRoleRet.Size()))
-		n28, err := m.RemoveRoleRet.MarshalTo(dAtA[i:])
+		n24, err := m.RemoveRoleRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n28
-	}
-	return i, nil
-}
-func (m *Response_SpaceMoveRet) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceMoveRet != nil {
-		dAtA[i] = 0xa2
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceMoveRet.Size()))
-		n29, err := m.SpaceMoveRet.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n29
-	}
-	return i, nil
-}
-func (m *Response_SpaceEnterRet) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceEnterRet != nil {
-		dAtA[i] = 0xaa
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceEnterRet.Size()))
-		n30, err := m.SpaceEnterRet.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n30
-	}
-	return i, nil
-}
-func (m *Response_SpaceLeaveRet) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.SpaceLeaveRet != nil {
-		dAtA[i] = 0xb2
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.SpaceLeaveRet.Size()))
-		n31, err := m.SpaceLeaveRet.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n31
-	}
-	return i, nil
-}
-func (m *Response_GetStateRet) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.GetStateRet != nil {
-		dAtA[i] = 0xba
-		i++
-		dAtA[i] = 0x1f
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.GetStateRet.Size()))
-		n32, err := m.GetStateRet.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n32
+		i += n24
 	}
 	return i, nil
 }
@@ -1595,9 +1258,6 @@ func (m *Request) Size() (n int) {
 	if m.Game != nil {
 		n += m.Game.Size()
 	}
-	if m.Scene != nil {
-		n += m.Scene.Size()
-	}
 	return n
 }
 
@@ -1615,6 +1275,15 @@ func (m *Request_BindService) Size() (n int) {
 	_ = l
 	if m.BindService != nil {
 		l = m.BindService.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_PushMessage) Size() (n int) {
+	var l int
+	_ = l
+	if m.PushMessage != nil {
+		l = m.PushMessage.Size()
 		n += 1 + l + sovProtocol(uint64(l))
 	}
 	return n
@@ -1682,42 +1351,6 @@ func (m *Request_RemoveRole) Size() (n int) {
 	}
 	return n
 }
-func (m *Request_SpaceMove) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceMove != nil {
-		l = m.SpaceMove.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Request_SpaceEnter) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceEnter != nil {
-		l = m.SpaceEnter.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Request_SpaceLeave) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceLeave != nil {
-		l = m.SpaceLeave.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Request_GetState) Size() (n int) {
-	var l int
-	_ = l
-	if m.GetState != nil {
-		l = m.GetState.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
 func (m *Response) Size() (n int) {
 	var l int
 	_ = l
@@ -1727,22 +1360,27 @@ func (m *Response) Size() (n int) {
 	if m.Code != 0 {
 		n += 1 + sovProtocol(uint64(m.Code))
 	}
+	if m.Gate != nil {
+		n += m.Gate.Size()
+	}
 	if m.Passport != nil {
 		n += m.Passport.Size()
 	}
 	if m.Game != nil {
 		n += m.Game.Size()
 	}
-	if m.Scene != nil {
-		n += m.Scene.Size()
-	}
-	if m.Push != nil {
-		l = m.Push.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
 	return n
 }
 
+func (m *Response_BindServiceRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.BindServiceRet != nil {
+		l = m.BindServiceRet.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
 func (m *Response_S2C_UserRegister) Size() (n int) {
 	var l int
 	_ = l
@@ -1802,42 +1440,6 @@ func (m *Response_RemoveRoleRet) Size() (n int) {
 	_ = l
 	if m.RemoveRoleRet != nil {
 		l = m.RemoveRoleRet.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Response_SpaceMoveRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceMoveRet != nil {
-		l = m.SpaceMoveRet.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Response_SpaceEnterRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceEnterRet != nil {
-		l = m.SpaceEnterRet.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Response_SpaceLeaveRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.SpaceLeaveRet != nil {
-		l = m.SpaceLeaveRet.Size()
-		n += 2 + l + sovProtocol(uint64(l))
-	}
-	return n
-}
-func (m *Response_GetStateRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.GetStateRet != nil {
-		l = m.GetStateRet.Size()
 		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
@@ -1975,6 +1577,38 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			m.Gate = &Request_BindService{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PushMessage", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &PushMessage{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Gate = &Request_PushMessage{v}
 			iNdEx = postIndex
 		case 10:
 			if wireType != 2 {
@@ -2200,134 +1834,6 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.Game = &Request_RemoveRole{v}
 			iNdEx = postIndex
-		case 500:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceMove", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceMove{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Request_SpaceMove{v}
-			iNdEx = postIndex
-		case 501:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceEnter", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceEnter{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Request_SpaceEnter{v}
-			iNdEx = postIndex
-		case 502:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceLeave", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceLeave{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Request_SpaceLeave{v}
-			iNdEx = postIndex
-		case 503:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field GetState", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &GetState{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Request_GetState{v}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipProtocol(dAtA[iNdEx:])
@@ -2416,6 +1922,38 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BindServiceRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &BindServiceRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Gate = &Response_BindServiceRet{v}
+			iNdEx = postIndex
 		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field S2C_UserRegister", wireType)
@@ -2640,167 +2178,6 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			}
 			m.Game = &Response_RemoveRoleRet{v}
 			iNdEx = postIndex
-		case 500:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceMoveRet", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceMoveRet{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Response_SpaceMoveRet{v}
-			iNdEx = postIndex
-		case 501:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceEnterRet", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceEnterRet{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Response_SpaceEnterRet{v}
-			iNdEx = postIndex
-		case 502:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SpaceLeaveRet", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &SpaceLeaveRet{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Response_SpaceLeaveRet{v}
-			iNdEx = postIndex
-		case 503:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field GetStateRet", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &GetStateRet{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Scene = &Response_GetStateRet{v}
-			iNdEx = postIndex
-		case 1000:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Push", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Push == nil {
-				m.Push = &Push{}
-			}
-			if err := m.Push.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipProtocol(dAtA[iNdEx:])
@@ -2999,52 +2376,42 @@ var (
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 738 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x95, 0x4d, 0x6f, 0xd3, 0x4e,
-	0x18, 0xc4, 0xe3, 0x24, 0x4d, 0xd2, 0x27, 0x69, 0x5a, 0xed, 0xff, 0xa5, 0xdb, 0x22, 0x45, 0x55,
-	0x91, 0x50, 0x4f, 0x39, 0xb8, 0xad, 0x40, 0x80, 0x8a, 0x9a, 0xa8, 0x62, 0x11, 0x45, 0xa0, 0x4d,
-	0x39, 0x5b, 0xa9, 0xfb, 0x34, 0xb5, 0x92, 0x7a, 0x83, 0x77, 0x13, 0x89, 0x6f, 0xc2, 0x07, 0xe2,
-	0xc0, 0x91, 0x8f, 0x80, 0xca, 0x05, 0x71, 0x86, 0x72, 0x45, 0xbb, 0x7e, 0x37, 0x49, 0xb9, 0x79,
-	0x3d, 0x33, 0x3f, 0x5b, 0xca, 0x4c, 0x0c, 0xed, 0x69, 0x20, 0x94, 0x70, 0xc5, 0xa4, 0x6b, 0x2e,
-	0x48, 0x23, 0x3e, 0x6f, 0x6f, 0x04, 0x28, 0x67, 0x13, 0xe5, 0x8a, 0x0b, 0x0c, 0xb5, 0x6d, 0x18,
-	0x0d, 0x55, 0x7c, 0xdd, 0x9e, 0x0e, 0xa5, 0x9c, 0x8a, 0x40, 0x45, 0xe7, 0xa6, 0x74, 0xd1, 0xcf,
-	0x18, 0xaf, 0xa3, 0xeb, 0xdd, 0x8f, 0x35, 0xa8, 0x73, 0x7c, 0x37, 0x43, 0xa9, 0x08, 0x85, 0xba,
-	0x44, 0x29, 0x3d, 0xe1, 0x53, 0x6b, 0xc7, 0xda, 0x5b, 0xe1, 0xf1, 0x91, 0x74, 0xa1, 0x3e, 0xf6,
-	0xdc, 0xf1, 0xeb, 0x99, 0xa2, 0xd5, 0x1d, 0x6b, 0xaf, 0x69, 0x93, 0x6e, 0xf2, 0x62, 0x5a, 0x70,
-	0xc4, 0x4c, 0xb1, 0x12, 0x8f, 0x4d, 0xe4, 0x31, 0x34, 0xcf, 0x3d, 0xff, 0x62, 0x80, 0xc1, 0xdc,
-	0x73, 0x91, 0xae, 0x98, 0xcc, 0xff, 0x69, 0x46, 0x8b, 0x8e, 0x0c, 0x55, 0x56, 0xe2, 0x59, 0x33,
-	0x79, 0x0e, 0x1b, 0x7d, 0x7b, 0xe0, 0xbc, 0x95, 0x18, 0x70, 0x1c, 0x79, 0x52, 0x61, 0x40, 0xc1,
-	0x00, 0xb6, 0x53, 0x40, 0xd1, 0xc1, 0x2c, 0xbe, 0xde, 0xb7, 0x07, 0xd9, 0x5b, 0xe4, 0x08, 0xd6,
-	0x62, 0xdb, 0xa9, 0x18, 0x79, 0x3e, 0x6d, 0x1a, 0xca, 0xe6, 0x9f, 0x14, 0x23, 0x33, 0x8b, 0xb7,
-	0x22, 0x84, 0x39, 0x93, 0x63, 0x68, 0x6b, 0xc3, 0x99, 0x18, 0xa3, 0x1f, 0x02, 0x5a, 0x06, 0x40,
-	0xf3, 0x80, 0x54, 0x67, 0x16, 0xd7, 0x4f, 0x4c, 0x6f, 0x90, 0x27, 0xd0, 0x1c, 0xa1, 0xd2, 0xc8,
-	0x17, 0xfe, 0xa5, 0xa0, 0x76, 0xf1, 0x05, 0x46, 0xa8, 0x9c, 0x99, 0xc4, 0xc0, 0xf1, 0xfc, 0x4b,
-	0xc1, 0xca, 0x3c, 0xeb, 0x26, 0x07, 0xb0, 0x3a, 0xd1, 0x14, 0x2e, 0x26, 0x48, 0xf7, 0x4d, 0xf4,
-	0xdf, 0x34, 0x6a, 0x24, 0x27, 0x10, 0x13, 0x64, 0x65, 0x9e, 0x1a, 0xc9, 0x43, 0x00, 0x37, 0xc0,
-	0xa1, 0x42, 0x13, 0x3b, 0x30, 0xb1, 0xff, 0xd2, 0x58, 0xa8, 0xc5, 0xb9, 0x8c, 0x55, 0x07, 0x03,
-	0xbc, 0x16, 0xf3, 0x30, 0x78, 0x58, 0x0c, 0x86, 0x5a, 0x12, 0x4c, 0xad, 0xe4, 0x10, 0x56, 0xe5,
-	0x74, 0xe8, 0xe2, 0x2b, 0x31, 0x47, 0xfa, 0xa3, 0x52, 0x7c, 0x51, 0xa3, 0x39, 0xda, 0xcd, 0x2a,
-	0x3c, 0x75, 0x92, 0x47, 0x00, 0xe6, 0x70, 0xe2, 0xeb, 0x5f, 0xf8, 0x67, 0xa5, 0xf8, 0xc0, 0x30,
-	0x87, 0x5a, 0x65, 0x15, 0x9e, 0xf1, 0x26, 0xc9, 0x53, 0x1c, 0xce, 0x91, 0xde, 0x2e, 0x49, 0x4e,
-	0xb4, 0x9a, 0x24, 0x8d, 0x97, 0xd8, 0xd0, 0x18, 0xa1, 0x1a, 0xa8, 0xa1, 0x42, 0xfa, 0x2b, 0xcc,
-	0xfd, 0x93, 0xff, 0x35, 0xa4, 0xd6, 0x58, 0x85, 0x27, 0xbe, 0x5e, 0x0d, 0xaa, 0x7a, 0x58, 0x3d,
-	0x80, 0x46, 0x3c, 0xaa, 0xf0, 0xde, 0x35, 0xf6, 0xea, 0xb0, 0x62, 0x86, 0xb5, 0xfb, 0xbd, 0x06,
-	0x0d, 0x8e, 0x72, 0x2a, 0x7c, 0x89, 0x77, 0xec, 0x68, 0x17, 0xaa, 0x7a, 0xb0, 0xb4, 0xbc, 0x63,
-	0xed, 0xb5, 0xed, 0x76, 0xa6, 0x48, 0xe2, 0x02, 0xb9, 0xd1, 0x74, 0xff, 0x07, 0x76, 0xff, 0x2f,
-	0xfd, 0x2f, 0x3a, 0x58, 0x89, 0xaf, 0x0f, 0xec, 0x7e, 0xb1, 0xff, 0xb1, 0x6d, 0x49, 0xff, 0x73,
-	0x32, 0x2b, 0xf1, 0x56, 0x84, 0x48, 0xfa, 0xaf, 0x0d, 0x77, 0xf5, 0x3f, 0xaf, 0xb3, 0x12, 0xd7,
-	0x4f, 0xcc, 0xf4, 0xff, 0x04, 0xda, 0x99, 0x46, 0x73, 0x54, 0xd1, 0x04, 0xee, 0x2d, 0x99, 0x80,
-	0x13, 0xa0, 0x62, 0x16, 0x2f, 0x84, 0xc8, 0x11, 0xb4, 0x92, 0x82, 0x6b, 0xc8, 0x7e, 0xf1, 0x3d,
-	0xd2, 0x31, 0x44, 0x84, 0x9c, 0x9f, 0x1c, 0xc3, 0x5a, 0x5a, 0x74, 0x0d, 0x08, 0x67, 0xb1, 0xb5,
-	0x70, 0x16, 0x11, 0x21, 0x9f, 0xd0, 0x88, 0xb4, 0xf2, 0x1a, 0x71, 0x58, 0x44, 0x64, 0x06, 0x12,
-	0x23, 0x72, 0x09, 0xf2, 0x0c, 0x5a, 0x49, 0xfb, 0x35, 0x21, 0x9a, 0x0a, 0x5d, 0x34, 0x15, 0x43,
-	0x28, 0xf3, 0x5c, 0x80, 0xf4, 0x60, 0x2d, 0x5d, 0x81, 0x26, 0x44, 0xa3, 0xd9, 0x5a, 0x38, 0x9a,
-	0x08, 0x91, 0x8f, 0x24, 0x0c, 0xb3, 0x07, 0xcd, 0xb8, 0x5d, 0xc2, 0x30, 0xf3, 0xc9, 0x31, 0xe2,
-	0x08, 0x79, 0x6a, 0xfe, 0xd5, 0xcc, 0x3a, 0x34, 0x21, 0x1a, 0xd2, 0xe6, 0x82, 0x21, 0x45, 0xf9,
-	0xac, 0x9d, 0xdc, 0x87, 0xea, 0x74, 0x26, 0xaf, 0xe8, 0xb7, 0xba, 0x89, 0x65, 0x46, 0xf0, 0x66,
-	0x26, 0xaf, 0xb8, 0x11, 0xef, 0x1e, 0x5b, 0x17, 0xaa, 0xda, 0x4a, 0x1e, 0x40, 0x55, 0x7f, 0x70,
-	0xcc, 0xc8, 0xda, 0xd9, 0x4f, 0xd2, 0x4b, 0xcf, 0x1d, 0x9f, 0xbd, 0x9f, 0x22, 0x37, 0x7a, 0x6f,
-	0xe3, 0xd3, 0x4d, 0xc7, 0xfa, 0x7c, 0xd3, 0xb1, 0xbe, 0xdc, 0x74, 0xac, 0x0f, 0x5f, 0x3b, 0xa5,
-	0xf3, 0x9a, 0xb1, 0xee, 0xff, 0x0e, 0x00, 0x00, 0xff, 0xff, 0x14, 0x5e, 0x98, 0xfa, 0x5f, 0x07,
-	0x00, 0x00,
+	// 591 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x94, 0xcd, 0x6e, 0xd3, 0x40,
+	0x14, 0x85, 0xeb, 0x28, 0x69, 0xcb, 0x4d, 0x6a, 0xaa, 0x11, 0x3f, 0x26, 0x48, 0x55, 0xd5, 0x05,
+	0xea, 0x2a, 0x0b, 0xb7, 0x15, 0x12, 0x48, 0x95, 0x9a, 0x80, 0x30, 0x02, 0x04, 0x1a, 0x97, 0xb5,
+	0x95, 0x3a, 0xb7, 0xae, 0x95, 0xc4, 0x63, 0x3c, 0xe3, 0x4a, 0xac, 0x79, 0x09, 0x1e, 0x89, 0x25,
+	0x8f, 0x80, 0xf2, 0x24, 0xe8, 0x8e, 0xed, 0x8c, 0x6d, 0xda, 0xb0, 0x8b, 0x7d, 0xce, 0xf9, 0x32,
+	0x1a, 0x7d, 0x32, 0xd8, 0x69, 0x26, 0x94, 0x08, 0xc5, 0x62, 0xa4, 0x7f, 0xb0, 0xdd, 0xea, 0x79,
+	0xb8, 0x9f, 0xa1, 0xcc, 0x17, 0x2a, 0x14, 0x33, 0x2c, 0xb2, 0x21, 0x44, 0x53, 0x55, 0xfd, 0xb6,
+	0xd3, 0xa9, 0x94, 0xa9, 0xc8, 0x94, 0xc9, 0x96, 0x65, 0x76, 0xf4, 0xb3, 0x07, 0x3b, 0x1c, 0xbf,
+	0xe5, 0x28, 0x15, 0x73, 0x60, 0x47, 0xa2, 0x94, 0xb1, 0x48, 0x1c, 0xeb, 0xd0, 0x3a, 0xee, 0xf1,
+	0xea, 0x91, 0x8d, 0x60, 0x67, 0x1e, 0x87, 0xf3, 0xcf, 0xb9, 0x72, 0xba, 0x87, 0xd6, 0x71, 0xdf,
+	0x65, 0xa3, 0xf5, 0x59, 0x28, 0x08, 0x44, 0xae, 0xbc, 0x2d, 0x5e, 0x95, 0xd8, 0x2b, 0xe8, 0x5f,
+	0xc5, 0xc9, 0xcc, 0xc7, 0xec, 0x36, 0x0e, 0xd1, 0xe9, 0xe9, 0xcd, 0x13, 0xb3, 0xa1, 0x30, 0x90,
+	0x45, 0xea, 0x6d, 0xf1, 0x7a, 0x99, 0xb6, 0x69, 0x2e, 0x6f, 0x3e, 0xa1, 0x94, 0xd3, 0x08, 0x9d,
+	0xed, 0xf6, 0x96, 0xc2, 0x60, 0x59, 0xa4, 0xb4, 0xad, 0x95, 0xd9, 0x3b, 0xd8, 0x9f, 0xb8, 0x7e,
+	0xf0, 0x55, 0x62, 0xc6, 0x31, 0x8a, 0xa5, 0xc2, 0xcc, 0x01, 0x0d, 0x18, 0x1a, 0x40, 0xbb, 0xe1,
+	0x59, 0xfc, 0xe1, 0xc4, 0xf5, 0xeb, 0xaf, 0xd8, 0x39, 0xec, 0x55, 0xb5, 0x8f, 0x22, 0x8a, 0x13,
+	0xa7, 0xaf, 0x29, 0x4f, 0xff, 0xa5, 0xe8, 0xd8, 0xb3, 0xf8, 0xa0, 0x44, 0xe8, 0x67, 0x76, 0x01,
+	0x36, 0x15, 0x2e, 0xc5, 0x1c, 0x93, 0x02, 0x30, 0xd0, 0x00, 0xa7, 0x09, 0x30, 0xb9, 0x67, 0x71,
+	0xfa, 0x47, 0xf3, 0x82, 0xbd, 0x86, 0x7e, 0x84, 0x8a, 0x90, 0xef, 0x93, 0x6b, 0xe1, 0xb8, 0xed,
+	0x03, 0x44, 0xa8, 0x82, 0x5c, 0x62, 0x16, 0xc4, 0xc9, 0xb5, 0xf0, 0x3a, 0xbc, 0xde, 0x66, 0xa7,
+	0xf0, 0x60, 0x41, 0x14, 0x2e, 0x16, 0xe8, 0x9c, 0xe8, 0xe9, 0x23, 0x33, 0xd5, 0x51, 0x90, 0x89,
+	0x05, 0x7a, 0x1d, 0x6e, 0x8a, 0xec, 0x25, 0x40, 0x98, 0xe1, 0x54, 0xa1, 0x9e, 0x9d, 0xea, 0xd9,
+	0x63, 0x33, 0x2b, 0xb2, 0x6a, 0x57, 0xab, 0xd2, 0x30, 0xc3, 0xa5, 0xb8, 0x2d, 0x86, 0x67, 0xed,
+	0x61, 0x91, 0xad, 0x87, 0xa6, 0x3a, 0xde, 0x86, 0x2e, 0x89, 0x3a, 0x06, 0xd8, 0xad, 0x24, 0x2d,
+	0xde, 0x2d, 0xf1, 0xe8, 0x47, 0x0f, 0x76, 0x39, 0xca, 0x54, 0x24, 0x12, 0x37, 0xb8, 0x79, 0x04,
+	0x5d, 0xf2, 0xde, 0xe9, 0x1c, 0x5a, 0xc7, 0xb6, 0x6b, 0xd7, 0x2e, 0x58, 0xcc, 0x90, 0xeb, 0x8c,
+	0xbd, 0x01, 0xbb, 0xa6, 0x18, 0x47, 0x55, 0x2a, 0x39, 0xbc, 0x5b, 0xc9, 0x20, 0x43, 0xd2, 0xb9,
+	0xb5, 0x21, 0xbb, 0x7c, 0x77, 0xf2, 0x1f, 0xbb, 0xda, 0x0d, 0xb2, 0xcb, 0x77, 0x27, 0x6d, 0xbb,
+	0xaa, 0xda, 0x3d, 0x76, 0x35, 0x62, 0xb2, 0xab, 0x44, 0xac, 0xed, 0xa2, 0xc2, 0x26, 0xbb, 0x9a,
+	0x39, 0xd9, 0xe5, 0xbb, 0x93, 0x9a, 0x5d, 0x6f, 0xc1, 0xae, 0xf9, 0x42, 0x37, 0x52, 0x08, 0xf6,
+	0xfc, 0x1e, 0xc1, 0xf4, 0x95, 0x74, 0x78, 0x6b, 0xc4, 0xce, 0x61, 0xb0, 0xd6, 0x87, 0x20, 0x27,
+	0xed, 0x73, 0x18, 0xd5, 0x4a, 0x42, 0xa3, 0xcf, 0x2e, 0x60, 0xcf, 0x68, 0x44, 0x80, 0x42, 0xba,
+	0x67, 0x77, 0x4a, 0x57, 0x12, 0x9a, 0x0b, 0x42, 0x18, 0xa1, 0x08, 0x71, 0xd6, 0x46, 0xd4, 0xf4,
+	0xab, 0x10, 0x8d, 0xc5, 0x46, 0x0b, 0x47, 0xd0, 0xfd, 0x92, 0xcb, 0x1b, 0xf6, 0x02, 0xba, 0xf4,
+	0x75, 0xd3, 0xf6, 0xd9, 0xf5, 0xef, 0xdf, 0x87, 0x38, 0x9c, 0x5f, 0x7e, 0x4f, 0x91, 0xeb, 0x7c,
+	0x3c, 0xf8, 0xb5, 0x3a, 0xb0, 0x7e, 0xaf, 0x0e, 0xac, 0x3f, 0xab, 0x03, 0xeb, 0x6a, 0x5b, 0xd7,
+	0x4e, 0xfe, 0x06, 0x00, 0x00, 0xff, 0xff, 0x8b, 0x2a, 0x4f, 0xe0, 0xbb, 0x05, 0x00, 0x00,
 }

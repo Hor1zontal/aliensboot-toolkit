@@ -16,6 +16,6 @@ import (
 
 
 //
-func handleBindService(authID int64, request *protocol.BindService) {
+func handleBindService(request *protocol.BindService) {
 	network.Manager.BindService(request.GetAuthID(), request.GetBinds())
 }

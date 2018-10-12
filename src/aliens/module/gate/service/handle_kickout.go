@@ -16,6 +16,6 @@ import (
 
 
 //
-func handleKickOut(authID int64, request *protocol.KickOut) {
+func handleKickOut(request *protocol.KickOut) {
 	network.Manager.KickOut(request.GetAuthID(), request.GetKickType())
 }

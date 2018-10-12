@@ -19,7 +19,6 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/gate/conf"
     "aliens/cluster/center"
-    "aliens/module/gate/network"
 )
 
 var instance service.IService = nil
@@ -34,33 +33,33 @@ func Close() {
 
 
 func handle(request *base.Any) *base.Any {
-    if request.GetGate() {
-        requestProxy := &protocol.Request{}
-        defer func() {
-            exception.CatchStackDetail()
-        }()
-        error := proto.Unmarshal(request.Value, requestProxy)
-        if error != nil {
-            log.Debugf("un expect request data : %v", request)
-            return nil
-        }
-        handleRequest(request.GetAuthId(), requestProxy)
-    } else {
-        //不是网关处理的消息即为推送消息
-        network.Manager.Push(request.GetAuthId(), request)
-    }
-	return nil
+     requestProxy := &protocol.Request{}
+     defer func() {
+         exception.CatchStackDetail()
+     }()
+     error := proto.Unmarshal(request.Value, requestProxy)
+     if error != nil {
+         log.Debugf("un expect request data : %v", request)
+         return nil
+     }
+     handleRequest(requestProxy)
+	 return nil
 }
 
-func handleRequest(authID int64, request *protocol.Request) {
+func handleRequest(request *protocol.Request) {
 	
 	if request.GetKickOut() != nil {
-		handleKickOut(authID, request.GetKickOut())
+		handleKickOut(request.GetKickOut())
 		return
 	}
 	
 	if request.GetBindService() != nil {
-		handleBindService(authID, request.GetBindService())
+		handleBindService(request.GetBindService())
+		return
+	}
+	
+	if request.GetPushMessage() != nil {
+		handlePushMessage(request.GetPushMessage())
 		return
 	}
 	

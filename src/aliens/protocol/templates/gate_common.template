@@ -34,28 +34,23 @@ func Close() {
 
 
 func handle(request *base.Any) *base.Any {
-    if request.GetGate() {
-        requestProxy := &${package}.Request{}
-        defer func() {
-            exception.CatchStackDetail()
-        }()
-        error := proto.Unmarshal(request.Value, requestProxy)
-        if error != nil {
-            log.Debugf("un expect request data : %v", request)
-            return nil
-        }
-        handleRequest(request.GetAuthId(), requestProxy)
-    } else {
-        //不是网关处理的消息即为推送消息
-        network.Manager.Push(request.GetAuthId(), request)
-    }
-	return nil
+     requestProxy := &${package}.Request{}
+     defer func() {
+         exception.CatchStackDetail()
+     }()
+     error := proto.Unmarshal(request.Value, requestProxy)
+     if error != nil {
+         log.Debugf("un expect request data : %v", request)
+         return nil
+     }
+     handleRequest(requestProxy)
+	 return nil
 }
 
-func handleRequest(authID int64, request *${package}.Request) {
+func handleRequest(request *${package}.Request) {
 	<message>
 	if request.Get${o_request}() != nil {
-		handle${o_name}(authID, request.Get${o_request}())
+		handle${o_name}(request.Get${o_request}())
 		return
 	}
 	<message>

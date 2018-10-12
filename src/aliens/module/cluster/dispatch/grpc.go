@@ -44,6 +44,12 @@ func SendNodeMessage(serviceName string, serviceID string, message *protocol.Req
 	return SendNode(serviceName, serviceID, request)
 }
 
+func Broadcast(serviceName string, message *protocol.Request) {
+	service := allocService(serviceName)
+	data, _ := message.Marshal()
+	request := &base.Any{Value: data}
+	service.BroadcastAll(request)
+}
 
 //同步阻塞请求
 func RequestNodeMessage(serviceName string, serviceID string, message *protocol.Request) (*protocol.Response, error) {

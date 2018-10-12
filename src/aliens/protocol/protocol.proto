@@ -15,6 +15,7 @@ message Request {
     oneof gate {
         kick_out kickOut = 4; //T人
         bind_service bindService = 5; //绑定服务-定向转发
+        push_message pushMessage = 6; //推送消息
     }
 
     //-----------------登录模块接口---------------
@@ -52,6 +53,9 @@ message Response {
     Code code = 2; //错误码
 
     //-----------------登录模块响应接口---------------
+    oneof gate {
+        bind_service_ret bindServiceRet = 5;
+    }
 
     oneof passport {
         S2C_UserRegister S2C_UserRegister = 10;
@@ -75,9 +79,11 @@ message Response {
 //    }
 
 
-    Push push = 1000; //推送消息
+    //Push push = 1000; //推送消息
 }
 
+
+//推送消息支持多条结构
 message Push {
     KickType kick = 1; //T人
 }

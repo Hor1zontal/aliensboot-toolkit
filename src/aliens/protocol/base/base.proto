@@ -16,7 +16,7 @@ message Any {
     // Must be a valid serialized protocol buffer of the above specified type.
     bytes value = 4;
 
-    bool gate = 3; //是否网关需要处理的消息
+    //bool gate = 3; //是否网关需要处理的消息
 
     //bytes Agent = 5[(gogoproto.customtype) = "aliens/network.Agent",(gogoproto.nullable) = false]; //
 }

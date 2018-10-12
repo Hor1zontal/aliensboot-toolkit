@@ -15,7 +15,18 @@ message kick_out {
     KickType kickType = 2;
 }
 
+//绑定服务
 message bind_service {
     int64 authID = 1;
     map<string, string> binds = 2;  //绑定的服务-绑定的服务节点名
+}
+
+message bind_service_ret {
+    bool result = 1;
+}
+
+//推送消息
+message push_message {
+    int64 authID = 1; //推送的authid -1 代表全服广播
+    bytes data = 2;  //推送内容
 }

@@ -40,3 +40,12 @@ func (this *gateRPCHandle) BindService(node string, request *protocol.BindServic
 	}
 	return dispatch.SendNodeMessage(this.name, node, message)
 }
+
+func (this *gateRPCHandle) PushMessage(node string, request *protocol.PushMessage) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_PushMessage{
+			PushMessage:request,
+		},
+	}
+	return dispatch.SendNodeMessage(this.name, node, message)
+}

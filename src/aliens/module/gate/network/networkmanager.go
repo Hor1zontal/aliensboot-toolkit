@@ -82,6 +82,13 @@ func (this *networkManager) Push(authID int64, message *base.Any) {
 	auth.Push(message)
 }
 
+//广播消息
+func (this *networkManager)	Broadcast(message *base.Any) {
+	for _, network := range this.authNetworks {
+		network.Push(message)
+	}
+}
+
 func (this *networkManager) AddNetwork(network *Network) {
 	data := make(util.TaskData)
 	data[0] = network

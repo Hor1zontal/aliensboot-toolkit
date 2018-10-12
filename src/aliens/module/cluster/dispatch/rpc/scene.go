@@ -33,43 +33,43 @@ func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) 
     return rpcRet
 }
 
-
-func (this *sceneRPCHandle) SpaceEnter(node string, request *protocol.SpaceEnter) *protocol.SpaceEnterRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_SpaceEnter{
-			SpaceEnter:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetSpaceEnterRet()
-}
-
-func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_SpaceLeave{
-			SpaceLeave:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetSpaceLeaveRet()
-}
-
-func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_GetState{
-			GetState:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetGetStateRet()
-}
-
-func (this *sceneRPCHandle) SpaceMove(node string, request *protocol.SpaceMove) *protocol.SpaceMoveRet {
-	message := &protocol.Request{
-		Scene:&protocol.Request_SpaceMove{
-			SpaceMove:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetSpaceMoveRet()
-}
+//
+//func (this *sceneRPCHandle) SpaceEnter(node string, request *protocol.SpaceEnter) *protocol.SpaceEnterRet {
+//	message := &protocol.Request{
+//		Scene:&protocol.Request_SpaceEnter{
+//			SpaceEnter:request,
+//		},
+//	}
+//	messageRet := this.RequestNode(node, message)
+//	return messageRet.GetSpaceEnterRet()
+//}
+//
+//func (this *sceneRPCHandle) SpaceLeave(node string, request *protocol.SpaceLeave) *protocol.SpaceLeaveRet {
+//	message := &protocol.Request{
+//		Scene:&protocol.Request_SpaceLeave{
+//			SpaceLeave:request,
+//		},
+//	}
+//	messageRet := this.RequestNode(node, message)
+//	return messageRet.GetSpaceLeaveRet()
+//}
+//
+//func (this *sceneRPCHandle) GetState(node string, request *protocol.GetState) *protocol.GetStateRet {
+//	message := &protocol.Request{
+//		Scene:&protocol.Request_GetState{
+//			GetState:request,
+//		},
+//	}
+//	messageRet := this.RequestNode(node, message)
+//	return messageRet.GetGetStateRet()
+//}
+//
+//func (this *sceneRPCHandle) SpaceMove(node string, request *protocol.SpaceMove) *protocol.SpaceMoveRet {
+//	message := &protocol.Request{
+//		Scene:&protocol.Request_SpaceMove{
+//			SpaceMove:request,
+//		},
+//	}
+//	messageRet := this.RequestNode(node, message)
+//	return messageRet.GetSpaceMoveRet()
+//}

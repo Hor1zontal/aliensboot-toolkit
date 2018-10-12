@@ -18,7 +18,6 @@ import (
 	"aliens/gate"
 	"aliens/protocol/base"
 	"aliens/log"
-	"aliens/module/cluster/dispatch/lpc"
 	"aliens/cluster/center"
 	"aliens/protocol"
 )
@@ -47,18 +46,15 @@ type Network struct {
 
 //发送消息给客户端
 func (this *Network) Push(msg *base.Any) {
-	msg.Id = 1000
 	this.agent.WriteMsg(msg)
 }
 
 func (this *Network) KickOut(kickType protocol.KickType) {
-	pushMsg := &protocol.Response{
-		Push:&protocol.Push{
-			Kick:kickType,
-		},
+	pushMsg := &protocol.Push{
+		Kick:kickType,
 	}
 	data, _ := pushMsg.Marshal()
-	this.Push(&base.Any{Value:data})
+	this.Push(&base.Any{Id:1000, Value:data})
 	this.agent.Close()
 }
 
@@ -77,17 +73,19 @@ func (this *Network) handleResponse(response *base.Any, err error) {
 		this.Auth(response.GetAuthId())
 	}
 	this.agent.WriteMsg(response)
-	lpc.StatisticsHandler.AddServiceStatistic(route.GetServiceByeSeq(response.Id), 1, 0.001)
+	//lpc.StatisticsHandler.AddServiceStatistic(route.GetServiceByeSeq(response.Id), 1, 0.001)
 }
 
 
 func (this *Network) HandleMessage(request *base.Any) {
-	//未授权之前需要传递验权id
+	//根据是否授权，传递授权id
 	if this.IsAuth() {
 		request.AuthId = this.authID
 	} else {
 		request.AuthId = 0
 	}
+
+	//消息增加网关id
 	request.GateId = center.ClusterCenter.GetNodeID()
 
 	node, _ := this.bindRoutes[request.Id]
