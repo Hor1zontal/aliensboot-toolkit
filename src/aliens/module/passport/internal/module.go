@@ -4,12 +4,12 @@ import (
 	"aliens/module/passport/cache"
 	"aliens/module/passport/db"
 	"aliens/module/passport/service"
-	"aliens/module"
 	"aliens/module/passport/conf"
+	"aliens/module/base"
 )
 
 type Module struct {
-	*module.Skeleton
+	*base.Skeleton
 }
 
 func (m *Module) GetName() string {
@@ -21,7 +21,7 @@ func (m *Module) GetConfig() interface{} {
 }
 
 func (m *Module) OnInit() {
-	m.Skeleton = module.NewSkeleton()
+	m.Skeleton = base.NewSkeleton()
 	db.Init()
 	cache.Init()
 	service.Init(m.ChanRPCServer)

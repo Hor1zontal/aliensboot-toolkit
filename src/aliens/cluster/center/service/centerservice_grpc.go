@@ -17,7 +17,6 @@ import (
 	"aliens/common/util"
 	"reflect"
 	"aliens/protocol/base"
-	"github.com/AsynkronIT/protoactor-go/actor"
 	"time"
 )
 
@@ -28,7 +27,7 @@ const (
 type GRPCService struct {
 	*CenterService
 
-	pid *actor.PID
+	//pid *actor.PID
 
 	server *rpcServer //grpc服务端处理句柄
 
@@ -101,13 +100,13 @@ func (this *GRPCService) Connect() bool {
 	}
 	this.receiveClient = receiveClient
 
-	props := actor.FromProducer(func() actor.Actor {return &rpcClient{client : this.requestClient}})
-	pid, err := actor.SpawnNamed(props, this.Name + this.ID)
-	if err != nil {
-		log.Errorf("init service pid error : %v", err)
-		return false
-	}
-	this.pid = pid
+	//props := actor.FromProducer(func() actor.Actor {return &rpcClient{client : this.requestClient}})
+	//pid, err := actor.SpawnNamed(props, this.Name + this.ID)
+	//if err != nil {
+	//	log.Errorf("init service pid error : %v", err)
+	//	return false
+	//}
+	//this.pid = pid
 
 	log.Infof("connect grpc service %v-%v success", this.Name, address)
 	return true
@@ -129,10 +128,10 @@ func (this *GRPCService) IsLocal() bool {
 
 //关闭服务
 func (this *GRPCService) Close() {
-	if this.pid != nil {
-		this.pid.Stop()
-		this.pid = nil
-	}
+	//if this.pid != nil {
+	//	this.pid.Stop()
+	//	this.pid = nil
+	//}
 	if this.server != nil {
 		this.server.close()
 		this.server = nil
@@ -149,7 +148,6 @@ func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 	if this.requestClient == nil {
 		return nil, errors.New("service is not initial")
 	}
-
 	//本地启动的服务直接调用，不需要经过grpc中转
 	//TODO 后续考虑直接调用本地的优化
 	//if this.IsLocal() {
@@ -165,6 +163,14 @@ func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 	return client.Recv()
 }
 
+//func (this *GRPCService) AsyncRequest(asyncCall *AsyncCall) {
+//	//asyncCall.requestClient = this.requestClient
+//	//asyncCall.Invoke()
+//
+//	//callback( , )
+//	//this.pid.Tell(&call{request, callback})
+//}
+
 //让服务接收消息，不需要响应
 func (this *GRPCService) Send(request *base.Any) error {
 	//服务为本机，直接处理
@@ -174,6 +180,3 @@ func (this *GRPCService) Send(request *base.Any) error {
 	return this.receiveClient.Send(request)
 }
 
-func (this *GRPCService) AsyncRequest(request *base.Any, callback Callback) {
-	this.pid.Tell(&call{request, callback})
-}

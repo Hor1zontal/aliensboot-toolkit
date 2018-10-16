@@ -74,14 +74,14 @@ func RequestNode(serviceName string, serviceID string, message *base.Any) (*base
 	return service.RequestNode(serviceID, message)
 }
 
-func AsyncRequest(serviceName string, message *base.Any, hashKey string, callback service.Callback) error {
+func AsyncRequest(serviceName string, hashKey string, asyncCall *service.AsyncCall) error {
 	service := allocService(serviceName)
-	return service.AsyncRequest(message, hashKey, callback)
+	return service.AsyncRequest(hashKey, asyncCall)
 }
 
-func AsyncRequestNode(serviceName string, serviceID string, message *base.Any, callback service.Callback) error {
+func AsyncRequestNode(serviceName string, serviceID string, asyncCall *service.AsyncCall) error {
 	service := allocService(serviceName)
-	return service.AsyncRequestNode(serviceID, message, callback)
+	return service.AsyncRequestNode(serviceID, asyncCall)
 }
 
 func Send(serviceName string, message *base.Any, hashKey string) error {

@@ -5,14 +5,14 @@ import (
 	"aliens/module/gate/conf"
 	"time"
 	"aliens/module/gate/msg"
-	"aliens/module"
 	"aliens/gate"
 	"aliens/module/gate/service"
 	"aliens/module/gate/route"
 	"aliens/module/gate/network"
+	"aliens/module/base"
 )
 
-var Skeleton = module.NewSkeleton()
+var Skeleton = base.NewSkeleton()
 
 type Module struct {
 	*gate.Gate
@@ -41,7 +41,7 @@ func (m *Module) OnInit() {
 		AgentChanRPC:    Skeleton.ChanRPCServer,
 	}
 	route.Init()
-	network.Manager.Init(Skeleton.ChanRPCServer)
+	network.Init(Skeleton)
 	service.Init(Skeleton.ChanRPCServer)
 	http.Init()
 }

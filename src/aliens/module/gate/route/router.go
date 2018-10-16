@@ -70,46 +70,46 @@ func GetServiceByeSeq(seq uint16) string {
 }
 
 
-func AsyncHandleMessage(request *base.Any, hashKey string, callback service.Callback) error {
-	serviceName, ok := seqServiceMapping[request.Id]
+func AsyncHandleMessage(hashKey string, asyncCall *service.AsyncCall) error {
+	serviceName, ok := seqServiceMapping[asyncCall.ReqID()]
 	if !ok {
-		return errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+		return errors.New(fmt.Sprintf("un expect request id %v", asyncCall.ReqID()))
 	}
-	return dispatch.AsyncRequest(serviceName, request, hashKey, callback)
+	return dispatch.AsyncRequest(serviceName, hashKey, asyncCall)
 }
 
 //发送到指定节点
-func AsyncHandleNodeMessage(request *base.Any, node string, callback service.Callback) error {
-	serviceName, ok := seqServiceMapping[request.Id]
+func AsyncHandleNodeMessage(serviceID string, asyncCall *service.AsyncCall) error {
+	serviceName, ok := seqServiceMapping[asyncCall.ReqID()]
 	if !ok {
-		return errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+		return errors.New(fmt.Sprintf("un expect request id %v", asyncCall.ReqID()))
 	}
-	return dispatch.AsyncRequestNode(serviceName, node, request, callback)
+	return dispatch.AsyncRequestNode(serviceName, serviceID, asyncCall)
 }
 
-//func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
-//	serviceName, ok := seqServiceMapping[request.Id]
-//	if !ok {
-//		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
-//	}
-//	response, error := dispatch.Request(serviceName, request, hashKey)
-//	if error != nil {
-//		return nil, error
-//	}
-//	response.Id = request.Id
-//	return response, nil
-//}
-//
-////发送到指定节点
-//func HandleNodeMessage(request *base.Any, node string) (*base.Any, error) {
-//	serviceName, ok := seqServiceMapping[request.Id]
-//	if !ok {
-//		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
-//	}
-//	response, error := dispatch.RequestNode(serviceName, node, request)
-//	if error != nil {
-//		return nil, error
-//	}
-//	response.Id = request.Id
-//	return response, nil
-//}
+func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {
+	serviceName, ok := seqServiceMapping[request.Id]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+	}
+	response, error := dispatch.Request(serviceName, request, hashKey)
+	if error != nil {
+		return nil, error
+	}
+	response.Id = request.Id
+	return response, nil
+}
+
+//发送到指定节点
+func HandleNodeMessage(request *base.Any, node string) (*base.Any, error) {
+	serviceName, ok := seqServiceMapping[request.Id]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+	}
+	response, error := dispatch.RequestNode(serviceName, node, request)
+	if error != nil {
+		return nil, error
+	}
+	response.Id = request.Id
+	return response, nil
+}

@@ -52,22 +52,24 @@ func (this *RemoteService) RequestNode(serviceID string, request *base.Any) (*ba
 }
 
 //同步调用服务, 请求节点采用内部的负载均衡策略分配
-func (this *RemoteService) AsyncRequest(request *base.Any, param string, callback service.Callback) error {
+func (this *RemoteService) AsyncRequest(param string, asyncCall *service.AsyncCall) error {
 	service := center.ClusterCenter.AllocService(this.serviceType, param)
 	if service == nil {
 		return invalidServiceError
 	}
-	service.AsyncRequest(request, callback)
+	asyncCall.Invoke(service)
+	//service.AsyncRequest(request, callback)
 	return nil
 }
 
 //同步调用服务，请求到指定节点
-func (this *RemoteService) AsyncRequestNode(serviceID string, request *base.Any, callback service.Callback) error {
+func (this *RemoteService) AsyncRequestNode(serviceID string, asyncCall *service.AsyncCall) error {
 	service := center.ClusterCenter.GetService(this.serviceType, serviceID)
 	if service == nil {
 		return invalidServiceError
 	}
-	service.AsyncRequest(request, callback)
+	asyncCall.Invoke(service)
+	//service.AsyncRequest(request, callback)
 	return nil
 }
 

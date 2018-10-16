@@ -18,7 +18,7 @@ const (
 	GRPC string = "grpc"
 )
 
-type Callback func(any *base.Any, err error)
+//type Callback func(response *base.Any, err error)
 
 type IService interface {
 	GetID() string
@@ -38,9 +38,8 @@ type IService interface {
 	IsLocal() bool                                    //是否本机服务
 
 	Request(request *base.Any) (*base.Any, error) //同步请求 阻塞
-	Send(request *base.Any) error //发送接收服务，不需要响应 - 异步请求
-
-	AsyncRequest(request *base.Any, callback Callback) //异步请求，响应采用回调
+	//AsyncRequest(asyncCall *AsyncCall) //异步请求，响应采用回调
+	Send(request *base.Any) error //发送消息，不需要响应
 
 	SetHandler(handler interface{})  //设置处理句柄
 	//KickOut(request interface{}) error //服务推送

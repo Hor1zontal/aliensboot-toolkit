@@ -17,10 +17,18 @@ import (
 	"aliens/common/util"
 	"aliens/gate"
 	"aliens/protocol/base"
+	modulebase "aliens/module/base"
 	"aliens/log"
 	"aliens/cluster/center"
 	"aliens/protocol"
+	"aliens/cluster/center/service"
 )
+
+var handler *modulebase.Skeleton
+
+func Init(skeleton *modulebase.Skeleton) {
+	handler = skeleton
+}
 
 func NewNetwork(agent gate.Agent) *Network {
 	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
@@ -58,9 +66,9 @@ func (this *Network) KickOut(kickType protocol.KickType) {
 	this.agent.Close()
 }
 
-func (this *Network) requestCallback(request *base.Any, err error) {
-	Manager.acceptResponse(this, request, err)
-}
+//func (this *Network) requestCallback(request *base.Any, err error) {
+//	Manager.acceptResponse(this, request, err)
+//}
 
 func (this *Network) handleResponse(response *base.Any, err error) {
 	if err != nil {
@@ -91,13 +99,15 @@ func (this *Network) HandleMessage(request *base.Any) {
 	node, _ := this.bindRoutes[request.Id]
 	var err error = nil
 	if node != "" {
-		err = route.AsyncHandleNodeMessage(request, node, this.requestCallback)
+		err = route.AsyncHandleNodeMessage(node, service.NewAsyncCall(request, handler.Go, this.handleResponse))
 	} else {
-		err = route.AsyncHandleMessage(request, this.hashKey, this.requestCallback)
+		err = route.AsyncHandleMessage(this.hashKey, service.NewAsyncCall(request, handler.Go, this.handleResponse))
 	}
 	if err != nil {
 		log.Debug(err.Error())
 	}
+
+
 
 	//start := time.Now()
 	//node, ok := this.bindRoutes[request.Id]

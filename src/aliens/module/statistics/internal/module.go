@@ -2,17 +2,17 @@ package internal
 
 import (
 	"aliens/module/statistics/analysis"
-	"aliens/module"
 	"aliens/module/statistics/conf"
+	"aliens/module/base"
 )
 
 var (
-	skeleton = module.NewSkeleton()
+	skeleton = base.NewSkeleton()
 	ChanRPC  = skeleton.ChanRPCServer
 )
 
 type Module struct {
-	*module.Skeleton
+	*base.Skeleton
 }
 
 func (m *Module) GetConfig() interface{} {

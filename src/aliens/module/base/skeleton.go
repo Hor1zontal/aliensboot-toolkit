@@ -7,7 +7,7 @@
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package module
+package base
 
 
 import (
@@ -17,8 +17,6 @@ import (
 	"aliens/pool"
 	"aliens/task"
 )
-
-
 
 const (
 	// skeleton conf

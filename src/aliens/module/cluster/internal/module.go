@@ -1,16 +1,16 @@
 package internal
 
 import (
-	"aliens/module"
 	"aliens/module/cluster/conf"
 	"aliens/cluster/center"
 	"aliens/module/cluster/cache"
+	"aliens/module/base"
 )
 
-var Skeleton = module.NewSkeleton()
+var Skeleton = base.NewSkeleton()
 
 type Module struct {
-	*module.Skeleton
+	*base.Skeleton
 }
 
 func (m *Module) GetName() string {

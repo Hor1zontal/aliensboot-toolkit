@@ -3,7 +3,6 @@ package network
 import (
 	"aliens/common/util"
 	"aliens/common/data_structures/set"
-	"aliens/chanrpc"
 	"aliens/protocol/base"
 	"aliens/protocol"
 	"aliens/module/cluster/cache"
@@ -13,12 +12,12 @@ import (
 
 var Manager = &networkManager{}
 
-const (
-	CommandRpcResponse = "resp"
-)
+//const (
+//	CommandRpcResponse = "resp"
+//)
 
 type networkManager struct {
-	chanRpc *chanrpc.Server
+	//handler *modulebase.Skeleton
 	networks  *set.HashSet          //存储所有未验权的网络连接
 	authNetworks map[int64]*Network //存储所有验权通过的网络连接
 	node string //当前节点名
@@ -26,9 +25,9 @@ type networkManager struct {
 }
 
 //开启权限,心跳等验证机制
-func (this *networkManager) Init(chanRpc *chanrpc.Server) {
-	this.chanRpc = chanRpc
-	this.chanRpc.Register(CommandRpcResponse, this.handleResponse)
+func (this *networkManager) Init() {
+	///this.handler = chanRpc
+	//this.chanRpc.Register(CommandRpcResponse, this.handleResponse)
 	this.node = center.ClusterCenter.GetNodeID()
 	//if this.timeWheel != nil {
 	//	this.timeWheel.Stop()
@@ -40,11 +39,10 @@ func (this *networkManager) Init(chanRpc *chanrpc.Server) {
 	//this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
 	//this.timeWheel.Start()
 }
-
-func (this *networkManager) acceptResponse(network *Network, response *base.Any, err error) {
-	//TODO 在关闭服务器的时候会有 data race的风险
-	this.chanRpc.Go(CommandRpcResponse, network, response, err)
-}
+//
+//func (this *networkManager) AsyncCall(f func(), c func()) {
+//	this.handler.Go(f, c)
+//}
 
 func (this *networkManager) handleResponse(args []interface{}) {
 	network := args[0].(*Network)
