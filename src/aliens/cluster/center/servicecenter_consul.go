@@ -50,7 +50,7 @@ func (this *ConsulServiceCenter) ConnectCluster(config ClusterConfig) {
 		log.Fatal(err)
 	}
 	this.client = client
-	this.Container = service.NewContainer(config.LBS)
+	this.Container = service.NewContainer()
 
 	go this.openListener()
 }

@@ -25,15 +25,22 @@ import (
 
 var format = &log.TextFormatter{}
 
-var logger = NewLogger("aliens", format, true)
+var logger = NewLogger("", format, false)
+
+var logRoot string
 
 var DEBUG = false
 
 //调试版本日志带颜色
-func Init(debug bool) {
+func Init(debug bool, tag string, logDir string) {
 	DEBUG = debug
-	format.ForceColors = debug
-	format.DisableTimestamp = debug
+	format.ForceColors = DEBUG
+	format.DisableTimestamp = DEBUG
+	if tag == "" {
+		tag = "aliens"
+	}
+	logRoot = logDir
+	configLocalFilesystemLogger(tag, logger)
 }
 
 func NewLogger(name string, formatter log.Formatter, local bool) *log.Logger {
@@ -45,7 +52,7 @@ func NewLogger(name string, formatter log.Formatter, local bool) *log.Logger {
 	// Only log the warning severity or above.
 	logger.Level = log.DebugLevel
 	if local {
-		configLocalFilesystemLogger(name, logger, 30 * 24 * time.Hour, 24 * time.Hour)
+		configLocalFilesystemLogger(name, logger)
 	}
 	return logger
 }
@@ -70,10 +77,11 @@ func NewLogger(name string, formatter log.Formatter, local bool) *log.Logger {
 //}
 
 //config logrus log to local file
-func configLocalFilesystemLogger(name string, logger *log.Logger, maxAge time.Duration, rotationTime time.Duration) {
-	logPath := ""
+func configLocalFilesystemLogger(name string, logger *log.Logger) {
+	maxAge := 30 * 24 * time.Hour
+	rotationTime := 24 * time.Hour
 	logFileName := name + ".log"
-	baseLogPath := path.Join(logPath, logFileName)
+	baseLogPath := path.Join(logRoot, logFileName)
 	writer, err := rotatelogs.New(
 		baseLogPath+".%Y%m%d%H%M",
 		rotatelogs.WithLinkName(baseLogPath),      // 生成软链，指向最新日志文件
@@ -83,15 +91,39 @@ func configLocalFilesystemLogger(name string, logger *log.Logger, maxAge time.Du
 	if err != nil {
 		log.Errorf("config local file system logger error. %+v", errors.WithStack(err))
 	}
+
+	errWriter, err1 := rotatelogs.New(
+		baseLogPath+".err.%Y%m%d%H%M",
+		rotatelogs.WithLinkName(baseLogPath),      // 生成软链，指向最新日志文件
+		rotatelogs.WithMaxAge(maxAge),             // 文件最大保存时间
+		rotatelogs.WithRotationTime(rotationTime), // 日志切割时间间隔
+	)
+	if err1 != nil {
+		log.Errorf("config local file system err logger error. %+v", errors.WithStack(err1))
+	}
+
 	lfHook := lfshook.NewHook(lfshook.WriterMap{
 		log.DebugLevel: writer, // 为不同级别设置不同的输出目的
 		log.InfoLevel:  writer,
 		log.WarnLevel:  writer,
-		log.ErrorLevel: writer,
-		log.FatalLevel: writer,
-		log.PanicLevel: writer,
+		log.ErrorLevel: errWriter,
+		log.FatalLevel: errWriter,
+		log.PanicLevel: errWriter,
 	}, logger.Formatter)
 	logger.AddHook(lfHook)
+}
+
+//Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
+
+//做一层适配，方便后续切换到其他日志框架或者自己写
+
+//-----------format
+func WithField(key string, value interface{}) *log.Entry {
+	return logger.WithField(key, value)
+}
+
+func WithFields(fields log.Fields) *log.Entry {
+	return logger.WithFields(fields)
 }
 
 func getLocation() string {
@@ -102,7 +134,6 @@ func getLocation() string {
 	}
 	return src
 }
-
 //Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
 
 //做一层适配，方便后续切换到其他日志框架或者自己写

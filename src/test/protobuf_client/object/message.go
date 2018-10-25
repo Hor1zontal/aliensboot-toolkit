@@ -32,8 +32,8 @@ import (
 func BuildLoginRequest(username string, pwd string, sessionID int32) *protocol.Request {
 	message := &protocol.Request{
 		Session:sessionID,
-		Passport:&protocol.Request_LoginLogin{
-			LoginLogin:&protocol.LoginLogin{
+		Passport:&protocol.Request_C2S_UserLogin{
+			C2S_UserLogin:&protocol.C2S_UserLogin{
 				Username:username,
 				Password:pwd,
 			},

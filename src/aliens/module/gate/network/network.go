@@ -17,18 +17,11 @@ import (
 	"aliens/common/util"
 	"aliens/gate"
 	"aliens/protocol/base"
-	modulebase "aliens/module/base"
 	"aliens/log"
 	"aliens/cluster/center"
 	"aliens/protocol"
 	"aliens/cluster/center/service"
 )
-
-var handler *modulebase.Skeleton
-
-func Init(skeleton *modulebase.Skeleton) {
-	handler = skeleton
-}
 
 func NewNetwork(agent gate.Agent) *Network {
 	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}

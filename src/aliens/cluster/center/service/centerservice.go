@@ -23,13 +23,13 @@ const (
 type IService interface {
 	GetID() string
 	SetID(id string)
+
 	SetName(name string)
 	GetName() string
+
 	GetAddress() string
 	GetPort() int
 	//GetConfig() *CenterService
-
-
 	Start() bool                                      //启动服务
 	Connect() bool                                    //连接服务
 	Close() 										  //关闭服务
@@ -42,6 +42,8 @@ type IService interface {
 	Send(request *base.Any) error //发送消息，不需要响应
 
 	SetHandler(handler interface{})  //设置处理句柄
+
+	//GetLBS() string
 	//KickOut(request interface{}) error //服务推送
 }
 
@@ -53,6 +55,7 @@ type Config struct {
 	Port int        //服务端端口
 	Unique bool     //是否全局唯一
 	Protocol string //提供服务的协议 GRPC HTTP WBSOCKET
+	Lbs string
 }
 
 type CenterService struct {

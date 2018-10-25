@@ -14,21 +14,16 @@ import (
 	"aliens/log"
 )
 
-func NewServiceCategory(category string, lbsStr string, desc string) *serviceCategory {
-	//seqs := []int32{}
-	//json.Unmarshal([]byte(desc), &seqs)
-	//seqMaps := make(map[int32]struct{})
-	//for _, seq := range seqs {
-	//	seqMaps[seq] = struct{}{}
-	//}
-	return &serviceCategory{
+func NewServiceCategory(category string, lbsStr string) *serviceCategory {
+	result := &serviceCategory{
 		category:  category,
-		lbs:       lbs.GetLBS(lbsStr),
 		services:  make(map[string]IService),
 		nodes:     []string{},
 		//listeners: []Listener{},
 		//seqs:     seqMaps,
 	}
+	result.setLbs(lbsStr)
+	return result
 }
 
 type serviceCategory struct {
@@ -39,6 +34,12 @@ type serviceCategory struct {
 
 	//listeners []Listener
 	//seqs     map[int32]struct{} //能够处理的消息编号
+}
+
+func (this *serviceCategory) setLbs(lbsStr string) {
+	//更新负载均衡策略
+	this.lbs = lbs.GetLBS(lbsStr)
+	log.Debug("update lbs strategy %v - %v", this.category, lbsStr)
 }
 
 //分配一个可用服务

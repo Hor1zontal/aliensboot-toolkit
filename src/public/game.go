@@ -14,8 +14,6 @@ func init() {
 
 func main() {
 	aliens.Run(
-		cluster.Module,
-		statistics.Module,
 		database.Module,
 		game.Module,
 	)

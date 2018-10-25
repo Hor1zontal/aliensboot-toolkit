@@ -61,13 +61,11 @@ func (this *ETCDServiceCenter) ConnectCluster(config ClusterConfig) {
 	this.serviceRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + SERVICE_NODE_NAME
 	this.configRoot = NODE_SPLIT + "root" + NODE_SPLIT + config.Name + NODE_SPLIT + CONFIG_NODE_NAME
 
-
 	this.node = config.ID
 	this.ttl = config.TTL
 	//this.listeners = make(map[string]struct{})
 
-	this.Container = service.NewContainer(config.LBS)
-
+	this.Container = service.NewContainer()
 	go this.openTTLCheck()
 }
 
@@ -179,7 +177,6 @@ func (this *ETCDServiceCenter) openTTLCheck() {
 		select {
 		case <-this.ticker.C:
 			this.ttlCheck.Range(this.check)
-
 		}
 	}
 }
@@ -198,6 +195,10 @@ func (this *ETCDServiceCenter) SubscribeServices(serviceNames ...string) {
 }
 
 func (this *ETCDServiceCenter) SubscribeService(healthyOnly bool, serviceName string) {
+	this.SubscribeConfig("lbs" + NODE_SPLIT + serviceName, func(data []byte) {
+		this.Container.SetLbs(serviceName, string(data))
+	})
+
 	serviceRootPath := this.serviceRoot + NODE_SPLIT + serviceName + NODE_SPLIT
 	prefixLen := len(serviceRootPath)
 

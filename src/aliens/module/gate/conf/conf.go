@@ -23,7 +23,6 @@ type Route struct
 }
 
 var (
-
 	// aliens conf
 	PendingWriteNum        = 2000
 	MaxMsgLen       uint32 = 4096

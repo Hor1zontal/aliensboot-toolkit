@@ -13,17 +13,28 @@ import (
 	"sync"
 )
 
-func NewContainer(lbs string) *Container {
-	return &Container{root:make(map[string]*serviceCategory), lbs:lbs}
+func NewContainer() *Container {
+	return &Container{root:make(map[string]*serviceCategory), lbs:make(map[string]string)}
 }
 
 type Container struct {
 	sync.RWMutex
 	root map[string]*serviceCategory //服务容器 key 服务名
+	lbs map[string]string //服务的负载均衡策略
 	//serviceListeners map[string]Listener  //服务监听
-	lbs string
+	//lbs string
 }
 
+
+func (this *Container) SetLbs(serviceName string, lbsStr string) {
+	this.Lock()
+	defer this.Unlock()
+	this.lbs[serviceName] = lbsStr
+	category := this.root[serviceName]
+	if category != nil {
+		category.setLbs(lbsStr)
+	}
+}
 //func (this *Container) AddServiceListener(listener Listener) {
 //	this.EnsureCategory(listener.GetServiceType()).AddListener(listener)
 //}
@@ -42,7 +53,7 @@ func (this *Container) EnsureCategory(serviceName string) *serviceCategory {
 	category := this.root[serviceName]
 
 	if category == nil {
-		category = NewServiceCategory(serviceName, this.lbs, "")
+		category = NewServiceCategory(serviceName, this.lbs[serviceName])
 		this.root[serviceName] = category
 	}
 	return category
@@ -53,7 +64,7 @@ func (this *Container) UpdateServices(serviceName string, services []IService) {
 	defer this.Unlock()
 	category := this.root[serviceName]
 	if category == nil {
-		category = NewServiceCategory(serviceName, this.lbs, "")
+		category = NewServiceCategory(serviceName, this.lbs[serviceName])
 		this.root[serviceName] = category
 	}
 	category.updateServices(services)

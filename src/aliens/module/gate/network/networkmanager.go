@@ -2,6 +2,7 @@ package network
 
 import (
 	"aliens/common/util"
+	modulebase "aliens/module/base"
 	"aliens/common/data_structures/set"
 	"aliens/protocol/base"
 	"aliens/protocol"
@@ -24,14 +25,18 @@ type networkManager struct {
 	//timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
+var handler *modulebase.Skeleton
+
+func Init(skeleton *modulebase.Skeleton) {
+	handler = skeleton
+	Manager.Init()
+}
+
 //开启权限,心跳等验证机制
 func (this *networkManager) Init() {
 	///this.handler = chanRpc
 	//this.chanRpc.Register(CommandRpcResponse, this.handleResponse)
 	this.node = center.ClusterCenter.GetNodeID()
-	//if this.timeWheel != nil {
-	//	this.timeWheel.Stop()
-	//}
 	this.networks = set.NewHashSet()
 	this.authNetworks = make(map[int64]*Network)
 

@@ -11,7 +11,6 @@ package cache
 
 import (
 	"aliens/cache/redis"
-	"aliens/module/cluster/conf"
 )
 
 var ClusterCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}

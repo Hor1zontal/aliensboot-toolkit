@@ -95,7 +95,7 @@ type ClusterConfig struct {
 	Name    string     //集群名称，不用业务使用不同的集群
 	Servers []string   //集群服务器列表
 	Timeout uint
-	LBS     string     //负载均衡策略  polling 轮询
+	//LBS     string     //负载均衡策略  polling 轮询
 	TTL     int64      //
 	//CertFile string
 	//KeyFile  string
