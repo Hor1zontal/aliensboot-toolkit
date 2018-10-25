@@ -1,15 +1,14 @@
 package internal
 
 import (
-	"aliens/module/gate/http"
 	"aliens/module/gate/conf"
-	"time"
 	"aliens/module/gate/msg"
 	"aliens/gate"
 	"aliens/module/gate/service"
 	"aliens/module/gate/route"
 	"aliens/module/gate/network"
 	"aliens/module/base"
+	"aliens/module/gate/http"
 )
 
 var Skeleton = base.NewSkeleton()
@@ -27,16 +26,11 @@ func (m *Module) GetConfig() interface{} {
 }
 
 func (m *Module) OnInit() {
-	conf.Init(m.GetName())
+	//conf.Init(m.GetName())
+
 	m.Gate = &gate.Gate{
-		MaxConnNum:      conf.Config.MaxConnNum,
-		PendingWriteNum: conf.PendingWriteNum,
-		MaxMsgLen:       conf.MaxMsgLen,
-		WSAddr:          conf.Config.WSAddr,
-		TCPAddr:         conf.Config.TCPAddr,
-		HTTPTimeout:     time.Duration(conf.HTTPTimeout),
-		LenMsgLen:       conf.LenMsgLen,
-		LittleEndian:    conf.LittleEndian,
+		TcpConfig: conf.Config.TCP,
+		WsConfig: conf.Config.WebSocket,
 		Processor:       msg.Processor,
 		AgentChanRPC:    Skeleton.ChanRPCServer,
 	}

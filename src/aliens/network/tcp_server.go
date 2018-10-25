@@ -7,12 +7,13 @@ import (
 	"runtime"
 	"fmt"
 	"aliens/log"
+	"aliens/config"
 )
 
+
 type TCPServer struct {
-	Addr            string
-	MaxConnNum      int
-	PendingWriteNum int
+	config.TCPConfig
+
 	NewAgent        func(*TCPConn) Agent
 	ln              net.Listener
 	conns           ConnSet
@@ -21,10 +22,7 @@ type TCPServer struct {
 	wgConns         sync.WaitGroup
 
 	// msg parser
-	LenMsgLen    int
-	MinMsgLen    uint32
-	MaxMsgLen    uint32
-	LittleEndian bool
+
 	msgParser    *MsgParser
 }
 
@@ -34,7 +32,7 @@ func (server *TCPServer) Start() {
 }
 
 func (server *TCPServer) init() {
-	ln, err := net.Listen("tcp", server.Addr)
+	ln, err := net.Listen("tcp", server.Address)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

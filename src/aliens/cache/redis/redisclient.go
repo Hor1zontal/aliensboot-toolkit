@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  * Date:
  *     2017/3/27
@@ -13,6 +13,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"time"
 	"aliens/log"
+	"aliens/config"
 )
 
 type RedisCacheClient struct {
@@ -33,7 +34,7 @@ type RedisCacheClient struct {
 //redis.pool.maxWait=3000    #最大等待时间：单位ms
 
 
-func NewRedisClient(config CacheConfig)  *RedisCacheClient {
+func NewRedisClient(config config.CacheConfig)  *RedisCacheClient {
 	if config.MaxActive == 0 {
 		config.MaxActive = 5000
 	}

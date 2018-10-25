@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  *
  * Contributors:
@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"context"
 	"github.com/coreos/etcd/mvcc/mvccpb"
+	"aliens/config"
 )
 
 type ETCDServiceCenter struct {
@@ -37,7 +38,7 @@ type ETCDServiceCenter struct {
 	ticker      *time.Ticker
 }
 
-func (this *ETCDServiceCenter) ConnectCluster(config ClusterConfig) {
+func (this *ETCDServiceCenter) ConnectCluster(config config.ClusterConfig) {
 	if config.ID == "" {
 		config.ID = bson.NewObjectId().Hex()
 	}

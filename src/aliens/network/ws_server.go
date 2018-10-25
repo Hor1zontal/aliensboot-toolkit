@@ -6,18 +6,13 @@ import (
 	"net"
 	"net/http"
 	"sync"
-	"time"
 	"aliens/log"
+	"aliens/config"
+	"time"
 )
 
 type WSServer struct {
-	Addr            string
-	MaxConnNum      int
-	PendingWriteNum int
-	MaxMsgLen       uint32
-	HTTPTimeout     time.Duration
-	CertFile        string
-	KeyFile         string
+	config.WsConfig
 	NewAgent        func(*WSConn) Agent
 	ln              net.Listener
 	handler         *WSHandler
@@ -77,7 +72,7 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *WSServer) Start() {
-	ln, err := net.Listen("tcp", server.Addr)
+	ln, err := net.Listen("tcp", server.Address)
 	if err != nil {
 		log.Fatal("%v", err)
 	}
@@ -95,7 +90,7 @@ func (server *WSServer) Start() {
 		log.Warnf("invalid MaxMsgLen, reset to %v", server.MaxMsgLen)
 	}
 	if server.HTTPTimeout <= 0 {
-		server.HTTPTimeout = 10 * time.Second
+		server.HTTPTimeout = 10
 		log.Warnf("invalid HTTPTimeout, reset to %v", server.HTTPTimeout)
 	}
 	if server.NewAgent == nil {
@@ -124,16 +119,16 @@ func (server *WSServer) Start() {
 		newAgent:        server.NewAgent,
 		conns:           make(WebsocketConnSet),
 		upgrader: websocket.Upgrader{
-			HandshakeTimeout: server.HTTPTimeout,
+			HandshakeTimeout: time.Duration(server.HTTPTimeout) * time.Second,
 			CheckOrigin:      func(_ *http.Request) bool { return true },
 		},
 	}
 
 	httpServer := &http.Server{
-		Addr:           server.Addr,
+		Addr:           server.Address,
 		Handler:        server.handler,
-		ReadTimeout:    server.HTTPTimeout,
-		WriteTimeout:   server.HTTPTimeout,
+		ReadTimeout:    time.Duration(server.HTTPTimeout) * time.Second,
+		WriteTimeout:   time.Duration(server.HTTPTimeout) * time.Second,
 		MaxHeaderBytes: 1024,
 	}
 

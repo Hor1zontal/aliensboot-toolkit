@@ -6,9 +6,9 @@ import (
 	"aliens/common/data_structures/set"
 	"aliens/protocol/base"
 	"aliens/protocol"
-	"aliens/module/cluster/cache"
 	"aliens/cluster/center"
-	"aliens/module/cluster/dispatch/rpc"
+	"aliens/module/gate/cache"
+	"aliens/module/dispatch/rpc"
 )
 
 var Manager = &networkManager{}

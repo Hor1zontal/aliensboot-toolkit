@@ -1,13 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
- *     2018/4/12
+ *     2018/10/25
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package redis
+package config
 
 
 type CacheConfig struct {
@@ -17,4 +17,3 @@ type CacheConfig struct {
 	MaxIdle     int
 	IdleTimeout int
 }
-

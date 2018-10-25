@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
  *     2018/3/29
@@ -14,7 +14,6 @@ import (
 	"aliens/log"
 	"path/filepath"
 	"github.com/go-yaml/yaml"
-	"fmt"
 )
 
 
@@ -36,16 +35,22 @@ var (
 )
 
 type BaseConfig struct {
-	ClusterName  string    `yaml:"cluster.name"`
-	ClusterCenter []string `yaml:"cluster.center"`
-	ClusterTTL int64 	   `yaml:"cluster.ttl"`
+	Cluster  ClusterConfig  `yaml:"cluster"`
+	PathLog  string    	    `yaml:"path.log"`
 
-	NodeName  string       `yaml:"node.name"`
+}
 
-	PathLog string    	   `yaml:"path.log"`
+type ClusterConfig struct {
+	ID 		string     `yaml:"node"` //集群中的节点id 需要保证整个集群中唯一
+	Name    string     `yaml:"name"` //集群名称，不用业务使用不同的集群
+	Servers []string   `yaml:"servers"`//集群服务器列表
+	Timeout uint	   `yaml:"timeout"`
 
-
-
+	TTL     int64      `yaml:"ttl"`//
+	
+	//CertFile string
+	//KeyFile  string
+	//CommonName string
 }
 
 func Init(configPath string) *BaseConfig {
@@ -56,7 +61,7 @@ func Init(configPath string) *BaseConfig {
 	config := &BaseConfig{}
 	baseConfigPath := dir + string(filepath.Separator) + "aliensbot.yml"
 	LoadConfigData(baseConfigPath, config)
-	fmt.Println("%v", config)
+	//fmt.Println("load config %v", config)
 	return config
 }
 
@@ -88,6 +93,7 @@ func LoadConfigData(path string, config interface{}) {
 	if err != nil {
 		log.Fatalf("load config %v err %v", path, err)
 	}
+	log.Debugf("load config data %v - %v", path, config)
 }
 
 func LoadModuleConfigData(name string, config interface{}) {
@@ -95,6 +101,5 @@ func LoadModuleConfigData(name string, config interface{}) {
 		return
 	}
 	path := ModuleConfigRoot + name + ".yml"
-
 	LoadConfigData(path, config)
 }

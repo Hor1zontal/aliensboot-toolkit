@@ -32,7 +32,7 @@ func Register(mi Module) {
 
 func Init() {
 	for i := 0; i < len(mods); i++ {
-		config.LoadConfigData(mods[i].mi.GetName(), mods[i].mi.GetConfig())
+		config.LoadModuleConfigData(mods[i].mi.GetName(), mods[i].mi.GetConfig())
 	}
 
 	for i := 0; i < len(mods); i++ {

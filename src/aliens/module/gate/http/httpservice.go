@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
  *     2018/4/2
@@ -16,10 +16,10 @@ import (
 )
 
 func Init() {
-	if conf.Config.HTTPAddr != "" {
+	if conf.Config.Http.Address != "" {
 		go func() {
 			//http.HandleFunc("/", httpHandle)
-			log.Info(http.ListenAndServe(conf.Config.HTTPAddr, nil))
+			log.Info(http.ListenAndServe(conf.Config.Http.Address, nil))
 		}()
 	}
 }

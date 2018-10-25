@@ -1,16 +1,20 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
- *     2018/9/12
+ *     2018/10/25
  * Contributors:
  *     aliens idea(xiamen) Corporation - initial API and implementation
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
-package main
+package config
 
-import "test/kcp/client"
-
-func main() {
-	client.Start()
+type WsConfig struct {
+	Address         string
+	MaxConnNum      int
+	PendingWriteNum int
+	MaxMsgLen       uint32
+	HTTPTimeout     uint32
+	CertFile        string
+	KeyFile         string
 }

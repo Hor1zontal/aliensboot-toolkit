@@ -5,6 +5,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"aliens/database/dbconfig"
 	"reflect"
+	"aliens/config"
 )
 
 //type DatabaseFactory struct {
@@ -27,7 +28,7 @@ type Database struct {
 }
 
 //初始化连接数据库
-func (this *Database) Init(config dbconfig.DBConfig) error {
+func (this *Database) Init(config config.DBConfig) error {
 	this.dbName = config.Name
 	if config.MaxSession == 0 {
 		config.MaxSession = 100

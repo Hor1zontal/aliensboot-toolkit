@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
  *     2018/6/4
@@ -14,6 +14,7 @@ import (
 	"aliens/log"
 	"aliens/cluster/center/lbs"
 	"aliens/common/util"
+	"aliens/config"
 )
 
 var ClusterCenter ServiceCenter = &ETCDServiceCenter{} //服务调度中心
@@ -26,7 +27,7 @@ const CONFIG_NODE_NAME string = "config"
 
 const DEFAULT_LBS string = lbs.LbsStrategyPolling
 
-func PublicService(config service.Config, handler interface{}) service.IService {
+func PublicService(config config.ServiceConfig, handler interface{}) service.IService {
 	if !ClusterCenter.IsConnect() {
 		log.Fatal(config.Name + " cluster center is not connected")
 		return nil
@@ -70,7 +71,7 @@ type ServiceCenter interface {
 
 	GetNodeID() string //获取当前节点id
 
-	ConnectCluster(config ClusterConfig)
+	ConnectCluster(config config.ClusterConfig)
 
 	PublicConfig(configName string, content []byte) bool        //发布配置
 	SubscribeConfig(configName string, listener ConfigListener) //订阅配置
@@ -88,17 +89,5 @@ type ServiceCenter interface {
 
 	IsConnect() bool
 	Close()
-}
-
-type ClusterConfig struct {
-	ID 		string     //集群中的节点id 需要保证整个集群中唯一
-	Name    string     //集群名称，不用业务使用不同的集群
-	Servers []string   //集群服务器列表
-	Timeout uint
-	//LBS     string     //负载均衡策略  polling 轮询
-	TTL     int64      //
-	//CertFile string
-	//KeyFile  string
-	//CommonName string
 }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  *
  * Contributors:
@@ -16,6 +16,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"aliens/log"
 	"aliens/cluster/center/service"
+	"aliens/config"
 )
 
 
@@ -44,7 +45,7 @@ func (this *ZKServiceCenter) GetNodeID() string {
 //	this.ConnectCluster([]string{address}, timeout, zkName, nodeID)
 //}
 
-func (this *ZKServiceCenter) ConnectCluster(config ClusterConfig) {
+func (this *ZKServiceCenter) ConnectCluster(config config.ClusterConfig) {
 	if config.ID == "" {
 		config.ID = bson.NewObjectId().Hex()
 		//config.ID =

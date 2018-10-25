@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  * Date:
  *     2018/8/21
@@ -37,23 +37,10 @@ func init() {
 
 func Run(mods ...module.Module) {
 	baseConfig := config.Init(configPath)
+
 	log.Init(debug, tag, baseConfig.PathLog)
 
-	//
-	//ID 		string     //集群中的节点id 需要保证整个集群中唯一
-	//Name    string     //集群名称，不用业务使用不同的集群
-	//Servers []string   //集群服务器列表
-	//Timeout uint
-	////LBS     string     //负载均衡策略  polling 轮询
-	//TTL     int64      //
-
-	//start cluster component
-	center.ClusterCenter.ConnectCluster(center.ClusterConfig{
-		ID:baseConfig.NodeName,
-		Name:baseConfig.ClusterName,
-		Servers:baseConfig.ClusterCenter,
-		TTL:baseConfig.ClusterTTL,
-	})
+	center.ClusterCenter.ConnectCluster(baseConfig.Cluster)
 
 	logo := `
 	╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝

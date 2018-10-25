@@ -3,42 +3,25 @@ package gate
 import (
 	"net"
 	"reflect"
-	"time"
 	"aliens/log"
 	"aliens/network"
 	"aliens/chanrpc"
+	"aliens/config"
 )
 
 type Gate struct {
-	MaxConnNum      int
-	PendingWriteNum int
-	MaxMsgLen       uint32
 	Processor       network.Processor
 	AgentChanRPC    *chanrpc.Server
 
-	// websocket
-	WSAddr      string
-	HTTPTimeout time.Duration
-	CertFile    string
-	KeyFile     string
-
-	// tcp
-	TCPAddr      string
-	LenMsgLen    int
-	LittleEndian bool
+	TcpConfig   config.TCPConfig
+	WsConfig 	config.WsConfig
 }
 
 func (gate *Gate) Run(closeSig chan bool) {
 	var wsServer *network.WSServer
-	if gate.WSAddr != "" {
+	if gate.WsConfig.Address != "" {
 		wsServer = new(network.WSServer)
-		wsServer.Addr = gate.WSAddr
-		wsServer.MaxConnNum = gate.MaxConnNum
-		wsServer.PendingWriteNum = gate.PendingWriteNum
-		wsServer.MaxMsgLen = gate.MaxMsgLen
-		wsServer.HTTPTimeout = gate.HTTPTimeout
-		wsServer.CertFile = gate.CertFile
-		wsServer.KeyFile = gate.KeyFile
+		wsServer.WsConfig = gate.WsConfig
 		wsServer.NewAgent = func(conn *network.WSConn) network.Agent {
 			a := &agent{conn: conn, gate: gate}
 			if gate.AgentChanRPC != nil {
@@ -49,14 +32,9 @@ func (gate *Gate) Run(closeSig chan bool) {
 	}
 
 	var tcpServer *network.TCPServer
-	if gate.TCPAddr != "" {
+	if gate.TcpConfig.Address != "" {
 		tcpServer = new(network.TCPServer)
-		tcpServer.Addr = gate.TCPAddr
-		tcpServer.MaxConnNum = gate.MaxConnNum
-		tcpServer.PendingWriteNum = gate.PendingWriteNum
-		tcpServer.LenMsgLen = gate.LenMsgLen
-		tcpServer.MaxMsgLen = gate.MaxMsgLen
-		tcpServer.LittleEndian = gate.LittleEndian
+		tcpServer.TCPConfig = gate.TcpConfig
 		tcpServer.NewAgent = func(conn *network.TCPConn) network.Agent {
 			a := &agent{conn: conn, gate: gate}
 			if gate.AgentChanRPC != nil {

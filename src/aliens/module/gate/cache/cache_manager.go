@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  * Date:
  *     2017/3/29
@@ -11,6 +11,8 @@ package cache
 
 import (
 	"aliens/cache/redis"
+	"aliens/module/gate/conf"
+	"aliens/config"
 )
 
 var ClusterCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -27,7 +29,7 @@ func Close() {
 	ClusterCache.Close()
 }
 
-func (this *cacheManager) Init(config redis.CacheConfig) {
+func (this *cacheManager) Init(config config.CacheConfig) {
 	this.redisClient = redis.NewRedisClient(config)
 	this.redisClient.Start()
 }

@@ -1,10 +1,13 @@
 package database
 
-import "aliens/database/dbconfig"
+import (
+	"aliens/database/dbconfig"
+	"aliens/config"
+)
 
 //数据库抽象层 适配其他数据库
 type IDatabase interface {
-	Init(config dbconfig.DBConfig) error //初始化数据库
+	Init(config config.DBConfig) error //初始化数据库
 	//auth(username string, password string)           //登录信息
 	Close()                                          //关闭数据库
 	GetHandler() IDatabaseHandler                    //获取数据库处理类

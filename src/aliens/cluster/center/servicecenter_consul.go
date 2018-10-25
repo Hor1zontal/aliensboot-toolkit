@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved.
  *
  * Contributors:
@@ -20,6 +20,7 @@ import (
 	"aliens/common/util"
 	"fmt"
 	"net/http"
+	"aliens/config"
 )
 
 type ConsulServiceCenter struct {
@@ -32,7 +33,7 @@ type ConsulServiceCenter struct {
 	listeners map[string]struct{}
 }
 
-func (this *ConsulServiceCenter) ConnectCluster(config ClusterConfig) {
+func (this *ConsulServiceCenter) ConnectCluster(config config.ClusterConfig) {
 	//if config.ID == "" {
 		config.ID = bson.NewObjectId().Hex()
 	//}

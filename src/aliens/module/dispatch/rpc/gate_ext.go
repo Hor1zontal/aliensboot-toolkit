@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+ * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
  * All rights reserved. 
  * Date:
  *     2018/8/25
@@ -14,7 +14,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 	"aliens/cluster/center/service"
 	"errors"
-	"aliens/module/cluster/dispatch"
+	"aliens/module/dispatch"
 )
 
 func (this *gateRPCHandle) BindService1(authID int64, node string, service service.IService) error {
