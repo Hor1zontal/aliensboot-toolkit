@@ -46,7 +46,6 @@ func (this *RedisCacheClient) HDel(key interface{}, field string) error {
 	return err
 }
 
-
 //func (this *RedisCacheClient) HSetData(key interface{}, data interface{}) {
 //	this.HSetFieldData(key, "", data)
 //}

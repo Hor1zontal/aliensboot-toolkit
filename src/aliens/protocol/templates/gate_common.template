@@ -19,7 +19,6 @@ import (
     "aliens/cluster/center/service"
     "aliens/module/${module}/conf"
     "aliens/cluster/center"
-    "aliens/module/gate/network"
 )
 
 var instance service.IService = nil

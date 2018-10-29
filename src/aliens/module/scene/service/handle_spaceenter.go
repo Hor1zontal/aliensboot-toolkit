@@ -10,9 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
-	"aliens/module/scene/entity"
 	"aliens/mmorpg/core"
+	"aliens/module/scene/entity"
+	"aliens/protocol"
 )
 
 func handleSpaceEnter(authID int64, gateID string, request *protocol.SpaceEnter, response *protocol.SpaceEnterRet) {

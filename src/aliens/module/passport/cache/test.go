@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/15
  * Contributors:
@@ -15,7 +15,6 @@ func Test() {
 	//User       *User   `protobuf:"bytes,14,opt,name=user" json:"user,omitempty"`
 	//Data       []byte  `protobuf:"bytes,15,opt,name=data,proto3" json:"data,omitempty"`
 	//Intdata    []int32 `protobuf:"varint,16,rep,packed,name=intdata" json:"intdata,omitempty"`
-
 
 	//user1 := protocol.Test{
 	//	Id:5,

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"aliens/module/gate"
 	"aliens"
+	"aliens/module/gate"
 )
 
 func init() {

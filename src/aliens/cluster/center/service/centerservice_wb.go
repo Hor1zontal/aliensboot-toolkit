@@ -9,7 +9,6 @@
  *******************************************************************************/
 package service
 
-
 //func PublicWBService(config CenterService, address string) *wbService {
 //	if !ClusterCenter.IsConnect() {
 //		panic(config.Name + " cluster center is not connected")

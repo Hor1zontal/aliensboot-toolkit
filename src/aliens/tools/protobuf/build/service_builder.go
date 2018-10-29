@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -10,30 +10,38 @@
 package main
 
 import (
+	"aliens/tools/protobuf/template"
+	"flag"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
-	"flag"
-	"aliens/tools/protobuf/template"
+	"github.com/go-yaml/yaml"
 )
 
-
 var (
-	proto    string
-	templatePath string
-	output    string
-	prefix      string
-	overwrite    bool
+	//proto        string
+	//templatePath string
+	//output       string
+	//prefix       string
+	//overwrite    bool
 
 	configPath string
 )
 
 func loadConfig(config interface{}, path string) {
-	data, err := ioutil.ReadFile(path)
+	//data, err := ioutil.ReadFile(path)
+	//if err != nil {
+	//	fmt.Printf("module %v config file is not found %v", path)
+	//}
+	//err = json.Unmarshal(data, config)
+	//if err != nil {
+	//	fmt.Printf("load config %v err %v", path, err)
+	//}
+
+	ymlFile, err := ioutil.ReadFile(path)
 	if err != nil {
-		fmt.Printf("module %v config file is not found %v", path)
+		fmt.Printf("config file is not found %v", path)
 	}
-	err = json.Unmarshal(data, config)
+	err = yaml.Unmarshal(ymlFile, config)
 	if err != nil {
 		fmt.Printf("load config %v err %v", path, err)
 	}
@@ -42,15 +50,14 @@ func loadConfig(config interface{}, path string) {
 func main() {
 	//template.ParseEntityProto("/Users/hejialin/git/server/aliensbot/src/aliens/protocol/entity/player.proto")
 
-	flag.StringVar(&proto, "proto", "", "protobuf file path")
-	flag.StringVar(&templatePath,"template", "", "output template path")
-	flag.StringVar(&output,"output", "", "output path")
-	flag.StringVar(&prefix,"prefix", "", "output file prefix")
-	flag.BoolVar(&overwrite,"overwrite", false, "is overwrite ?")
+	//flag.StringVar(&proto, "proto", "", "protobuf file path")
+	//flag.StringVar(&templatePath, "template", "", "output template path")
+	//flag.StringVar(&output, "output", "", "output path")
+	//flag.StringVar(&prefix, "prefix", "", "output file prefix")
+	//flag.BoolVar(&overwrite, "overwrite", false, "is overwrite ?")
 
-	flag.StringVar(&configPath,"configPath", "", "config file path")
+	flag.StringVar(&configPath, "configPath", "", "config file path")
 	flag.Parse()
-
 
 	if configPath == "" {
 		fmt.Printf("Please input correct params => codegen -h \n")
@@ -112,6 +119,3 @@ func genPassportProto() {
 	//outputPath := "/Users/hejialin/git/server/kylin/src/aliens/module/passport/service/service1.go"
 	//template.Convert(protoPath, templatePath, outputPath, "", true)
 }
-
-
-

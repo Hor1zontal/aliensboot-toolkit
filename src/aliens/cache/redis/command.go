@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/15
  * Contributors:
@@ -8,7 +8,6 @@
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
 package redis
-
 
 //操作类型
 const (
@@ -32,8 +31,8 @@ const (
 	OP_EXISTS string = "EXISTS"
 	OP_SETEX  string = "SETEX"
 	OP_SETNX  string = "SETNX"
-	OP_INCR   string = "INCR"     //自增长
-	OP_DECR   string = "DECR"   //自减
+	OP_INCR   string = "INCR" //自增长
+	OP_DECR   string = "DECR" //自减
 
 	OP_EXPIRE string = "EXPIRE"
 
@@ -64,4 +63,3 @@ const (
 
 	OP_PUBLISH string = "PUBLISH"
 )
-

@@ -1,10 +1,10 @@
 package chanrpc
 
 import (
+	"aliens/exception"
+	"aliens/log"
 	"errors"
 	"fmt"
-	"aliens/log"
-	"aliens/exception"
 )
 
 // one server per goroutine (goroutine not safe)

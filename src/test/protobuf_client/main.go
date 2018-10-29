@@ -4,13 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"strconv"
-	"time"
-	"test/protobuf_client/object"
 	"test/protobuf_client/base"
+	"test/protobuf_client/object"
+	"time"
 )
 
 var g_Players map[int32]*object.Player
-
 
 var (
 	gameserver    string

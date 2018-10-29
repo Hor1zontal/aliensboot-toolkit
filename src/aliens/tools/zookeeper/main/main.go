@@ -10,13 +10,13 @@
 package main
 
 import (
+	"aliens/tools/zookeeper"
 	"bufio"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 	"strings"
-	"aliens/tools/zookeeper"
 )
 
 func main() {
@@ -27,7 +27,6 @@ func main() {
 	flag.Parse()
 
 	zookeeper.Transfer(from, to, fromPath, toPath)
-
 
 	//zookeeper.Transfer("120.77.213.111:2182", "39.108.220.37:2181", "/gok")
 
@@ -53,8 +52,8 @@ func uploadWithConfig() {
 	}
 	nodePath := "/" + *node
 	zookeeper.Create(zkConn, nodePath)
-	zookeeper.Create(zkConn, nodePath + "/config")
-	zookeeper.Create(zkConn, nodePath + "/service")
+	zookeeper.Create(zkConn, nodePath+"/config")
+	zookeeper.Create(zkConn, nodePath+"/service")
 
 	rd := bufio.NewReader(f)
 	for {

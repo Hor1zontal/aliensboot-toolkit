@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/9/1
  * Contributors:
@@ -10,9 +10,9 @@
 package template
 
 import (
-	"os"
-	"aliens/tools/protobuf/proto"
 	"aliens/log"
+	"aliens/tools/protobuf/proto"
+	"os"
 )
 
 func ParseEntityProto(protoPath string) {
@@ -26,7 +26,7 @@ func ParseEntityProto(protoPath string) {
 
 	for _, element := range definition.Elements {
 		switch element.(type) {
-		case *proto.Package :
+		case *proto.Package:
 			message.PackageName = element.(*proto.Package).Name
 			//log.Println()
 			break
@@ -46,4 +46,3 @@ func ParseEntityProto(protoPath string) {
 	}
 
 }
-

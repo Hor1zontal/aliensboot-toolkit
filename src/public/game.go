@@ -1,11 +1,9 @@
 package main
 
 import (
-	"aliens/module/cluster"
-	"aliens/module/game"
-	"aliens/module/statistics"
-	"aliens/module/database"
 	"aliens"
+	"aliens/module/database"
+	"aliens/module/game"
 )
 
 func init() {

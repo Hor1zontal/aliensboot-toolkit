@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/31
  * Contributors:
@@ -10,14 +10,12 @@
 package core
 
 import (
+	"aliens/common/data_structures/set"
 	"reflect"
 	"strings"
-	"aliens/common/data_structures/set"
 )
 
 var _VALID_ATTR_DEFS = set.StringSet{} // all valid attribute defs
-
-
 
 func init() {
 	_VALID_ATTR_DEFS.Add(AttrTagFeatureSelf) //
@@ -35,8 +33,6 @@ const (
 	AttrTagFeatureSelf    = "self"
 	AttrTagFeatureAll     = "all"
 	AttrTagFeaturePersist = "persist"
-
-
 )
 
 type methodDesc struct {
@@ -72,19 +68,18 @@ func (rdm methodDescMap) visit(method reflect.Method) {
 	}
 }
 
-
 // EntityTypeDesc is the entity type description for registering entity types
 type EntityDesc struct {
 	name string //entity type name
 
 	client bool //is client exist this entity
 
-	useAOI          bool
-	aoiDistance     float32
+	useAOI      bool
+	aoiDistance float32
 
-	entityType      reflect.Type
+	entityType reflect.Type
 
-	methodDescs     methodDescMap
+	methodDescs methodDescMap
 
 	selfAttrs set.StringSet
 
@@ -92,7 +87,6 @@ type EntityDesc struct {
 
 	persistAttrs set.StringSet
 }
-
 
 func (desc *EntityDesc) IsPersistent() bool {
 	return !desc.persistAttrs.IsEmpty()

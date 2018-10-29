@@ -10,9 +10,9 @@
 package service
 
 import (
+	"aliens/cluster/center"
 	"aliens/cluster/center/service"
 	"aliens/module/hall/conf"
-	"aliens/cluster/center"
 )
 
 var instance service.IService = nil

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/31
  * Contributors:
@@ -22,7 +22,7 @@ func (this *ServiceMessage) EnsureModule(name string) *Module {
 	}
 	module := this.modules[name]
 	if module == nil {
-		module = &Module{Name:name, UName:strFirstToUpper(name), Handlers:make(map[int]*ProtoHandler), Pushs:make(map[int]string)}
+		module = &Module{Name: name, UName: strFirstToUpper(name), Handlers: make(map[int]*ProtoHandler), Pushs: make(map[int]string)}
 		this.modules[name] = module
 	}
 	return module
@@ -39,16 +39,16 @@ func strFirstToUpper(str string) string {
 }
 
 type Module struct {
-	Name string
-	UName string
+	Name     string
+	UName    string
 	Handlers map[int]*ProtoHandler
-	Pushs map[int]string
+	Pushs    map[int]string
 }
 
 type ProtoHandler struct {
-	Name string
-	Desc string
-	ORequest string
+	Name      string
+	Desc      string
+	ORequest  string
 	OResponse string
 	//OPush string
 }
@@ -64,4 +64,3 @@ func (this *ProtoHandler) GetName() string {
 	}
 	return this.Name
 }
-

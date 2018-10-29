@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/mmorpg/core"
+	"aliens/protocol"
 )
-
 
 //ignore d s
 func handleSpaceMove(authID int64, gateID string, request *protocol.SpaceMove, response *protocol.SpaceMoveRet) {

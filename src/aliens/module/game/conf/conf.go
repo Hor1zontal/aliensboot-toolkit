@@ -1,15 +1,11 @@
 package conf
 
 import (
-	"aliens/cache/redis"
-	"aliens/database/dbconfig"
-	"aliens/cluster/center/service"
+	"aliens/config"
 )
 
-
-
 var Config struct {
-	Service  service.Config
-	Cache 	 redis.CacheConfig
-	Database dbconfig.DBConfig
+	Service  config.ServiceConfig
+	Cache    config.CacheConfig
+	Database config.DBConfig
 }

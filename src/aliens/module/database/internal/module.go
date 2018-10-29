@@ -1,18 +1,17 @@
 package internal
 
 import (
-	"aliens/module"
+	"aliens/module/base"
 )
 
 var (
-	skeleton = module.NewSkeleton()
+	skeleton = base.NewSkeleton()
 	ChanRPC  = skeleton.ChanRPCServer
 )
 
 type Module struct {
-	*module.Skeleton
+	*base.Skeleton
 }
-
 
 func (m *Module) GetName() string {
 	return "database"

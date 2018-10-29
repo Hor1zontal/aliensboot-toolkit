@@ -1,23 +1,24 @@
 package console
 
 import (
+	"aliens/network"
 	"bufio"
 	"math"
 	"strconv"
 	"strings"
-	"aliens/network"
-	"aliens/config"
 )
 
 var server *network.TCPServer
 
-func Init() {
-	if config.ConsolePort == 0 {
+var consolePrompt string
+
+func Init(port int, prompt string) {
+	if port == 0 {
 		return
 	}
-
+	consolePrompt = prompt
 	server = new(network.TCPServer)
-	server.Address = "localhost:" + strconv.Itoa(config.ConsolePort)
+	server.Address = "localhost:" + strconv.Itoa(port)
 	server.MaxConnNum = int(math.MaxInt32)
 	server.PendingWriteNum = 100
 	server.NewAgent = newAgent
@@ -45,8 +46,8 @@ func newAgent(conn *network.TCPConn) network.Agent {
 
 func (a *Agent) Run() {
 	for {
-		if config.ConsolePrompt != "" {
-			a.conn.Write([]byte(config.ConsolePrompt))
+		if consolePrompt != "" {
+			a.conn.Write([]byte(consolePrompt))
 		}
 
 		line, err := a.reader.ReadString('\n')

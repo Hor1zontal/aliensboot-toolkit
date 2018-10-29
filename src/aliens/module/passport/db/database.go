@@ -1,8 +1,8 @@
 package db
 
 import (
-	"aliens/module/passport/conf"
 	"aliens/database/mongo"
+	"aliens/module/passport/conf"
 	"aliens/protocol"
 )
 

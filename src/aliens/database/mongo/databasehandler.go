@@ -7,15 +7,14 @@ import (
 	"strings"
 	//"time"
 	//"aliens/log"
-	"github.com/pkg/errors"
 	"aliens/database/dbconfig"
+	"github.com/pkg/errors"
 )
 
 const (
-	ID_STORE string = "_id"
+	ID_STORE      string = "_id"
 	ID_FIELD_NAME string = "ID"
 )
-
 
 //获取表格名和id值
 func (this *Database) GetTableMeta(data interface{}) (*dbconfig.TableMeta, error) {
@@ -38,8 +37,6 @@ func (this *Database) GetTableMeta(data interface{}) (*dbconfig.TableMeta, error
 func (this *Database) reflectID(data interface{}, idName string) interface{} {
 	return reflect.ValueOf(data).Elem().FieldByName(idName).Interface()
 }
-
-
 
 //新增自增长键
 //func (this *Database) EnsureCounter(data interface{}) {
@@ -65,9 +62,9 @@ func (this *Database) EnsureTable(name string, data interface{}) error {
 		return errors.New("table data pointer required")
 	}
 
-	meta := &dbconfig.TableMeta{Name:name}
+	meta := &dbconfig.TableMeta{Name: name}
 	dataType := tableType.Elem()
-	for i:=0; i<dataType.NumField(); i++ {
+	for i := 0; i < dataType.NumField(); i++ {
 		field := dataType.Field(i)
 		uniqueValue := field.Tag.Get("unique")
 		if strings.Contains(uniqueValue, "true") {
@@ -88,7 +85,7 @@ func (this *Database) EnsureTable(name string, data interface{}) error {
 		}
 	}
 	if meta.IDName == "" {
-		return errors.New("bson:_id is not found in " + name + " tag",)
+		return errors.New("bson:_id is not found in " + name + " tag")
 	}
 	this.tableMetas[tableType] = meta
 	return nil
@@ -138,7 +135,6 @@ func (this *Database) Insert(data interface{}) error {
 	}
 	return this.database.C(tableMeta.Name).Insert(data)
 }
-
 
 func (this *Database) QueryAllLimit(data interface{}, result interface{}, limit int, callback func(interface{}) bool) error {
 	this.validateConnection()

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/10
  * Contributors:
@@ -10,15 +10,14 @@
 package lpc
 
 import (
+	database2 "aliens/database"
 	"aliens/module/database"
 	"aliens/module/database/constant"
-	database2 "aliens/database"
 )
 
 var DBServiceProxy = &dbHandler{}
 
 type dbHandler struct {
-
 }
 
 func (this *dbHandler) Insert(data interface{}, dbHandler database2.IDatabaseHandler) {

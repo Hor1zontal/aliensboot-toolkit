@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/11
  * Contributors:
@@ -12,7 +12,7 @@ package cache
 import "aliens/common/util"
 
 const (
-	userGatePrefix string = "gate_"     //
+	userGatePrefix string = "gate_" //
 )
 
 func getAuthGateKey(authID int64) string {

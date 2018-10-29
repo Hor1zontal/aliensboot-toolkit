@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/11
  * Contributors:
@@ -10,9 +10,9 @@
 package constant
 
 const (
-	DB_COMMAND_INSERT = "I"
-	DB_COMMAND_UPDATE = "U"
-	DB_COMMAND_DELETE = "D"
-	DB_COMMAND_FUPDATE = "FU"
+	DB_COMMAND_INSERT           = "I"
+	DB_COMMAND_UPDATE           = "U"
+	DB_COMMAND_DELETE           = "D"
+	DB_COMMAND_FUPDATE          = "FU"
 	DB_COMMAND_CONDITION_UPDATE = "CU"
 )

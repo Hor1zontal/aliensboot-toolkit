@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/28
  * Contributors:
@@ -10,35 +10,35 @@
 package network
 
 import (
-	"time"
-	"aliens/module/gate/conf"
-	"net"
-	"aliens/module/gate/route"
+	"aliens/cluster/center"
+	"aliens/cluster/center/service"
 	"aliens/common/util"
 	"aliens/gate"
-	"aliens/protocol/base"
 	"aliens/log"
-	"aliens/cluster/center"
+	"aliens/module/gate/conf"
+	"aliens/module/gate/route"
 	"aliens/protocol"
-	"aliens/cluster/center/service"
+	"aliens/protocol/base"
+	"net"
+	"time"
 )
 
 func NewNetwork(agent gate.Agent) *Network {
-	network := &Network{agent: agent, createTime:time.Now(), heartbeatTime:time.Now()}
+	network := &Network{agent: agent, createTime: time.Now(), heartbeatTime: time.Now()}
 	network.hashKey = agent.RemoteAddr().String()
 	network.bindRoutes = make(map[uint16]string)
 	return network
 }
 
 type Network struct {
-	agent 	      gate.Agent
+	agent gate.Agent
 	//channel       chan *base.Any //消息管道
 
-	authID  int64  //用户标识 登录验证后
+	authID int64 //用户标识 登录验证后
 
 	hashKey string //用来做一致性负载均衡的标识
 
-	createTime    time.Time //创建时间
+	createTime time.Time //创建时间
 
 	heartbeatTime time.Time //上次的心跳时间
 
@@ -52,10 +52,10 @@ func (this *Network) Push(msg *base.Any) {
 
 func (this *Network) KickOut(kickType protocol.KickType) {
 	pushMsg := &protocol.Push{
-		Kick:kickType,
+		Kick: kickType,
 	}
 	data, _ := pushMsg.Marshal()
-	this.Push(&base.Any{Id:1000, Value:data})
+	this.Push(&base.Any{Id: 1000, Value: data})
 	this.agent.Close()
 }
 
@@ -76,7 +76,6 @@ func (this *Network) handleResponse(response *base.Any, err error) {
 	this.agent.WriteMsg(response)
 	//lpc.StatisticsHandler.AddServiceStatistic(route.GetServiceByeSeq(response.Id), 1, 0.001)
 }
-
 
 func (this *Network) HandleMessage(request *base.Any) {
 	//根据是否授权，传递授权id
@@ -99,8 +98,6 @@ func (this *Network) HandleMessage(request *base.Any) {
 	if err != nil {
 		log.Debug(err.Error())
 	}
-
-
 
 	//start := time.Now()
 	//node, ok := this.bindRoutes[request.Id]
@@ -162,6 +159,6 @@ func (this *Network) IsHeartbeatTimeout() bool {
 	return time.Now().Sub(this.heartbeatTime).Seconds() >= conf.Config.HeartbeatTimeout
 }
 
-func (this *Network) HeartBeat () {
+func (this *Network) HeartBeat() {
 	this.heartbeatTime = time.Now()
 }

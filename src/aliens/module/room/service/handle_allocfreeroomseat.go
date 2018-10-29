@@ -11,10 +11,9 @@ package service
 
 import "aliens/protocol/room"
 import (
-	"aliens/network"
 	"aliens/module/room/core"
+	"aliens/network"
 )
-
 
 //
 func handleAllocFreeRoomSeat(request *room.AllocFreeRoomSeat, response *room.AllocFreeRoomSeatRet, agent network.Agent) {

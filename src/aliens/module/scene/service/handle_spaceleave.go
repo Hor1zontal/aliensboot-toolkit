@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/mmorpg/core"
+	"aliens/protocol"
 )
-
 
 //
 func handleSpaceLeave(authID int64, gateID string, request *protocol.SpaceLeave, response *protocol.SpaceLeaveRet) {

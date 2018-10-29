@@ -12,15 +12,15 @@ package log
 
 import (
 	//"os"
-	"os"
-	log "github.com/sirupsen/logrus"
-	"time"
-	"path"
-	"github.com/lestrrat/go-file-rotatelogs"
-	"github.com/rifflock/lfshook"
-	"github.com/pkg/errors"
 	"fmt"
+	"github.com/lestrrat/go-file-rotatelogs"
+	"github.com/pkg/errors"
+	"github.com/rifflock/lfshook"
+	log "github.com/sirupsen/logrus"
+	"os"
+	"path"
 	"runtime"
+	"time"
 )
 
 var format = &log.TextFormatter{}
@@ -134,6 +134,7 @@ func getLocation() string {
 	}
 	return src
 }
+
 //Debugf Printf Infof Warnf Warningf Errorf Panicf Fatalf
 
 //做一层适配，方便后续切换到其他日志框架或者自己写
@@ -164,7 +165,6 @@ func Panic(arg ...interface{}) {
 func Fatal(arg ...interface{}) {
 	logger.Fatal(arg...)
 }
-
 
 //-----------format
 
@@ -216,4 +216,3 @@ func Fatalf(format string, arg ...interface{}) {
 	}
 	logger.Fatalf(format, arg...)
 }
-

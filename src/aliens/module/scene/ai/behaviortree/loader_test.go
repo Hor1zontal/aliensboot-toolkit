@@ -13,7 +13,6 @@ import (
 	"github.com/magicsea/behavior3go/loader"
 )
 
-
 ///////////////////////加载事例///////////////////////////
 //自定义action节点
 type LogTest struct {

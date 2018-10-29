@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/module/passport/cache"
+	"aliens/protocol"
 )
-
 
 //
 func handleUserLogin(request *protocol.C2S_UserLogin, response *protocol.S2C_UserLogin) int64 {
@@ -23,7 +22,6 @@ func handleUserLogin(request *protocol.C2S_UserLogin, response *protocol.S2C_Use
 	userCache := cache.GetUser(username)
 	if userCache == nil {
 		passwordHash := PasswordHash(username, password)
-
 
 		userCache = cache.NewUser(username, passwordHash, "", "", "", "")
 		//result.Result = passport.LoginLoginRet_invalidUser

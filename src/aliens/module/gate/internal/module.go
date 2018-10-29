@@ -1,14 +1,14 @@
 package internal
 
 import (
-	"aliens/module/gate/conf"
-	"aliens/module/gate/msg"
 	"aliens/gate"
-	"aliens/module/gate/service"
-	"aliens/module/gate/route"
-	"aliens/module/gate/network"
 	"aliens/module/base"
+	"aliens/module/gate/conf"
 	"aliens/module/gate/http"
+	"aliens/module/gate/msg"
+	"aliens/module/gate/network"
+	"aliens/module/gate/route"
+	"aliens/module/gate/service"
 )
 
 var Skeleton = base.NewSkeleton()
@@ -29,15 +29,15 @@ func (m *Module) OnInit() {
 	//conf.Init(m.GetName())
 
 	m.Gate = &gate.Gate{
-		TcpConfig: conf.Config.TCP,
-		WsConfig: conf.Config.WebSocket,
-		Processor:       msg.Processor,
-		AgentChanRPC:    Skeleton.ChanRPCServer,
+		TcpConfig:    conf.Config.TCP,
+		WsConfig:     conf.Config.WebSocket,
+		Processor:    msg.Processor,
+		AgentChanRPC: Skeleton.ChanRPCServer,
 	}
 	route.Init()
 	network.Init(Skeleton)
 	service.Init(Skeleton.ChanRPCServer)
-	http.Init()
+	http.Init(conf.Config.Http)
 }
 
 func (m *Module) OnDestroy() {
@@ -47,9 +47,5 @@ func (m *Module) OnDestroy() {
 
 func (m *Module) Run(closeSig chan bool) {
 	go m.Gate.Run(closeSig)
- 	Skeleton.Run(closeSig)
+	Skeleton.Run(closeSig)
 }
-
-
-
-

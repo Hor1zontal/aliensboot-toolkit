@@ -1,21 +1,21 @@
 package network
 
 import (
+	"aliens/config"
+	"aliens/log"
 	"crypto/tls"
 	"github.com/gorilla/websocket"
 	"net"
 	"net/http"
 	"sync"
-	"aliens/log"
-	"aliens/config"
 	"time"
 )
 
 type WSServer struct {
 	config.WsConfig
-	NewAgent        func(*WSConn) Agent
-	ln              net.Listener
-	handler         *WSHandler
+	NewAgent func(*WSConn) Agent
+	ln       net.Listener
+	handler  *WSHandler
 }
 
 type WSHandler struct {

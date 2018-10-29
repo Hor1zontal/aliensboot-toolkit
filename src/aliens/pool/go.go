@@ -1,9 +1,9 @@
 package pool
 
 import (
+	"aliens/exception"
 	"container/list"
 	"sync"
-	"aliens/exception"
 )
 
 // one Go per goroutine (goroutine not safe)

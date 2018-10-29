@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/5
  * Contributors:
@@ -14,17 +14,16 @@ import (
 )
 
 func NewContainer() *Container {
-	return &Container{root:make(map[string]*serviceCategory), lbs:make(map[string]string)}
+	return &Container{root: make(map[string]*serviceCategory), lbs: make(map[string]string)}
 }
 
 type Container struct {
 	sync.RWMutex
 	root map[string]*serviceCategory //服务容器 key 服务名
-	lbs map[string]string //服务的负载均衡策略
+	lbs  map[string]string           //服务的负载均衡策略
 	//serviceListeners map[string]Listener  //服务监听
 	//lbs string
 }
-
 
 func (this *Container) SetLbs(serviceName string, lbsStr string) {
 	this.Lock()
@@ -35,6 +34,7 @@ func (this *Container) SetLbs(serviceName string, lbsStr string) {
 		category.setLbs(lbsStr)
 	}
 }
+
 //func (this *Container) AddServiceListener(listener Listener) {
 //	this.EnsureCategory(listener.GetServiceType()).AddListener(listener)
 //}
@@ -47,7 +47,6 @@ func (this *Container) UpdateService(service IService, overwrite bool) bool {
 	result := category.updateService(service, overwrite)
 	return result
 }
-
 
 func (this *Container) EnsureCategory(serviceName string) *serviceCategory {
 	category := this.root[serviceName]

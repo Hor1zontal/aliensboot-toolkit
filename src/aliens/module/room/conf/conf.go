@@ -1,17 +1,16 @@
 package conf
 
 import (
-	"aliens/config"
 	"aliens/cluster/center/service"
-	"aliens/network"
+	"aliens/config"
 	"aliens/module/base"
+	"aliens/network"
 )
-
 
 var configPath = base.BaseConfPath + "room/server.json"
 
 var Config struct {
-	Service  service.Config
+	Service    service.Config
 	UDPService network.Config
 }
 

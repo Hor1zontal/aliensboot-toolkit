@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/1
  * Contributors:
@@ -10,14 +10,14 @@
 package analysis
 
 import (
-	_ "expvar"
-	_ "net/http/pprof"
-	"net/http"
-	"os"
-	"runtime/trace"
-	"fmt"
-	"runtime"
 	"aliens/module/statistics/conf"
+	_ "expvar"
+	"fmt"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
+	"runtime"
+	"runtime/trace"
 )
 
 func Init() {
@@ -34,22 +34,18 @@ func Init() {
 	}
 }
 
-
-
 //手动GC
 func gc(w http.ResponseWriter, r *http.Request) {
 	runtime.GC()
 	w.Write([]byte("StartGC"))
 }
 
-
 //运行trace
-func traces(w http.ResponseWriter, r *http.Request){
+func traces(w http.ResponseWriter, r *http.Request) {
 	f, err := os.Create("trace.out")
 	if err != nil {
 		panic(err)
 	}
-
 
 	err = trace.Start(f)
 	if err != nil {
@@ -60,10 +56,8 @@ func traces(w http.ResponseWriter, r *http.Request){
 }
 
 //停止trace
-func traceStop(w http.ResponseWriter, r *http.Request){
+func traceStop(w http.ResponseWriter, r *http.Request) {
 	trace.Stop()
 	w.Write([]byte("TrancStop"))
 	fmt.Println("StopTrancs")
 }
-
-

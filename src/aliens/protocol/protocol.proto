@@ -6,6 +6,7 @@ import "gate.proto";
 import "passport.proto";
 import "game.proto";
 
+//TODO 支持接口权限声明 是否支持客户端调用， 是否支持内部调用
 
 //request
 message Request {

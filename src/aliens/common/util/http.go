@@ -10,11 +10,11 @@
 package util
 
 import (
+	"aliens/log"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"io"
-	"aliens/log"
 )
 
 func HttpGet(paramUrl string) string {
@@ -66,4 +66,3 @@ func HttpGetBody(request *http.Request) []byte {
 	}
 	return data
 }
-

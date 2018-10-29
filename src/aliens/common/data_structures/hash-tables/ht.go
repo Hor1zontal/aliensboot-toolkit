@@ -4,8 +4,8 @@
 package ht
 
 import (
-	"github.com/magicsea/ganet/data-structures/linked-list"
 	"errors"
+	"github.com/magicsea/ganet/data-structures/linked-list"
 	"math"
 )
 

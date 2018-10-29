@@ -10,14 +10,14 @@
 package service
 
 import (
+	"aliens/common/util"
+	"aliens/exception"
+	"aliens/protocol"
 	"aliens/protocol/hall"
 	"github.com/gogo/protobuf/proto"
-	"golang.org/x/net/context"
-	"github.com/pkg/errors"
-	"aliens/protocol"
-	"aliens/exception"
-	"aliens/common/util"
 	"github.com/name5566/leaf/chanrpc"
+	"github.com/pkg/errors"
+	"golang.org/x/net/context"
 )
 
 func newService(chanRpc *chanrpc.Server) *hallService {
@@ -46,14 +46,14 @@ func (this *hallService) Request(request *scene_model_proto.Any, server scene_mo
 	return nil
 }
 
-func (this *hallService) RequestProxy(ctx context.Context,request *scene_model_proto.Any) (response *scene_model_proto.Any, err error) {
+func (this *hallService) RequestProxy(ctx context.Context, request *scene_model_proto.Any) (response *scene_model_proto.Any, err error) {
 	isJSONRequest := request.TypeUrl != ""
 	if isJSONRequest {
 		data, error := handleJsonRequest(request.TypeUrl, request.Value)
 		if error != nil {
 			return nil, error
 		}
-		return &scene_model_proto.Any{TypeUrl:"", Value:data}, nil
+		return &scene_model_proto.Any{TypeUrl: "", Value: data}, nil
 	}
 
 	requestProxy := &hall.HallRequest{}
@@ -61,39 +61,38 @@ func (this *hallService) RequestProxy(ctx context.Context,request *scene_model_p
 	if error != nil {
 		return nil, error
 	}
-	responseProxy := &hall.HallResponse{Session:requestProxy.GetSession()}
+	responseProxy := &hall.HallResponse{Session: requestProxy.GetSession()}
 
-    defer func() {
-    	//处理消息异常
-    	if err := recover(); err != nil {
-    		switch err.(type) {
-    		    case exception.GameCode:
-    				responseProxy.Response = &hall.HallResponse_Exception{Exception:uint32(err.(exception.GameCode))}
-    				break
-    			default:
-    				util.PrintStackDetail()
-    				//未知异常不需要回数据
-                    response = nil
-                    return
-    			}
-    	}
-    	data, _ := proto.Marshal(responseProxy)
-        response = &scene_model_proto.Any{Value:data}
-    }()
+	defer func() {
+		//处理消息异常
+		if err := recover(); err != nil {
+			switch err.(type) {
+			case exception.GameCode:
+				responseProxy.Response = &hall.HallResponse_Exception{Exception: uint32(err.(exception.GameCode))}
+				break
+			default:
+				util.PrintStackDetail()
+				//未知异常不需要回数据
+				response = nil
+				return
+			}
+		}
+		data, _ := proto.Marshal(responseProxy)
+		response = &scene_model_proto.Any{Value: data}
+	}()
 	err = handleRequest(requestProxy, responseProxy)
-    return
+	return
 }
 
 func handleRequest(request *hall.HallRequest, response *hall.HallResponse) error {
-	
+
 	if request.GetQuickMatch() != nil {
 		messageRet := &hall.QuickMatchRet{}
 		handleQuickMatch(request.GetQuickMatch(), messageRet)
 		response.Response = &hall.HallResponse_QuickMatchRet{messageRet}
 		return nil
 	}
-	
+
 	return errors.New("unexpect request")
 
 }
-

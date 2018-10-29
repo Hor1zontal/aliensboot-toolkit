@@ -1,9 +1,9 @@
 package internal
 
 import (
+	"aliens/module/base"
 	"aliens/module/statistics/analysis"
 	"aliens/module/statistics/conf"
-	"aliens/module/base"
 )
 
 var (

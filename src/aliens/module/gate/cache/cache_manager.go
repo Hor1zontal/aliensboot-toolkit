@@ -11,8 +11,8 @@ package cache
 
 import (
 	"aliens/cache/redis"
-	"aliens/module/gate/conf"
 	"aliens/config"
+	"aliens/module/gate/conf"
 )
 
 var ClusterCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -39,5 +39,3 @@ func (this *cacheManager) Close() {
 		this.redisClient.Close()
 	}
 }
-
-

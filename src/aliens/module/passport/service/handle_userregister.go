@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/module/passport/cache"
+	"aliens/protocol"
 )
-
 
 //
 func handleUserRegister(request *protocol.C2S_UserRegister, response *protocol.S2C_UserRegister) int64 {

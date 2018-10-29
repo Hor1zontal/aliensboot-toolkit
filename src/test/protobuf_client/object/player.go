@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"test/protobuf_client/base"
 	"aliens/protocol"
+	"test/protobuf_client/base"
 )
 
 type Player struct {
@@ -179,12 +179,10 @@ func (this *Player) Connect() bool {
 			}
 			//fmt.Printf("Recv msg = %v\n   %v", len, buf )
 
-
 			data := buf[4:len]
 			if this.isCipher() {
 				data = xxtea.Decrypt(data, []byte(this.secretkey))
 			}
-
 
 			recv := &protocol.Response{}
 			err = proto.Unmarshal(data, recv)
@@ -317,7 +315,7 @@ func (this *Player) _send_Message(id uint16, message proto.Message) { //发送�
 	}
 
 	m := make([]byte, len(buff)+4)
-	binary.LittleEndian.PutUint16(m, uint16(len(buff)) + 2) //
+	binary.LittleEndian.PutUint16(m, uint16(len(buff))+2) //
 	binary.LittleEndian.PutUint16(m[2:], id)
 
 	copy(m[4:], buff)
@@ -330,5 +328,3 @@ func (this *Player) _receive_Message(message proto.Message) { //接收消息
 	this.syncData()
 	//code := message.GetSequence()
 }
-
-

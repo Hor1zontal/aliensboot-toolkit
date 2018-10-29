@@ -9,7 +9,6 @@
  *******************************************************************************/
 package service
 
-
 //func PublicHTTPService(config CenterService, address string) *httpService {
 //	if !ClusterCenter.IsConnect() {
 //		panic(config.Name + " cluster center is not connected")

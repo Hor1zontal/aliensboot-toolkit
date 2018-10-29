@@ -1,16 +1,15 @@
 package conf
 
 import (
-	"aliens/config"
 	"aliens/cluster/center/service"
+	"aliens/config"
 	"aliens/module/base"
 )
-
 
 var configPath = base.BaseConfPath + "hall/server.json"
 
 var Config struct {
-	Service  service.Config
+	Service service.Config
 	//Cache 	 redis.CacheConfig
 	//Database dbconfig.DBConfig
 }

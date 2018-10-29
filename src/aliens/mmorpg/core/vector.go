@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/21
  * Contributors:
@@ -10,13 +10,12 @@
 package core
 
 import (
-"math"
 	"aliens/protocol"
+	"math"
 )
 
 // Yaw is the type of entity direction
 type Yaw float32
-
 
 // protocol.Vector is type of entity position
 //type protocol.Vector struct {
@@ -68,7 +67,7 @@ func DirToYaw(dir protocol.Vector) Yaw {
 	return Yaw(yaw)
 }
 
-func Normalize(p *protocol.Vector)  {
+func Normalize(p *protocol.Vector) {
 	d := float32(math.Sqrt(float64(p.X*p.X + p.Y + p.Y + p.Z*p.Z)))
 	if d == 0 {
 		return
@@ -78,7 +77,6 @@ func Normalize(p *protocol.Vector)  {
 	p.Z /= d
 }
 
-func  Normalized(p *protocol.Vector) {
+func Normalized(p *protocol.Vector) {
 	Normalize(p)
 }
-

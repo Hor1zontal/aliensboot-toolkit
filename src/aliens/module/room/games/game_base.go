@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/13
  * Contributors:
@@ -10,17 +10,16 @@
 package games
 
 import (
-	"time"
-	"aliens/protocol/room"
 	"aliens/network"
+	"aliens/protocol/room"
+	"time"
 )
 
 //只需要处理消息转发即可
 type SimpleGame struct {
-
 	roomID string
 
-	players map[uint32]*Player  //加入游戏的玩家
+	players map[uint32]*Player //加入游戏的玩家
 
 	maxPlayer int //最大人数
 
@@ -130,20 +129,17 @@ func (this *SimpleGame) handleAllocFreeSeat(request *room.AllocFreeRoomSeat, res
 		response.Result = room.RoomResult_maxPlayers
 		return
 	}
-	this.allocPlayerID ++
-	player := &Player{id:this.allocPlayerID}
+	this.allocPlayerID++
+	player := &Player{id: this.allocPlayerID}
 	this.players[player.id] = player
 
 	response.Result = room.RoomResult_success
 	response.PlayerID = player.id
 }
 
-
 func buildPlayerLeavePush(playerID uint32) *room.Response {
 	return &room.Response{
-		PlayerLeavePush:&room.PlayerLeavePush{
-
-		},
+		PlayerLeavePush: &room.PlayerLeavePush{},
 	}
 }
 

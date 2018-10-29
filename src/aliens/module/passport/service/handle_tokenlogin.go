@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/module/passport/cache"
+	"aliens/protocol"
 )
-
 
 //
 func handleTokenLogin(request *protocol.C2S_TokenLogin, response *protocol.S2C_TokenLogin) int64 {

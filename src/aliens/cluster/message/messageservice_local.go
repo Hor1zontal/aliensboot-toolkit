@@ -9,7 +9,6 @@
  *******************************************************************************/
 package message
 
-
 ////新建本地服务管理类
 //func NewLocalService(serviceType string) *LocalService {
 //	service := &LocalService{

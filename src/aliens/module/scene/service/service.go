@@ -10,14 +10,14 @@
 package service
 
 import (
+	"aliens/chanrpc"
+	"aliens/cluster/center"
+	"aliens/cluster/center/service"
+	"aliens/exception"
+	"aliens/module/scene/conf"
+	"aliens/protocol"
+	"aliens/protocol/base"
 	"github.com/gogo/protobuf/proto"
-    "aliens/chanrpc"
-    "aliens/exception"
-    "aliens/protocol/base"
-    "aliens/protocol"
-    "aliens/cluster/center/service"
-    "aliens/module/scene/conf"
-    "aliens/cluster/center"
 )
 
 var instance service.IService = nil
@@ -29,7 +29,6 @@ func Init(chanRpc *chanrpc.Server) {
 func Close() {
 	center.ReleaseService(instance)
 }
-
 
 func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
@@ -60,35 +59,34 @@ func handle(request *base.Any) *base.Any {
 }
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
-	
+
 	if request.GetSpaceMove() != nil {
 		messageRet := &protocol.SpaceMoveRet{}
 		handleSpaceMove(authID, gateID, request.GetSpaceMove(), messageRet)
 		response.Scene = &protocol.Response_SpaceMoveRet{messageRet}
 		return
 	}
-	
+
 	if request.GetSpaceEnter() != nil {
 		messageRet := &protocol.SpaceEnterRet{}
 		handleSpaceEnter(authID, gateID, request.GetSpaceEnter(), messageRet)
 		response.Scene = &protocol.Response_SpaceEnterRet{messageRet}
 		return
 	}
-	
+
 	if request.GetSpaceLeave() != nil {
 		messageRet := &protocol.SpaceLeaveRet{}
 		handleSpaceLeave(authID, gateID, request.GetSpaceLeave(), messageRet)
 		response.Scene = &protocol.Response_SpaceLeaveRet{messageRet}
 		return
 	}
-	
+
 	if request.GetGetState() != nil {
 		messageRet := &protocol.GetStateRet{}
 		handleGetState(authID, gateID, request.GetGetState(), messageRet)
 		response.Scene = &protocol.Response_GetStateRet{messageRet}
 		return
 	}
-	
+
 	response.Code = protocol.Code_InvalidRequest
 }
-

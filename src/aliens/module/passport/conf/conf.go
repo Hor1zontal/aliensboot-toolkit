@@ -1,27 +1,25 @@
 package conf
 
 import (
-	"time"
 	"aliens/config"
+	"time"
 )
 
 var Config struct {
 	Service  config.ServiceConfig
-	Cache 	 config.CacheConfig
+	Cache    config.CacheConfig
 	Database config.DBConfig
 
 	DefaultChannelPassport string
-	TokenExpireTime   int64
+	TokenExpireTime        int64
 	//HTTPAddress       string
-	AppKey            string
-
-
+	AppKey string
 }
 
 func Init() {
 	if Config.TokenExpireTime <= 0 {
 		//默认过期时间七天
-		Config.TokenExpireTime = int64(7 * 24 *time.Hour)
+		Config.TokenExpireTime = int64(7 * 24 * time.Hour)
 	}
 }
 

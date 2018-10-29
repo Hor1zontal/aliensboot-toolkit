@@ -10,25 +10,24 @@
 package template
 
 import (
-	"os"
-	"aliens/tools/protobuf/proto"
 	"aliens/common/util"
+	"aliens/tools/protobuf/proto"
+	"os"
 	"strings"
 )
 
 const (
-	REQUEST_TAG = "request"
+	REQUEST_TAG  = "request"
 	RESPONSE_TAG = "response"
-	PUSH_TAG = "push"
+	PUSH_TAG     = "push"
 )
 
 var message = &ServiceMessage{}
 
-
 //Handlers:make( map[int]*ProtoHandler)
 
 func ParseProto(protoPath string) *ServiceMessage {
-	message = &ServiceMessage{modules:make(map[string]*Module)}
+	message = &ServiceMessage{modules: make(map[string]*Module)}
 	//"/Users/hejialin/git/server/kylin/src/aliens/protocol/scene/protocol.proto"
 	reader, _ := os.Open(protoPath)
 	defer reader.Close()
@@ -38,39 +37,38 @@ func ParseProto(protoPath string) *ServiceMessage {
 
 	for _, element := range definition.Elements {
 		switch element.(type) {
-			case *proto.Package :
-				message.PackageName = element.(*proto.Package).Name
-				//log.Println()
-				break;
-			case *proto.Message:
-				comment := element.(*proto.Message).Doc()
-				if comment == nil {
-					break
-				}
+		case *proto.Package:
+			message.PackageName = element.(*proto.Package).Name
+			//log.Println()
+			break
+		case *proto.Message:
+			comment := element.(*proto.Message).Doc()
+			if comment == nil {
+				break
+			}
 
-				tag := strings.TrimSpace(comment.Message())
-				if tag == "" {
-					break
-				}
+			tag := strings.TrimSpace(comment.Message())
+			if tag == "" {
+				break
+			}
 
-				handleMessage(element.(*proto.Message), tag)
+			handleMessage(element.(*proto.Message), tag)
 
-				//proto.Walk(, proto.WithOneof(&messageWalk{tag:tag}.handleMessage))
+			//proto.Walk(, proto.WithOneof(&messageWalk{tag:tag}.handleMessage))
 
-				//if tag == REQUEST_TAG {
-				//	//message.RequestName = element.(*proto.Message).Name
-				//} else if tag == RESPONSE_TAG  {
-				//	//message.ResponseName = element.(*proto.Message).Name
-				//} else if tag == PUSH_TAG{
-				//	//message.PushName = element.(*proto.Message).Name
-				//}
+			//if tag == REQUEST_TAG {
+			//	//message.RequestName = element.(*proto.Message).Name
+			//} else if tag == RESPONSE_TAG  {
+			//	//message.ResponseName = element.(*proto.Message).Name
+			//} else if tag == PUSH_TAG{
+			//	//message.PushName = element.(*proto.Message).Name
+			//}
 		}
 	}
 
 	return message
 
 }
-
 
 func handleMessage(member *proto.Message, tag string) {
 	for _, visitee := range member.Elements {
@@ -97,10 +95,10 @@ func handleMessage(member *proto.Message, tag string) {
 			if tag == REQUEST_TAG {
 				handler.ORequest = util.FirstToUpper(field.Name)
 				//message.RequestName = element.(*proto.Message).Name
-			} else if tag == RESPONSE_TAG  {
+			} else if tag == RESPONSE_TAG {
 				handler.OResponse = util.FirstToUpper(field.Name)
 				//message.ResponseName = element.(*proto.Message).Name
-			} else if tag == PUSH_TAG{
+			} else if tag == PUSH_TAG {
 				module.Pushs[field.Sequence] = util.FirstToUpper(field.Name)
 				//message.PushName = element.(*proto.Message).Name
 			}
@@ -116,6 +114,3 @@ func handleMessage(member *proto.Message, tag string) {
 	//proto.Walk(m, proto.WithOneof(handleHandle))
 
 }
-
-
-

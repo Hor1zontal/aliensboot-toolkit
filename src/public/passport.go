@@ -1,8 +1,8 @@
 package main
 
 import (
-	"aliens/module/passport"
 	"aliens"
+	"aliens/module/passport"
 )
 
 func init() {

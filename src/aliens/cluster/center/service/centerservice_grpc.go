@@ -10,13 +10,13 @@
 package service
 
 import (
-	"github.com/pkg/errors"
-	"google.golang.org/grpc"
-	"aliens/log"
-	"golang.org/x/net/context"
 	"aliens/common/util"
-	"reflect"
+	"aliens/log"
 	"aliens/protocol/base"
+	"github.com/pkg/errors"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"reflect"
 	"time"
 )
 
@@ -32,7 +32,6 @@ type GRPCService struct {
 	server *rpcServer //grpc服务端处理句柄
 
 	client *grpc.ClientConn
-
 
 	requestClient base.RPCServiceClient
 	receiveClient base.RPCService_ReceiveClient
@@ -179,4 +178,3 @@ func (this *GRPCService) Send(request *base.Any) error {
 	}
 	return this.receiveClient.Send(request)
 }
-

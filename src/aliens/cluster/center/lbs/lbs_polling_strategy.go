@@ -12,28 +12,27 @@
 package lbs
 
 func NewPollingLBS() *PollingLBS {
-	return &PollingLBS{nodes:make(map[string]struct{})}
+	return &PollingLBS{nodes: make(map[string]struct{})}
 }
 
 //轮询负载策略
 type PollingLBS struct {
-	nodes map[string]struct{}
-	rootNode *PollingNode   //链表根节点
-	currNode *PollingNode	//当前请求到的节点
+	nodes    map[string]struct{}
+	rootNode *PollingNode //链表根节点
+	currNode *PollingNode //当前请求到的节点
 }
 
 type PollingNode struct {
-	name string
+	name   string
 	weight int
-	next *PollingNode
-	index int
+	next   *PollingNode
+	index  int
 }
 
 //func (this *PollingLBS) Init(nodes []string) {
 //	this.nodes = nodes
 //	this.length = len(this.nodes)
 //}
-
 
 func (this *PollingLBS) AddNode(nodeKey string, weight int) {
 	_, ok := this.nodes[nodeKey]
@@ -42,7 +41,7 @@ func (this *PollingLBS) AddNode(nodeKey string, weight int) {
 	}
 	this.nodes[nodeKey] = struct{}{}
 
-	newRootNode := &PollingNode{name:nodeKey, weight:weight, index:0}
+	newRootNode := &PollingNode{name: nodeKey, weight: weight, index: 0}
 	if this.rootNode != nil {
 		newRootNode.next = this.rootNode
 	} else {
@@ -91,7 +90,7 @@ func (this *PollingLBS) GetNode(key string) string {
 	if this.currNode == nil {
 		return ""
 	}
-	this.currNode.index ++
+	this.currNode.index++
 	//超过权重 取下个节点
 	if this.currNode.index > this.currNode.weight {
 		this.nextNode()

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/11
  * Contributors:
@@ -11,16 +11,13 @@ package network
 
 import "net"
 
-
 type UDPAgent struct {
-
 	conn *net.UDPConn
 
 	udpAddr *net.UDPAddr
 
 	userData interface{}
 }
-
 
 //发送数据
 func (this *UDPAgent) WriteMsg(msg interface{}) {
@@ -38,7 +35,6 @@ func (this *UDPAgent) UserData() interface{} {
 	return this.userData
 }
 
-
 func (this *UDPAgent) LocalAddr() net.Addr {
 	return this.conn.LocalAddr()
 }
@@ -47,17 +43,13 @@ func (this *UDPAgent) RemoteAddr() net.Addr {
 	return this.udpAddr
 }
 
-
 func (this *UDPAgent) Close(userData interface{}) {
 	this.userData = userData
 }
 
-
-
 func (this *UDPAgent) Destroy(userData interface{}) {
 	this.userData = userData
 }
-
 
 func (this *UDPAgent) GetID() string {
 	if this.udpAddr == nil {

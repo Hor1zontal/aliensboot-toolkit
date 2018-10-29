@@ -1,9 +1,9 @@
 package aoi
 
 type AOI struct {
-	x        float32
-	y        float32
-	tower    *tower
+	x     float32
+	y     float32
+	tower *tower
 
 	viewRadius float32 //视野范围
 

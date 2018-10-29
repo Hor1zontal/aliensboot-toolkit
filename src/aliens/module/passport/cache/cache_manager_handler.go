@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/12
  * Contributors:
@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	FLAG_LOADUSER string = "flag_user_load_"   	//标识，是否加载用户数据到缓存
+	FLAG_LOADUSER       string = "flag_user_load_" //标识，是否加载用户数据到缓存
 	USERNAME_KEY_PREFIX string = "unk_"
 )
 
@@ -61,7 +61,7 @@ func (this *cacheManager) IsUsernameExist(username string) bool {
 }
 
 func (this *cacheManager) SetUsernameUidMapping(username string, uid int64) error {
-	return this.redisClient.SetData(USERNAME_KEY_PREFIX + username, uid)
+	return this.redisClient.SetData(USERNAME_KEY_PREFIX+username, uid)
 }
 
 func (this *cacheManager) GetUidByUsername(username string) int64 {

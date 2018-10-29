@@ -10,18 +10,17 @@
 package service
 
 import (
-	"aliens/protocol/hall"
 	"aliens/module/cluster/rpc"
+	"aliens/protocol/hall"
 	"aliens/protocol/room"
 )
 
-
 func handleQuickMatch(request *hall.QuickMatch, response *hall.QuickMatchRet) {
-	ret := rpc.Proxy_room.AllocFreeRoom(&room.AllocFreeRoom{GameID:1})
+	ret := rpc.Proxy_room.AllocFreeRoom(&room.AllocFreeRoom{GameID: 1})
 	response.Result = hall.HallResult_success
 	response.MatchResult = &hall.QuickMatchResult{
-		RoomID:ret.GetRoomID(),
-		Address:ret.GetAddress(),
-		Token:ret.GetToken(),
+		RoomID:  ret.GetRoomID(),
+		Address: ret.GetAddress(),
+		Token:   ret.GetToken(),
 	}
 }

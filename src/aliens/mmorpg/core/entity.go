@@ -1,14 +1,13 @@
 package core
 
 import (
-	"aliens/mmorpg/aoi"
-	"fmt"
-	"aliens/protocol"
-	"reflect"
 	"aliens/log"
+	"aliens/mmorpg/aoi"
+	"aliens/protocol"
+	"fmt"
+	"reflect"
 	"unsafe"
 )
-
 
 //type IEntity interface {
 //	OnInit(self *Entity)
@@ -22,26 +21,25 @@ type Entity struct {
 	//client Client
 	//space *Space   //
 
-	*protocol.Entity  //sync data
+	*protocol.Entity //sync data
 
 	clientID *ClientID
 
-	I    IEntity
+	I IEntity
 
-	V    reflect.Value
+	V reflect.Value
 
-	space *Space  //实体所在的空间id
+	space *Space //实体所在的空间id
 
-	aoi   *aoi.AOI //one entity , one aoi!
+	aoi *aoi.AOI //one entity , one aoi!
 
 	attrs Attr //属性列表
 
-	interestedIn         EntitySet //当前实体视野范围内的实体
+	interestedIn EntitySet //当前实体视野范围内的实体
 
-	interestedBy         EntitySet //视野内存在当前实体的对象
+	interestedBy EntitySet //视野内存在当前实体的对象
 
 	destroyed bool
-
 }
 
 func (e *Entity) GetID() EntityID {
@@ -82,7 +80,6 @@ func (e *Entity) init(typeName string, entityID EntityID, entityInstance reflect
 	e.I.OnInit()
 }
 
-
 func (e *Entity) OnEnterAOI(otherAoi *aoi.AOI) {
 	e.interest(otherAoi.Callback.(*Entity))
 }
@@ -90,7 +87,6 @@ func (e *Entity) OnEnterAOI(otherAoi *aoi.AOI) {
 func (e *Entity) OnLeaveAOI(otherAoi *aoi.AOI) {
 	e.uninterest(otherAoi.Callback.(*Entity))
 }
-
 
 // Destroy destroys the entity
 func (e *Entity) Destroy() {
@@ -120,7 +116,6 @@ func (e *Entity) destroyEntity(isMigrate bool) {
 	EntityManager.del(e)
 }
 
-
 // IsInterestedIn checks if other entity is interested by this entity
 func (e *Entity) IsInterestedIn(other *Entity) bool {
 	return e.interestedIn.Contains(other)
@@ -130,7 +125,6 @@ func (e *Entity) IsInterestedIn(other *Entity) bool {
 //func (e *Entity) DistanceTo(other *Entity) Coord {
 //	return e.Position.DistanceTo(other.Position)
 //}
-
 
 func (e *Entity) String() string {
 	return fmt.Sprintf("%s<%s>", e, e.GetID())
@@ -149,7 +143,6 @@ func (e *Entity) AsSpace() *Space {
 
 	return (*Space)(unsafe.Pointer(e))
 }
-
 
 // Interests and Uninterest among entities
 func (e *Entity) interest(other *Entity) {

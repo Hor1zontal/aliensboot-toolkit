@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -10,17 +10,17 @@
 package msg
 
 import (
-	"errors"
-	"encoding/binary"
-	"aliens/protocol/base"
 	"aliens/chanrpc"
+	"aliens/protocol/base"
+	"encoding/binary"
+	"errors"
 )
 
 var Processor = NewMsgProcessor() //protobuf.NewProcessor()
 
 type MessageProcessor struct {
 	littleEndian bool
-	msgRouter     *chanrpc.Server
+	msgRouter    *chanrpc.Server
 }
 
 func NewMsgProcessor() *MessageProcessor {
@@ -49,13 +49,13 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 	} else {
 		id = binary.BigEndian.Uint16(data)
 	}
-	return &base.Any{Id:id, Value:data[2:]}, nil
+	return &base.Any{Id: id, Value: data[2:]}, nil
 }
 
 // must goroutine safe
 func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
 	any, ok := msg.(*base.Any)
-	if !ok || any == nil{
+	if !ok || any == nil {
 		return nil, errors.New("invalid any type")
 	}
 	id := make([]byte, 2)

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/7/30
  * Contributors:
@@ -9,14 +9,13 @@
  *******************************************************************************/
 package model
 
-
 type CallInfo struct {
-	count int32 	 //调用次数
+	count    int32   //调用次数
 	interval float64 //调用时间总长
 }
 
 func (this *CallInfo) AddCall(interval float64) {
-	this.count ++
+	this.count++
 	this.interval += interval
 }
 
@@ -34,5 +33,5 @@ func (this *CallInfo) DumpData() (bool, int32, float64) {
 	this.count = 0
 	this.interval = 0
 
-	return true , count, avg
+	return true, count, avg
 }

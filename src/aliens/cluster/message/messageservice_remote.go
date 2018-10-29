@@ -11,8 +11,8 @@ package message
 
 import (
 	"aliens/cluster/center"
-	"aliens/protocol/base"
 	"aliens/cluster/center/service"
+	"aliens/protocol/base"
 )
 
 func NewRemoteService(serviceType string) *RemoteService {
@@ -31,7 +31,6 @@ type RemoteService struct {
 func (this *RemoteService) Init() {
 	center.ClusterCenter.SubscribeServices(this.serviceType)
 }
-
 
 //同步调用服务, 请求节点采用内部的负载均衡策略分配
 func (this *RemoteService) Request(request *base.Any, param string) (*base.Any, error) {

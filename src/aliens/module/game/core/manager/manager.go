@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/7/26
  * Contributors:
@@ -9,18 +9,16 @@
  *******************************************************************************/
 package manager
 
-
-
 import (
-	"aliens/protocol"
-	"aliens/module/game/db"
 	"aliens/exception"
 	"aliens/log"
+	"aliens/module/game/db"
+	"aliens/protocol"
 )
 
 func NewUserDataManager(uid int64) *UserDataManager {
 	dataManager := &UserDataManager{}
-	var user = &protocol.GameUser{Uid:uid}
+	var user = &protocol.GameUser{Uid: uid}
 	err := db.Database.QueryOne(user)
 	if err != nil {
 		//创建数据
@@ -29,13 +27,11 @@ func NewUserDataManager(uid int64) *UserDataManager {
 	return dataManager
 }
 
-
 //角色管理容器
 type UserDataManager struct {
-	user		  *protocol.GameUser  //用户游戏信息 拥有的角色
-	activeRole    *RoleHandler //当前的角色处理句柄
+	user       *protocol.GameUser //用户游戏信息 拥有的角色
+	activeRole *RoleHandler       //当前的角色处理句柄
 }
-
 
 func (this *UserDataManager) GetActiveRoleHandler() *RoleHandler {
 	return this.activeRole
@@ -47,7 +43,7 @@ func (this *UserDataManager) LoginRole(roleID int64) *RoleHandler {
 	}
 	//加载当前玩家缓存
 	if this.activeRole == nil || !this.activeRole.IsRole(roleID) {
-		roleInfo := &protocol.RoleInfo{Id:roleID}
+		roleInfo := &protocol.RoleInfo{Id: roleID}
 		err := db.Database.QueryOne(roleInfo)
 		if err != nil {
 			log.Debugf("query role exception %v", err)
@@ -57,7 +53,6 @@ func (this *UserDataManager) LoginRole(roleID int64) *RoleHandler {
 	}
 	return this.activeRole
 }
-
 
 func (this *UserDataManager) HaveRole(roleID int64) bool {
 	for _, role := range this.user.Roles {

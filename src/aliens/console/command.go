@@ -1,14 +1,13 @@
 package console
 
 import (
+	"aliens/chanrpc"
+	"aliens/log"
 	"fmt"
 	"os"
 	"path"
 	"runtime/pprof"
 	"time"
-	"aliens/log"
-	"aliens/config"
-	"aliens/chanrpc"
 )
 
 var commands = []Command{
@@ -144,7 +143,7 @@ func (c *CommandCPUProf) run(args []string) string {
 
 func profileName() string {
 	now := time.Now()
-	return path.Join(config.ProfilePath,
+	return path.Join(consolePrompt,
 		fmt.Sprintf("%d%02d%02d_%02d_%02d_%02d",
 			now.Year(),
 			now.Month(),

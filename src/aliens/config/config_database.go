@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/25
  * Contributors:
@@ -9,9 +9,8 @@
  *******************************************************************************/
 package config
 
-
 type DBConfig struct {
-	Name       string  //database name
-	Address    string  //database address
-	MaxSession uint    //database connection pool limit
+	Name       string //database name
+	Address    string //database address
+	MaxSession uint   //database connection pool limit
 }

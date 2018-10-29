@@ -11,10 +11,9 @@ package service
 
 import "aliens/protocol/room"
 import (
-	"aliens/network"
 	"aliens/module/room/core"
+	"aliens/network"
 )
-
 
 //
 func handleJoinRoom(request *room.JoinRoom, response *room.JoinRoomRet, agent network.Agent) {

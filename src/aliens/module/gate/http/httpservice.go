@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/2
  * Contributors:
@@ -10,39 +10,56 @@
 package http
 
 import (
-	"net/http"
+	"aliens/config"
 	"aliens/log"
-	"aliens/module/gate/conf"
+	"aliens/module/gate/route"
+	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
 )
 
-func Init() {
-	if conf.Config.Http.Address != "" {
-		go func() {
-			//http.HandleFunc("/", httpHandle)
-			log.Info(http.ListenAndServe(conf.Config.Http.Address, nil))
-		}()
+func Init(config config.HttpConfig) {
+	if config.Address == "" {
+		return
 	}
+	go func() {
+		router := gin.Default()
+		if !log.DEBUG {
+			gin.SetMode(gin.ReleaseMode)
+		}
+		router.Any(config.Prefix+"/:service/:handler", handleService)
+		err := router.Run(config.Address)
+		if err != nil {
+			log.Fatalf("start http service err : %v", err)
+		}
+	}()
 }
-
 
 func Close() {
 
 }
 
 //添加弹幕信息
-//func httpHandle(w http.ResponseWriter, r *http.Request) {
-//	r.ParseForm()
-//	body, _ := ioutil.ReadAll(r.Body)
-//	response, error := route.HandleUrlMessage(r.RequestURI, body)
-//	if error != nil {
-//		response = []byte(error.Error())
-//	}
-//	_, err := w.Write(response)
-//	if err != nil {
-//		log.Debug(err.Error())
-//	}
-//}
+func handleService(c *gin.Context) {
+	service := c.Param("service")
 
+	//var data map[string]interface{}
+	//c.ShouldBindQuery(data)
+	//c.shouldbind
 
+	body, _ := ioutil.ReadAll(c.Request.Body)
+	//data, _ := json.Marshal(c.Request.Form)
 
-
+	log.Debugf("request data %v", string(body))
+	response, err := route.HandleUrlMessage(service, nil)
+	if err != nil {
+		response = []byte(err.Error())
+		c.String(http.StatusInternalServerError, string(response))
+	} else {
+		c.String(http.StatusOK, string(response))
+	}
+	//_, err := w.Write(response)
+	//if err != nil {
+	//	log.Debug(err.Error())
+	//}
+}

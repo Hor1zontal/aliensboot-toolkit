@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/14
  * Contributors:
@@ -10,14 +10,12 @@
 package util
 
 import (
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"strconv"
-	"fmt"
 	"time"
-	"encoding/json"
 )
-
-
 
 func VisitTag(meta interface{}, tag string, callback func(fieldName string, tagValue string)) {
 	dataValue := reflect.ValueOf(meta).Elem()
@@ -30,7 +28,6 @@ func VisitTag(meta interface{}, tag string, callback func(fieldName string, tagV
 		callback(fieldType.Name, tagValue)
 	}
 }
-
 
 func GetReflectValue(value reflect.Value) (interface{}, error) {
 	data := value.Interface()
@@ -49,7 +46,9 @@ func GetReflectValue(value reflect.Value) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		return string(jsonData), nil
+
+		//TODO 支持protobuf
+		return jsonData, nil
 	}
 }
 

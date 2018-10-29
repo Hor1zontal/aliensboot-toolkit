@@ -2,15 +2,14 @@ package internal
 
 import (
 	"aliens/log"
-	"github.com/sirupsen/logrus"
-	"aliens/module/statistics/model"
 	"aliens/module/statistics/elastics"
+	"aliens/module/statistics/model"
+	"github.com/sirupsen/logrus"
 	//"aliens/cluster/center"
 	"aliens/module/statistics/conf"
 	"aliens/module/statistics/constant"
 	"aliens/task"
 )
-
 
 var esHandler = elastics.NewESHandler(conf.Game)
 
@@ -39,8 +38,8 @@ func init() {
 }
 
 func handleOnlineStatic(args []interface{}) {
-	userCount := args[0].(int)   //用户数量
-	visitorCount := args[1].(int)   //空连接数量
+	userCount := args[0].(int)     //用户数量
+	visitorCount := args[1].(int)  //空连接数量
 	onlineFields["node"] = "node1" //center.ClusterCenter.GetNodeID()
 	onlineFields["u_count"] = userCount
 	onlineFields["v_count"] = visitorCount
@@ -50,8 +49,8 @@ func handleOnlineStatic(args []interface{}) {
 //处理服务信息统计
 func handleServiceStatic(args []interface{}) {
 	service := args[0].(string)   //服务名称
-	serviceNo := args[1].(int32)   //服务处理编号
-	interval := args[2].(float64)  //服务处理时间间隔
+	serviceNo := args[1].(int32)  //服务处理编号
+	interval := args[2].(float64) //服务处理时间间隔
 	callInfos := serviceStatistics[service]
 	if callInfos == nil {
 		callInfos = make(map[int32]*model.CallInfo)

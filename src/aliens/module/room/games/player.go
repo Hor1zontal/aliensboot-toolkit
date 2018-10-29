@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/25
  * Contributors:
@@ -14,7 +14,6 @@ import (
 )
 
 type Player struct {
-
 	id uint32 //玩家id
 
 	agent network.Agent //连接代理 是否连接
@@ -31,7 +30,6 @@ func (this *Player) getID(data []byte) {
 		this.agent.WriteMsg(data)
 	}
 }
-
 
 //发动数据
 func (this *Player) sendData(data []byte) {

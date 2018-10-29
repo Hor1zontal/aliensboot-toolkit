@@ -1,14 +1,14 @@
 package network
 
 import (
+	"aliens/cluster/center"
+	"aliens/common/data_structures/set"
 	"aliens/common/util"
 	modulebase "aliens/module/base"
-	"aliens/common/data_structures/set"
-	"aliens/protocol/base"
-	"aliens/protocol"
-	"aliens/cluster/center"
-	"aliens/module/gate/cache"
 	"aliens/module/dispatch/rpc"
+	"aliens/module/gate/cache"
+	"aliens/protocol"
+	"aliens/protocol/base"
 )
 
 var Manager = &networkManager{}
@@ -19,9 +19,9 @@ var Manager = &networkManager{}
 
 type networkManager struct {
 	//handler *modulebase.Skeleton
-	networks  *set.HashSet          //存储所有未验权的网络连接
+	networks     *set.HashSet       //存储所有未验权的网络连接
 	authNetworks map[int64]*Network //存储所有验权通过的网络连接
-	node string //当前节点名
+	node         string             //当前节点名
 	//timeWheel *util.TimeWheel       //验权检查时间轮
 }
 
@@ -44,6 +44,7 @@ func (this *networkManager) Init() {
 	//this.timeWheel = util.NewTimeWheel(time.Second, 60, this.dealAuthTimeout)
 	//this.timeWheel.Start()
 }
+
 //
 //func (this *networkManager) AsyncCall(f func(), c func()) {
 //	this.handler.Go(f, c)
@@ -86,7 +87,7 @@ func (this *networkManager) Push(authID int64, message *base.Any) {
 }
 
 //广播消息
-func (this *networkManager)	Broadcast(message *base.Any) {
+func (this *networkManager) Broadcast(message *base.Any) {
 	for _, network := range this.authNetworks {
 		network.Push(message)
 	}
@@ -111,7 +112,7 @@ func (this *networkManager) RemoveNetwork(network *Network) {
 }
 
 func (this *networkManager) DealAuthTimeout() {
-	this.networks.Range(func (element interface{}) {
+	this.networks.Range(func(element interface{}) {
 		network := element.(*Network)
 		//连接超过固定时长没有验证权限需要退出
 		if network.IsAuthTimeout() {
@@ -137,8 +138,8 @@ func (this *networkManager) auth(authID int64, network *Network) {
 		//用户在其他网关节点登录 需要发送远程T人
 		if node != this.node {
 			kickMsg := &protocol.KickOut{
-				AuthID:authID,
-				KickType:protocol.KickType_OtherSession,
+				AuthID:   authID,
+				KickType: protocol.KickType_OtherSession,
 			}
 			rpc.Gate.KickOut(node, kickMsg)
 		}

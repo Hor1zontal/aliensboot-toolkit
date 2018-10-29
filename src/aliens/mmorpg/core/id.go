@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/31
  * Contributors:
@@ -14,10 +14,9 @@ import (
 	"aliens/log"
 )
 
-
 type ClientID struct {
-	gateID string
-	authID int64
+	gateID   string
+	authID   int64
 	entityID EntityID
 }
 
@@ -36,8 +35,3 @@ func MustEntityID(id string) EntityID {
 	}
 	return EntityID(id)
 }
-
-
-
-
-

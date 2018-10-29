@@ -1,16 +1,15 @@
 package core
 
 import (
-	"aliens/mmorpg/aoi"
-	"fmt"
-	"aliens/protocol"
-	"aliens/mmorpg/config"
-	"github.com/gogo/protobuf/proto"
 	"aliens/log"
+	"aliens/mmorpg/aoi"
+	"aliens/mmorpg/config"
+	"aliens/protocol"
+	"fmt"
+	"github.com/gogo/protobuf/proto"
 )
 
 type ISpace interface {
-
 	IEntity
 	//GetConfig() config.SpaceConfig //
 
@@ -27,10 +26,9 @@ type ISpace interface {
 }
 
 type Space struct {
-
 	id EntityID
 
-	entities EntityMap  //entities in current space
+	entities EntityMap //entities in current space
 
 	aoiMgr aoi.Manager
 
@@ -96,12 +94,10 @@ func (space *Space) move(entity *Entity, newPos *protocol.Vector) {
 	//space.proxy.OnEntityMove(entity)
 }
 
-
 // CreateEntity creates a new local entity in this space
 func (space *Space) CreateEntity(typeName string, pos *protocol.Vector) {
 	EntityManager.CreateLocalEntity(typeName, space, pos)
 }
-
 
 func (space *Space) GetNeighbors(entityID EntityID) EntitySet {
 	entity := space.entities.Get(entityID)
@@ -110,7 +106,6 @@ func (space *Space) GetNeighbors(entityID EntityID) EntitySet {
 	}
 	return entity.interestedIn
 }
-
 
 // GetEntityCount returns the total count of entities in space
 func (space *Space) GetEntityCount() int {
@@ -126,6 +121,5 @@ func (space *Space) ForEachEntity(f func(e *Entity)) {
 
 // GetEntity returns the entity in space with specified id, nil otherwise
 func (space *Space) GetEntity(entityID EntityID) *Entity {
-	return  space.entities.Get(entityID)
+	return space.entities.Get(entityID)
 }
-

@@ -10,35 +10,34 @@ package center
 
 //服务中心，处理服务的调度和查询
 import (
-	"strings"
-	"github.com/hashicorp/consul/api"
-	"aliens/log"
-	"time"
-	"gopkg.in/mgo.v2/bson"
 	"aliens/cluster/center/service"
-	"sync"
 	"aliens/common/util"
-	"fmt"
-	"net/http"
 	"aliens/config"
+	"aliens/log"
+	"fmt"
+	"github.com/hashicorp/consul/api"
+	"gopkg.in/mgo.v2/bson"
+	"net/http"
+	"strings"
+	"sync"
+	"time"
 )
 
 type ConsulServiceCenter struct {
 	sync.RWMutex
 
 	*service.Container //服务容器 key 服务名
-	client *api.Client
+	client             *api.Client
 
-	node string
+	node      string
 	listeners map[string]struct{}
 }
 
 func (this *ConsulServiceCenter) ConnectCluster(config config.ClusterConfig) {
 	//if config.ID == "" {
-		config.ID = bson.NewObjectId().Hex()
+	config.ID = bson.NewObjectId().Hex()
 	//}
 	this.node = config.ID
-
 
 	this.listeners = make(map[string]struct{})
 
@@ -82,7 +81,7 @@ func (this *ConsulServiceCenter) ReleaseService(service service.IService) {
 func (this *ConsulServiceCenter) PublicService(service service.IService, unique bool) bool {
 	var tags []string
 	serviceID := service.GetName() + "-" + service.GetAddress() + "-" + util.IntToString(service.GetPort())
-	checkAddress := ":" + util.IntToString(service.GetPort() + 10)
+	checkAddress := ":" + util.IntToString(service.GetPort()+10)
 
 	consulService := &api.AgentServiceRegistration{
 		ID:      serviceID,
@@ -109,9 +108,8 @@ func (this *ConsulServiceCenter) PublicService(service service.IService, unique 
 
 }
 
-
 func (this *ConsulServiceCenter) openListener() {
-	t := time.NewTicker(time.Second * 5)  //5秒轮询刷新
+	t := time.NewTicker(time.Second * 5) //5秒轮询刷新
 	for {
 		select {
 		case <-t.C:
@@ -120,12 +118,10 @@ func (this *ConsulServiceCenter) openListener() {
 	}
 }
 
-
-
 func (this *ConsulServiceCenter) handleListener() {
 	this.RLock()
 	defer this.RUnlock()
-	for serviceName, _  := range this.listeners {
+	for serviceName, _ := range this.listeners {
 		this.DiscoverService(true, serviceName)
 	}
 }
@@ -139,10 +135,9 @@ func (this *ConsulServiceCenter) SubscribeServices(serviceNames ...string) {
 	}
 }
 
-
 func (this *ConsulServiceCenter) DiscoverService(healthyOnly bool, serviceName string) {
 	servicesData, _, err := this.client.Health().Service(serviceName, "", healthyOnly, &api.QueryOptions{})
-	if err != nil  {
+	if err != nil {
 		return
 	}
 

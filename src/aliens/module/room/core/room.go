@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/25
  * Contributors:
@@ -16,7 +16,6 @@ import (
 )
 
 type Room struct {
-
 	id string //房间id
 
 	game games.Game //绑定游戏
@@ -65,7 +64,7 @@ func (this *Room) gameTimerLogic(game games.TimeGame) {
 	timer := game.GetTimer()
 	for {
 		select {
-		case <- timer.C:
+		case <-timer.C:
 			game.HandleTimer()
 		case message := <-this.channel:
 			game.HandleMessage(message)

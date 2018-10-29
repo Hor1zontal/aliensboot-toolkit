@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/2
  * Contributors:
@@ -10,9 +10,9 @@
 package service
 
 import (
+	"aliens/common/util"
 	"crypto/md5"
 	"encoding/hex"
-	"aliens/common/util"
 )
 
 func MD5Hash(str string) string {

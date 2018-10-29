@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/7/3
  * Contributors:
@@ -10,7 +10,7 @@
 package dbconfig
 
 type TableMeta struct {
-	Name string //表格名
-	IDName string
+	Name          string //表格名
+	IDName        string
 	AutoIncrement bool //id自否自增长
 }

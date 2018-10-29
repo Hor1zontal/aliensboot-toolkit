@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/9
  * Contributors:
@@ -9,13 +9,12 @@
  *******************************************************************************/
 package base
 
-
 import (
-	"time"
 	"aliens/chanrpc"
 	"aliens/console"
 	"aliens/pool"
 	"aliens/task"
+	"time"
 )
 
 const (
@@ -148,5 +147,3 @@ func (s *Skeleton) RegisterChanRPC(id interface{}, f interface{}) {
 func (s *Skeleton) RegisterCommand(name string, help string, f interface{}) {
 	console.Register(name, help, f, s.commandServer)
 }
-
-

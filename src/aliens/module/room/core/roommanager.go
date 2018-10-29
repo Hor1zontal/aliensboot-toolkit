@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/8
  * Contributors:
@@ -10,23 +10,22 @@
 package core
 
 import (
+	"aliens/network"
 	"aliens/protocol/framesync"
 	"sync"
-	"aliens/network"
 )
 
-var Manager = &manager{rooms:make(map[string]*Room)}
+var Manager = &manager{rooms: make(map[string]*Room)}
 
 var authResponseData []byte = nil
 
-func init () {
-	response := &framesync.Response{AuthRet:true}
+func init() {
+	response := &framesync.Response{AuthRet: true}
 	data, _ := response.Marshal()
 	authResponseData = data
 }
 
 type manager struct {
-
 	sync.RWMutex
 
 	rooms map[string]*Room //运行的游戏 游戏类型 - 房间id - 房间对象

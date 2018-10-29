@@ -11,18 +11,18 @@ package service
 
 import (
 	"aliens/chanrpc"
-	"aliens/protocol/base"
-	"time"
-	"google.golang.org/grpc"
 	"aliens/log"
+	"aliens/protocol/base"
+	"google.golang.org/grpc"
 	"net"
 	"strconv"
+	"time"
 )
 
 const (
 	suspendedTimeOut = time.Millisecond * 500
-	commandRequest = "request"
-	commandReceive = "receive"
+	commandRequest   = "request"
+	commandReceive   = "receive"
 )
 
 type handler func(request *base.Any) *base.Any
@@ -44,7 +44,7 @@ type rpcServer struct {
 	handler   handler
 	suspended bool
 	//启动服务参数
-	server  *grpc.Server      //
+	server *grpc.Server //
 }
 
 func (this *rpcServer) start(name string, port int) bool {
@@ -112,5 +112,3 @@ func (this *rpcServer) Receive(server base.RPCService_ReceiveServer) error {
 	}
 	return nil
 }
-
-

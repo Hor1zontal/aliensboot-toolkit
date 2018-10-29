@@ -1,10 +1,10 @@
 package network
 
 import (
+	"aliens/log"
 	"github.com/gorilla/websocket"
 	"sync"
 	"time"
-	"aliens/log"
 )
 
 type WSClient struct {

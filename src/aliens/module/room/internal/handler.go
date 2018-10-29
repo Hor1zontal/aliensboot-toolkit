@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/8
  * Contributors:
@@ -10,10 +10,10 @@
 package internal
 
 import (
-	"aliens/protocol/framesync"
 	"aliens/log"
-	"aliens/network"
 	"aliens/module/room/conf"
+	"aliens/network"
+	"aliens/protocol/framesync"
 )
 
 var server *network.UDPServer = &network.UDPServer{}
@@ -39,5 +39,3 @@ func handleUDPMessage(args []interface{}) {
 
 	//core.Manager.AcceptFrameMessage(request, agent)
 }
-
-

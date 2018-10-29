@@ -1,12 +1,12 @@
 package mongo
 
 import (
+	"aliens/log"
 	"container/heap"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"sync"
 	"time"
-	"aliens/log"
 )
 
 // session

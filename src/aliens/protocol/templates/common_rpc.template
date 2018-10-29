@@ -10,7 +10,7 @@
 package rpc
 
 import (
-	"aliens/module/cluster/dispatch"
+	"aliens/module/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"

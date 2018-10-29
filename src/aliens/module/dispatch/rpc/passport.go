@@ -10,10 +10,10 @@
 package rpc
 
 import (
+	"aliens/module/dispatch"
 	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
-	"aliens/module/dispatch"
 )
 
 var Passport = &passportRPCHandle{"passport"}

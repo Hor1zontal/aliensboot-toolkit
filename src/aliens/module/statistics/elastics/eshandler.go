@@ -10,19 +10,19 @@
 package elastics
 
 import (
-	"github.com/sirupsen/logrus"
-	"gopkg.in/sohlich/elogrus.v2"
+	"aliens/log"
+	"aliens/module/statistics/conf"
 	"fmt"
 	"github.com/pkg/errors"
-	"aliens/log"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/olivere/elastic.v5"
+	"gopkg.in/sohlich/elogrus.v2"
 	"time"
-	"aliens/module/statistics/conf"
 )
 
 var tag = ""
 
-var format = &logrus.JSONFormatter{DisableTimestamp:true, DisableField:true}
+var format = &logrus.JSONFormatter{DisableTimestamp: true, DisableField: true}
 
 func init() {
 	//flag.StringVar(&tag, "etag", "", "testcase tag")  //测试用例标识
@@ -32,8 +32,8 @@ func init() {
 
 func NewESHandler(prefix string) *esHandler {
 	return &esHandler{
-		prefix:prefix,
-		esLogs:make(map[string]*logrus.Logger),
+		prefix:    prefix,
+		esLogs:    make(map[string]*logrus.Logger),
 		dayPrefix: time.Now().Format("2006-01-02"),
 	}
 }
@@ -45,11 +45,9 @@ type esHandler struct {
 	dayPrefix string
 }
 
-
-func (this *esHandler) UpdateDayPrefix()  {
+func (this *esHandler) UpdateDayPrefix() {
 	this.dayPrefix = time.Now().Add(time.Hour).Format("2006-01-02")
 }
-
 
 //func handleESLog(args []interface{}, ) {
 //	index := args[0].(constant.EsLogIndex)

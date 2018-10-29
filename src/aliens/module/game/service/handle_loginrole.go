@@ -11,10 +11,9 @@ package service
 
 import (
 	"aliens/module/game/core"
-	"time"
 	"aliens/protocol"
+	"time"
 )
-
 
 //
 func handleLoginRole(authID int64, gateID string, request *protocol.LoginRole, response *protocol.LoginRoleRet) {

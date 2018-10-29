@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/8
  * Contributors:
@@ -10,17 +10,16 @@
 package network
 
 import (
-	"net"
 	"aliens/log"
+	"net"
 	"strconv"
 )
-
 
 type UDPServer struct {
 	conn *net.UDPConn
 
 	protocol string
-	address string
+	address  string
 
 	agents map[string]*UDPAgent
 
@@ -37,9 +36,7 @@ func (this *UDPServer) init(config Config, handle func(data []byte, addr *UDPAge
 	this.protocol = config.Protocol
 	this.address = config.Address + ":" + strconv.Itoa(config.Port)
 
-
 	this.agents = make(map[string]*UDPAgent)
-
 
 	udpAddr, err := net.ResolveUDPAddr(this.protocol, this.address)
 	if err != nil {
@@ -64,10 +61,9 @@ func (this *UDPServer) run() {
 
 		agent := this.agents[udpAddr.String()]
 		if agent == nil {
-			agent = &UDPAgent{conn:this.conn, udpAddr:udpAddr}
+			agent = &UDPAgent{conn: this.conn, udpAddr: udpAddr}
 			this.agents[udpAddr.String()] = agent
 		}
 		this.handle(buf[0:len], agent)
 	}
 }
-

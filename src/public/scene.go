@@ -1,9 +1,9 @@
 package main
 
 import (
+	"aliens"
 	"aliens/module/cluster"
 	"aliens/module/scene"
-	"aliens"
 )
 
 func init() {

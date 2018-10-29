@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/15
  * Contributors:
@@ -10,27 +10,25 @@
 package rpc
 
 import (
-	"aliens/protocol"
 	"aliens/exception"
 	"aliens/log"
 	dispatch "aliens/module/dispatch"
+	"aliens/protocol"
 )
 
 var Scene = &sceneRPCHandle{"scene"}
-
 
 type sceneRPCHandle struct {
 	name string
 }
 
-
 func (this *sceneRPCHandle) RequestNode(node string, request *protocol.Request) *protocol.Response {
 	rpcRet, err := dispatch.RequestNodeMessage(this.name, node, request)
 	if err != nil {
-    	log.Error(err)
-    	exception.GameException(protocol.Code_InvalidService)
-    }
-    return rpcRet
+		log.Error(err)
+		exception.GameException(protocol.Code_InvalidService)
+	}
+	return rpcRet
 }
 
 //

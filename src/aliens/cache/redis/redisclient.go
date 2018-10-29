@@ -10,10 +10,10 @@
 package redis
 
 import (
+	"aliens/config"
+	"aliens/log"
 	"github.com/garyburd/redigo/redis"
 	"time"
-	"aliens/log"
-	"aliens/config"
 )
 
 type RedisCacheClient struct {
@@ -33,8 +33,7 @@ type RedisCacheClient struct {
 
 //redis.pool.maxWait=3000    #最大等待时间：单位ms
 
-
-func NewRedisClient(config config.CacheConfig)  *RedisCacheClient {
+func NewRedisClient(config config.CacheConfig) *RedisCacheClient {
 	if config.MaxActive == 0 {
 		config.MaxActive = 5000
 	}
@@ -129,7 +128,6 @@ func (this *RedisCacheClient) Decr(key string) (int, error) {
 	defer conn.Close()
 	return redis.Int(conn.Do(OP_DECR, key))
 }
-
 
 func (this *RedisCacheClient) SelectDB(dbNumber int) error {
 	conn := this.pool.Get()

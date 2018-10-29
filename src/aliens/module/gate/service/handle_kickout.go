@@ -10,10 +10,9 @@
 package service
 
 import (
-	"aliens/protocol"
 	"aliens/module/gate/network"
+	"aliens/protocol"
 )
-
 
 //
 func handleKickOut(request *protocol.KickOut) {

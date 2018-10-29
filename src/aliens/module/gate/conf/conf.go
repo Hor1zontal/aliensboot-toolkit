@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2017/8/4
  * Contributors:
@@ -13,12 +13,10 @@ import (
 	"aliens/config"
 )
 
-
-type Route struct
-{
+type Route struct {
 	Service string `json:"service"`
-	Seq uint16 `json:"seq"`
-	Auth bool `json:"auth"`
+	Seq     uint16 `json:"seq"`
+	Auth    bool   `json:"auth"`
 }
 
 var Config struct {
@@ -31,12 +29,8 @@ var Config struct {
 	SecretKey        string //
 	AuthTimeout      float64
 	HeartbeatTimeout float64
-	Route            []Route   //路由配置
+	Route            []Route //路由配置
 }
-
-
-
-
 
 //func Init(name string) {
 //	Config.Service.Name = name

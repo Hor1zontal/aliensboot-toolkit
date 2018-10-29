@@ -31,17 +31,16 @@ import (
 
 func BuildLoginRequest(username string, pwd string, sessionID int32) *protocol.Request {
 	message := &protocol.Request{
-		Session:sessionID,
-		Passport:&protocol.Request_C2S_UserLogin{
-			C2S_UserLogin:&protocol.C2S_UserLogin{
-				Username:username,
-				Password:pwd,
+		Session: sessionID,
+		Passport: &protocol.Request_C2S_UserLogin{
+			C2S_UserLogin: &protocol.C2S_UserLogin{
+				Username: username,
+				Password: pwd,
 			},
 		},
 	}
 	return message
 }
-
 
 //func BuildRequest1(session int32, uid string, content string) *service1.Request1 {
 //	message := &service1.Request1{

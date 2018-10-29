@@ -1,10 +1,10 @@
 package network
 
 import (
+	"aliens/log"
 	"net"
 	"sync"
 	"time"
-	"aliens/log"
 )
 
 type TCPClient struct {

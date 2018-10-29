@@ -1,10 +1,10 @@
 package main
 
 import (
-	"aliens/module/room"
+	"aliens"
 	"aliens/module/cluster"
 	"aliens/module/gate"
-	"aliens"
+	"aliens/module/room"
 )
 
 func init() {

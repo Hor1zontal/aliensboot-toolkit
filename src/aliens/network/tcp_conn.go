@@ -1,11 +1,11 @@
 package network
 
 import (
-	"net"
-	"sync"
-	"runtime"
-	"fmt"
 	"aliens/log"
+	"fmt"
+	"net"
+	"runtime"
+	"sync"
 )
 
 type ConnSet map[net.Conn]struct{}
@@ -32,7 +32,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int, msgParser *MsgParser) *TCPCo
 				stackInfo := fmt.Sprintf("%s", buf[:n])
 				log.Error("panic stack info %s", stackInfo)
 			}
-		} ()
+		}()
 		for b := range tcpConn.writeChan {
 			if b == nil {
 				break

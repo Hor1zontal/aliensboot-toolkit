@@ -10,8 +10,8 @@
 package rpc
 
 import (
-	"aliens/protocol"
 	"aliens/module/dispatch"
+	"aliens/protocol"
 )
 
 var Gate = &gateRPCHandle{"gate"}
@@ -22,6 +22,15 @@ type gateRPCHandle struct {
 }
 
 
+
+func (this *gateRPCHandle) PushMessage(node string, request *protocol.PushMessage) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_PushMessage{
+			PushMessage:request,
+		},
+	}
+	return dispatch.SendNodeMessage(this.name, node, message)
+}
 
 func (this *gateRPCHandle) KickOut(node string, request *protocol.KickOut) error {
 	message := &protocol.Request{
@@ -36,15 +45,6 @@ func (this *gateRPCHandle) BindService(node string, request *protocol.BindServic
 	message := &protocol.Request{
 		Gate:&protocol.Request_BindService{
 			BindService:request,
-		},
-	}
-	return dispatch.SendNodeMessage(this.name, node, message)
-}
-
-func (this *gateRPCHandle) PushMessage(node string, request *protocol.PushMessage) error {
-	message := &protocol.Request{
-		Gate:&protocol.Request_PushMessage{
-			PushMessage:request,
 		},
 	}
 	return dispatch.SendNodeMessage(this.name, node, message)

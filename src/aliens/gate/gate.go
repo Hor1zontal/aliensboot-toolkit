@@ -1,20 +1,20 @@
 package gate
 
 import (
-	"net"
-	"reflect"
-	"aliens/log"
-	"aliens/network"
 	"aliens/chanrpc"
 	"aliens/config"
+	"aliens/log"
+	"aliens/network"
+	"net"
+	"reflect"
 )
 
 type Gate struct {
-	Processor       network.Processor
-	AgentChanRPC    *chanrpc.Server
+	Processor    network.Processor
+	AgentChanRPC *chanrpc.Server
 
-	TcpConfig   config.TCPConfig
-	WsConfig 	config.WsConfig
+	TcpConfig config.TCPConfig
+	WsConfig  config.WsConfig
 }
 
 func (gate *Gate) Run(closeSig chan bool) {
@@ -62,9 +62,9 @@ func (gate *Gate) Run(closeSig chan bool) {
 func (gate *Gate) OnDestroy() {}
 
 type agent struct {
-	conn          network.Conn
-	gate          *Gate
-	userData      interface{}
+	conn     network.Conn
+	gate     *Gate
+	userData interface{}
 }
 
 func (a *agent) Run() {

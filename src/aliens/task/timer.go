@@ -1,8 +1,8 @@
 package task
 
 import (
-	"time"
 	"aliens/exception"
+	"time"
 )
 
 // one dispatcher per goroutine (goroutine not safe)

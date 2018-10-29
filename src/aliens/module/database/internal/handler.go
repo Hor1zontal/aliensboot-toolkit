@@ -3,10 +3,10 @@ package internal
 import (
 	"aliens/database"
 	"aliens/log"
-	"time"
-	"reflect"
 	"aliens/module/database/conf"
 	"aliens/module/database/constant"
+	"reflect"
+	"time"
 )
 
 func init() {
@@ -61,11 +61,7 @@ func debugLog(opt string, data interface{}, startTime time.Time, err error) {
 		}
 		duration := time.Now().Sub(startTime)
 		if duration.Seconds() >= conf.DBTimeoutThreshold {
-			log.Debug("[%v] %v too long %v",opt, typeName, duration.Seconds())
+			log.Debug("[%v] %v too long %v", opt, typeName, duration.Seconds())
 		}
 	}
 }
-
-
-
-

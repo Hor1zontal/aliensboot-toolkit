@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/13
  * Contributors:
@@ -10,16 +10,15 @@
 package games
 
 import (
-	"time"
 	"aliens/network"
+	"time"
 )
 
-var GameRegistry = make(map[uint32]func()Game)
-
+var GameRegistry = make(map[uint32]func() Game)
 
 const (
 	GameNoobFight uint32 = 1
-	GameSimple uint32 = 2
+	GameSimple    uint32 = 2
 )
 
 func init() {
@@ -40,13 +39,12 @@ func NewGameMessage(agent network.Agent, request interface{}, response interface
 }
 
 type GameMessage struct {
-	agent network.Agent
-	request interface{}
+	agent    network.Agent
+	request  interface{}
 	response interface{}
 }
 
 type Game interface {
-
 	Init(roomID string) //初始化游戏
 
 	Start() //开始游戏
@@ -60,11 +58,9 @@ type Game interface {
 	BroadcastWithout(response []byte, playerID uint32)
 
 	BroadcastAll(response []byte)
-
 }
 
 type TimeGame interface {
-
 	HandleMessage(message GameMessage) bool //处理游戏消息 seatID 消息的发送者
 
 	GetTimer() *time.Timer

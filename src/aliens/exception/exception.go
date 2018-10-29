@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/7/23
  * Contributors:
@@ -10,16 +10,14 @@
 package exception
 
 import (
-	"runtime"
-	"aliens/log"
 	"aliens/config"
+	"aliens/log"
+	"runtime"
 )
 
 func GameException(data interface{}) {
 	panic(data)
 }
-
-
 
 func CatchStackDetail() {
 	if err := recover(); err != nil {
@@ -31,7 +29,7 @@ func PrintStackDetail(err interface{}) {
 	if config.LenStackBuf > 0 {
 		buf := make([]byte, config.LenStackBuf)
 		n := runtime.Stack(buf, false)
-		log.Errorf("%v: %s",err, buf[:n])
+		log.Errorf("%v: %s", err, buf[:n])
 	} else {
 		log.Error("%v", err)
 	}

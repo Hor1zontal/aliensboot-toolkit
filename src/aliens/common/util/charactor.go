@@ -68,7 +68,6 @@ func Int32ToString(value int32) string {
 	return strconv.Itoa(int(value))
 }
 
-
 func IntToString(value int) string {
 	return strconv.Itoa(value)
 }
@@ -76,7 +75,6 @@ func IntToString(value int) string {
 func Int64ToString(value int64) string {
 	return strconv.FormatInt(value, 10)
 }
-
 
 func FirstToUpper(str string) string {
 	length := len(str)

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/23
  * Contributors:
@@ -32,7 +32,6 @@ func CreateSpaceLocally(typeName string) *Space {
 	e := EntityManager.createEntity(typeName, nil, nil, "", nil)
 	return e.AsSpace()
 }
-
 
 func (spmgr *_SpaceManager) putSpace(space *Space) {
 	spmgr.spaces[space.id] = space

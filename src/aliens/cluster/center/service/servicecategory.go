@@ -16,9 +16,9 @@ import (
 
 func NewServiceCategory(category string, lbsStr string) *serviceCategory {
 	result := &serviceCategory{
-		category:  category,
-		services:  make(map[string]IService),
-		nodes:     []string{},
+		category: category,
+		services: make(map[string]IService),
+		nodes:    []string{},
 		//listeners: []Listener{},
 		//seqs:     seqMaps,
 	}

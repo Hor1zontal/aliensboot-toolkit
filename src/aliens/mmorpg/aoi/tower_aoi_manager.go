@@ -131,7 +131,7 @@ func (this *TowerAOIManager) normalizeYi(yi int) int {
 	return yi
 }
 
-func (this *TowerAOIManager) getTower(x , y float32) *tower {
+func (this *TowerAOIManager) getTower(x, y float32) *tower {
 	xi, yi := this.transTowerXY(x, y)
 	return &this.towers[xi][yi]
 }

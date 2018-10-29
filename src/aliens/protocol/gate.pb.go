@@ -71,7 +71,7 @@ func (m *KickOut) GetKickType() KickType {
 	return KickType_None
 }
 
-// 绑定服务
+// 绑定服务 定向转发
 type BindService struct {
 	AuthID int64             `protobuf:"varint,1,opt,name=authID,proto3" json:"authID,omitempty"`
 	Binds  map[string]string `protobuf:"bytes,2,rep,name=binds" json:"binds,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`

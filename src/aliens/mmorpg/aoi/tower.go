@@ -3,10 +3,10 @@ package aoi
 import "aliens/log"
 
 type tower struct {
-	indexX 	int
-	indexY  int
-	aoiNodes     map[*AOI]struct{} //当前灯塔范围内的aoi对象
-	watchers     map[*AOI]struct{} //灯塔在视野范围内的所有aoi
+	indexX   int
+	indexY   int
+	aoiNodes map[*AOI]struct{} //当前灯塔范围内的aoi对象
+	watchers map[*AOI]struct{} //灯塔在视野范围内的所有aoi
 }
 
 func (t *tower) init(indexX int, indexY int) {

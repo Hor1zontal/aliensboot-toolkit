@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/25
  * Contributors:
@@ -10,11 +10,11 @@
 package rpc
 
 import (
-	"aliens/protocol"
-	"github.com/gogo/protobuf/proto"
 	"aliens/cluster/center/service"
-	"errors"
 	"aliens/module/dispatch"
+	"aliens/protocol"
+	"errors"
+	"github.com/gogo/protobuf/proto"
 )
 
 func (this *gateRPCHandle) BindService1(authID int64, node string, service service.IService) error {
@@ -25,7 +25,7 @@ func (this *gateRPCHandle) BindService1(authID int64, node string, service servi
 	service.GetID()
 
 	request := &protocol.BindService{
-		AuthID:authID,
+		AuthID: authID,
 		//Binds:center.ClusterCenter.GetNodeID()
 	}
 	return this.BindService(node, request)
@@ -38,8 +38,8 @@ func (this *gateRPCHandle) Push(authID int64, node string, response *protocol.Re
 		return err
 	}
 	pushMessage := &protocol.PushMessage{
-		AuthID:authID,
-		Data:data,
+		AuthID: authID,
+		Data:   data,
 	}
 	this.PushMessage(node, pushMessage)
 	return nil
@@ -48,10 +48,10 @@ func (this *gateRPCHandle) Push(authID int64, node string, response *protocol.Re
 func (this *gateRPCHandle) BroadcastAll(node string, response *protocol.Response) {
 	data, _ := proto.Marshal(response)
 	message := &protocol.Request{
-		Gate:&protocol.Request_PushMessage{
-			PushMessage:&protocol.PushMessage{
-				AuthID:-1,
-				Data:data,
+		Gate: &protocol.Request_PushMessage{
+			PushMessage: &protocol.PushMessage{
+				AuthID: -1,
+				Data:   data,
 			},
 		},
 	}

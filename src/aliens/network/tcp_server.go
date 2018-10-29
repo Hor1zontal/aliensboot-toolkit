@@ -1,29 +1,28 @@
 package network
 
 import (
+	"aliens/config"
+	"aliens/log"
+	"fmt"
 	"net"
+	"runtime"
 	"sync"
 	"time"
-	"runtime"
-	"fmt"
-	"aliens/log"
-	"aliens/config"
 )
-
 
 type TCPServer struct {
 	config.TCPConfig
 
-	NewAgent        func(*TCPConn) Agent
-	ln              net.Listener
-	conns           ConnSet
-	mutexConns      sync.Mutex
-	wgLn            sync.WaitGroup
-	wgConns         sync.WaitGroup
+	NewAgent   func(*TCPConn) Agent
+	ln         net.Listener
+	conns      ConnSet
+	mutexConns sync.Mutex
+	wgLn       sync.WaitGroup
+	wgConns    sync.WaitGroup
 
 	// msg parser
 
-	msgParser    *MsgParser
+	msgParser *MsgParser
 }
 
 func (server *TCPServer) Start() {
@@ -106,7 +105,7 @@ func (server *TCPServer) run() {
 					stackInfo := fmt.Sprintf("%s", buf[:n])
 					log.Errorf("panic stack info %s", stackInfo)
 				}
-			} ()
+			}()
 			agent.Run()
 
 			// cleanup

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/12
  * Contributors:
@@ -9,9 +9,8 @@
  *******************************************************************************/
 package network
 
-
 type Config struct {
-	Address string
-	Port 	int
+	Address  string
+	Port     int
 	Protocol string
 }

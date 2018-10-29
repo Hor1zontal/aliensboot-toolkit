@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/4
  * Contributors:
@@ -10,11 +10,11 @@
 package center
 
 import (
-	"aliens/cluster/center/service"
-	"aliens/log"
 	"aliens/cluster/center/lbs"
+	"aliens/cluster/center/service"
 	"aliens/common/util"
 	"aliens/config"
+	"aliens/log"
 )
 
 var ClusterCenter ServiceCenter = &ETCDServiceCenter{} //服务调度中心
@@ -39,7 +39,7 @@ func PublicService(config config.ServiceConfig, handler interface{}) service.ISe
 	}
 	service := service.NewService(config)
 	if service == nil {
-		log.Fatalf( "un expect service protocol %v", config.Protocol)
+		log.Fatalf("un expect service protocol %v", config.Protocol)
 	}
 	service.SetHandler(handler)
 	if !service.Start() {
@@ -51,7 +51,6 @@ func PublicService(config config.ServiceConfig, handler interface{}) service.ISe
 	}
 	return service
 }
-
 
 func ReleaseService(service service.IService) {
 	//if !ClusterCenter.IsConnect() {
@@ -68,7 +67,6 @@ func ReleaseService(service service.IService) {
 type ConfigListener func(data []byte)
 
 type ServiceCenter interface {
-
 	GetNodeID() string //获取当前节点id
 
 	ConnectCluster(config config.ClusterConfig)
@@ -76,18 +74,17 @@ type ServiceCenter interface {
 	PublicConfig(configName string, content []byte) bool        //发布配置
 	SubscribeConfig(configName string, listener ConfigListener) //订阅配置
 
-	ReleaseService(service service.IService)   //释放服务
-	PublicService(service service.IService, unique bool) bool  //发布服务
+	ReleaseService(service service.IService)                  //释放服务
+	PublicService(service service.IService, unique bool) bool //发布服务
 
-	SubscribeServices(serviceNames ...string) //订阅服务
-	GetAllService(serviceName string) []service.IService  //获取所有的服务
+	SubscribeServices(serviceNames ...string)            //订阅服务
+	GetAllService(serviceName string) []service.IService //获取所有的服务
 
 	GetService(serviceName string, serviceID string) service.IService //获取指定服务
-	AllocService(serviceName string, param string) service.IService //按照负载均衡策略 分配一个可用的服务
+	AllocService(serviceName string, param string) service.IService   //按照负载均衡策略 分配一个可用的服务
 
 	//AddServiceListener(listener service.Listener)
 
 	IsConnect() bool
 	Close()
 }
-

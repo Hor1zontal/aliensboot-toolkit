@@ -1,14 +1,14 @@
 package module
 
 import (
-	"sync"
-	"aliens/exception"
 	"aliens/config"
+	"aliens/exception"
+	"sync"
 )
 
 type Module interface {
-	GetName() string  //module name
-	GetConfig() interface{}  //module config data
+	GetName() string        //module name
+	GetConfig() interface{} //module config data
 
 	OnInit()
 	OnDestroy()

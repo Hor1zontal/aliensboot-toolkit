@@ -10,29 +10,26 @@ package center
 
 //服务中心，处理服务的调度和查询
 import (
-	"encoding/json"
-	"github.com/samuel/go-zookeeper/zk"
-	"time"
-	"gopkg.in/mgo.v2/bson"
-	"aliens/log"
 	"aliens/cluster/center/service"
 	"aliens/config"
+	"aliens/log"
+	"encoding/json"
+	"github.com/samuel/go-zookeeper/zk"
+	"gopkg.in/mgo.v2/bson"
+	"time"
 )
-
-
 
 type ZKServiceCenter struct {
 	*service.Container
-	zkCon            *zk.Conn
-	zkName           string
-	serviceRoot      string
-	configRoot 		 string
+	zkCon       *zk.Conn
+	zkName      string
+	serviceRoot string
+	configRoot  string
 
-
-	nodeId  string //当前集群节点的id
+	nodeId string //当前集群节点的id
 	//lbs string //default polling
-	certFile string
-	keyFile string
+	certFile   string
+	keyFile    string
 	commonName string
 }
 
@@ -104,7 +101,7 @@ func (this *ZKServiceCenter) ReleaseService(service service.IService) {
 }
 
 func (this *ZKServiceCenter) SubscribeService(serviceName string) {
-	this.SubscribeConfig("lbs" + NODE_SPLIT + serviceName, func(data []byte) {
+	this.SubscribeConfig("lbs"+NODE_SPLIT+serviceName, func(data []byte) {
 		this.Container.SetLbs(serviceName, string(data))
 	})
 	path := this.serviceRoot + NODE_SPLIT + serviceName
@@ -194,7 +191,7 @@ func (this *ZKServiceCenter) PublicService(service service.IService, unique bool
 	}
 
 	this.confirmNode(servicePath)
-	id, err := this.zkCon.Create(servicePath + NODE_SPLIT + serviceId, data,
+	id, err := this.zkCon.Create(servicePath+NODE_SPLIT+serviceId, data,
 		zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 	if err != nil {
 		log.Errorf("create service error : %v", err)
@@ -235,7 +232,7 @@ func (this *ZKServiceCenter) SubscribeConfig(configName string, configHandler Co
 		return
 	}
 	configHandler(content)
-	go func(){
+	go func() {
 		for {
 			event, _ := <-ch
 			//更新配置节点信息
@@ -252,9 +249,6 @@ func (this *ZKServiceCenter) SubscribeConfig(configName string, configHandler Co
 	}()
 }
 
-
-
 //func (this *ZKServiceCenter) AddServiceListener(listener service.Listener) {
 //	this.Container.AddServiceListener(listener)
 //}
-

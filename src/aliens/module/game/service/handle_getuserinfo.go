@@ -14,7 +14,6 @@ import (
 	"aliens/protocol"
 )
 
-
 //
 func handleGetUserInfo(authID int64, gateID string, request *protocol.GetUserInfo, response *protocol.GetUserInfoRet) {
 	userSession := core.UserManager.EnsureUser(authID)

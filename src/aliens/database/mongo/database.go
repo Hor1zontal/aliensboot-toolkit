@@ -1,11 +1,11 @@
 package mongo
 
 import (
-	"aliens/database"
-	"gopkg.in/mgo.v2"
-	"aliens/database/dbconfig"
-	"reflect"
 	"aliens/config"
+	"aliens/database"
+	"aliens/database/dbconfig"
+	"gopkg.in/mgo.v2"
+	"reflect"
 )
 
 //type DatabaseFactory struct {
@@ -24,7 +24,7 @@ type Database struct {
 	database  *mgo.Database
 	auth      *database.Authority
 
-	tableMetas  map[reflect.Type]*dbconfig.TableMeta
+	tableMetas map[reflect.Type]*dbconfig.TableMeta
 }
 
 //初始化连接数据库

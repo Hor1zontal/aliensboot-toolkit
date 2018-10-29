@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/16
  * Contributors:
@@ -15,8 +15,8 @@ import (
 
 func NewAsyncCall(request *base.Any, callProxy func(f func(), c func()), callbackProxy func(response *base.Any, err error)) *AsyncCall {
 	return &AsyncCall{
-		request:   request,
-		callProxy: callProxy,
+		request:       request,
+		callProxy:     callProxy,
 		callbackProxy: callbackProxy,
 	}
 }

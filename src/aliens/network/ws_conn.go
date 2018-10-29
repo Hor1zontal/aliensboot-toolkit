@@ -1,13 +1,13 @@
 package network
 
 import (
+	"aliens/log"
 	"errors"
+	"fmt"
 	"github.com/gorilla/websocket"
 	"net"
-	"sync"
 	"runtime"
-	"fmt"
-	"aliens/log"
+	"sync"
 )
 
 type WebsocketConnSet map[*websocket.Conn]struct{}
@@ -34,7 +34,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 				stackInfo := fmt.Sprintf("%s", buf[:n])
 				log.Errorf("panic stack info %s", stackInfo)
 			}
-		} ()
+		}()
 		for b := range wsConn.writeChan {
 			if b == nil {
 				break

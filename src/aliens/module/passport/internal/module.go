@@ -1,11 +1,11 @@
 package internal
 
 import (
+	"aliens/module/base"
 	"aliens/module/passport/cache"
+	"aliens/module/passport/conf"
 	"aliens/module/passport/db"
 	"aliens/module/passport/service"
-	"aliens/module/passport/conf"
-	"aliens/module/base"
 )
 
 type Module struct {

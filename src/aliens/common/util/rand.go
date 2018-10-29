@@ -1,9 +1,9 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
 )
 
 var randomArray []byte = []byte("0123456789abcdefghijklmnopqrstuvwxyz")
@@ -33,7 +33,6 @@ func GetRandomString(l int) string {
 	}
 	return Bytes2Str(result)
 }
-
 
 func RandGroup(p ...uint32) int {
 	if p == nil {

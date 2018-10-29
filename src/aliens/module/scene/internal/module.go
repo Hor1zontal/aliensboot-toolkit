@@ -1,12 +1,11 @@
 package internal
 
 import (
-	"aliens/module/scene/service"
 	"aliens/module"
 	"aliens/module/scene/conf"
 	"aliens/module/scene/core"
+	"aliens/module/scene/service"
 )
-
 
 type Module struct {
 	*module.Skeleton
@@ -19,7 +18,6 @@ func (m *Module) GetName() string {
 func (m *Module) GetConfig() interface{} {
 	return &conf.Config
 }
-
 
 func (m *Module) OnInit() {
 	m.Skeleton = module.NewSkeleton()

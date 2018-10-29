@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/9
  * Contributors:
@@ -50,7 +50,7 @@ func (c *Cache) Add(key Key, value interface{}) {
 		c.ll = list.New()
 	}
 	if ee, ok := c.cache[key]; ok {
-		c.ll.MoveToFront(ee)//移动到前边
+		c.ll.MoveToFront(ee) //移动到前边
 		ee.Value.(*entry).value = value
 		return
 	}

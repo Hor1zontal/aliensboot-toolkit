@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -10,12 +10,12 @@
 package route
 
 import (
+	"aliens/cluster/center/service"
+	"aliens/module/dispatch"
+	"aliens/module/gate/conf"
+	"aliens/protocol/base"
 	"errors"
 	"fmt"
-	"aliens/protocol/base"
-	"aliens/module/gate/conf"
-	"aliens/module/dispatch"
-	"aliens/cluster/center/service"
 )
 
 //requestID - service
@@ -25,7 +25,6 @@ var seqServiceMapping = make(map[uint16]string)
 var serviceSeqMapping = make(map[string]uint16)
 
 //goroutine pool, deal async request and callback
-
 
 func Init() {
 	routes := conf.Config.Route
@@ -38,29 +37,6 @@ func Init() {
 	}
 }
 
-//func HandleUrlMessage(requestURL string, requestData []byte) ([]byte, error) {
-//	params := strings.Split(requestURL, "/")
-//	if len(params) < 3 {
-//		return nil, errors.New("invalid param")
-//	}
-//
-//	serviceID := params[1]
-//	request := &base.Any{TypeUrl:params[2], Value:requestData}
-//	response, error := dispatch.RPC.Request(serviceID, request, "")
-//	if error != nil {
-//		return nil, error
-//	}
-//	responseProxy, ok := response.(*base.Any)
-//	if !ok {
-//		return nil, errors.New("unexpect response type")
-//	}
-//	return responseProxy.Value, nil
-//}
-//
-//func GetPushID(service string) uint16 {
-//	return serviceSeqMapping[service]
-//}
-
 func GetServiceSeq(serviceName string) uint16 {
 	return serviceSeqMapping[serviceName]
 }
@@ -69,6 +45,22 @@ func GetServiceByeSeq(seq uint16) string {
 	return seqServiceMapping[seq]
 }
 
+func HandleUrlMessage(serviceName string, requestData []byte) ([]byte, error) {
+	seq := GetServiceSeq(serviceName)
+	if seq <= 0 {
+		return nil, errors.New(fmt.Sprintf("service %v seq not found", serviceName))
+	}
+	request := &base.Any{Id: seq, Value: requestData}
+	response, error := dispatch.Request(serviceName, request, "")
+	if error != nil {
+		return nil, error
+	}
+	return response.Value, nil
+}
+
+//func GetPushID(service string) uint16 {
+//	return serviceSeqMapping[service]
+//}
 
 func AsyncHandleMessage(hashKey string, asyncCall *service.AsyncCall) error {
 	serviceName, ok := seqServiceMapping[asyncCall.ReqID()]

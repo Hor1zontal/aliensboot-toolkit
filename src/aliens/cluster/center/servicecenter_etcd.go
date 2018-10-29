@@ -10,31 +10,30 @@ package center
 
 //服务中心，处理服务的调度和查询
 import (
-	"aliens/log"
-	"time"
-	"gopkg.in/mgo.v2/bson"
 	"aliens/cluster/center/service"
-	"sync"
-	"github.com/coreos/etcd/clientv3"
-	"encoding/json"
-	"context"
-	"github.com/coreos/etcd/mvcc/mvccpb"
 	"aliens/config"
+	"aliens/log"
+	"context"
+	"encoding/json"
+	"github.com/coreos/etcd/clientv3"
+	"github.com/coreos/etcd/mvcc/mvccpb"
+	"gopkg.in/mgo.v2/bson"
+	"sync"
+	"time"
 )
 
 type ETCDServiceCenter struct {
 	//sync.RWMutex
 
 	*service.Container //服务容器 key 服务名
-	client *clientv3.Client
+	client             *clientv3.Client
 
-
-	node        string //当前节点
+	node string //当前节点
 
 	configRoot  string //配置根节点
 	serviceRoot string //服务根节点
 	ttl         int64
-	ttlCheck    *sync.Map//map[string]string
+	ttlCheck    *sync.Map //map[string]string
 	ticker      *time.Ticker
 }
 
@@ -196,7 +195,7 @@ func (this *ETCDServiceCenter) SubscribeServices(serviceNames ...string) {
 }
 
 func (this *ETCDServiceCenter) SubscribeService(healthyOnly bool, serviceName string) {
-	this.SubscribeConfig("lbs" + NODE_SPLIT + serviceName, func(data []byte) {
+	this.SubscribeConfig("lbs"+NODE_SPLIT+serviceName, func(data []byte) {
 		this.Container.SetLbs(serviceName, string(data))
 	})
 
@@ -247,8 +246,6 @@ func (this *ETCDServiceCenter) handleService(eventType mvccpb.Event_EventType, v
 
 }
 
-
-
 func (this *ETCDServiceCenter) SubscribeConfig(configName string, configHandler ConfigListener) {
 	configPath := this.configRoot + NODE_SPLIT + configName
 	rsp, err := this.client.Get(newTimeoutContext(), configPath)
@@ -260,7 +257,7 @@ func (this *ETCDServiceCenter) SubscribeConfig(configName string, configHandler 
 		configHandler(v.Value)
 	}
 
-	go func(){
+	go func() {
 		ch := this.client.Watch(context.TODO(), configPath)
 		for {
 			//只要消息管道没有关闭，就一直等待用户请求
@@ -271,7 +268,7 @@ func (this *ETCDServiceCenter) SubscribeConfig(configName string, configHandler 
 				}
 			}
 		}
-	} ()
+	}()
 
 }
 

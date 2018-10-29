@@ -10,21 +10,22 @@
 package aliens
 
 import (
+	"aliens/cluster/center"
+	"aliens/config"
+	"aliens/console"
+	"aliens/log"
+	"aliens/module"
+	"flag"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"os/signal"
-	"aliens/config"
-	"aliens/module"
-	"aliens/log"
-	"aliens/console"
-	"fmt"
-	"flag"
-	"aliens/cluster/center"
 )
 
 var (
-	debug = false
-	configPath = ""  //配置文件根目录，默认当前
-	tag = ""
+	debug      = false
+	configPath = "" //配置文件根目录，默认当前
+	tag        = ""
 )
 
 func init() {
@@ -42,12 +43,19 @@ func Run(mods ...module.Module) {
 
 	center.ClusterCenter.ConnectCluster(baseConfig.Cluster)
 
-	logo := `
-	╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝
-	╔═║║  ║╔═╝║ ║══║╔═║║ ║ ║
-	╝ ╝══╝╝══╝╝ ╝══╝══ ══╝ ╝
-	`
-	fmt.Println(logo)
+	//logo := `
+	//╔═║║  ╝╔═╝╔═ ╔═╝╔═ ╔═║═╔╝
+	//╔═║║  ║╔═╝║ ║══║╔═║║ ║ ║
+	//╝ ╝══╝╝══╝╝ ╝══╝══ ══╝ ╝
+	//`
+
+	f, err := os.Open(configPath + "/logo.txt")
+	if err == nil {
+		data, _ := ioutil.ReadAll(f)
+		fmt.Println(string(data))
+	} else {
+		log.Debug(err)
+	}
 
 	log.Infof("AliensBot %v starting up", config.Version)
 
@@ -60,7 +68,7 @@ func Run(mods ...module.Module) {
 
 	module.Init()
 	// console
-	console.Init()
+	console.Init(baseConfig.ConsolePort, baseConfig.ConsolePrompt)
 
 	// close
 	c := make(chan os.Signal, 1)

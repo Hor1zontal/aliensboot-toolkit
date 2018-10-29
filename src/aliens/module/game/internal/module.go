@@ -1,14 +1,14 @@
 package internal
 
 import (
+	"aliens/module/base"
+	"aliens/module/game/conf"
 	"aliens/module/game/db"
 	"aliens/module/game/service"
-	"aliens/module"
-	"aliens/module/game/conf"
 )
 
 type Module struct {
-	*module.Skeleton
+	*base.Skeleton
 }
 
 func (m *Module) GetName() string {
@@ -20,7 +20,7 @@ func (m *Module) GetConfig() interface{} {
 }
 
 func (m *Module) OnInit() {
-	m.Skeleton = module.NewSkeleton()
+	m.Skeleton = base.NewSkeleton()
 	db.Init()
 	service.Init(m.ChanRPCServer)
 }

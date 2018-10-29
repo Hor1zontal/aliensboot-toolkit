@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/22
  * Contributors:
@@ -9,20 +9,18 @@
  *******************************************************************************/
 package dispatch
 
-
 import (
-	"aliens/protocol/base"
+	"aliens/cluster/center/service"
 	"aliens/cluster/message"
 	"aliens/protocol"
+	"aliens/protocol/base"
 	"github.com/gogo/protobuf/proto"
-	"aliens/cluster/center/service"
 )
-
 
 var serviceMapping = make(map[string]*message.RemoteService)
 
 //阻塞请求消息 - 根据负载均衡动态分配一个节点处理
-func RequestMessage(serviceName string, message  *protocol.Request, hashKey string) (*protocol.Response, error) {
+func RequestMessage(serviceName string, message *protocol.Request, hashKey string) (*protocol.Response, error) {
 	data, err := proto.Marshal(message)
 	if err != nil {
 		return nil, err
@@ -34,7 +32,7 @@ func RequestMessage(serviceName string, message  *protocol.Request, hashKey stri
 	}
 	messageRet := &protocol.Response{}
 	messageRet.Unmarshal(response.GetValue())
-	return  messageRet, nil
+	return messageRet, nil
 }
 
 //异步发送信息
@@ -61,7 +59,7 @@ func RequestNodeMessage(serviceName string, serviceID string, message *protocol.
 	}
 	messageRet := &protocol.Response{}
 	messageRet.Unmarshal(response.GetValue())
-	return  messageRet, nil
+	return messageRet, nil
 }
 
 func Request(serviceName string, message *base.Any, hashKey string) (*base.Any, error) {
@@ -102,8 +100,3 @@ func allocService(serviceName string) *message.RemoteService {
 	}
 	return service
 }
-
-
-
-
-

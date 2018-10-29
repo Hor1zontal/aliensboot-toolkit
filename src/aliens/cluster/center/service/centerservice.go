@@ -14,8 +14,8 @@ import "aliens/protocol/base"
 //调用方式
 const (
 	WEBSOCKET string = "websocket"
-	HTTP string = "http"
-	GRPC string = "grpc"
+	HTTP      string = "http"
+	GRPC      string = "grpc"
 )
 
 //type Callback func(response *base.Any, err error)
@@ -30,30 +30,30 @@ type IService interface {
 	GetAddress() string
 	GetPort() int
 	//GetConfig() *CenterService
-	Start() bool                                      //启动服务
-	Connect() bool                                    //连接服务
-	Close() 										  //关闭服务
+	Start() bool   //启动服务
+	Connect() bool //连接服务
+	Close()        //关闭服务
 
-	Equals(other IService) bool                       //比较服务
-	IsLocal() bool                                    //是否本机服务
+	Equals(other IService) bool //比较服务
+	IsLocal() bool              //是否本机服务
 
 	Request(request *base.Any) (*base.Any, error) //同步请求 阻塞
 	//AsyncRequest(asyncCall *AsyncCall) //异步请求，响应采用回调
 	Send(request *base.Any) error //发送消息，不需要响应
 
-	SetHandler(handler interface{})  //设置处理句柄
+	SetHandler(handler interface{}) //设置处理句柄
 
 	//GetLBS() string
 	//KickOut(request interface{}) error //服务推送
 }
 
 type CenterService struct {
-	Address string  `json:"address"`//服务地址 域名或ip
-	Port int        `json:"port"` //服务端端口
-	Protocol string `json:"protocol"`//提供服务的协议 GRPC HTTP WBSOCKET
-	ID   string		`json:"-"` //服务器的id
-	Name string     `json:"-"`//服务名称
-	Unique bool     `json:"-"`//是否全局唯一
+	Address  string `json:"address"`  //服务地址 域名或ip
+	Port     int    `json:"port"`     //服务端端口
+	Protocol string `json:"protocol"` //提供服务的协议 GRPC HTTP WBSOCKET
+	ID       string `json:"-"`        //服务器的id
+	Name     string `json:"-"`        //服务名称
+	Unique   bool   `json:"-"`        //是否全局唯一
 }
 
 func (this *CenterService) GetAddress() string {
@@ -76,21 +76,17 @@ func (this *CenterService) GetID() string {
 	return this.ID
 }
 
-
 func (this *CenterService) SetID(id string) {
 	this.ID = id
 }
-
 
 func (this *CenterService) GetName() string {
 	return this.Name
 }
 
-
 func (this *CenterService) SetName(name string) {
 	this.Name = name
 }
-
 
 //
 //type centerService struct {
@@ -101,5 +97,3 @@ func (this *CenterService) SetName(name string) {
 //	id       string `json:"-"`              //服务ID
 //	name     string `json:"-"`              //服务类型
 //}
-
-

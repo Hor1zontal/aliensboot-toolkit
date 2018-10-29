@@ -12,10 +12,9 @@ package service
 import (
 	"aliens/protocol"
 
-	"aliens/module/scene/util"
 	"aliens/mmorpg/core"
+	"aliens/module/scene/util"
 )
-
 
 //
 func handleGetState(authID int64, gateID string, request *protocol.GetState, response *protocol.GetStateRet) {

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"aliens/module/hall"
-	"aliens/module/cluster"
 	"aliens"
+	"aliens/module/cluster"
+	"aliens/module/hall"
 )
 
 func init() {

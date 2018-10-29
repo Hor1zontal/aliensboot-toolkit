@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/5/17
  * Contributors:
@@ -10,12 +10,12 @@
 package internal
 
 import (
-	"aliens/module/gate/msg"
-	"aliens/protocol/base"
 	"aliens/gate"
-	"aliens/module/gate/network"
-	"aliens/task"
 	"aliens/log"
+	"aliens/module/gate/msg"
+	"aliens/module/gate/network"
+	"aliens/protocol/base"
+	"aliens/task"
 )
 
 func init() {
@@ -31,10 +31,8 @@ func init() {
 
 	Skeleton.CronFunc(cron, network.Manager.DealAuthTimeout)
 
-
 	//dispatch.MQ.RegisterConsumer(constant.SERVICE_GATE, HandlePush)
 }
-
 
 //只处理推送消息
 //func HandlePush(request *base.Any) error {
@@ -44,7 +42,6 @@ func init() {
 //	}
 //	return nil
 //}
-
 
 //推送消息
 //func agentPush(args []interface{}) {
@@ -81,4 +78,3 @@ func handleMessage(args []interface{}) {
 		break
 	}
 }
-

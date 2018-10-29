@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/27
  * Contributors:
@@ -10,11 +10,11 @@
 package main
 
 import (
-"container/heap"
-"fmt"
-"math"
-"strings"
-"strconv"
+	"container/heap"
+	"fmt"
+	"math"
+	"strconv"
+	"strings"
 )
 
 type OpenList []*_AstarPoint
@@ -36,7 +36,6 @@ func (this *OpenList) Pop() interface{} {
 	*this = old[0 : n-1]
 	return x
 }
-
 
 type _Point struct {
 	x    int

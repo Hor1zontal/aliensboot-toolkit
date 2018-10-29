@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/30
  * Contributors:
@@ -10,16 +10,15 @@
 package template
 
 import (
-	"strings"
+	"fmt"
 	"io/ioutil"
 	"os"
-	"fmt"
+	"strings"
 )
 
 const (
 	SPLIT_STR = "<message>"
 )
-
 
 func Convert(config *Config) {
 	message := ParseProto(config.ProtoPath)
@@ -33,16 +32,20 @@ func Convert(config *Config) {
 			continue
 		}
 
-		convertModule(moduleConfig, module)
+		convertModule(config.TemplatePath, moduleConfig, module)
 	}
-
 
 }
 
-
-func convertModule(moduleConfig *ModuleConfig, module *Module) {
+func convertModule(templateRoot string, moduleConfig *ModuleConfig, module *Module) {
 	for _, outputConfig := range moduleConfig.Outputs {
-		b, err := ioutil.ReadFile(outputConfig.Template)
+		templatePath := outputConfig.Template
+		//配置模板根目录需要加上根目录
+		if templateRoot != "" {
+			templatePath = templateRoot + "/" + templatePath
+		}
+
+		b, err := ioutil.ReadFile(templatePath)
 		if err != nil {
 			fmt.Printf(err.Error())
 			return
@@ -59,7 +62,6 @@ func convertModule(moduleConfig *ModuleConfig, module *Module) {
 			header = replaceMessage(results[0], module)
 			tailf = replaceMessage(results[2], module)
 
-
 			for _, handler := range module.Handlers {
 				handleStr := replaceMessage(results[1], module)
 				if !handler.IsValid() {
@@ -69,7 +71,7 @@ func convertModule(moduleConfig *ModuleConfig, module *Module) {
 				if outputConfig.Prefix != "" {
 					filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler.GetName()), -1)
 					//单独写文件
-					writeFile(filePath, header + handleStr + tailf, outputConfig.Overwrite)
+					writeFile(filePath, header+handleStr+tailf, outputConfig.Overwrite)
 				} else {
 					content += handleStr
 				}
@@ -77,13 +79,11 @@ func convertModule(moduleConfig *ModuleConfig, module *Module) {
 		} else {
 			header = replaceMessage(templateContent, module)
 		}
-		if  outputConfig.Prefix == "" {
+		if outputConfig.Prefix == "" {
 			//写一个文件
-			writeFile( outputConfig.Output, header + content + tailf,  outputConfig.Overwrite)
+			writeFile(outputConfig.Output, header+content+tailf, outputConfig.Overwrite)
 		}
 	}
-
-
 
 }
 
@@ -109,7 +109,6 @@ func writeFile(filePath string, content string, overwrite bool) {
 	}
 	fmt.Printf("gen code file " + filePath + " success! \n")
 }
-
 
 func replaceMessage(content string, module *Module) string {
 	content = strings.Replace(content, "${package}", message.PackageName, -1)

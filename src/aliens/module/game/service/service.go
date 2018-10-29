@@ -61,6 +61,13 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
 	
+	if request.GetRemoveRole() != nil {
+		messageRet := &protocol.RemoveRoleRet{}
+		handleRemoveRole(authID, gateID, request.GetRemoveRole(), messageRet)
+		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
+		return
+	}
+	
 	if request.GetGetUserInfo() != nil {
 		messageRet := &protocol.GetUserInfoRet{}
 		handleGetUserInfo(authID, gateID, request.GetGetUserInfo(), messageRet)
@@ -79,13 +86,6 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		messageRet := &protocol.CreateRoleRet{}
 		handleCreateRole(authID, gateID, request.GetCreateRole(), messageRet)
 		response.Game = &protocol.Response_CreateRoleRet{messageRet}
-		return
-	}
-	
-	if request.GetRemoveRole() != nil {
-		messageRet := &protocol.RemoveRoleRet{}
-		handleRemoveRole(authID, gateID, request.GetRemoveRole(), messageRet)
-		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
 		return
 	}
 	

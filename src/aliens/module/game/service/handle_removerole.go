@@ -11,7 +11,6 @@ package service
 
 import "aliens/protocol"
 
-
 //
 func handleRemoveRole(authID int64, gateID string, request *protocol.RemoveRole, response *protocol.RemoveRoleRet) {
 

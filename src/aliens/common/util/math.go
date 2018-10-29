@@ -5,7 +5,6 @@ import (
 	"math/rand"
 )
 
-
 func Round(value float64) int32 {
 	return int32(value + 0.5)
 }
@@ -241,7 +240,6 @@ func StaticRand(seedrare, min, max int) int {
 	return ret
 }
 
-
 //随机权重
 func RandomMultiWeight(weightMapping map[int32]int32, count int) []int32 {
 	results := []int32{}
@@ -275,4 +273,3 @@ func RandomWeight(weightMapping map[int32]int32) int32 {
 	}
 	return 0
 }
-

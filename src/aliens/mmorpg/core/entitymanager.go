@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/31
  * Contributors:
@@ -10,12 +10,12 @@
 package core
 
 import (
-	"reflect"
-	"github.com/xiaonanln/goworld/engine/gwlog"
-	"aliens/protocol"
-	"aliens/common/util"
 	"aliens/common/data_structures/set"
+	"aliens/common/util"
 	"aliens/log"
+	"aliens/protocol"
+	"github.com/xiaonanln/goworld/engine/gwlog"
+	"reflect"
 	"strings"
 )
 
@@ -62,20 +62,18 @@ func (em *_EntityManager) traverseByType(etype string, cb func(e *Entity)) {
 }
 
 // GenEntityID generates a new EntityID
-func  (em *_EntityManager) genEntityID() EntityID {
+func (em *_EntityManager) genEntityID() EntityID {
 	return EntityID(util.GenUUID())
 }
 
-func  (em *_EntityManager) getEntityTypeName(entity IEntity) string {
+func (em *_EntityManager) getEntityTypeName(entity IEntity) string {
 	entityType := reflect.TypeOf(entity)
 	return entityType.Name()
 }
 
-
 func (em *_EntityManager) GetEntity(id EntityID) *Entity {
 	return em.entities.Get(id)
 }
-
 
 func (em *_EntityManager) UNRegisterEntity(entity IEntity) {
 	typeName := em.getEntityTypeName(entity)
@@ -112,7 +110,6 @@ func (em *_EntityManager) RegisterEntity(entity IEntity, meta interface{}) *Enti
 	entityPtrType := reflect.PtrTo(entityType)
 	numMethods := entityPtrType.NumMethod()
 
-
 	for i := 0; i < numMethods; i++ {
 		method := entityPtrType.Method(i)
 		methodDescs.visit(method)
@@ -126,8 +123,7 @@ func (em *_EntityManager) RegisterEntity(entity IEntity, meta interface{}) *Enti
 	return entityTypeDesc
 }
 
-
-func (em *_EntityManager) registerAttr(desc *EntityDesc, meta interface{})  {
+func (em *_EntityManager) registerAttr(desc *EntityDesc, meta interface{}) {
 	util.VisitTag(meta, AttrTagFeature, func(fieldName string, tagValue string) {
 		if strings.Contains(tagValue, AttrTagFeatureSelf) {
 			desc.selfAttrs.Add(fieldName)
@@ -177,7 +173,6 @@ func (em *_EntityManager) createEntity(typeName string, space *Space, pos *proto
 
 	return entity
 }
-
 
 //func (em *_EntityManager) onGateDisconnected(gateid uint16) {
 //	for _, entity := range em.entities {

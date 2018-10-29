@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/7/10
  * Contributors:
@@ -9,9 +9,8 @@
  *******************************************************************************/
 package service
 
-
 type Listener interface {
 	GetServiceType() string
-	AddNode(string)  //新增节点
-	RemoveNode(string) 	 //删除节点
+	AddNode(string)    //新增节点
+	RemoveNode(string) //删除节点
 }

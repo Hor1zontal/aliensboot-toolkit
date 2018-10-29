@@ -10,14 +10,14 @@
 package message
 
 import (
-	"aliens/log"
 	"aliens/exception"
+	"aliens/log"
 )
 
 type MessageChannel struct {
-	channel        chan interface{} //消息管道
-	messageLimit   int
-	handler func (msg interface{}) interface{}
+	channel      chan interface{} //消息管道
+	messageLimit int
+	handler      func(msg interface{}) interface{}
 }
 
 //向管道发送消息

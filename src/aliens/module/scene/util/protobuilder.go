@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/26
  * Contributors:
@@ -10,8 +10,8 @@
 package util
 
 import (
-	"aliens/protocol"
 	"aliens/mmorpg/core"
+	"aliens/protocol"
 )
 
 func BuildEntities(entitySet core.EntitySet) []*protocol.Entity {
@@ -25,7 +25,7 @@ func BuildEntities(entitySet core.EntitySet) []*protocol.Entity {
 func BuildEntityProtocol(entity *core.Entity) *protocol.Entity {
 	return &protocol.Entity{
 		//Id:       int64(entity.GetID()),
-		Position: entity.GetPosition(),
+		Position:  entity.GetPosition(),
 		Direction: entity.GetDirection(),
 	}
 }

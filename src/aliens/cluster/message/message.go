@@ -6,7 +6,7 @@ var invalidServiceError error = errors.New("invalid service")
 
 //消息服务抽象层，可以为local也可以是remote
 type IMessageService interface {
-	GetType() string                          //获取消息服务类型
+	GetType() string                                        //获取消息服务类型
 	HandleMessage(request interface{}) (interface{}, error) //阻塞调用消息服务接口
 }
 
@@ -18,10 +18,9 @@ type IMessageService interface {
 //}
 
 type ISeqMessage interface {
-	GetID() int32  //获取消息id
+	GetID() int32 //获取消息id
 }
 
 type IServiceHandler interface {
 	Request(request interface{}, out interface{}) error
 }
-

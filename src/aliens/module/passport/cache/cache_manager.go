@@ -11,13 +11,13 @@ package cache
 
 import (
 	"aliens/cache/redis"
+	"aliens/config"
+	"aliens/exception"
+	"aliens/log"
 	"aliens/module/passport/conf"
 	"aliens/module/passport/db"
-	"time"
-	"aliens/log"
-	"aliens/exception"
 	"aliens/protocol"
-	"aliens/config"
+	"time"
 )
 
 var PassportCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
@@ -65,16 +65,16 @@ func (this *cacheManager) SetNX(key string, value interface{}) bool {
  */
 func NewUser(username string, password string, channel string, channelUID string, openID string, avatar string) *protocol.User {
 	user := &protocol.User{
-		Username: username,
-		Password: password,
-		Salt:     "",
-		Channel:  channel,
+		Username:   username,
+		Password:   password,
+		Salt:       "",
+		Channel:    channel,
 		Channeluid: channelUID,
-		Mobile:   "",
-		Openid:   openID,
-		Status:   0,
-		Avatar:   avatar,
-		RegTime:  time.Now().Unix(),
+		Mobile:     "",
+		Openid:     openID,
+		Status:     0,
+		Avatar:     avatar,
+		RegTime:    time.Now().Unix(),
 	}
 	//uid, err := db.DatabaseHandler.GenTimestampId(user)
 	//if err != nil {

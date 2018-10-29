@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/8/29
  * Contributors:
@@ -9,16 +9,13 @@
  *******************************************************************************/
 package template
 
-
 type Type int
 
-
 type ModelMessage struct {
-	models  map[string]*Model //模型
+	models map[string]*Model //模型
 }
 
 type Model struct {
-	Name string  //
+	Name string //
 	//Props map[string]
 }
-

@@ -2,8 +2,8 @@ package util
 
 // reference: https://github.com/mohae/deepcopy
 import (
-	"reflect"
 	"encoding/json"
+	"reflect"
 )
 
 func deepCopy(dst, src reflect.Value) {
@@ -76,7 +76,6 @@ func DeepClone(v interface{}) interface{} {
 	return dst.Interface()
 }
 
-
 func CopyFloat32Map(source map[int32]float32) map[int32]float32 {
 	target := make(map[int32]float32)
 	for key, value := range source {
@@ -109,7 +108,6 @@ func CopyInt64Map(source map[int32]int64) map[int32]int64 {
 	return target
 }
 
-
 func MargeMap(a map[int32]int32, b map[int32]int32) {
 	for key, value := range b {
 		a[key] = value
@@ -131,5 +129,3 @@ func CopyJSON(marshaler interface{}, unMarshaler interface{}) error {
 	}
 	return json.Unmarshal(data, unMarshaler)
 }
-
-

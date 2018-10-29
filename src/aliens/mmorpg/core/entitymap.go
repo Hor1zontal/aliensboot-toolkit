@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/21
  * Contributors:
@@ -97,4 +97,3 @@ func (es EntitySet) String() string {
 //	}
 //	return list
 //}
-

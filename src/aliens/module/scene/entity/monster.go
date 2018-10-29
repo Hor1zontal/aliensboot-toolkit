@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/24
  * Contributors:
@@ -19,28 +19,24 @@ type MonsterEntity struct {
 	*Stats
 }
 
-
 //可视距离
-func (this * MonsterEntity) GetDist() float32 {
+func (this *MonsterEntity) GetDist() float32 {
 	return 100
 }
 
-
-func (this * MonsterEntity) OnEntityEnter(entity *core.Entity) {
+func (this *MonsterEntity) OnEntityEnter(entity *core.Entity) {
 	log.Debugf("entity enter %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
-
-func (this * MonsterEntity) OnEntityLeave(entity *core.Entity) {
+func (this *MonsterEntity) OnEntityLeave(entity *core.Entity) {
 	log.Debugf("entity leave %v", entity.GetID())
 
 	//dispatch.GatePush(this.clientID, )
 }
 
-
-func (this * MonsterEntity) OnEntityMove(entity *core.Entity) {
+func (this *MonsterEntity) OnEntityMove(entity *core.Entity) {
 	log.Debugf("entity move %v", entity.GetID())
 
 }

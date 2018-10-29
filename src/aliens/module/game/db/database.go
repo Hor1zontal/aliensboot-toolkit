@@ -2,12 +2,11 @@ package db
 
 import (
 	"aliens/database/mongo"
-	"aliens/protocol"
 	"aliens/module/game/conf"
+	"aliens/protocol"
 )
 
 var Database *mongo.Database = &mongo.Database{}
-
 
 func Init() {
 	err := Database.Init(conf.Config.Database)

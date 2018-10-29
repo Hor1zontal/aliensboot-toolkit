@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/3/24
  * Contributors:
@@ -10,8 +10,8 @@
 package entity
 
 import (
-	"aliens/mmorpg/core"
 	"aliens/mmorpg/config"
+	"aliens/mmorpg/core"
 )
 
 type MySpace struct {
@@ -19,7 +19,7 @@ type MySpace struct {
 }
 
 func (this *MySpace) GetConfig() config.SpaceConfig {
-	return config.SpaceConfig{"map1",-400, 400, -300, 300, 200}
+	return config.SpaceConfig{"map1", -400, 400, -300, 300, 200}
 }
 
 func (this *MySpace) OnEntityEnter(entity *core.Entity) {
@@ -33,6 +33,3 @@ func (this *MySpace) OnEntityLeave(entity *core.Entity) {
 func (this *MySpace) OnEntityMove(entity *core.Entity) {
 	//dispatch.gate
 }
-
-
-

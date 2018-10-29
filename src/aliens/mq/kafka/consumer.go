@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/21
  * Contributors:
@@ -10,10 +10,10 @@
 package kafka
 
 import (
-	"time"
+	"aliens/log"
 	"github.com/Shopify/sarama"
 	"github.com/bsm/sarama-cluster" //support automatic consumer-group rebalancing and offset tracking
-	"aliens/log"
+	"time"
 )
 
 type Consumer struct {
@@ -37,14 +37,14 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 		noti := c.Notifications()
 		for {
 			select {
-				case err := <-errors:
-					if err != nil {
-						log.Error(err)
-					}
-				case notify := <-noti:
-					if notify != nil {
-						log.Debug(notify)
-					}
+			case err := <-errors:
+				if err != nil {
+					log.Error(err)
+				}
+			case notify := <-noti:
+				if notify != nil {
+					log.Debug(notify)
+				}
 			}
 		}
 	}(this.proxy)
@@ -57,7 +57,7 @@ func (this *Consumer) Init(address []string, service string, node string, handle
 			c.MarkOffset(msg, "") //MarkOffset 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
 		}
 		//log.Error("consumer close!")
-	} ()
+	}()
 
 	return nil
 }
@@ -68,6 +68,3 @@ func (this *Consumer) Close() error {
 	}
 	return nil
 }
-
-
-

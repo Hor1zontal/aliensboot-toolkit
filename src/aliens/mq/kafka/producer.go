@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/21
  * Contributors:
@@ -10,9 +10,9 @@
 package kafka
 
 import (
-	"time"
-	"github.com/Shopify/sarama"
 	"aliens/log"
+	"github.com/Shopify/sarama"
+	"time"
 )
 
 type Producer struct {
@@ -50,10 +50,10 @@ func (this *Producer) Init(address []string, timeout int) error {
 				if err != nil {
 					log.Error(err)
 				}
-			//case succ := <-success:
-			//	if succ != nil {
-			//		log.Debug(succ)
-			//	}
+				//case succ := <-success:
+				//	if succ != nil {
+				//		log.Debug(succ)
+				//	}
 			}
 		}
 	}(this.proxy)
@@ -82,4 +82,3 @@ func (this *Producer) SendMessage(service string, node string, data []byte) {
 	}
 	this.proxy.Input() <- msg
 }
-

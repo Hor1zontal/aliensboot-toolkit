@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/4/8
  * Contributors:
@@ -11,8 +11,8 @@ package mq
 
 import (
 	"aliens/mq/kafka"
-	"github.com/pkg/errors"
 	"fmt"
+	"github.com/pkg/errors"
 )
 
 type Type string
@@ -25,7 +25,7 @@ const (
 type IProducer interface {
 	Init(address []string, timeout int) error
 	SendMessage(service string, node string, data []byte) //异步发送数据
-	Broadcast(service string, data []byte) //广播数据
+	Broadcast(service string, data []byte)                //广播数据
 	Close() error
 }
 

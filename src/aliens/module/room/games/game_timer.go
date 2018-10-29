@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/6/13
  * Contributors:
@@ -13,14 +13,13 @@ import "time"
 
 //只需要处理消息转发即可
 type TimerGame struct {
-
 	*SimpleGame
 
 	timer *time.Timer //定时器
 
 	syncPerSecond uint //每秒运行时间
 
-	totalTime uint  //游戏总时间 -1 没有时间限制
+	totalTime uint //游戏总时间 -1 没有时间限制
 }
 
 func (this *TimerGame) Start() {
@@ -37,7 +36,6 @@ func (this *TimerGame) Stop() {
 func (this *TimerGame) HandleTimer() {
 
 }
-
 
 func (this *TimerGame) GetTimer() *time.Timer {
 	return this.timer
