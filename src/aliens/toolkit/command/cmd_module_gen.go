@@ -39,7 +39,7 @@ var codeCmd = &cobra.Command{
 
 func GenCode(module string, packageName string, rootPath string) {
 	protocolPath := getPath(rootPath, "src", packageName, "protocol", "protocol.proto")
-	templatePath := getPath(rootPath, "src", packageName, "protocol", "templates")
+	templatePath := getPath(rootPath, "templates", "protocol")
 
 	config := &model.CodeGenConfig{
 		Package:      packageName,

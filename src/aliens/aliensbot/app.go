@@ -39,6 +39,7 @@ func init() {
 func Run(mods ...module.Module) {
 	baseConfig := config.Init(configPath)
 
+	log.Debugf("config data %+v", baseConfig)
 	log.Init(debug, tag, baseConfig.PathLog)
 
 	center.ClusterCenter.ConnectCluster(baseConfig.Cluster)
@@ -57,7 +58,7 @@ func Run(mods ...module.Module) {
 		log.Debug(err)
 	}
 
-	log.Infof("aliens/aliensbotBot %v starting up", config.Version)
+	log.Infof("AliensBot %v starting up", config.Version)
 
 	//module.Register(database.Module)
 

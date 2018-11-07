@@ -17,8 +17,8 @@ import (
     "aliens/aliensbot/cluster/center/service"
     "aliens/aliensbot/cluster/center"
     "aliens/aliensbot/protocol/base"
-    "aliens/testserver/${package}"
-    "aliens/testserver/module/${module}/conf"
+    "aliens/gok/${package}"
+    "aliens/gok/module/${module}/conf"
 
 )
 

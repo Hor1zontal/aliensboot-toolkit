@@ -2,7 +2,7 @@ package db
 
 import (
 	"aliens/aliensbot/database/mongo"
-	"aliens/testserver/module/commonmodule/conf"
+	"aliens/testserver/module/defaultmodule/conf"
 )
 
 var Database *mongo.Database = &mongo.Database{}

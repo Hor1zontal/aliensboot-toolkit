@@ -63,15 +63,37 @@ func initProject(homePath string, targetHomePath string, packagePath string) {
 
 	targetSrcPath := getPath(targetHomePath, "src", packagePath)
 
-	srcConfigPath := getPath(homePath, "src","aliens","config")
 
-	targetConfigPath := getPath(targetHomePath,"config")
+	srcCopyPath := getPath(homePath, "copy")
+
+	targetCopyPath := getPath(targetHomePath, ".")
+
+	//srcConfigPath := getPath(homePath, "data", "config")
+	//
+	//targetConfigPath := getPath(targetHomePath, "config")
+	//
+	//
+	//srcTemplatesPath := getPath(homePath, "data", "templates")
+	//
+	//targetTemplatesPath := getPath(targetHomePath,"templates")
+	//
+	//
+	//srcToolPath := getPath(homePath, "data", "tool")
+	//
+	//targetToolPath := getPath(targetHomePath,"tool")
+
+
 
 	replaceContent := make(map[string]string)
 	replaceContent[DefaultPackagePath] = packagePath
 
 	util.CopyDir(srcSrcPath, targetSrcPath, replaceContent)
-	util.CopyDir(srcConfigPath, targetConfigPath, nil)
+
+	util.CopyDir(srcCopyPath, targetCopyPath, replaceContent)
+
+	//util.CopyDir(srcConfigPath, targetConfigPath, replaceContent)
+	//util.CopyDir(srcTemplatesPath, targetTemplatesPath, replaceContent)
+	//util.CopyDir(srcToolPath, targetToolPath, replaceContent)
 
 }
 

@@ -59,9 +59,13 @@ func addModule(homePath string, targetHomePath string, packagePath string, modul
 	}
 
 
-	srcConfigPath := getPath(homePath, "src","aliens","config","modules", DefaultModuleName + ".yml.bak")
+	srcConfigPath := getPath(homePath, "copy","config","modules", DefaultModuleName + ".yml.bak")
 
 	targetConfigPath := getPath(targetHomePath,"config", "modules", moduleName + ".yml")
+
+	srcPublicPath := getPath(homePath, "src","aliens","testserver","public", DefaultModuleName + ".go")
+
+	targetPublicPath := getPath(targetHomePath,"src", packagePath, "public", moduleName + ".go")
 
 	replaceContent := make(map[string]string)
 	replaceContent[DefaultModuleName] = moduleName
@@ -70,6 +74,7 @@ func addModule(homePath string, targetHomePath string, packagePath string, modul
 
 	util.CopyDir(srcModulePath, targetModulePath, replaceContent)
 	util.CopyFile(srcConfigPath, targetConfigPath, replaceContent)
+	util.CopyFile(srcPublicPath, targetPublicPath, replaceContent)
 
 }
 

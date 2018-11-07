@@ -1,4 +1,4 @@
-package game
+package defaultmodule
 
 import "aliens/testserver/module/defaultmodule/internal"
 
