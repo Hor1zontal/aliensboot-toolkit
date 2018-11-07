@@ -22,6 +22,7 @@ func (m *Module) GetConfig() interface{} {
 
 func (m *Module) OnInit() {
 	m.Skeleton = base.NewSkeleton()
+	conf.Init()
 	db.Init()
 	cache.Init()
 	service.Init(m.ChanRPCServer)
@@ -31,4 +32,5 @@ func (m *Module) OnDestroy() {
 	service.Close()
 	cache.Close()
 	db.Close()
+	conf.Close()
 }
