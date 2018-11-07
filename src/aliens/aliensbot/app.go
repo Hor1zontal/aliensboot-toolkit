@@ -39,7 +39,7 @@ func init() {
 func Run(mods ...module.Module) {
 	baseConfig := config.Init(configPath)
 
-	log.Debugf("config data %+v", baseConfig)
+	//log.Debugf("config data %+v", baseConfig)
 	log.Init(debug, tag, baseConfig.PathLog)
 
 	center.ClusterCenter.ConnectCluster(baseConfig.Cluster)

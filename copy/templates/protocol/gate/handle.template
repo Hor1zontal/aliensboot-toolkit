@@ -9,7 +9,7 @@
  *******************************************************************************/
 package service
 
-import "aliens/protocol"
+import "aliens/testserver/protocol"
 
 <message>
 //${o_desc}

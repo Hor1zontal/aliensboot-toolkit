@@ -15,34 +15,32 @@ var _ = fmt.Errorf
 var _ = math.Inf
 
 // 普通注册账号
-type C2S_UserRegister struct {
+type UserRegister struct {
 	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	Server   int32  `protobuf:"varint,3,opt,name=server,proto3" json:"server,omitempty"`
 }
 
-func (m *C2S_UserRegister) Reset()         { *m = C2S_UserRegister{} }
-func (m *C2S_UserRegister) String() string { return proto.CompactTextString(m) }
-func (*C2S_UserRegister) ProtoMessage()    {}
-func (*C2S_UserRegister) Descriptor() ([]byte, []int) {
-	return fileDescriptorPassportInterface, []int{0}
-}
+func (m *UserRegister) Reset()                    { *m = UserRegister{} }
+func (m *UserRegister) String() string            { return proto.CompactTextString(m) }
+func (*UserRegister) ProtoMessage()               {}
+func (*UserRegister) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{0} }
 
-func (m *C2S_UserRegister) GetUsername() string {
+func (m *UserRegister) GetUsername() string {
 	if m != nil {
 		return m.Username
 	}
 	return ""
 }
 
-func (m *C2S_UserRegister) GetPassword() string {
+func (m *UserRegister) GetPassword() string {
 	if m != nil {
 		return m.Password
 	}
 	return ""
 }
 
-func (m *C2S_UserRegister) GetServer() int32 {
+func (m *UserRegister) GetServer() int32 {
 	if m != nil {
 		return m.Server
 	}
@@ -50,42 +48,40 @@ func (m *C2S_UserRegister) GetServer() int32 {
 }
 
 // 登录服务器注册账号返回
-type S2C_UserRegister struct {
+type UserRegisterRet struct {
 	Result RegisterResult `protobuf:"varint,1,opt,name=result,proto3,enum=protocol.RegisterResult" json:"result,omitempty"`
 	Uid    int64          `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	Token  string         `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
 	Msg    string         `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
-func (m *S2C_UserRegister) Reset()         { *m = S2C_UserRegister{} }
-func (m *S2C_UserRegister) String() string { return proto.CompactTextString(m) }
-func (*S2C_UserRegister) ProtoMessage()    {}
-func (*S2C_UserRegister) Descriptor() ([]byte, []int) {
-	return fileDescriptorPassportInterface, []int{1}
-}
+func (m *UserRegisterRet) Reset()                    { *m = UserRegisterRet{} }
+func (m *UserRegisterRet) String() string            { return proto.CompactTextString(m) }
+func (*UserRegisterRet) ProtoMessage()               {}
+func (*UserRegisterRet) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{1} }
 
-func (m *S2C_UserRegister) GetResult() RegisterResult {
+func (m *UserRegisterRet) GetResult() RegisterResult {
 	if m != nil {
 		return m.Result
 	}
 	return RegisterResult_registerSuccess
 }
 
-func (m *S2C_UserRegister) GetUid() int64 {
+func (m *UserRegisterRet) GetUid() int64 {
 	if m != nil {
 		return m.Uid
 	}
 	return 0
 }
 
-func (m *S2C_UserRegister) GetToken() string {
+func (m *UserRegisterRet) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
 	return ""
 }
 
-func (m *S2C_UserRegister) GetMsg() string {
+func (m *UserRegisterRet) GetMsg() string {
 	if m != nil {
 		return m.Msg
 	}
@@ -93,24 +89,24 @@ func (m *S2C_UserRegister) GetMsg() string {
 }
 
 // 用户名密码登录服务器
-type C2S_UserLogin struct {
+type UserLogin struct {
 	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (m *C2S_UserLogin) Reset()                    { *m = C2S_UserLogin{} }
-func (m *C2S_UserLogin) String() string            { return proto.CompactTextString(m) }
-func (*C2S_UserLogin) ProtoMessage()               {}
-func (*C2S_UserLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{2} }
+func (m *UserLogin) Reset()                    { *m = UserLogin{} }
+func (m *UserLogin) String() string            { return proto.CompactTextString(m) }
+func (*UserLogin) ProtoMessage()               {}
+func (*UserLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{2} }
 
-func (m *C2S_UserLogin) GetUsername() string {
+func (m *UserLogin) GetUsername() string {
 	if m != nil {
 		return m.Username
 	}
 	return ""
 }
 
-func (m *C2S_UserLogin) GetPassword() string {
+func (m *UserLogin) GetPassword() string {
 	if m != nil {
 		return m.Password
 	}
@@ -118,40 +114,40 @@ func (m *C2S_UserLogin) GetPassword() string {
 }
 
 // 登录服务器返回
-type S2C_UserLogin struct {
+type UserLoginRet struct {
 	Result LoginResult `protobuf:"varint,1,opt,name=result,proto3,enum=protocol.LoginResult" json:"result,omitempty"`
 	Uid    int64       `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	Token  string      `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
 	Msg    string      `protobuf:"bytes,4,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
-func (m *S2C_UserLogin) Reset()                    { *m = S2C_UserLogin{} }
-func (m *S2C_UserLogin) String() string            { return proto.CompactTextString(m) }
-func (*S2C_UserLogin) ProtoMessage()               {}
-func (*S2C_UserLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{3} }
+func (m *UserLoginRet) Reset()                    { *m = UserLoginRet{} }
+func (m *UserLoginRet) String() string            { return proto.CompactTextString(m) }
+func (*UserLoginRet) ProtoMessage()               {}
+func (*UserLoginRet) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{3} }
 
-func (m *S2C_UserLogin) GetResult() LoginResult {
+func (m *UserLoginRet) GetResult() LoginResult {
 	if m != nil {
 		return m.Result
 	}
 	return LoginResult_loginSuccess
 }
 
-func (m *S2C_UserLogin) GetUid() int64 {
+func (m *UserLoginRet) GetUid() int64 {
 	if m != nil {
 		return m.Uid
 	}
 	return 0
 }
 
-func (m *S2C_UserLogin) GetToken() string {
+func (m *UserLoginRet) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
 	return ""
 }
 
-func (m *S2C_UserLogin) GetMsg() string {
+func (m *UserLoginRet) GetMsg() string {
 	if m != nil {
 		return m.Msg
 	}
@@ -159,42 +155,40 @@ func (m *S2C_UserLogin) GetMsg() string {
 }
 
 // 渠道登录
-type C2S_ChannelLogin struct {
+type ChannelLogin struct {
 	Channel    string `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
 	ChannelUID string `protobuf:"bytes,2,opt,name=channelUID,proto3" json:"channelUID,omitempty"`
 	Sdk        string `protobuf:"bytes,3,opt,name=sdk,proto3" json:"sdk,omitempty"`
 	Ip         string `protobuf:"bytes,4,opt,name=ip,proto3" json:"ip,omitempty"`
 }
 
-func (m *C2S_ChannelLogin) Reset()         { *m = C2S_ChannelLogin{} }
-func (m *C2S_ChannelLogin) String() string { return proto.CompactTextString(m) }
-func (*C2S_ChannelLogin) ProtoMessage()    {}
-func (*C2S_ChannelLogin) Descriptor() ([]byte, []int) {
-	return fileDescriptorPassportInterface, []int{4}
-}
+func (m *ChannelLogin) Reset()                    { *m = ChannelLogin{} }
+func (m *ChannelLogin) String() string            { return proto.CompactTextString(m) }
+func (*ChannelLogin) ProtoMessage()               {}
+func (*ChannelLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{4} }
 
-func (m *C2S_ChannelLogin) GetChannel() string {
+func (m *ChannelLogin) GetChannel() string {
 	if m != nil {
 		return m.Channel
 	}
 	return ""
 }
 
-func (m *C2S_ChannelLogin) GetChannelUID() string {
+func (m *ChannelLogin) GetChannelUID() string {
 	if m != nil {
 		return m.ChannelUID
 	}
 	return ""
 }
 
-func (m *C2S_ChannelLogin) GetSdk() string {
+func (m *ChannelLogin) GetSdk() string {
 	if m != nil {
 		return m.Sdk
 	}
 	return ""
 }
 
-func (m *C2S_ChannelLogin) GetIp() string {
+func (m *ChannelLogin) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
@@ -202,26 +196,24 @@ func (m *C2S_ChannelLogin) GetIp() string {
 }
 
 // 渠道登录结果
-type S2C_ChannelLogin struct {
+type ChannelLoginRet struct {
 	Uid   int64  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 }
 
-func (m *S2C_ChannelLogin) Reset()         { *m = S2C_ChannelLogin{} }
-func (m *S2C_ChannelLogin) String() string { return proto.CompactTextString(m) }
-func (*S2C_ChannelLogin) ProtoMessage()    {}
-func (*S2C_ChannelLogin) Descriptor() ([]byte, []int) {
-	return fileDescriptorPassportInterface, []int{5}
-}
+func (m *ChannelLoginRet) Reset()                    { *m = ChannelLoginRet{} }
+func (m *ChannelLoginRet) String() string            { return proto.CompactTextString(m) }
+func (*ChannelLoginRet) ProtoMessage()               {}
+func (*ChannelLoginRet) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{5} }
 
-func (m *S2C_ChannelLogin) GetUid() int64 {
+func (m *ChannelLoginRet) GetUid() int64 {
 	if m != nil {
 		return m.Uid
 	}
 	return 0
 }
 
-func (m *S2C_ChannelLogin) GetToken() string {
+func (m *ChannelLoginRet) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
@@ -229,40 +221,40 @@ func (m *S2C_ChannelLogin) GetToken() string {
 }
 
 // token 登录
-type C2S_TokenLogin struct {
+type TokenLogin struct {
 	Uid   int64  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 }
 
-func (m *C2S_TokenLogin) Reset()                    { *m = C2S_TokenLogin{} }
-func (m *C2S_TokenLogin) String() string            { return proto.CompactTextString(m) }
-func (*C2S_TokenLogin) ProtoMessage()               {}
-func (*C2S_TokenLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{6} }
+func (m *TokenLogin) Reset()                    { *m = TokenLogin{} }
+func (m *TokenLogin) String() string            { return proto.CompactTextString(m) }
+func (*TokenLogin) ProtoMessage()               {}
+func (*TokenLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{6} }
 
-func (m *C2S_TokenLogin) GetUid() int64 {
+func (m *TokenLogin) GetUid() int64 {
 	if m != nil {
 		return m.Uid
 	}
 	return 0
 }
 
-func (m *C2S_TokenLogin) GetToken() string {
+func (m *TokenLogin) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
 	return ""
 }
 
-type S2C_TokenLogin struct {
+type TokenLoginRet struct {
 	Result LoginResult `protobuf:"varint,1,opt,name=result,proto3,enum=protocol.LoginResult" json:"result,omitempty"`
 }
 
-func (m *S2C_TokenLogin) Reset()                    { *m = S2C_TokenLogin{} }
-func (m *S2C_TokenLogin) String() string            { return proto.CompactTextString(m) }
-func (*S2C_TokenLogin) ProtoMessage()               {}
-func (*S2C_TokenLogin) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{7} }
+func (m *TokenLoginRet) Reset()                    { *m = TokenLoginRet{} }
+func (m *TokenLoginRet) String() string            { return proto.CompactTextString(m) }
+func (*TokenLoginRet) ProtoMessage()               {}
+func (*TokenLoginRet) Descriptor() ([]byte, []int) { return fileDescriptorPassportInterface, []int{7} }
 
-func (m *S2C_TokenLogin) GetResult() LoginResult {
+func (m *TokenLoginRet) GetResult() LoginResult {
 	if m != nil {
 		return m.Result
 	}
@@ -270,16 +262,16 @@ func (m *S2C_TokenLogin) GetResult() LoginResult {
 }
 
 func init() {
-	proto.RegisterType((*C2S_UserRegister)(nil), "protocol.C2S_UserRegister")
-	proto.RegisterType((*S2C_UserRegister)(nil), "protocol.S2C_UserRegister")
-	proto.RegisterType((*C2S_UserLogin)(nil), "protocol.C2S_UserLogin")
-	proto.RegisterType((*S2C_UserLogin)(nil), "protocol.S2C_UserLogin")
-	proto.RegisterType((*C2S_ChannelLogin)(nil), "protocol.C2S_ChannelLogin")
-	proto.RegisterType((*S2C_ChannelLogin)(nil), "protocol.S2C_ChannelLogin")
-	proto.RegisterType((*C2S_TokenLogin)(nil), "protocol.C2S_TokenLogin")
-	proto.RegisterType((*S2C_TokenLogin)(nil), "protocol.S2C_TokenLogin")
+	proto.RegisterType((*UserRegister)(nil), "protocol.userRegister")
+	proto.RegisterType((*UserRegisterRet)(nil), "protocol.userRegisterRet")
+	proto.RegisterType((*UserLogin)(nil), "protocol.userLogin")
+	proto.RegisterType((*UserLoginRet)(nil), "protocol.userLoginRet")
+	proto.RegisterType((*ChannelLogin)(nil), "protocol.channelLogin")
+	proto.RegisterType((*ChannelLoginRet)(nil), "protocol.channelLoginRet")
+	proto.RegisterType((*TokenLogin)(nil), "protocol.tokenLogin")
+	proto.RegisterType((*TokenLoginRet)(nil), "protocol.tokenLoginRet")
 }
-func (m *C2S_UserRegister) Marshal() (dAtA []byte, err error) {
+func (m *UserRegister) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -289,7 +281,7 @@ func (m *C2S_UserRegister) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *C2S_UserRegister) MarshalTo(dAtA []byte) (int, error) {
+func (m *UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -314,7 +306,7 @@ func (m *C2S_UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *S2C_UserRegister) Marshal() (dAtA []byte, err error) {
+func (m *UserRegisterRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -324,7 +316,7 @@ func (m *S2C_UserRegister) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *S2C_UserRegister) MarshalTo(dAtA []byte) (int, error) {
+func (m *UserRegisterRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -354,7 +346,7 @@ func (m *S2C_UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *C2S_UserLogin) Marshal() (dAtA []byte, err error) {
+func (m *UserLogin) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -364,7 +356,7 @@ func (m *C2S_UserLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *C2S_UserLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *UserLogin) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -384,7 +376,7 @@ func (m *C2S_UserLogin) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *S2C_UserLogin) Marshal() (dAtA []byte, err error) {
+func (m *UserLoginRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -394,7 +386,7 @@ func (m *S2C_UserLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *S2C_UserLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *UserLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -424,7 +416,7 @@ func (m *S2C_UserLogin) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *C2S_ChannelLogin) Marshal() (dAtA []byte, err error) {
+func (m *ChannelLogin) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -434,7 +426,7 @@ func (m *C2S_ChannelLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *C2S_ChannelLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *ChannelLogin) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -466,7 +458,7 @@ func (m *C2S_ChannelLogin) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *S2C_ChannelLogin) Marshal() (dAtA []byte, err error) {
+func (m *ChannelLoginRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -476,7 +468,7 @@ func (m *S2C_ChannelLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *S2C_ChannelLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *ChannelLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -495,7 +487,7 @@ func (m *S2C_ChannelLogin) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *C2S_TokenLogin) Marshal() (dAtA []byte, err error) {
+func (m *TokenLogin) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -505,7 +497,7 @@ func (m *C2S_TokenLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *C2S_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *TokenLogin) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -524,7 +516,7 @@ func (m *C2S_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *S2C_TokenLogin) Marshal() (dAtA []byte, err error) {
+func (m *TokenLoginRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -534,7 +526,7 @@ func (m *S2C_TokenLogin) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *S2C_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *TokenLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -556,7 +548,7 @@ func encodeVarintPassportInterface(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
-func (m *C2S_UserRegister) Size() (n int) {
+func (m *UserRegister) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Username)
@@ -573,7 +565,7 @@ func (m *C2S_UserRegister) Size() (n int) {
 	return n
 }
 
-func (m *S2C_UserRegister) Size() (n int) {
+func (m *UserRegisterRet) Size() (n int) {
 	var l int
 	_ = l
 	if m.Result != 0 {
@@ -593,7 +585,7 @@ func (m *S2C_UserRegister) Size() (n int) {
 	return n
 }
 
-func (m *C2S_UserLogin) Size() (n int) {
+func (m *UserLogin) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Username)
@@ -607,7 +599,7 @@ func (m *C2S_UserLogin) Size() (n int) {
 	return n
 }
 
-func (m *S2C_UserLogin) Size() (n int) {
+func (m *UserLoginRet) Size() (n int) {
 	var l int
 	_ = l
 	if m.Result != 0 {
@@ -627,7 +619,7 @@ func (m *S2C_UserLogin) Size() (n int) {
 	return n
 }
 
-func (m *C2S_ChannelLogin) Size() (n int) {
+func (m *ChannelLogin) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Channel)
@@ -649,7 +641,7 @@ func (m *C2S_ChannelLogin) Size() (n int) {
 	return n
 }
 
-func (m *S2C_ChannelLogin) Size() (n int) {
+func (m *ChannelLoginRet) Size() (n int) {
 	var l int
 	_ = l
 	if m.Uid != 0 {
@@ -662,7 +654,7 @@ func (m *S2C_ChannelLogin) Size() (n int) {
 	return n
 }
 
-func (m *C2S_TokenLogin) Size() (n int) {
+func (m *TokenLogin) Size() (n int) {
 	var l int
 	_ = l
 	if m.Uid != 0 {
@@ -675,7 +667,7 @@ func (m *C2S_TokenLogin) Size() (n int) {
 	return n
 }
 
-func (m *S2C_TokenLogin) Size() (n int) {
+func (m *TokenLoginRet) Size() (n int) {
 	var l int
 	_ = l
 	if m.Result != 0 {
@@ -697,7 +689,7 @@ func sovPassportInterface(x uint64) (n int) {
 func sozPassportInterface(x uint64) (n int) {
 	return sovPassportInterface(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *C2S_UserRegister) Unmarshal(dAtA []byte) error {
+func (m *UserRegister) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -720,10 +712,10 @@ func (m *C2S_UserRegister) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: C2S_UserRegister: wiretype end group for non-group")
+			return fmt.Errorf("proto: userRegister: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: C2S_UserRegister: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: userRegister: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -824,7 +816,7 @@ func (m *C2S_UserRegister) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *S2C_UserRegister) Unmarshal(dAtA []byte) error {
+func (m *UserRegisterRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -847,10 +839,10 @@ func (m *S2C_UserRegister) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: S2C_UserRegister: wiretype end group for non-group")
+			return fmt.Errorf("proto: userRegisterRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: S2C_UserRegister: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: userRegisterRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -970,7 +962,7 @@ func (m *S2C_UserRegister) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *C2S_UserLogin) Unmarshal(dAtA []byte) error {
+func (m *UserLogin) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -993,10 +985,10 @@ func (m *C2S_UserLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: C2S_UserLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: userLogin: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: C2S_UserLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: userLogin: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1078,7 +1070,7 @@ func (m *C2S_UserLogin) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *S2C_UserLogin) Unmarshal(dAtA []byte) error {
+func (m *UserLoginRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1101,10 +1093,10 @@ func (m *S2C_UserLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: S2C_UserLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: userLoginRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: S2C_UserLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: userLoginRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1224,7 +1216,7 @@ func (m *S2C_UserLogin) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *C2S_ChannelLogin) Unmarshal(dAtA []byte) error {
+func (m *ChannelLogin) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1247,10 +1239,10 @@ func (m *C2S_ChannelLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: C2S_ChannelLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: channelLogin: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: C2S_ChannelLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: channelLogin: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1390,7 +1382,7 @@ func (m *C2S_ChannelLogin) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *S2C_ChannelLogin) Unmarshal(dAtA []byte) error {
+func (m *ChannelLoginRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1413,10 +1405,10 @@ func (m *S2C_ChannelLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: S2C_ChannelLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: channelLoginRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: S2C_ChannelLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: channelLoginRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1488,7 +1480,7 @@ func (m *S2C_ChannelLogin) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *C2S_TokenLogin) Unmarshal(dAtA []byte) error {
+func (m *TokenLogin) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1511,10 +1503,10 @@ func (m *C2S_TokenLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: C2S_TokenLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: tokenLogin: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: C2S_TokenLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: tokenLogin: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1586,7 +1578,7 @@ func (m *C2S_TokenLogin) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *S2C_TokenLogin) Unmarshal(dAtA []byte) error {
+func (m *TokenLoginRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1609,10 +1601,10 @@ func (m *S2C_TokenLogin) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: S2C_TokenLogin: wiretype end group for non-group")
+			return fmt.Errorf("proto: tokenLoginRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: S2C_TokenLogin: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: tokenLoginRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1763,27 +1755,27 @@ var (
 func init() { proto.RegisterFile("passport_interface.proto", fileDescriptorPassportInterface) }
 
 var fileDescriptorPassportInterface = []byte{
-	// 351 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x91, 0xcf, 0x4e, 0xea, 0x40,
-	0x14, 0xc6, 0x33, 0xe5, 0xc2, 0x85, 0x93, 0x4b, 0x43, 0x26, 0x5c, 0x33, 0x61, 0xd1, 0x90, 0xae,
-	0xd8, 0x48, 0x0c, 0x6e, 0x8c, 0x1b, 0x13, 0x31, 0x31, 0x26, 0xae, 0x06, 0x59, 0x93, 0x02, 0x47,
-	0x6c, 0x28, 0x33, 0xcd, 0x4c, 0x51, 0x57, 0x3e, 0x9f, 0x4b, 0x1f, 0xc1, 0xf0, 0x24, 0x66, 0xfe,
-	0x14, 0xc1, 0xb8, 0xc1, 0xb8, 0xea, 0xf9, 0xe6, 0x7c, 0x73, 0x7e, 0xe7, 0xeb, 0x00, 0xcb, 0x13,
-	0xad, 0x73, 0xa9, 0x8a, 0x49, 0x2a, 0x0a, 0x54, 0xf7, 0xc9, 0x0c, 0xfb, 0xb9, 0x92, 0x85, 0xa4,
-	0x75, 0xfb, 0x99, 0xc9, 0xac, 0xd3, 0xde, 0x7a, 0x56, 0x72, 0x8e, 0x99, 0xeb, 0xc7, 0x53, 0x68,
-	0x0d, 0x07, 0xa3, 0xc9, 0x58, 0xa3, 0xe2, 0xb8, 0x48, 0x75, 0x81, 0x8a, 0x76, 0xa0, 0xbe, 0xd6,
-	0xa8, 0x44, 0xb2, 0x42, 0x46, 0xba, 0xa4, 0xd7, 0xe0, 0x5b, 0x6d, 0x7a, 0x66, 0xce, 0x93, 0x54,
-	0x73, 0x16, 0xb8, 0x5e, 0xa9, 0xe9, 0x11, 0xd4, 0x34, 0xaa, 0x47, 0x54, 0xac, 0xd2, 0x25, 0xbd,
-	0x2a, 0xf7, 0x2a, 0x7e, 0x81, 0xd6, 0x68, 0x30, 0xdc, 0x67, 0x9c, 0x40, 0x4d, 0xa1, 0x5e, 0x67,
-	0x85, 0x25, 0x84, 0x03, 0xd6, 0x2f, 0x17, 0xed, 0x97, 0x1e, 0x6e, 0xfb, 0xdc, 0xfb, 0x68, 0x0b,
-	0x2a, 0xeb, 0xd4, 0x41, 0x2b, 0xdc, 0x94, 0xb4, 0x0d, 0xd5, 0x42, 0x2e, 0x51, 0x58, 0x5c, 0x83,
-	0x3b, 0x61, 0x7c, 0x2b, 0xbd, 0x60, 0x7f, 0xec, 0x99, 0x29, 0xe3, 0x6b, 0x68, 0x96, 0x19, 0x6f,
-	0xe5, 0x22, 0x15, 0x3f, 0x0d, 0x18, 0x3f, 0x43, 0xb3, 0x0c, 0xe2, 0x06, 0x1d, 0x7f, 0x49, 0xf1,
-	0xff, 0x33, 0x85, 0x35, 0xfc, 0x5a, 0x04, 0xe1, 0x9e, 0x69, 0xf8, 0x90, 0x08, 0x81, 0x99, 0x83,
-	0x33, 0xf8, 0x3b, 0x73, 0xda, 0x87, 0x28, 0x25, 0x8d, 0x00, 0x7c, 0x39, 0xbe, 0xb9, 0xf2, 0x29,
-	0x76, 0x4e, 0xcc, 0x7c, 0x3d, 0x5f, 0x7a, 0xa6, 0x29, 0x69, 0x08, 0x41, 0x9a, 0x7b, 0x60, 0x90,
-	0xe6, 0xf1, 0xb9, 0x7b, 0xb2, 0x3d, 0x9e, 0xdf, 0x9e, 0x7c, 0xb3, 0x7d, 0xb0, 0xb3, 0x7d, 0x7c,
-	0x06, 0xa1, 0xd9, 0xf5, 0xce, 0x88, 0xc3, 0x6e, 0x5e, 0x40, 0x68, 0xa8, 0x3b, 0x37, 0x0f, 0xfb,
-	0xc1, 0x97, 0xff, 0x5e, 0x37, 0x11, 0x79, 0xdb, 0x44, 0xe4, 0x7d, 0x13, 0x91, 0x69, 0xcd, 0x7a,
-	0x4f, 0x3f, 0x02, 0x00, 0x00, 0xff, 0xff, 0x7b, 0x72, 0xf3, 0x85, 0x1e, 0x03, 0x00, 0x00,
+	// 338 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x50, 0x41, 0x4f, 0x32, 0x31,
+	0x14, 0x4c, 0x97, 0x0f, 0x3e, 0x78, 0x41, 0x30, 0x0d, 0x9a, 0x86, 0xc3, 0x86, 0xec, 0x89, 0x8b,
+	0xc4, 0xa8, 0x17, 0x2f, 0x1e, 0xd4, 0x8b, 0x89, 0xa7, 0x26, 0x5e, 0x35, 0x2b, 0x3c, 0x71, 0x65,
+	0xd9, 0x6e, 0xda, 0x22, 0x27, 0xff, 0x9f, 0x47, 0x7f, 0x82, 0xe1, 0x97, 0x98, 0xd7, 0x16, 0xd8,
+	0x18, 0x0f, 0x6a, 0x3c, 0x75, 0xa6, 0x6f, 0xfa, 0x66, 0xa6, 0x20, 0xca, 0xd4, 0x98, 0x52, 0x69,
+	0x7b, 0x97, 0x15, 0x16, 0xf5, 0x43, 0x3a, 0xc6, 0x51, 0xa9, 0x95, 0x55, 0xbc, 0xe9, 0x8e, 0xb1,
+	0xca, 0xfb, 0xbd, 0x8d, 0x66, 0xae, 0x26, 0x98, 0xfb, 0x79, 0x72, 0x0b, 0xed, 0x85, 0x41, 0x2d,
+	0x71, 0x9a, 0x19, 0x8b, 0x9a, 0xf7, 0xa1, 0x49, 0xbc, 0x48, 0xe7, 0x28, 0xd8, 0x80, 0x0d, 0x5b,
+	0x72, 0xc3, 0x69, 0x46, 0x3b, 0x96, 0x4a, 0x4f, 0x44, 0xe4, 0x67, 0x6b, 0xce, 0xf7, 0xa1, 0x61,
+	0x50, 0x3f, 0xa3, 0x16, 0xb5, 0x01, 0x1b, 0xd6, 0x65, 0x60, 0xc9, 0x0b, 0x74, 0xab, 0xfb, 0x25,
+	0x5a, 0x7e, 0x08, 0x0d, 0x8d, 0x66, 0x91, 0x5b, 0x67, 0xd0, 0x39, 0x12, 0xa3, 0x75, 0xc6, 0xd1,
+	0x56, 0x46, 0x73, 0x19, 0x74, 0x7c, 0x17, 0x6a, 0x8b, 0xcc, 0x7b, 0xd6, 0x24, 0x41, 0xde, 0x83,
+	0xba, 0x55, 0x33, 0x2c, 0x9c, 0x5b, 0x4b, 0x7a, 0x42, 0xba, 0xb9, 0x99, 0x8a, 0x7f, 0xee, 0x8e,
+	0x60, 0x72, 0x01, 0x2d, 0xb2, 0xbf, 0x56, 0xd3, 0xac, 0xf8, 0x6d, 0xb7, 0x64, 0xe9, 0xff, 0xc8,
+	0x2d, 0xa1, 0x02, 0x07, 0x9f, 0x0a, 0xec, 0x6d, 0x0b, 0x04, 0xcd, 0x1f, 0xa5, 0x7f, 0x82, 0xf6,
+	0xf8, 0x31, 0x2d, 0x0a, 0xcc, 0x7d, 0x01, 0x01, 0xff, 0x03, 0x0f, 0xf9, 0xd7, 0x94, 0xc7, 0x00,
+	0x01, 0xde, 0x5c, 0x5d, 0x86, 0x02, 0x95, 0x1b, 0xda, 0x6d, 0x26, 0xb3, 0xe0, 0x47, 0x90, 0x77,
+	0x20, 0xca, 0xca, 0x60, 0x16, 0x65, 0x65, 0x72, 0x0a, 0xdd, 0xaa, 0x17, 0xf5, 0x0c, 0xc1, 0xd9,
+	0x17, 0xc1, 0xa3, 0x4a, 0xf0, 0xe4, 0x04, 0xc0, 0x01, 0x1f, 0xf2, 0xbb, 0xaf, 0xce, 0x60, 0x67,
+	0xfb, 0xea, 0xe7, 0xdf, 0x7a, 0xde, 0x7e, 0x5d, 0xc5, 0xec, 0x6d, 0x15, 0xb3, 0xf7, 0x55, 0xcc,
+	0xee, 0x1b, 0x4e, 0x7b, 0xfc, 0x11, 0x00, 0x00, 0xff, 0xff, 0xea, 0x9d, 0x11, 0xe8, 0x0a, 0x03,
+	0x00, 0x00,
 }

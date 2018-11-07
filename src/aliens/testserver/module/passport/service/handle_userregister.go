@@ -9,29 +9,10 @@
  *******************************************************************************/
 package service
 
-import (
-	"aliens/testserver/module/passport/cache"
-	"aliens/testserver/protocol"
-)
+import "aliens/testserver/protocol"
+
 
 //
-func handleUserRegister(request *protocol.C2S_UserRegister, response *protocol.S2C_UserRegister) int64 {
-	username := request.GetUsername()
-	passwd := request.GetPassword()
-	if cache.PassportCache.IsUsernameExist(username) {
-		response.Msg = "user already exists"
-		response.Result = protocol.RegisterResult_userExists
-		return 0
-	}
-
-	passwd = PasswordHash(username, passwd)
-	//TODO 有风险最好查询 数据库再加一层判断
-	userCache := cache.NewUser(username, passwd, "", "", "", "")
-
-	response.Result = protocol.RegisterResult_registerSuccess
-	response.Uid = userCache.Id
-	token := NewToken()
-	cache.PassportCache.SetUserToken(userCache.Id, token)
-	response.Token = token
-	return response.GetUid()
+func handleUserRegister(request *protocol.UserRegister, response *protocol.UserRegisterRet) int64 {
+    return 0
 }

@@ -12,4 +12,5 @@ package model
 
 type ProjectConfig struct {
 	Name string
+	TemplatePath string `yaml:"path.template"`
 }

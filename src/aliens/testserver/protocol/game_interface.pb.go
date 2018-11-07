@@ -19,27 +19,20 @@
 		GetUserInfoRet
 		LoginRole
 		LoginRoleRet
-		CreateRole
-		CreateRoleRet
-		RemoveRole
-		RemoveRoleRet
-		GameUser
 		Role
-		RoleInfo
-		Equip
-		Skill
+		RoleDetail
 		KickOut
 		BindService
 		BindServiceRet
 		PushMessage
-		C2S_UserRegister
-		S2C_UserRegister
-		C2S_UserLogin
-		S2C_UserLogin
-		C2S_ChannelLogin
-		S2C_ChannelLogin
-		C2S_TokenLogin
-		S2C_TokenLogin
+		UserRegister
+		UserRegisterRet
+		UserLogin
+		UserLoginRet
+		ChannelLogin
+		ChannelLoginRet
+		TokenLogin
+		TokenLoginRet
 		User
 		Request
 		Response
@@ -75,7 +68,6 @@ func (*GetUserInfo) Descriptor() ([]byte, []int) { return fileDescriptorGameInte
 
 // 登录游戏服务器返回
 type GetUserInfoRet struct {
-	User *GameUser `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
 }
 
 func (m *GetUserInfoRet) Reset()                    { *m = GetUserInfoRet{} }
@@ -83,14 +75,7 @@ func (m *GetUserInfoRet) String() string            { return proto.CompactTextSt
 func (*GetUserInfoRet) ProtoMessage()               {}
 func (*GetUserInfoRet) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{1} }
 
-func (m *GetUserInfoRet) GetUser() *GameUser {
-	if m != nil {
-		return m.User
-	}
-	return nil
-}
-
-// 角色登录
+// 登录角色
 type LoginRole struct {
 	RoleID int64 `protobuf:"varint,1,opt,name=roleID,proto3" json:"roleID,omitempty"`
 }
@@ -108,8 +93,8 @@ func (m *LoginRole) GetRoleID() int64 {
 }
 
 type LoginRoleRet struct {
-	RoleInfo   *RoleInfo `protobuf:"bytes,1,opt,name=roleInfo" json:"roleInfo,omitempty"`
-	ServerTime int64     `protobuf:"varint,2,opt,name=serverTime,proto3" json:"serverTime,omitempty"`
+	Role       *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
+	ServerTime int64 `protobuf:"varint,2,opt,name=serverTime,proto3" json:"serverTime,omitempty"`
 }
 
 func (m *LoginRoleRet) Reset()                    { *m = LoginRoleRet{} }
@@ -117,9 +102,9 @@ func (m *LoginRoleRet) String() string            { return proto.CompactTextStri
 func (*LoginRoleRet) ProtoMessage()               {}
 func (*LoginRoleRet) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{3} }
 
-func (m *LoginRoleRet) GetRoleInfo() *RoleInfo {
+func (m *LoginRoleRet) GetRole() *Role {
 	if m != nil {
-		return m.RoleInfo
+		return m.Role
 	}
 	return nil
 }
@@ -131,73 +116,11 @@ func (m *LoginRoleRet) GetServerTime() int64 {
 	return 0
 }
 
-// 创建角色
-type CreateRole struct {
-	Role *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
-}
-
-func (m *CreateRole) Reset()                    { *m = CreateRole{} }
-func (m *CreateRole) String() string            { return proto.CompactTextString(m) }
-func (*CreateRole) ProtoMessage()               {}
-func (*CreateRole) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{4} }
-
-func (m *CreateRole) GetRole() *Role {
-	if m != nil {
-		return m.Role
-	}
-	return nil
-}
-
-type CreateRoleRet struct {
-	Role *Role `protobuf:"bytes,1,opt,name=role" json:"role,omitempty"`
-}
-
-func (m *CreateRoleRet) Reset()                    { *m = CreateRoleRet{} }
-func (m *CreateRoleRet) String() string            { return proto.CompactTextString(m) }
-func (*CreateRoleRet) ProtoMessage()               {}
-func (*CreateRoleRet) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{5} }
-
-func (m *CreateRoleRet) GetRole() *Role {
-	if m != nil {
-		return m.Role
-	}
-	return nil
-}
-
-// 删除角色
-type RemoveRole struct {
-	RoleID int64 `protobuf:"varint,1,opt,name=roleID,proto3" json:"roleID,omitempty"`
-}
-
-func (m *RemoveRole) Reset()                    { *m = RemoveRole{} }
-func (m *RemoveRole) String() string            { return proto.CompactTextString(m) }
-func (*RemoveRole) ProtoMessage()               {}
-func (*RemoveRole) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{6} }
-
-func (m *RemoveRole) GetRoleID() int64 {
-	if m != nil {
-		return m.RoleID
-	}
-	return 0
-}
-
-type RemoveRoleRet struct {
-}
-
-func (m *RemoveRoleRet) Reset()                    { *m = RemoveRoleRet{} }
-func (m *RemoveRoleRet) String() string            { return proto.CompactTextString(m) }
-func (*RemoveRoleRet) ProtoMessage()               {}
-func (*RemoveRoleRet) Descriptor() ([]byte, []int) { return fileDescriptorGameInterface, []int{7} }
-
 func init() {
-	proto.RegisterType((*GetUserInfo)(nil), "protocol.get_user_info")
-	proto.RegisterType((*GetUserInfoRet)(nil), "protocol.get_user_info_ret")
-	proto.RegisterType((*LoginRole)(nil), "protocol.login_role")
-	proto.RegisterType((*LoginRoleRet)(nil), "protocol.login_role_ret")
-	proto.RegisterType((*CreateRole)(nil), "protocol.create_role")
-	proto.RegisterType((*CreateRoleRet)(nil), "protocol.create_role_ret")
-	proto.RegisterType((*RemoveRole)(nil), "protocol.remove_role")
-	proto.RegisterType((*RemoveRoleRet)(nil), "protocol.remove_role_ret")
+	proto.RegisterType((*GetUserInfo)(nil), "protocol.getUserInfo")
+	proto.RegisterType((*GetUserInfoRet)(nil), "protocol.getUserInfoRet")
+	proto.RegisterType((*LoginRole)(nil), "protocol.loginRole")
+	proto.RegisterType((*LoginRoleRet)(nil), "protocol.loginRoleRet")
 }
 func (m *GetUserInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -232,16 +155,6 @@ func (m *GetUserInfoRet) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.User != nil {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintGameInterface(dAtA, i, uint64(m.User.Size()))
-		n1, err := m.User.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n1
-	}
 	return i, nil
 }
 
@@ -283,118 +196,21 @@ func (m *LoginRoleRet) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.RoleInfo != nil {
+	if m.Role != nil {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintGameInterface(dAtA, i, uint64(m.RoleInfo.Size()))
-		n2, err := m.RoleInfo.MarshalTo(dAtA[i:])
+		i = encodeVarintGameInterface(dAtA, i, uint64(m.Role.Size()))
+		n1, err := m.Role.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n2
+		i += n1
 	}
 	if m.ServerTime != 0 {
 		dAtA[i] = 0x10
 		i++
 		i = encodeVarintGameInterface(dAtA, i, uint64(m.ServerTime))
 	}
-	return i, nil
-}
-
-func (m *CreateRole) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *CreateRole) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Role != nil {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintGameInterface(dAtA, i, uint64(m.Role.Size()))
-		n3, err := m.Role.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n3
-	}
-	return i, nil
-}
-
-func (m *CreateRoleRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *CreateRoleRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Role != nil {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintGameInterface(dAtA, i, uint64(m.Role.Size()))
-		n4, err := m.Role.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n4
-	}
-	return i, nil
-}
-
-func (m *RemoveRole) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *RemoveRole) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.RoleID != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGameInterface(dAtA, i, uint64(m.RoleID))
-	}
-	return i, nil
-}
-
-func (m *RemoveRoleRet) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *RemoveRoleRet) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
 	return i, nil
 }
 
@@ -416,10 +232,6 @@ func (m *GetUserInfo) Size() (n int) {
 func (m *GetUserInfoRet) Size() (n int) {
 	var l int
 	_ = l
-	if m.User != nil {
-		l = m.User.Size()
-		n += 1 + l + sovGameInterface(uint64(l))
-	}
 	return n
 }
 
@@ -435,48 +247,13 @@ func (m *LoginRole) Size() (n int) {
 func (m *LoginRoleRet) Size() (n int) {
 	var l int
 	_ = l
-	if m.RoleInfo != nil {
-		l = m.RoleInfo.Size()
+	if m.Role != nil {
+		l = m.Role.Size()
 		n += 1 + l + sovGameInterface(uint64(l))
 	}
 	if m.ServerTime != 0 {
 		n += 1 + sovGameInterface(uint64(m.ServerTime))
 	}
-	return n
-}
-
-func (m *CreateRole) Size() (n int) {
-	var l int
-	_ = l
-	if m.Role != nil {
-		l = m.Role.Size()
-		n += 1 + l + sovGameInterface(uint64(l))
-	}
-	return n
-}
-
-func (m *CreateRoleRet) Size() (n int) {
-	var l int
-	_ = l
-	if m.Role != nil {
-		l = m.Role.Size()
-		n += 1 + l + sovGameInterface(uint64(l))
-	}
-	return n
-}
-
-func (m *RemoveRole) Size() (n int) {
-	var l int
-	_ = l
-	if m.RoleID != 0 {
-		n += 1 + sovGameInterface(uint64(m.RoleID))
-	}
-	return n
-}
-
-func (m *RemoveRoleRet) Size() (n int) {
-	var l int
-	_ = l
 	return n
 }
 
@@ -516,10 +293,10 @@ func (m *GetUserInfo) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: get_user_info: wiretype end group for non-group")
+			return fmt.Errorf("proto: getUserInfo: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: get_user_info: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: getUserInfo: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -566,45 +343,12 @@ func (m *GetUserInfoRet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: get_user_info_ret: wiretype end group for non-group")
+			return fmt.Errorf("proto: getUserInfoRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: get_user_info_ret: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: getUserInfoRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.User == nil {
-				m.User = &GameUser{}
-			}
-			if err := m.User.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGameInterface(dAtA[iNdEx:])
@@ -649,10 +393,10 @@ func (m *LoginRole) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: login_role: wiretype end group for non-group")
+			return fmt.Errorf("proto: loginRole: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: login_role: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: loginRole: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -718,15 +462,15 @@ func (m *LoginRoleRet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: login_role_ret: wiretype end group for non-group")
+			return fmt.Errorf("proto: loginRoleRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: login_role_ret: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: loginRoleRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RoleInfo", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -750,10 +494,10 @@ func (m *LoginRoleRet) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.RoleInfo == nil {
-				m.RoleInfo = &RoleInfo{}
+			if m.Role == nil {
+				m.Role = &Role{}
 			}
-			if err := m.RoleInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Role.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -776,291 +520,6 @@ func (m *LoginRoleRet) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *CreateRole) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: create_role: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: create_role: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Role == nil {
-				m.Role = &Role{}
-			}
-			if err := m.Role.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *CreateRoleRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: create_role_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: create_role_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Role", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Role == nil {
-				m.Role = &Role{}
-			}
-			if err := m.Role.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *RemoveRole) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: remove_role: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: remove_role: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RoleID", wireType)
-			}
-			m.RoleID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.RoleID |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *RemoveRoleRet) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: remove_role_ret: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: remove_role_ret: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGameInterface(dAtA[iNdEx:])
@@ -1190,22 +649,17 @@ var (
 func init() { proto.RegisterFile("game_interface.proto", fileDescriptorGameInterface) }
 
 var fileDescriptorGameInterface = []byte{
-	// 260 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x8f, 0x41, 0x4b, 0xf3, 0x40,
-	0x10, 0x86, 0xd9, 0xef, 0x2b, 0xa5, 0x4c, 0xb4, 0xb1, 0x8b, 0x48, 0xf1, 0x10, 0x64, 0x51, 0xf1,
-	0x14, 0x50, 0xf1, 0xe4, 0x4d, 0x04, 0xf1, 0xba, 0xe8, 0x79, 0x8d, 0x71, 0x12, 0x02, 0xd9, 0x8c,
-	0x4c, 0xd6, 0xfe, 0x46, 0x8f, 0xfe, 0x04, 0xc9, 0x2f, 0x91, 0x4c, 0xa3, 0xa6, 0x08, 0xe2, 0x69,
-	0xc8, 0x3c, 0xef, 0xfb, 0x64, 0x16, 0x76, 0xcb, 0xcc, 0xa3, 0xab, 0x9a, 0x80, 0x5c, 0x64, 0x39,
-	0xa6, 0xcf, 0x4c, 0x81, 0xf4, 0x4c, 0x46, 0x4e, 0xf5, 0xfe, 0x8e, 0x70, 0x4f, 0x4f, 0x58, 0xaf,
-	0x99, 0x89, 0x61, 0xbb, 0xc4, 0xe0, 0x5e, 0x5a, 0x64, 0x57, 0x35, 0x05, 0x99, 0x4b, 0x58, 0x6c,
-	0x2c, 0x1c, 0x63, 0xd0, 0xc7, 0x30, 0xe9, 0x17, 0x4b, 0x75, 0xa0, 0x4e, 0xa2, 0x33, 0x9d, 0x7e,
-	0x0a, 0xd3, 0x9b, 0xcc, 0xe3, 0x7d, 0x8b, 0x6c, 0x85, 0x9b, 0x43, 0x80, 0x9a, 0xca, 0xaa, 0x71,
-	0x4c, 0x35, 0xea, 0x3d, 0x98, 0xf6, 0xf3, 0xf6, 0x5a, 0x7a, 0xff, 0xed, 0xf0, 0x65, 0x1e, 0x60,
-	0xfe, 0x9d, 0x12, 0x7f, 0x0a, 0x33, 0x61, 0x4d, 0x41, 0x3f, 0xff, 0x61, 0x07, 0x62, 0xbf, 0x32,
-	0x3a, 0x01, 0x68, 0x91, 0x57, 0xc8, 0x77, 0x95, 0xc7, 0xe5, 0x3f, 0xb1, 0x8f, 0x36, 0xe6, 0x14,
-	0xa2, 0x9c, 0x31, 0x0b, 0xb8, 0x3e, 0xc4, 0xc0, 0xa4, 0x9f, 0x83, 0x7a, 0xbe, 0xa9, 0xb6, 0xc2,
-	0xcc, 0x05, 0xc4, 0xa3, 0x8a, 0x5c, 0xf5, 0x97, 0xda, 0x11, 0x44, 0x8c, 0x9e, 0x56, 0xf8, 0xfb,
-	0x93, 0x17, 0x10, 0x8f, 0x62, 0xbd, 0xfd, 0x6a, 0xeb, 0xb5, 0x4b, 0xd4, 0x5b, 0x97, 0xa8, 0xf7,
-	0x2e, 0x51, 0x8f, 0x53, 0x91, 0x9f, 0x7f, 0x04, 0x00, 0x00, 0xff, 0xff, 0x9d, 0x11, 0xcc, 0xf0,
-	0xc2, 0x01, 0x00, 0x00,
+	// 187 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x49, 0x4f, 0xcc, 0x4d,
+	0x8d, 0xcf, 0xcc, 0x2b, 0x49, 0x2d, 0x4a, 0x4b, 0x4c, 0x4e, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
+	0x17, 0xe2, 0x00, 0x53, 0xc9, 0xf9, 0x39, 0x52, 0x02, 0x60, 0xf9, 0xdc, 0xfc, 0x94, 0xd4, 0x1c,
+	0x88, 0x9c, 0x12, 0x2f, 0x17, 0x77, 0x7a, 0x6a, 0x49, 0x68, 0x71, 0x6a, 0x91, 0x67, 0x5e, 0x5a,
+	0xbe, 0x92, 0x00, 0x17, 0x1f, 0x12, 0x37, 0x28, 0xb5, 0x44, 0x49, 0x99, 0x8b, 0x33, 0x27, 0x3f,
+	0x3d, 0x33, 0x2f, 0x28, 0x3f, 0x27, 0x55, 0x48, 0x8c, 0x8b, 0xad, 0x28, 0x3f, 0x27, 0xd5, 0xd3,
+	0x45, 0x82, 0x51, 0x81, 0x51, 0x83, 0x39, 0x08, 0xca, 0x53, 0x0a, 0xe2, 0xe2, 0x81, 0x2b, 0x0a,
+	0x4a, 0x2d, 0x11, 0x52, 0xe2, 0x62, 0x01, 0xc9, 0x80, 0x55, 0x71, 0x1b, 0xf1, 0xe9, 0xc1, 0x1c,
+	0xa0, 0x07, 0x56, 0x00, 0x96, 0x13, 0x92, 0xe3, 0xe2, 0x2a, 0x4e, 0x2d, 0x2a, 0x4b, 0x2d, 0x0a,
+	0xc9, 0xcc, 0x4d, 0x95, 0x60, 0x02, 0x9b, 0x87, 0x24, 0xe2, 0xc4, 0x73, 0xe2, 0x91, 0x1c, 0xe3,
+	0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x26, 0xb1, 0x81, 0x8d, 0x30, 0x06, 0x04, 0x00,
+	0x00, 0xff, 0xff, 0x3a, 0x09, 0xbc, 0xd9, 0xe2, 0x00, 0x00, 0x00,
 }

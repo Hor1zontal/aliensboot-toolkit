@@ -15,79 +15,28 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type Profession int32
-
-const (
-	Profession_coder   Profession = 0
-	Profession_artist  Profession = 1
-	Profession_planner Profession = 2
-)
-
-var Profession_name = map[int32]string{
-	0: "coder",
-	1: "artist",
-	2: "planner",
-}
-var Profession_value = map[string]int32{
-	"coder":   0,
-	"artist":  1,
-	"planner": 2,
-}
-
-func (x Profession) String() string {
-	return proto.EnumName(Profession_name, int32(x))
-}
-func (Profession) EnumDescriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{0} }
-
-type GameUser struct {
-	Uid          int64   `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty" bson:"_id"`
-	Roles        []*Role `protobuf:"bytes,2,rep,name=roles" json:"roles,omitempty" bson:"roles"`
-	SelectedRole int64   `protobuf:"varint,3,opt,name=selectedRole,proto3" json:"selectedRole,omitempty" bson:"selectedRole"`
-}
-
-func (m *GameUser) Reset()                    { *m = GameUser{} }
-func (m *GameUser) String() string            { return proto.CompactTextString(m) }
-func (*GameUser) ProtoMessage()               {}
-func (*GameUser) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{0} }
-
-func (m *GameUser) GetUid() int64 {
-	if m != nil {
-		return m.Uid
-	}
-	return 0
-}
-
-func (m *GameUser) GetRoles() []*Role {
-	if m != nil {
-		return m.Roles
-	}
-	return nil
-}
-
-func (m *GameUser) GetSelectedRole() int64 {
-	if m != nil {
-		return m.SelectedRole
-	}
-	return 0
-}
-
 // 角色显示信息 、 选择角色界面数据
 type Role struct {
-	Id         int64      `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
-	Nickname   string     `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty" bson:"nickname"`
-	Profession Profession `protobuf:"varint,4,opt,name=profession,proto3,enum=protocol.Profession" json:"profession,omitempty" bson:"profession"`
-	Equp       []int32    `protobuf:"varint,5,rep,packed,name=equp" json:"equp,omitempty" bson:"equip"`
-	Sex        bool       `protobuf:"varint,6,opt,name=sex,proto3" json:"sex,omitempty" bson:"sex"`
+	Id       int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
+	Uid      int64  `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty" bson:"uid"`
+	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty" bson:"nickname"`
 }
 
 func (m *Role) Reset()                    { *m = Role{} }
 func (m *Role) String() string            { return proto.CompactTextString(m) }
 func (*Role) ProtoMessage()               {}
-func (*Role) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{1} }
+func (*Role) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{0} }
 
 func (m *Role) GetId() int64 {
 	if m != nil {
 		return m.Id
+	}
+	return 0
+}
+
+func (m *Role) GetUid() int64 {
+	if m != nil {
+		return m.Uid
 	}
 	return 0
 }
@@ -99,172 +48,35 @@ func (m *Role) GetNickname() string {
 	return ""
 }
 
-func (m *Role) GetProfession() Profession {
-	if m != nil {
-		return m.Profession
-	}
-	return Profession_coder
-}
-
-func (m *Role) GetEqup() []int32 {
-	if m != nil {
-		return m.Equp
-	}
-	return nil
-}
-
-func (m *Role) GetSex() bool {
-	if m != nil {
-		return m.Sex
-	}
-	return false
-}
-
 // 角色详细信息
-type RoleInfo struct {
-	Id      int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id" gorm:"AUTO_INCREMENT"`
-	SceneID int32    `protobuf:"varint,2,opt,name=sceneID,proto3" json:"sceneID,omitempty" bson:"sceneID"`
-	Equp    []*Equip `protobuf:"bytes,5,rep,name=equp" json:"equp,omitempty" bson:"equip"`
+type RoleDetail struct {
+	Id       int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
+	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty" bson:"nickname"`
 }
 
-func (m *RoleInfo) Reset()                    { *m = RoleInfo{} }
-func (m *RoleInfo) String() string            { return proto.CompactTextString(m) }
-func (*RoleInfo) ProtoMessage()               {}
-func (*RoleInfo) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{2} }
+func (m *RoleDetail) Reset()                    { *m = RoleDetail{} }
+func (m *RoleDetail) String() string            { return proto.CompactTextString(m) }
+func (*RoleDetail) ProtoMessage()               {}
+func (*RoleDetail) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{1} }
 
-func (m *RoleInfo) GetId() int64 {
+func (m *RoleDetail) GetId() int64 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-func (m *RoleInfo) GetSceneID() int32 {
+func (m *RoleDetail) GetNickname() string {
 	if m != nil {
-		return m.SceneID
+		return m.Nickname
 	}
-	return 0
-}
-
-func (m *RoleInfo) GetEqup() []*Equip {
-	if m != nil {
-		return m.Equp
-	}
-	return nil
-}
-
-type Equip struct {
-	Id     int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"id"`
-	Hp     int64 `protobuf:"varint,2,opt,name=hp,proto3" json:"hp,omitempty" bson:"hp"`
-	Attack int32 `protobuf:"varint,3,opt,name=attack,proto3" json:"attack,omitempty" bson:"attack"`
-	Armor  int32 `protobuf:"varint,4,opt,name=armor,proto3" json:"armor,omitempty" bson:"armor"`
-}
-
-func (m *Equip) Reset()                    { *m = Equip{} }
-func (m *Equip) String() string            { return proto.CompactTextString(m) }
-func (*Equip) ProtoMessage()               {}
-func (*Equip) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{3} }
-
-func (m *Equip) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-func (m *Equip) GetHp() int64 {
-	if m != nil {
-		return m.Hp
-	}
-	return 0
-}
-
-func (m *Equip) GetAttack() int32 {
-	if m != nil {
-		return m.Attack
-	}
-	return 0
-}
-
-func (m *Equip) GetArmor() int32 {
-	if m != nil {
-		return m.Armor
-	}
-	return 0
-}
-
-type Skill struct {
-	Id    int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Level int32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
-}
-
-func (m *Skill) Reset()                    { *m = Skill{} }
-func (m *Skill) String() string            { return proto.CompactTextString(m) }
-func (*Skill) ProtoMessage()               {}
-func (*Skill) Descriptor() ([]byte, []int) { return fileDescriptorGameModel, []int{4} }
-
-func (m *Skill) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-func (m *Skill) GetLevel() int32 {
-	if m != nil {
-		return m.Level
-	}
-	return 0
+	return ""
 }
 
 func init() {
-	proto.RegisterType((*GameUser)(nil), "protocol.GameUser")
 	proto.RegisterType((*Role)(nil), "protocol.Role")
-	proto.RegisterType((*RoleInfo)(nil), "protocol.RoleInfo")
-	proto.RegisterType((*Equip)(nil), "protocol.Equip")
-	proto.RegisterType((*Skill)(nil), "protocol.Skill")
-	proto.RegisterEnum("protocol.Profession", Profession_name, Profession_value)
+	proto.RegisterType((*RoleDetail)(nil), "protocol.RoleDetail")
 }
-func (m *GameUser) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GameUser) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Uid != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Uid))
-	}
-	if len(m.Roles) > 0 {
-		for _, msg := range m.Roles {
-			dAtA[i] = 0x12
-			i++
-			i = encodeVarintGameModel(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	if m.SelectedRole != 0 {
-		dAtA[i] = 0x18
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.SelectedRole))
-	}
-	return i, nil
-}
-
 func (m *Role) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -285,49 +97,21 @@ func (m *Role) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGameModel(dAtA, i, uint64(m.Id))
 	}
+	if m.Uid != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGameModel(dAtA, i, uint64(m.Uid))
+	}
 	if len(m.Nickname) > 0 {
 		dAtA[i] = 0x1a
 		i++
 		i = encodeVarintGameModel(dAtA, i, uint64(len(m.Nickname)))
 		i += copy(dAtA[i:], m.Nickname)
 	}
-	if m.Profession != 0 {
-		dAtA[i] = 0x20
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Profession))
-	}
-	if len(m.Equp) > 0 {
-		dAtA2 := make([]byte, len(m.Equp)*10)
-		var j1 int
-		for _, num1 := range m.Equp {
-			num := uint64(num1)
-			for num >= 1<<7 {
-				dAtA2[j1] = uint8(uint64(num)&0x7f | 0x80)
-				num >>= 7
-				j1++
-			}
-			dAtA2[j1] = uint8(num)
-			j1++
-		}
-		dAtA[i] = 0x2a
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(j1))
-		i += copy(dAtA[i:], dAtA2[:j1])
-	}
-	if m.Sex {
-		dAtA[i] = 0x30
-		i++
-		if m.Sex {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i++
-	}
 	return i, nil
 }
 
-func (m *RoleInfo) Marshal() (dAtA []byte, err error) {
+func (m *RoleDetail) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -337,7 +121,7 @@ func (m *RoleInfo) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *RoleInfo) MarshalTo(dAtA []byte) (int, error) {
+func (m *RoleDetail) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -347,88 +131,11 @@ func (m *RoleInfo) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGameModel(dAtA, i, uint64(m.Id))
 	}
-	if m.SceneID != 0 {
-		dAtA[i] = 0x10
+	if len(m.Nickname) > 0 {
+		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.SceneID))
-	}
-	if len(m.Equp) > 0 {
-		for _, msg := range m.Equp {
-			dAtA[i] = 0x2a
-			i++
-			i = encodeVarintGameModel(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	return i, nil
-}
-
-func (m *Equip) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Equip) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Id != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Id))
-	}
-	if m.Hp != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Hp))
-	}
-	if m.Attack != 0 {
-		dAtA[i] = 0x18
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Attack))
-	}
-	if m.Armor != 0 {
-		dAtA[i] = 0x20
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Armor))
-	}
-	return i, nil
-}
-
-func (m *Skill) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Skill) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Id != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Id))
-	}
-	if m.Level != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintGameModel(dAtA, i, uint64(m.Level))
+		i = encodeVarintGameModel(dAtA, i, uint64(len(m.Nickname)))
+		i += copy(dAtA[i:], m.Nickname)
 	}
 	return i, nil
 }
@@ -442,25 +149,23 @@ func encodeVarintGameModel(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
-func (m *GameUser) Size() (n int) {
+func (m *Role) Size() (n int) {
 	var l int
 	_ = l
+	if m.Id != 0 {
+		n += 1 + sovGameModel(uint64(m.Id))
+	}
 	if m.Uid != 0 {
 		n += 1 + sovGameModel(uint64(m.Uid))
 	}
-	if len(m.Roles) > 0 {
-		for _, e := range m.Roles {
-			l = e.Size()
-			n += 1 + l + sovGameModel(uint64(l))
-		}
-	}
-	if m.SelectedRole != 0 {
-		n += 1 + sovGameModel(uint64(m.SelectedRole))
+	l = len(m.Nickname)
+	if l > 0 {
+		n += 1 + l + sovGameModel(uint64(l))
 	}
 	return n
 }
 
-func (m *Role) Size() (n int) {
+func (m *RoleDetail) Size() (n int) {
 	var l int
 	_ = l
 	if m.Id != 0 {
@@ -469,67 +174,6 @@ func (m *Role) Size() (n int) {
 	l = len(m.Nickname)
 	if l > 0 {
 		n += 1 + l + sovGameModel(uint64(l))
-	}
-	if m.Profession != 0 {
-		n += 1 + sovGameModel(uint64(m.Profession))
-	}
-	if len(m.Equp) > 0 {
-		l = 0
-		for _, e := range m.Equp {
-			l += sovGameModel(uint64(e))
-		}
-		n += 1 + sovGameModel(uint64(l)) + l
-	}
-	if m.Sex {
-		n += 2
-	}
-	return n
-}
-
-func (m *RoleInfo) Size() (n int) {
-	var l int
-	_ = l
-	if m.Id != 0 {
-		n += 1 + sovGameModel(uint64(m.Id))
-	}
-	if m.SceneID != 0 {
-		n += 1 + sovGameModel(uint64(m.SceneID))
-	}
-	if len(m.Equp) > 0 {
-		for _, e := range m.Equp {
-			l = e.Size()
-			n += 1 + l + sovGameModel(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *Equip) Size() (n int) {
-	var l int
-	_ = l
-	if m.Id != 0 {
-		n += 1 + sovGameModel(uint64(m.Id))
-	}
-	if m.Hp != 0 {
-		n += 1 + sovGameModel(uint64(m.Hp))
-	}
-	if m.Attack != 0 {
-		n += 1 + sovGameModel(uint64(m.Attack))
-	}
-	if m.Armor != 0 {
-		n += 1 + sovGameModel(uint64(m.Armor))
-	}
-	return n
-}
-
-func (m *Skill) Size() (n int) {
-	var l int
-	_ = l
-	if m.Id != 0 {
-		n += 1 + sovGameModel(uint64(m.Id))
-	}
-	if m.Level != 0 {
-		n += 1 + sovGameModel(uint64(m.Level))
 	}
 	return n
 }
@@ -546,125 +190,6 @@ func sovGameModel(x uint64) (n int) {
 }
 func sozGameModel(x uint64) (n int) {
 	return sovGameModel(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *GameUser) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameModel
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: GameUser: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GameUser: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
-			}
-			m.Uid = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Uid |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Roles", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Roles = append(m.Roles, &Role{})
-			if err := m.Roles[len(m.Roles)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SelectedRole", wireType)
-			}
-			m.SelectedRole = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.SelectedRole |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameModel(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *Role) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -693,6 +218,123 @@ func (m *Role) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: Role: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameModel
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
+			}
+			m.Uid = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameModel
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Uid |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nickname", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGameModel
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGameModel
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Nickname = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGameModel(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGameModel
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RoleDetail) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGameModel
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RoleDetail: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RoleDetail: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -743,440 +385,6 @@ func (m *Role) Unmarshal(dAtA []byte) error {
 			}
 			m.Nickname = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Profession", wireType)
-			}
-			m.Profession = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Profession |= (Profession(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
-			if wireType == 0 {
-				var v int32
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowGameModel
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					v |= (int32(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				m.Equp = append(m.Equp, v)
-			} else if wireType == 2 {
-				var packedLen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowGameModel
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					packedLen |= (int(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				if packedLen < 0 {
-					return ErrInvalidLengthGameModel
-				}
-				postIndex := iNdEx + packedLen
-				if postIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				for iNdEx < postIndex {
-					var v int32
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowGameModel
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						v |= (int32(b) & 0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					m.Equp = append(m.Equp, v)
-				}
-			} else {
-				return fmt.Errorf("proto: wrong wireType = %d for field Equp", wireType)
-			}
-		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sex", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Sex = bool(v != 0)
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameModel(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *RoleInfo) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameModel
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: RoleInfo: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: RoleInfo: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			m.Id = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Id |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SceneID", wireType)
-			}
-			m.SceneID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.SceneID |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Equp", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Equp = append(m.Equp, &Equip{})
-			if err := m.Equp[len(m.Equp)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameModel(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *Equip) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameModel
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Equip: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Equip: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			m.Id = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Id |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Hp", wireType)
-			}
-			m.Hp = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Hp |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Attack", wireType)
-			}
-			m.Attack = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Attack |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Armor", wireType)
-			}
-			m.Armor = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Armor |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGameModel(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGameModel
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *Skill) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGameModel
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Skill: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Skill: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			m.Id = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Id |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
-			}
-			m.Level = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGameModel
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Level |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGameModel(dAtA[iNdEx:])
@@ -1306,40 +514,18 @@ var (
 func init() { proto.RegisterFile("game_model.proto", fileDescriptorGameModel) }
 
 var fileDescriptorGameModel = []byte{
-	// 550 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xcf, 0x6e, 0xd3, 0x4a,
-	0x18, 0xc5, 0xef, 0xd8, 0x71, 0x9a, 0x7c, 0x49, 0xd3, 0x74, 0xda, 0x2b, 0x2c, 0xa4, 0xc6, 0xd6,
-	0xa8, 0x42, 0x06, 0xd1, 0x04, 0x85, 0x3f, 0x8b, 0xb2, 0xc2, 0x10, 0xa1, 0x08, 0x51, 0xa4, 0xa1,
-	0x5d, 0x47, 0x8e, 0x3d, 0x49, 0xac, 0xd8, 0x1e, 0xd7, 0x76, 0x50, 0x1f, 0x85, 0x2d, 0x0b, 0xde,
-	0x85, 0x25, 0x4f, 0x60, 0xa1, 0xac, 0x59, 0xf9, 0x09, 0x90, 0x67, 0x9a, 0xda, 0x5d, 0x74, 0x95,
-	0x99, 0x39, 0xbf, 0xc9, 0x77, 0xce, 0x19, 0x43, 0x7f, 0xe9, 0x84, 0x6c, 0x16, 0x72, 0x8f, 0x05,
-	0xc3, 0x38, 0xe1, 0x19, 0xc7, 0x2d, 0xf1, 0xe3, 0xf2, 0xe0, 0xf1, 0xd9, 0xd2, 0xcf, 0x56, 0x9b,
-	0xf9, 0xd0, 0xe5, 0xe1, 0x68, 0xc9, 0x97, 0x7c, 0x24, 0x94, 0xf9, 0x66, 0x21, 0x76, 0x62, 0x23,
-	0x56, 0xf2, 0x22, 0xf9, 0x81, 0xa0, 0xf5, 0xd1, 0x09, 0xd9, 0x55, 0xca, 0x12, 0x6c, 0x82, 0xba,
-	0xf1, 0x3d, 0x1d, 0x99, 0xc8, 0x52, 0xed, 0x5e, 0x91, 0x1b, 0x30, 0x4f, 0x79, 0x74, 0x4e, 0x66,
-	0xbe, 0x47, 0x68, 0x29, 0xe1, 0x37, 0xa0, 0x25, 0x3c, 0x60, 0xa9, 0xae, 0x98, 0xaa, 0xd5, 0x19,
-	0xf7, 0x86, 0xbb, 0xb9, 0x43, 0xca, 0x03, 0x66, 0xf7, 0x8b, 0xdc, 0xe8, 0xca, 0x3b, 0x02, 0x23,
-	0x54, 0xe2, 0xf8, 0x2d, 0x74, 0x53, 0x16, 0x30, 0x37, 0x63, 0x5e, 0x09, 0xea, 0xaa, 0x18, 0xf1,
-	0xa8, 0xc8, 0x8d, 0x23, 0x89, 0xd7, 0x55, 0x42, 0xef, 0xc1, 0xe4, 0x2f, 0x82, 0x46, 0xb9, 0xc0,
-	0x03, 0x50, 0x1e, 0xb4, 0xa7, 0xf8, 0x1e, 0x1e, 0x41, 0x2b, 0xf2, 0xdd, 0x75, 0xe4, 0x84, 0x72,
-	0x42, 0xdb, 0x3e, 0x2a, 0x72, 0xe3, 0x40, 0x52, 0x3b, 0x85, 0xd0, 0x3b, 0x08, 0x7f, 0x02, 0x88,
-	0x13, 0xbe, 0x60, 0x69, 0xea, 0xf3, 0x48, 0x6f, 0x98, 0xc8, 0xea, 0x8d, 0x8f, 0xab, 0x4c, 0x95,
-	0x66, 0xff, 0x5f, 0xe4, 0xc6, 0xa1, 0xfc, 0xa3, 0xea, 0x94, 0xd0, 0xda, 0x75, 0x7c, 0x0a, 0x0d,
-	0x76, 0xbd, 0x89, 0x75, 0xcd, 0x54, 0x2d, 0xad, 0x5e, 0x05, 0xbb, 0xde, 0xf8, 0x31, 0xa1, 0x42,
-	0x2d, 0x3b, 0x4e, 0xd9, 0x8d, 0xde, 0x34, 0x91, 0xd5, 0xaa, 0x87, 0x48, 0xd9, 0x0d, 0xa1, 0xa5,
-	0x44, 0x7e, 0x22, 0x68, 0x95, 0x71, 0xa7, 0xd1, 0x82, 0xe3, 0x57, 0xb5, 0xc8, 0xa7, 0x45, 0x6e,
-	0x98, 0x55, 0x64, 0x73, 0xc9, 0x93, 0xf0, 0x9c, 0xbc, 0xbb, 0xba, 0xfc, 0x32, 0x9b, 0x5e, 0xbc,
-	0xa7, 0x93, 0xcf, 0x93, 0x8b, 0x4b, 0x59, 0xc4, 0x73, 0xd8, 0x4b, 0x5d, 0x16, 0xb1, 0xe9, 0x07,
-	0x5d, 0x31, 0x91, 0xa5, 0xd9, 0xb8, 0xc8, 0x8d, 0xde, 0xed, 0x20, 0x29, 0x10, 0xba, 0x43, 0xf0,
-	0xeb, 0x9a, 0xf1, 0xce, 0xf8, 0xa0, 0xca, 0x3f, 0x29, 0x8d, 0x3f, 0x94, 0x84, 0x7c, 0x47, 0xa0,
-	0x09, 0x02, 0x9f, 0xdc, 0x99, 0xd4, 0xec, 0xfd, 0x22, 0x37, 0xda, 0x92, 0xde, 0x3d, 0xcb, 0x09,
-	0x28, 0xab, 0x58, 0x18, 0x51, 0xeb, 0xf2, 0x2a, 0x26, 0x54, 0x59, 0xc5, 0xf8, 0x29, 0x34, 0x9d,
-	0x2c, 0x73, 0xdc, 0xb5, 0x78, 0x33, 0xcd, 0x3e, 0x2c, 0x72, 0x63, 0x5f, 0x22, 0xf2, 0x9c, 0xd0,
-	0x5b, 0x00, 0x3f, 0x01, 0xcd, 0x49, 0x42, 0x9e, 0x88, 0xa7, 0xba, 0xd7, 0xb1, 0x38, 0x26, 0x54,
-	0xca, 0xe4, 0x0c, 0xb4, 0xaf, 0x6b, 0x3f, 0x08, 0x70, 0xaf, 0x72, 0x26, 0xac, 0x1c, 0x83, 0x16,
-	0xb0, 0x6f, 0x2c, 0x90, 0xb5, 0x50, 0xb9, 0x79, 0xf6, 0xa2, 0xfe, 0x19, 0xe0, 0x36, 0x68, 0x2e,
-	0xf7, 0x58, 0xd2, 0xff, 0x0f, 0x03, 0x34, 0x9d, 0x24, 0xf3, 0xd3, 0xac, 0x8f, 0x70, 0x07, 0xf6,
-	0xe2, 0xc0, 0x89, 0x22, 0x96, 0xf4, 0x15, 0xbb, 0xfb, 0x6b, 0x3b, 0x40, 0xbf, 0xb7, 0x03, 0xf4,
-	0x67, 0x3b, 0x40, 0xf3, 0xa6, 0x68, 0xec, 0xe5, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x02, 0xea,
-	0xf5, 0x4b, 0x98, 0x03, 0x00, 0x00,
+	// 204 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x48, 0x4f, 0xcc, 0x4d,
+	0x8d, 0xcf, 0xcd, 0x4f, 0x49, 0xcd, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x00, 0x53,
+	0xc9, 0xf9, 0x39, 0x52, 0xba, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa,
+	0xe9, 0xf9, 0xe9, 0xf9, 0xfa, 0x60, 0x99, 0xa4, 0xd2, 0x34, 0x30, 0x0f, 0xcc, 0x01, 0xb3, 0x20,
+	0x1a, 0x95, 0x2a, 0xb9, 0x58, 0x82, 0xf2, 0x73, 0x52, 0x85, 0xe4, 0xb8, 0x98, 0x32, 0x53, 0x24,
+	0x18, 0x15, 0x18, 0x35, 0x98, 0x9d, 0xf8, 0x3e, 0xdd, 0x93, 0xe7, 0x4a, 0x2a, 0xce, 0xcf, 0xb3,
+	0x52, 0x8a, 0xcf, 0x4c, 0x51, 0x0a, 0x62, 0xca, 0x4c, 0x11, 0x52, 0xe0, 0x62, 0x2e, 0xcd, 0x4c,
+	0x91, 0x60, 0x42, 0x57, 0x50, 0x0a, 0x52, 0x00, 0x92, 0x12, 0xd2, 0xe7, 0xe2, 0xc8, 0xcb, 0x4c,
+	0xce, 0xce, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x56, 0x60, 0xd4, 0xe0, 0x74, 0x12, 0xfe, 0x74, 0x4f,
+	0x9e, 0x1f, 0xa2, 0x0c, 0x26, 0xa3, 0x14, 0x04, 0x57, 0xa4, 0x14, 0xcb, 0xc5, 0x05, 0xb2, 0xda,
+	0x25, 0xb5, 0x24, 0x31, 0x33, 0x87, 0xa0, 0x03, 0x48, 0x35, 0xde, 0x89, 0xe7, 0xc4, 0x23, 0x39,
+	0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x4c, 0x62, 0x03, 0x7b, 0xd7, 0x18, 0x10,
+	0x00, 0x00, 0xff, 0xff, 0xd5, 0x14, 0x8e, 0x1a, 0x3b, 0x01, 0x00, 0x00,
 }

@@ -46,6 +46,7 @@ func EnsureProjectConfig() *model.ProjectConfig {
 		fmt.Println("invalid project description file 'project.yml'")
 		os.Exit(1)
 	}
+	fmt.Printf("project config %+v \n", projectConfig)
 	return projectConfig
 }
 

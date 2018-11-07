@@ -19,7 +19,7 @@ import (
 
 
 func Init() {
-	center.ClusterCenter.SubscribeConfig("army", UpdateArmyData)
+	center.ClusterCenter.SubscribeConfig("TestData", UpdateBelieverUpgrade)
 }
 
 func Close() {
@@ -27,23 +27,23 @@ func Close() {
 }
 
 var (
-	armyData map[int32]*data.Army
+	believerUpgradeData map[int32]*data.BelieverUpgrade
 )
 
-func UpdateArmyData(content []byte) {
-	var dataArray []*data.Army
+func UpdateBelieverUpgrade(content []byte) {
+	var dataArray []*data.BelieverUpgrade
 	json.Unmarshal(content, &dataArray)
-	results := make(map[int32]*data.Army)
+	results := make(map[int32]*data.BelieverUpgrade)
 	for _, data := range dataArray {
-		results[data.Tid] = data
+		results[data.Id] = data
 	}
-	armyData = results
+	believerUpgradeData = results
 }
 
-func GetArmyData(id int32) *data.Army {
-	if armyData == nil {
+func GetBelieverUpgrade(id int32) *data.BelieverUpgrade {
+	if believerUpgradeData == nil {
 		exception.GameException(protocol.Code_ConfigException)
 	}
-	return armyData[id]
+	return believerUpgradeData[id]
 }
 

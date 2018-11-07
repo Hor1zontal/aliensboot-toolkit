@@ -14,7 +14,7 @@ import (
 	"reflect"
 )
 
-func newRoleHandler(info *protocol.RoleInfo) *RoleHandler {
+func newRoleHandler(info *protocol.Role) *RoleHandler {
 	handler := &RoleHandler{data: info}
 	handler.Init()
 	return handler
@@ -22,14 +22,14 @@ func newRoleHandler(info *protocol.RoleInfo) *RoleHandler {
 
 //角色数据管理
 type RoleHandler struct {
-	data *protocol.RoleInfo //
+	data *protocol.Role
 }
 
 func (this *RoleHandler) IsRole(roleID int64) bool {
 	return this.data.Id == roleID
 }
 
-func (this *RoleHandler) GetData() *protocol.RoleInfo {
+func (this *RoleHandler) GetData() *protocol.Role {
 	return this.data
 }
 

@@ -13,8 +13,8 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	Database.EnsureTable("game_user", &protocol.GameUser{})
-	Database.EnsureTable("role", &protocol.RoleInfo{})
+
+	Database.EnsureTable("role", &protocol.Role{})
 
 }
 

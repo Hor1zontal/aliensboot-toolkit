@@ -32,14 +32,14 @@ var codeCmd = &cobra.Command{
 		}
 
 		config := EnsureProjectConfig()
-		GenCode(args[0], config.Name, "")
+		GenCode(args[0], config.Name, config.TemplatePath, "")
 	},
 }
 
 
-func GenCode(module string, packageName string, rootPath string) {
+func GenCode(module string, packageName string, templatePath string, rootPath string) {
 	protocolPath := getPath(rootPath, "src", packageName, "protocol", "protocol.proto")
-	templatePath := getPath(rootPath, "templates", "protocol")
+	templatePath = getPath(templatePath, "templates", "protocol")
 
 	config := &model.CodeGenConfig{
 		Package:      packageName,

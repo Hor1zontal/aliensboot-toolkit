@@ -9,11 +9,11 @@
  *******************************************************************************/
 package service
 
-import "aliens/${package}"
+import "aliens/testserver/${package}"
 
 <message>
 //${o_desc}
 func handle${o_name}(request *${package}.${o_request}, response *${package}.${o_response}) int64 {
-
+    return 0
 }
 <message>

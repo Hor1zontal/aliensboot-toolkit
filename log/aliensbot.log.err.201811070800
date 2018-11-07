@@ -1,0 +1,2 @@
+[31mERRO[0m [aliens/aliensbot/cluster/center/service.(*rpcServer).start:57] failed to listen: listen tcp :19118: bind: address already in use 
+[31mFATA[0m [aliens/aliensbot/cluster/center.PublicService:46] service passport can not be start 

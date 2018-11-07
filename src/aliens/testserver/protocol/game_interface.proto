@@ -5,20 +5,20 @@ import "game_model.proto";
 
 
 //登录游戏服务器
-message get_user_info {
+message getUserInfo {
 }
 
 //登录游戏服务器返回
-message get_user_info_ret {
-    GameUser user = 1;              //用户游戏信息
+message getUserInfoRet {
+    //GameUser user = 1;              //用户游戏信息
 }
 
 //登录角色
-message login_role {
+message loginRole {
     int64 roleID = 1; //角色id
 }
 
-message login_role_ret {
+message loginRoleRet {
     Role role = 1; //角色详细数据
     int64 serverTime = 2;  //服务器时间
 }

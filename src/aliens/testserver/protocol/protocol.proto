@@ -23,17 +23,17 @@ message Request {
     //-----------------登录模块接口---------------
 
     oneof passport {
-        C2S_UserRegister C2S_UserRegister = 10;
-        C2S_UserLogin C2S_UserLogin = 11;
-        C2S_TokenLogin C2S_TokenLogin = 12; //token登录
+        userRegister userRegister = 10;
+        userLogin userLogin = 11;
+        tokenLogin tokenLogin = 12; //token登录
     }
 
     //-----------------游戏模块接口---------------
     oneof game {
-        get_user_info getUserInfo = 50;
-        login_role loginRole = 51;
-        create_role createRole = 52;
-        remove_role removeRole = 53;
+        getUserInfo getUserInfo = 50;
+        loginRole loginRole = 51;
+//        create_role createRole = 52;
+//        remove_role removeRole = 53;
     }
 
 
@@ -52,17 +52,17 @@ message Response {
     }
 
     oneof passport {
-        S2C_UserRegister S2C_UserRegister = 10;
-        S2C_UserLogin S2C_UserLogin = 11;
-        S2C_TokenLogin S2C_TokenLogin = 12; //token登录
+        userRegisterRet userRegisterRet = 10;
+        userLoginRet userLoginRet = 11;
+        tokenLoginRet tokenLoginRet = 12; //token登录
     }
 
     //-----------------游戏模块接口---------------
     oneof game {
-        get_user_info_ret getUserInfoRet = 50;
-        login_role_ret loginRoleRet = 51;
-        create_role_ret createRoleRet = 52;
-        remove_role_ret removeRoleRet = 53;
+        getUserInfoRet getUserInfoRet = 50;
+        loginRoleRet loginRoleRet = 51;
+//        create_role_ret createRoleRet = 52;
+//        remove_role_ret removeRoleRet = 53;
     }
 
 }
