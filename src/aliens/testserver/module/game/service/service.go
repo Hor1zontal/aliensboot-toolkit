@@ -63,13 +63,6 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
 	
-	if request.GetGetUserInfo() != nil {
-		messageRet := &protocol.GetUserInfoRet{}
-		handleGetUserInfo(authID, gateID, request.GetGetUserInfo(), messageRet)
-		response.Game = &protocol.Response_GetUserInfoRet{messageRet}
-		return
-	}
-	
 	if request.GetLoginRole() != nil {
 		messageRet := &protocol.LoginRoleRet{}
 		handleLoginRole(authID, gateID, request.GetLoginRole(), messageRet)
@@ -77,17 +70,10 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return
 	}
 	
-	if request.GetCreateRole() != nil {
-		messageRet := &protocol.CreateRoleRet{}
-		handleCreateRole(authID, gateID, request.GetCreateRole(), messageRet)
-		response.Game = &protocol.Response_CreateRoleRet{messageRet}
-		return
-	}
-	
-	if request.GetRemoveRole() != nil {
-		messageRet := &protocol.RemoveRoleRet{}
-		handleRemoveRole(authID, gateID, request.GetRemoveRole(), messageRet)
-		response.Game = &protocol.Response_RemoveRoleRet{messageRet}
+	if request.GetChangeNickname() != nil {
+		messageRet := &protocol.ChangeNicknameRet{}
+		handleChangeNickname(authID, gateID, request.GetChangeNickname(), messageRet)
+		response.Game = &protocol.Response_ChangeNicknameRet{messageRet}
 		return
 	}
 	

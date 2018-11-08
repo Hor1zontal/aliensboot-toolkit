@@ -11,70 +11,71 @@ package manager
 
 import (
 	"aliens/aliensbot/exception"
-	"aliens/aliensbot/log"
 	"aliens/testserver/module/game/db"
 	"aliens/testserver/protocol"
+	"reflect"
 )
 
-func NewUserDataManager(uid int64) *UserDataManager {
-	dataManager := &UserDataManager{}
-	var user = &protocol.GameUser{Uid: uid}
-	err := db.Database.QueryOne(user)
+func NewRoleManager(uid int64) *RoleManager {
+	var user = &protocol.Role{Uid: uid}
+	err := db.Database.QueryOneCondition(user, "uid", uid)
+
 	if err != nil {
 		//创建数据
+		user.Uid = uid
+		user.Nickname = "我叫猪大肠"
+
+		err1 := db.Database.Insert(user)
+		if err1 != nil {
+			exception.GameException(protocol.Code_DBExcetpion)
+		}
 	}
-	dataManager.user = user
+
+	dataManager := &RoleManager{data:user}
+	dataManager.Init()
 	return dataManager
 }
 
-//角色管理容器
-type UserDataManager struct {
-	user       *protocol.GameUser //用户游戏信息 拥有的角色
-	activeRole *RoleHandler       //当前的角色处理句柄
+//角色数据管理
+type RoleManager struct {
+	data *protocol.Role
+
+	RoleBaseManager
 }
 
-func (this *UserDataManager) GetActiveRoleHandler() *RoleHandler {
-	return this.activeRole
+func (this *RoleManager) IsRole(roleID int64) bool {
+	return this.data.Id == roleID
 }
 
-func (this *UserDataManager) LoginRole(roleID int64) *RoleHandler {
-	if !this.HaveRole(roleID) {
-		exception.GameException(protocol.Code_RoleNotExists)
-	}
-	//加载当前玩家缓存
-	if this.activeRole == nil || !this.activeRole.IsRole(roleID) {
-		roleInfo := &protocol.RoleInfo{Id: roleID}
-		err := db.Database.QueryOne(roleInfo)
-		if err != nil {
-			log.Debugf("query role exception %v", err)
-			exception.GameException(protocol.Code_DBExcetpion)
-		}
-		this.activeRole = newRoleHandler(roleInfo)
-	}
-	return this.activeRole
+func (this *RoleManager) GetData() *protocol.Role {
+	return this.data
 }
 
-func (this *UserDataManager) HaveRole(roleID int64) bool {
-	for _, role := range this.user.Roles {
-		if role.Id == roleID {
-			return true
+//初始化
+func (this *RoleManager) Init() {
+	mutable := reflect.ValueOf(this).Elem()
+	params := make([]reflect.Value, 1)
+	//数据管理类操作副本数据，这样更新的时候能够做比对增量更新
+	params[0] = reflect.ValueOf(this.data)
+	for i := 0; i < mutable.NumField(); i++ {
+		f := mutable.Field(i)
+		initMethod := f.Addr().MethodByName("Init")
+		if initMethod.IsValid() {
+			initMethod.Call(params)
 		}
 	}
-	return false
 }
 
-func (this *UserDataManager) GetUserData() *protocol.GameUser {
-	return this.user
-}
-
-func (this *UserDataManager) CreateRole(role *protocol.Role) *protocol.Role {
-	roleInfo := &protocol.RoleInfo{}
-	err := db.Database.Insert(roleInfo)
-	if err != nil {
-		exception.GameException(protocol.Code_DBExcetpion)
+//更新本地缓存
+func (this *RoleManager) Update() {
+	mutable := reflect.ValueOf(this).Elem()
+	params := make([]reflect.Value, 1)
+	params[0] = reflect.ValueOf(this.data)
+	for i := 0; i < mutable.NumField(); i++ {
+		f := mutable.Field(i)
+		initMethod := f.Addr().MethodByName("Update")
+		if initMethod.IsValid() {
+			initMethod.Call(params)
+		}
 	}
-	role.Id = roleInfo.Id
-	this.user.Roles = append(this.user.Roles, role)
-	this.activeRole = newRoleHandler(roleInfo)
-	return role
 }

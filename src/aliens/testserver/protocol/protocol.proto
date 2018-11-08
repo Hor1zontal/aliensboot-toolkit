@@ -30,10 +30,8 @@ message Request {
 
     //-----------------游戏模块接口---------------
     oneof game {
-        getUserInfo getUserInfo = 50;
         loginRole loginRole = 51;
-//        create_role createRole = 52;
-//        remove_role removeRole = 53;
+        changeNickname changeNickname = 52;
     }
 
 
@@ -59,10 +57,8 @@ message Response {
 
     //-----------------游戏模块接口---------------
     oneof game {
-        getUserInfoRet getUserInfoRet = 50;
         loginRoleRet loginRoleRet = 51;
-//        create_role_ret createRoleRet = 52;
-//        remove_role_ret removeRoleRet = 53;
+        changeNicknameRet changeNicknameRet = 52;
     }
 
 }

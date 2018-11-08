@@ -15,12 +15,12 @@ import (
 )
 
 func newUserSession(uid int64) *UserSession {
-	dataManager := manager.NewUserDataManager(uid)
-	session := &UserSession{UserDataManager: dataManager, lastActiveTime: time.Now()}
+	dataManager := manager.NewRoleManager(uid)
+	session := &UserSession{RoleManager: dataManager, lastActiveTime: time.Now()}
 	return session
 }
 
 type UserSession struct {
-	*manager.UserDataManager
+	*manager.RoleManager
 	lastActiveTime time.Time //上次活跃时间 没有要进行释放
 }

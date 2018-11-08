@@ -4,18 +4,9 @@ package protocol;
 import "game_model.proto";
 
 
-//登录游戏服务器
-message getUserInfo {
-}
-
-//登录游戏服务器返回
-message getUserInfoRet {
-    //GameUser user = 1;              //用户游戏信息
-}
-
 //登录角色
 message loginRole {
-    int64 roleID = 1; //角色id
+    //int64 roleID = 1; //角色id
 }
 
 message loginRoleRet {
@@ -23,3 +14,10 @@ message loginRoleRet {
     int64 serverTime = 2;  //服务器时间
 }
 
+message changeNickname {
+    string newName = 1;
+}
+
+message changeNicknameRet {
+    bool result = 1;
+}

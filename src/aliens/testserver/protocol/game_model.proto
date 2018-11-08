@@ -6,13 +6,7 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 //角色显示信息 、 选择角色界面数据
 message Role {
-    int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\""]; //角色id
-    int64 uid = 2 [(gogoproto.moretags) = "bson:\"uid\""]; //用户id
-    string nickname = 3 [(gogoproto.moretags) = "bson:\"nickname\""]; //角色昵称
-}
-
-//角色详细信息
-message RoleDetail {
-    int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\""]; //角色id
+    int64 id = 1 [(gogoproto.moretags) = "bson:\"_id\" gorm:\"AUTO_INCREMENT\""]; //角色id
+    int64 uid = 2 [(gogoproto.moretags) = "bson:\"uid\" unique:\"true\""]; //用户id
     string nickname = 3 [(gogoproto.moretags) = "bson:\"nickname\""]; //角色昵称
 }

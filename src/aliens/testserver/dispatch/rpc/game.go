@@ -10,8 +10,8 @@
 package rpc
 
 import (
-	"aliens/testserver/dispatch"
-	"aliens/testserver/protocol"
+	"aliens/gok/dispatch"
+	"aliens/gok/protocol"
 	"aliens/aliensbot/exception"
 	"aliens/aliensbot/log"
 )
@@ -44,32 +44,12 @@ func (this *gameRPCHandle) LoginRole(node string, request *protocol.LoginRole) *
 	return messageRet.GetLoginRoleRet()
 }
 
-func (this *gameRPCHandle) CreateRole(node string, request *protocol.CreateRole) *protocol.CreateRoleRet {
+func (this *gameRPCHandle) ChangeNickname(node string, request *protocol.ChangeNickname) *protocol.ChangeNicknameRet {
 	message := &protocol.Request{
-		Game:&protocol.Request_CreateRole{
-			CreateRole:request,
+		Game:&protocol.Request_ChangeNickname{
+			ChangeNickname:request,
 		},
 	}
 	messageRet := this.RequestNode(node, message)
-	return messageRet.GetCreateRoleRet()
-}
-
-func (this *gameRPCHandle) RemoveRole(node string, request *protocol.RemoveRole) *protocol.RemoveRoleRet {
-	message := &protocol.Request{
-		Game:&protocol.Request_RemoveRole{
-			RemoveRole:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetRemoveRoleRet()
-}
-
-func (this *gameRPCHandle) GetUserInfo(node string, request *protocol.GetUserInfo) *protocol.GetUserInfoRet {
-	message := &protocol.Request{
-		Game:&protocol.Request_GetUserInfo{
-			GetUserInfo:request,
-		},
-	}
-	messageRet := this.RequestNode(node, message)
-	return messageRet.GetGetUserInfoRet()
+	return messageRet.GetChangeNicknameRet()
 }

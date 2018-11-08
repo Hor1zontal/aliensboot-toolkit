@@ -11,7 +11,6 @@ package core
 
 import (
 	"aliens/aliensbot/exception"
-	"aliens/testserver/module/game/core/manager"
 	"aliens/testserver/protocol"
 )
 
@@ -31,13 +30,10 @@ func (this *userManager) EnsureUser(uid int64) *UserSession {
 	return session
 }
 
-//获取角色数据处理句柄
-
-func (this *userManager) EnsureRoleHandler(uid int64) *manager.RoleHandler {
-	session := this.EnsureUser(uid)
-	handler := session.GetActiveRoleHandler()
-	if handler == nil {
-		exception.GameException(protocol.Code_RoleNotSelect)
+func (this *userManager) GetUser(uid int64) *UserSession {
+	session := this.users[uid]
+	if session == nil {
+		exception.GameException(protocol.Code_ValidateException)
 	}
-	return handler
+	return session
 }

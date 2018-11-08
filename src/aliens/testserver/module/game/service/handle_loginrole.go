@@ -18,7 +18,7 @@ import (
 //
 func handleLoginRole(authID int64, gateID string, request *protocol.LoginRole, response *protocol.LoginRoleRet) {
 	userSession := core.UserManager.EnsureUser(authID)
-	roleHandler := userSession.LoginRole(request.GetRoleID())
-	response.RoleInfo = roleHandler.GetData()
+
+	response.Role = userSession.GetData()
 	response.ServerTime = time.Now().Unix()
 }

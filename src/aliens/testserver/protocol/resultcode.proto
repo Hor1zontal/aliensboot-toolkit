@@ -10,9 +10,6 @@ enum Code {
 
     //game
     ValidateException = 9; //验证用户失败、需要重新登录校验
-    RoleNotExists = 10; //角色不存在
-    RoleNotSelect = 11; //角色未选择
-
 
     InvalidService = 1000; //服务不可用
 
