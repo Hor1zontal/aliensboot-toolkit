@@ -1,5 +1,5 @@
-pkg/
 .idea/
-bin/
-bins/
+.cache/
+pkg/
+log/
 *.log
