@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/29
  * Contributors:
@@ -10,17 +10,15 @@
 package util
 
 import (
-	"path/filepath"
-	"os"
-	"fmt"
-	"strings"
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
-
 var filters = make(map[string]struct{})
-
 
 func AddFilter(name string) {
 	filters[name] = struct{}{}
@@ -113,7 +111,6 @@ func CopyFile(src, dest string, replaceContent map[string]string) {
 		}
 	}
 
-
 	content := string(data)
 
 	if replaceContent != nil {
@@ -125,7 +122,6 @@ func CopyFile(src, dest string, replaceContent map[string]string) {
 	WriteFile(dest, []byte(content))
 	//return io.Copy(dstFile, srcFile)
 }
-
 
 func WriteFile(filePath string, content []byte) {
 	dstFile, err := os.Create(filePath)

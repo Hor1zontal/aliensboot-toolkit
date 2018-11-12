@@ -10,11 +10,11 @@
 package template
 
 import (
+	"aliens/toolkit/model"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
-	"aliens/toolkit/model"
 )
 
 const (

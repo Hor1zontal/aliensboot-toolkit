@@ -10,12 +10,12 @@
 package main
 
 import (
+	"aliens/toolkit/model"
 	"aliens/toolkit/protobuf/template"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"github.com/go-yaml/yaml"
-	"aliens/toolkit/model"
+	"io/ioutil"
 )
 
 var (

@@ -6,6 +6,6 @@ import (
 
 var Config struct {
 	Service  config.ServiceConfig //grpc
-	Cache    config.CacheConfig  //redis
-	Database config.DBConfig     //mongo
+	Cache    config.CacheConfig   //redis
+	Database config.DBConfig      //mongo
 }

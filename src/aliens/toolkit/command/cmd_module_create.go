@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/11/5
  * Contributors:
@@ -10,9 +10,9 @@
 package command
 
 import (
-	"github.com/spf13/cobra"
-	"fmt"
 	"aliens/toolkit/util"
+	"fmt"
+	"github.com/spf13/cobra"
 	"os"
 )
 
@@ -43,14 +43,11 @@ var moduleAddCmd = &cobra.Command{
 	},
 }
 
-
-
 func addModule(homePath string, targetHomePath string, packagePath string, moduleName string) {
 
-	srcModulePath := getPath(homePath, "src","aliens","testserver","module", DefaultModuleName)
+	srcModulePath := getPath(homePath, "src", "aliens", "testserver", "module", DefaultModuleName)
 
 	targetModulePath := getPath(targetHomePath, "src", packagePath, "module", moduleName)
-
 
 	srcInfo, err := os.Stat(targetModulePath)
 	if err == nil && srcInfo.IsDir() {
@@ -58,24 +55,20 @@ func addModule(homePath string, targetHomePath string, packagePath string, modul
 		return
 	}
 
+	srcConfigPath := getPath(homePath, "copy", "config", "modules", DefaultModuleName+".yml.bak")
 
-	srcConfigPath := getPath(homePath, "copy","config","modules", DefaultModuleName + ".yml.bak")
+	targetConfigPath := getPath(targetHomePath, "config", "modules", moduleName+".yml")
 
-	targetConfigPath := getPath(targetHomePath,"config", "modules", moduleName + ".yml")
+	srcPublicPath := getPath(homePath, "src", "aliens", "testserver", "public", DefaultModuleName+".go")
 
-	srcPublicPath := getPath(homePath, "src","aliens","testserver","public", DefaultModuleName + ".go")
-
-	targetPublicPath := getPath(targetHomePath,"src", packagePath, "public", moduleName + ".go")
+	targetPublicPath := getPath(targetHomePath, "src", packagePath, "public", moduleName+".go")
 
 	replaceContent := make(map[string]string)
 	replaceContent[DefaultModuleName] = moduleName
 	replaceContent[DefaultPackagePath] = packagePath
-
 
 	util.CopyDir(srcModulePath, targetModulePath, replaceContent)
 	util.CopyFile(srcConfigPath, targetConfigPath, replaceContent)
 	util.CopyFile(srcPublicPath, targetPublicPath, replaceContent)
 
 }
-
-

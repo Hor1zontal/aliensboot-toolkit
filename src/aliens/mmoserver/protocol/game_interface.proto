@@ -1,0 +1,23 @@
+syntax = "proto3";
+package protocol;
+
+import "game_model.proto";
+
+
+//登录角色
+message loginRole {
+    //int64 roleID = 1; //角色id
+}
+
+message loginRoleRet {
+    Role role = 1; //角色详细数据
+    int64 serverTime = 2;  //服务器时间
+}
+
+message changeNickname {
+    string newName = 1;
+}
+
+message changeNicknameRet {
+    bool result = 1;
+}

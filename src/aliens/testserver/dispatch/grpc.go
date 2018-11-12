@@ -12,8 +12,8 @@ package dispatch
 import (
 	"aliens/aliensbot/cluster/center/service"
 	"aliens/aliensbot/cluster/message"
-	"aliens/testserver/protocol"
 	"aliens/aliensbot/protocol/base"
+	"aliens/testserver/protocol"
 	"github.com/gogo/protobuf/proto"
 )
 

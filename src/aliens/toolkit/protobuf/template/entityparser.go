@@ -12,8 +12,8 @@ package template
 import (
 	//"aliens/log"
 	"aliens/toolkit/protobuf/proto"
-	"os"
 	"fmt"
+	"os"
 )
 
 func ParseEntityProto(protoPath string) {

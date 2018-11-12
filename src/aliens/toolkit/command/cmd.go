@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/29
  * Contributors:
@@ -10,12 +10,12 @@
 package command
 
 import (
-	"github.com/spf13/cobra"
-	"os"
-	"fmt"
 	"aliens/toolkit/model"
 	"aliens/toolkit/util"
+	"fmt"
 	"github.com/go-yaml/yaml"
+	"github.com/spf13/cobra"
+	"os"
 	"path/filepath"
 )
 
@@ -50,14 +50,11 @@ func EnsureProjectConfig() *model.ProjectConfig {
 	return projectConfig
 }
 
-
-
 func writeProjectConfig(targetHomePath string, projectConfig *model.ProjectConfig) {
 	projectFilePath := targetHomePath + "project.yml"
 	data, _ := yaml.Marshal(projectConfig)
 	util.WriteFile(projectFilePath, data)
 }
-
 
 func readProjectConfig(targetHomePath string) *model.ProjectConfig {
 	projectFilePath := targetHomePath + "project.yml"
@@ -74,7 +71,6 @@ func readProjectConfig(targetHomePath string) *model.ProjectConfig {
 	return result
 }
 
-
 func getPath(basePath string, packages ...string) string {
 	result := basePath
 	for _, name := range packages {
@@ -86,4 +82,3 @@ func getPath(basePath string, packages ...string) string {
 	}
 	return result
 }
-

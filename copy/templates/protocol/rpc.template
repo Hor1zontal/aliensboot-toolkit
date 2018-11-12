@@ -10,8 +10,8 @@
 package rpc
 
 import (
-	"aliens/gok/dispatch"
-	"aliens/gok/protocol"
+	"aliens/testserver/dispatch"
+	"aliens/testserver/protocol"
 	"aliens/aliensbot/exception"
 	"aliens/aliensbot/log"
 )

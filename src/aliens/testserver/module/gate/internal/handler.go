@@ -12,10 +12,10 @@ package internal
 import (
 	"aliens/aliensbot/gate"
 	"aliens/aliensbot/log"
-	"aliens/testserver/module/gate/msg"
-	"aliens/testserver/module/gate/network"
 	"aliens/aliensbot/protocol/base"
 	"aliens/aliensbot/task"
+	"aliens/testserver/module/gate/msg"
+	"aliens/testserver/module/gate/network"
 )
 
 func init() {

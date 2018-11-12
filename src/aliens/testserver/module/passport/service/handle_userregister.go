@@ -11,8 +11,7 @@ package service
 
 import "aliens/testserver/protocol"
 
-
 //
 func handleUserRegister(request *protocol.UserRegister, response *protocol.UserRegisterRet) int64 {
-    return 0
+	return 0
 }

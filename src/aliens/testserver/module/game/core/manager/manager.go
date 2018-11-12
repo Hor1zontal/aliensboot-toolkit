@@ -31,7 +31,7 @@ func NewRoleManager(uid int64) *RoleManager {
 		}
 	}
 
-	dataManager := &RoleManager{data:user}
+	dataManager := &RoleManager{data: user}
 	dataManager.Init()
 	return dataManager
 }

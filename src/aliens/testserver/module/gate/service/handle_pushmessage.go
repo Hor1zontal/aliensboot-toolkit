@@ -10,9 +10,9 @@
 package service
 
 import (
+	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/module/gate/network"
 	"aliens/testserver/protocol"
-	"aliens/aliensbot/protocol/base"
 )
 
 //

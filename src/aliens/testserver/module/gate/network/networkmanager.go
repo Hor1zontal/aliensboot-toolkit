@@ -5,10 +5,10 @@ import (
 	"aliens/aliensbot/common/data_structures/set"
 	"aliens/aliensbot/common/util"
 	modulebase "aliens/aliensbot/module/base"
+	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/dispatch/rpc"
 	"aliens/testserver/module/gate/cache"
 	"aliens/testserver/protocol"
-	"aliens/aliensbot/protocol/base"
 )
 
 var Manager = &networkManager{}

@@ -10,16 +10,14 @@
 package service
 
 import (
-
+	"aliens/aliensbot/chanrpc"
+	"aliens/aliensbot/cluster/center"
+	"aliens/aliensbot/cluster/center/service"
+	"aliens/aliensbot/exception"
+	"aliens/aliensbot/protocol/base"
+	"aliens/testserver/module/game/conf"
+	"aliens/testserver/protocol"
 	"github.com/gogo/protobuf/proto"
-    "aliens/aliensbot/chanrpc"
-    "aliens/aliensbot/exception"
-    "aliens/aliensbot/cluster/center/service"
-    "aliens/aliensbot/cluster/center"
-    "aliens/aliensbot/protocol/base"
-    "aliens/testserver/protocol"
-    "aliens/testserver/module/game/conf"
-
 )
 
 var instance service.IService = nil
@@ -31,7 +29,6 @@ func Init(chanRpc *chanrpc.Server) {
 func Close() {
 	center.ReleaseService(instance)
 }
-
 
 func handle(request *base.Any) *base.Any {
 	requestProxy := &protocol.Request{}
@@ -62,21 +59,20 @@ func handle(request *base.Any) *base.Any {
 }
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) {
-	
+
 	if request.GetLoginRole() != nil {
 		messageRet := &protocol.LoginRoleRet{}
 		handleLoginRole(authID, gateID, request.GetLoginRole(), messageRet)
 		response.Game = &protocol.Response_LoginRoleRet{messageRet}
 		return
 	}
-	
+
 	if request.GetChangeNickname() != nil {
 		messageRet := &protocol.ChangeNicknameRet{}
 		handleChangeNickname(authID, gateID, request.GetChangeNickname(), messageRet)
 		response.Game = &protocol.Response_ChangeNicknameRet{messageRet}
 		return
 	}
-	
+
 	response.Code = protocol.Code_InvalidRequest
 }
-

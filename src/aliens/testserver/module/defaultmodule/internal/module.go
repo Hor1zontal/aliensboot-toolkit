@@ -2,10 +2,10 @@ package internal
 
 import (
 	"aliens/aliensbot/module/base"
+	"aliens/testserver/module/defaultmodule/cache"
 	"aliens/testserver/module/defaultmodule/conf"
 	"aliens/testserver/module/defaultmodule/db"
 	"aliens/testserver/module/defaultmodule/service"
-	"aliens/testserver/module/defaultmodule/cache"
 )
 
 type Module struct {

@@ -10,16 +10,15 @@
 package service
 
 import (
-
+	"aliens/aliensbot/chanrpc"
+	"aliens/aliensbot/cluster/center"
+	"aliens/aliensbot/cluster/center/service"
+	"aliens/aliensbot/exception"
+	"aliens/aliensbot/log"
+	"aliens/aliensbot/protocol/base"
+	"aliens/testserver/module/passport/conf"
+	"aliens/testserver/protocol"
 	"github.com/gogo/protobuf/proto"
-    "aliens/aliensbot/chanrpc"
-    "aliens/aliensbot/exception"
-    "aliens/aliensbot/cluster/center/service"
-    "aliens/aliensbot/cluster/center"
-    "aliens/aliensbot/protocol/base"
-    "aliens/aliensbot/log"
-    "aliens/testserver/protocol"
-    "aliens/testserver/module/passport/conf"
 )
 
 var instance service.IService = nil
@@ -51,12 +50,12 @@ func handle(request *base.Any) *base.Any {
 		}
 		data, _ := proto.Marshal(responseProxy)
 		responseProxy.Session = requestProxy.GetSession()
-        response.AuthId = authID
+		response.AuthId = authID
 		response.Value = data
 	}()
 	error := proto.Unmarshal(request.Value, requestProxy)
 	if error != nil {
-	    log.Debug(error)
+		log.Debug(error)
 		exception.GameException(protocol.Code_InvalidRequest)
 	}
 	authID = handleRequest(requestProxy, responseProxy)
@@ -64,29 +63,28 @@ func handle(request *base.Any) *base.Any {
 }
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
-	
+
 	if request.GetUserRegister() != nil {
 		messageRet := &protocol.UserRegisterRet{}
 		result := handleUserRegister(request.GetUserRegister(), messageRet)
 		response.Passport = &protocol.Response_UserRegisterRet{messageRet}
 		return result
 	}
-	
+
 	if request.GetUserLogin() != nil {
 		messageRet := &protocol.UserLoginRet{}
 		result := handleUserLogin(request.GetUserLogin(), messageRet)
 		response.Passport = &protocol.Response_UserLoginRet{messageRet}
 		return result
 	}
-	
+
 	if request.GetTokenLogin() != nil {
 		messageRet := &protocol.TokenLoginRet{}
 		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
 		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
 		return result
 	}
-	
+
 	response.Code = protocol.Code_InvalidRequest
 	return 0
 }
-

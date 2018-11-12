@@ -15,10 +15,10 @@ import (
 	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/gate"
 	"aliens/aliensbot/log"
+	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/module/gate/conf"
 	"aliens/testserver/module/gate/route"
 	"aliens/testserver/protocol"
-	"aliens/aliensbot/protocol/base"
 	"net"
 	"time"
 )

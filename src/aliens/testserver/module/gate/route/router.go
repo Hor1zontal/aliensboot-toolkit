@@ -11,9 +11,9 @@ package route
 
 import (
 	"aliens/aliensbot/cluster/center/service"
+	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/dispatch"
 	"aliens/testserver/module/gate/conf"
-	"aliens/aliensbot/protocol/base"
 	"errors"
 	"fmt"
 )

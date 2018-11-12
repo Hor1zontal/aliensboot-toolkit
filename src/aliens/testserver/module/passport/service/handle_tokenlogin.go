@@ -11,8 +11,7 @@ package service
 
 import "aliens/testserver/protocol"
 
-
 //
 func handleTokenLogin(request *protocol.TokenLogin, response *protocol.TokenLoginRet) int64 {
-    return 0
+	return 0
 }

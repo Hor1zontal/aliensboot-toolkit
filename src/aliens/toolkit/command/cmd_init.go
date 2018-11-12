@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/29
  * Contributors:
@@ -10,11 +10,11 @@
 package command
 
 import (
-	"github.com/spf13/cobra"
-	"aliens/toolkit/util"
-	"os"
-	"fmt"
 	"aliens/toolkit/model"
+	"aliens/toolkit/util"
+	"fmt"
+	"github.com/spf13/cobra"
+	"os"
 )
 
 const (
@@ -37,7 +37,6 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-
 		ALIENSBOTHOME := os.Getenv("ALIENSBOT_HOME")
 		if ALIENSBOTHOME == "" {
 			fmt.Println("can not found env ALENSBOT_HOME")
@@ -48,21 +47,17 @@ var initCmd = &cobra.Command{
 	},
 }
 
-
-
 func initProject(homePath string, targetHomePath string, packagePath string) {
 	util.AddFilter(DefaultModuleName)
 
 	projectConfig := &model.ProjectConfig{
-		Name:packagePath,
+		Name: packagePath,
 	}
 	writeProjectConfig(targetHomePath, projectConfig)
 
-
-	srcSrcPath := getPath(homePath, "src","aliens","testserver")
+	srcSrcPath := getPath(homePath, "src", "aliens", "testserver")
 
 	targetSrcPath := getPath(targetHomePath, "src", packagePath)
-
 
 	srcCopyPath := getPath(homePath, "copy")
 
@@ -82,8 +77,6 @@ func initProject(homePath string, targetHomePath string, packagePath string) {
 	//
 	//targetToolPath := getPath(targetHomePath,"tool")
 
-
-
 	replaceContent := make(map[string]string)
 	replaceContent[DefaultPackagePath] = packagePath
 
@@ -96,4 +89,3 @@ func initProject(homePath string, targetHomePath string, packagePath string) {
 	//util.CopyDir(srcToolPath, targetToolPath, replaceContent)
 
 }
-

@@ -10,9 +10,9 @@
 package service
 
 import (
-	"aliens/testserver/module/cluster/rpc"
 	"aliens/aliensbot/protocol/hall"
 	"aliens/aliensbot/protocol/room"
+	"aliens/testserver/module/cluster/rpc"
 )
 
 func handleQuickMatch(request *hall.QuickMatch, response *hall.QuickMatchRet) {

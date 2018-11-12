@@ -4,7 +4,6 @@ import (
 	"aliens/testserver/data"
 )
 
-
 func Init() {
 	//center.ClusterCenter.SubscribeConfig("testdata", UpdateArmyData)
 }
@@ -33,4 +32,3 @@ var (
 //	}
 //	return armyData[id]
 //}
-

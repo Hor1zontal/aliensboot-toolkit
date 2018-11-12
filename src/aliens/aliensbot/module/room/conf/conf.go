@@ -3,8 +3,8 @@ package conf
 import (
 	"aliens/aliensbot/cluster/center/service"
 	"aliens/aliensbot/config"
-	"aliens/testserver/module/base"
 	"aliens/aliensbot/network"
+	"aliens/testserver/module/base"
 )
 
 var configPath = base.BaseConfPath + "room/server.json"

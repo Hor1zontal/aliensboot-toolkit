@@ -10,9 +10,9 @@
 package zookeeper
 
 import (
+	"fmt"
 	"github.com/samuel/go-zookeeper/zk"
 	"time"
-	"fmt"
 )
 
 //迁移节点数据数据

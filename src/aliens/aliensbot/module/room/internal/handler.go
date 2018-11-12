@@ -11,9 +11,9 @@ package internal
 
 import (
 	"aliens/aliensbot/log"
-	"aliens/testserver/module/room/conf"
 	"aliens/aliensbot/network"
 	"aliens/aliensbot/protocol/framesync"
+	"aliens/testserver/module/room/conf"
 )
 
 var server *network.UDPServer = &network.UDPServer{}

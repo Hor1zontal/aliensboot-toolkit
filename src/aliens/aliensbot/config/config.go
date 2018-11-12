@@ -17,7 +17,6 @@ import (
 )
 
 var (
-
 	Version = "1.0.0"
 
 	LenStackBuf = 4096
@@ -30,8 +29,8 @@ type BaseConfig struct {
 	PathLog     string        `yaml:"path.log"`
 	PathProfile string        `yaml:"path.profile"`
 
-	ConsolePort   int    	  `yaml:"console.port"`
-	ConsolePrompt string 	  `yaml:"console.prompt"`
+	ConsolePort   int    `yaml:"console.port"`
+	ConsolePrompt string `yaml:"console.prompt"`
 }
 
 type ClusterConfig struct {

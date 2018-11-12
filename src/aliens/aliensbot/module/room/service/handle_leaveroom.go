@@ -11,8 +11,8 @@ package service
 
 import "aliens/aliensbot/protocol/room"
 import (
-	"aliens/testserver/module/room/core"
 	"aliens/aliensbot/network"
+	"aliens/testserver/module/room/core"
 )
 
 //

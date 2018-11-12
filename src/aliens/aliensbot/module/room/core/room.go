@@ -11,8 +11,8 @@ package core
 
 import (
 	"aliens/aliensbot/common/util"
-	"aliens/testserver/module/room/games"
 	"aliens/aliensbot/network"
+	"aliens/testserver/module/room/games"
 )
 
 type Room struct {

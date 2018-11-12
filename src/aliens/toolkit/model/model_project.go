@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/10/30
  * Contributors:
@@ -9,8 +9,7 @@
  *******************************************************************************/
 package model
 
-
 type ProjectConfig struct {
-	Name string
+	Name         string
 	TemplatePath string `yaml:"path.template"`
 }
