@@ -10,7 +10,7 @@
 package redis
 
 import (
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 //自增指定数量

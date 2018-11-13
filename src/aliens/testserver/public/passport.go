@@ -2,8 +2,8 @@ package main
 
 import (
 	"aliens/aliensbot"
-	"aliens/testserver/module/passport"
 	"aliens/aliensbot/module/database"
+	"aliens/testserver/module/passport"
 )
 
 func init() {
