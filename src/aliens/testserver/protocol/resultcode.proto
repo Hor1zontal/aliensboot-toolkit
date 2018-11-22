@@ -16,6 +16,7 @@ enum Code {
     playerNotFound = 51; //玩家未找到
 
     roomNotFound = 60; //房间未找到
+    roomMaxPlayer = 61; //房间人数已满
 
     gameNotFound = 101; //游戏未找到
     gameAlreadyStart = 103; //游戏已经开始、无效的操作

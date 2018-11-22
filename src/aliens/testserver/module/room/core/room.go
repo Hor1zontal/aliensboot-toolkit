@@ -10,7 +10,6 @@
 package core
 
 import (
-	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/exception"
 	"aliens/testserver/module/room/config"
 	"aliens/testserver/module/room/game"
@@ -18,14 +17,18 @@ import (
 	"github.com/gogo/protobuf/proto"
 )
 
+type Seat int32
+
 type Room struct {
+
 	id string //房间id
+
+	Seats //桌子,数组下标为座位编号
 
 	config *config.RoomConfig //房间配置
 
 	game game.Game //房间内进行的游戏对象
 
-	players map[int64]*Player //加入的玩家
 }
 
 func (room *Room) GetID() string {
@@ -33,22 +36,18 @@ func (room *Room) GetID() string {
 }
 
 //新增玩家
-//func (room *Room) AddPlayer(player *Player) {
-//	room.players[player.GetPlayerid()] = player
-//	if room.IsMaxPlayer() {
-//		//通知所有玩家初始化成功
-//		push := &protocol.Push{Room: &protocol.Push_RoomCreatedRet{RoomCreatedRet: &protocol.RoomCreatedRet{
-//			Players:room.GetAllPlayerData(),
-//		}}}
-//
-//		room.BroadcastOtherPlayer(-1, push)
-//	}
-//}
-
-//关闭房间
-func (room *Room) Close() {
-	if room.game != nil {
-		room.game.Stop()
+func (room *Room) AddPlayer(player *protocol.Player) {
+	ok := room.Add(&Player{Player:player})
+	if !ok {
+		exception.GameException(protocol.Code_roomMaxPlayer)
+	}
+	if room.IsFull() {
+		//通知所有玩家初始化成功
+		push := &protocol.Response{Room: &protocol.Response_PlayerJoinRet{PlayerJoinRet: &protocol.PlayerJoinRet{
+			RoomID:room.GetID(),
+			Player:player,
+		}}}
+		room.BroadcastOtherPlayer(player.GetPlayerid(), push)
 	}
 }
 
@@ -58,26 +57,28 @@ func (room *Room) InitPlayers(players []*protocol.Player) {
 		return
 	}
 	//初始化玩家
-	for index, player := range players {
-		//座位号递增
-		player.Seat = int32(index + 1)
-		player.GroupId = util.Int32ToString(player.Seat)
-		room.players[player.GetPlayerid()] = &Player{Player: player}
+	for _, player := range players {
+		room.AddPlayer(player)
 	}
 }
 
-func (room *Room) GetAllPlayer() map[int64]*Player {
-	return room.players
+//关闭房间
+func (room *Room) Close() {
+	room.Clean()
+	//for _, player := range players {
+	//	delete(this.players, player.GetPlayerid())
+	//}
+	if room.game != nil {
+		room.game.Stop()
+	}
 }
 
 //获取所有玩家数据
 func (room *Room) GetAllPlayerData() []*protocol.Player {
-	results := make([]*protocol.Player, len(room.players))
-	index := 0
-	for _, player := range room.players {
-		results[index] = player.Player
-		index++
-	}
+	results := []*protocol.Player{}
+	room.Foreach(func (player *Player) {
+		results = append(results, player.Player)
+	})
 	return results
 }
 
@@ -86,17 +87,12 @@ func (room *Room) GetPlayerData(playerID int64) *protocol.Player {
 	return player.Player
 }
 
-func (room *Room) EnsurePlayer(playerid int64) *Player {
-	player := room.players[playerid]
+func (room *Room) EnsurePlayer(playerID int64) *Player {
+	player := room.Get(playerID)
 	if player == nil {
 		exception.GameException(protocol.Code_playerNotFound)
 	}
 	return player
-}
-
-//玩家是否全部加入
-func (room *Room) IsMaxPlayer() bool {
-	return len(room.players) == room.config.MaxSeat
 }
 
 //玩家准备
@@ -108,20 +104,10 @@ func (room *Room) PlayerReady(playerID int64) {
 	player.Ready()
 
 	//所有玩家准备完毕、即可开始游戏
-	if room.IsAllPlayerReady() {
+	if room.IsAllReady() {
 		//启动新游戏
 		room.game.Start()
 	}
-}
-
-//是否所有玩家准备完毕
-func (room *Room) IsAllPlayerReady() bool {
-	for _, player := range room.players {
-		if !player.IsReady() {
-			return false
-		}
-	}
-	return true
 }
 
 //玩家上报游戏结果
@@ -147,11 +133,11 @@ func (room *Room) EnsureGame() game.Game {
 //广播其他玩家
 func (room *Room) BroadcastOtherPlayer(playerID int64, message proto.Message) {
 	sendData, _ := proto.Marshal(message)
-	for _, player := range room.players {
+	room.Foreach(func(player *Player) {
 		if player.GetPlayerid() != playerID {
 			player.SendMsg(sendData)
 		}
-	}
+	})
 }
 
 //接收玩家数据，同步给其他玩家

@@ -12,6 +12,7 @@ package core
 import (
 	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/exception"
+	"aliens/testserver/module/room/conf"
 	"aliens/testserver/module/room/config"
 	"aliens/testserver/module/room/game"
 	"aliens/testserver/protocol"
@@ -63,9 +64,9 @@ func (this *roomManager) EnsureRoom(roomID string) *Room {
 //新建房间
 func (this *roomManager) newRoom(config *config.RoomConfig) *Room {
 	result := &Room{
-		id:      util.GenUUID(),
-		config:  config,
-		players: make(map[int64]*Player),
+		id:     util.GenUUID(),
+		config: config,
+		Seats:  NewSeats(config.MaxSeat),
 	}
 
 	for _, factory := range this.gameFactories {
@@ -81,26 +82,35 @@ func (this *roomManager) newRoom(config *config.RoomConfig) *Room {
 	return result
 }
 
+//玩家加入房间
+func (this *roomManager) JoinRoom(appID string, roomID string, playerID int64) {
+	room := this.EnsureRoom(roomID)
+	room.AddPlayer(&protocol.Player{
+		Playerid:playerID,
+		Nickname:"蛇皮" + util.Int64ToString(playerID),
+	})
+
+}
+
+
 //分配新房间
 func (this *roomManager) AllocRoom(appID string, players []*protocol.Player) *Room {
-	config := &config.RoomConfig{AppID: appID, MaxSeat: 2}
+	config := conf.GetRoomConfig(appID)
 	room := this.newRoom(config)
 	room.InitPlayers(players)
 	this.rooms[room.GetID()] = room
-
-	for _, player := range players {
-		this.players[player.GetPlayerid()] = room.GetID()
+	if players != nil {
+		for _, player := range players {
+			this.players[player.GetPlayerid()] = room.GetID()
+		}
 	}
+
 	return room
 }
 
 //关闭房间
 func (this *roomManager) RemoveRoom(roomID string) {
 	room := this.EnsureRoom(roomID)
-	players := room.GetAllPlayer()
-	for _, player := range players {
-		delete(this.players, player.GetPlayerid())
-	}
 	room.Close()
 	delete(this.rooms, roomID)
 }

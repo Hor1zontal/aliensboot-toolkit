@@ -2,12 +2,15 @@
 // source: room_interface.proto
 package service
 
-import "aliens/testserver/protocol"
+import (
+	"aliens/testserver/module/room/core"
+	"aliens/testserver/protocol"
+)
 
 
 //
 func handleJoinRoom(authID int64, gateID string, request *protocol.JoinRoom, response *protocol.JoinRoomRet) {
-
+	core.RoomManager.JoinRoom(request.GetAppID(), request.GetRoomID(), authID)
 }
 
 

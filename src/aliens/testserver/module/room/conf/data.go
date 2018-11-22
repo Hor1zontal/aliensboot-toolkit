@@ -2,9 +2,14 @@ package conf
 
 import (
 	"aliens/testserver/data"
+	"aliens/testserver/module/room/config"
 )
 
 func Init() {
+
+	roomData = make(map[string]*config.RoomConfig)
+	roomData["0"] = &config.RoomConfig{AppID: "0", MaxSeat: 2}
+	roomData["1"] = &config.RoomConfig{AppID: "1", MaxSeat: 5}
 	//center.ClusterCenter.SubscribeConfig("testdata", UpdateArmyData)
 }
 
@@ -14,7 +19,12 @@ func Close() {
 
 var (
 	armyData map[int32]*data.Army
+	roomData map[string]*config.RoomConfig
 )
+
+func GetRoomConfig(appID string) *config.RoomConfig {
+	return roomData[appID]
+}
 
 //func UpdateTestData(content []byte) {
 //	var dataArray []*data.Army

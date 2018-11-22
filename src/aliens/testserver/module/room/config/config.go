@@ -9,11 +9,6 @@
  *******************************************************************************/
 package config
 
-type GameConfig struct {
-	AppID   string //游戏类型id
-	MaxSeat int    //最大的玩家类型
-}
-
 type RoomConfig struct {
 	AppID   string //游戏类型id
 	MaxSeat int    //最大的玩家类型
