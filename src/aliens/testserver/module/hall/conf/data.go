@@ -9,9 +9,8 @@ import (
 func Init() {
 	center.ClusterCenter.SubscribeConfig("game", UpdateGameData)
 
-
 	GameData = make(map[string]data.Game)
-	GameData["0"] = data.Game{MaxSeat:2}
+	GameData["0"] = data.Game{MaxSeat: 2}
 }
 
 func Close() {

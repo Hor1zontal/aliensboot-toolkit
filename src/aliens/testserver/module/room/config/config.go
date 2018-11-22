@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/11/13
  * Contributors:
@@ -10,11 +10,11 @@
 package config
 
 type GameConfig struct {
-	AppID  string    //游戏类型id
-	MaxSeat int      //最大的玩家类型
+	AppID   string //游戏类型id
+	MaxSeat int    //最大的玩家类型
 }
 
 type RoomConfig struct {
-	AppID  string    //游戏类型id
-	MaxSeat int      //最大的玩家类型
+	AppID   string //游戏类型id
+	MaxSeat int    //最大的玩家类型
 }

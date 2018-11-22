@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved. 
+ * All rights reserved.
  * Date:
  *     2018/11/13
  * Contributors:
@@ -13,34 +13,17 @@ import (
 	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/exception"
 	"aliens/testserver/module/room/config"
+	"aliens/testserver/module/room/game"
 	"aliens/testserver/protocol"
 	"github.com/gogo/protobuf/proto"
-	"github.com/xiaonanln/goworld/engine/uuid"
 )
 
-//新建游戏
-func NewRoom(appID string) *Room {
-	//TODO 加载游戏配置
-	var config *config.RoomConfig = &config.RoomConfig{AppID:appID, MaxSeat:2}
-
-	result := &Room{
-		id:uuid.GenUUID(),
-		appID:appID,
-		RoomConfig: config,
-		players: make(map[int64]*Player),
-	}
-	return result
-}
-
 type Room struct {
-
 	id string //房间id
 
-	appID string //房间所属的游戏id
+	config *config.RoomConfig //房间配置
 
-	*config.RoomConfig  //房间配置
-
-	game *Game //房间内进行的游戏对象
+	game game.Game //房间内进行的游戏对象
 
 	players map[int64]*Player //加入的玩家
 }
@@ -48,7 +31,6 @@ type Room struct {
 func (room *Room) GetID() string {
 	return room.id
 }
-
 
 //新增玩家
 //func (room *Room) AddPlayer(player *Player) {
@@ -62,7 +44,6 @@ func (room *Room) GetID() string {
 //		room.BroadcastOtherPlayer(-1, push)
 //	}
 //}
-
 
 //关闭房间
 func (room *Room) Close() {
@@ -81,7 +62,7 @@ func (room *Room) InitPlayers(players []*protocol.Player) {
 		//座位号递增
 		player.Seat = int32(index + 1)
 		player.GroupId = util.Int32ToString(player.Seat)
-		room.players[player.GetPlayerid()] = &Player{Player:player}
+		room.players[player.GetPlayerid()] = &Player{Player: player}
 	}
 }
 
@@ -115,20 +96,20 @@ func (room *Room) EnsurePlayer(playerid int64) *Player {
 
 //玩家是否全部加入
 func (room *Room) IsMaxPlayer() bool {
-	return len(room.players) == room.MaxSeat
+	return len(room.players) == room.config.MaxSeat
 }
 
 //玩家准备
 func (room *Room) PlayerReady(playerID int64) {
-	if room.game != nil {
+	if room.IsGameStart() {
 		exception.GameException(protocol.Code_gameAlreadyStart)
 	}
 	player := room.EnsurePlayer(playerID)
 	player.Ready()
+
 	//所有玩家准备完毕、即可开始游戏
 	if room.IsAllPlayerReady() {
 		//启动新游戏
-		room.game = NewGame(room)
 		room.game.Start()
 	}
 }
@@ -143,21 +124,20 @@ func (room *Room) IsAllPlayerReady() bool {
 	return true
 }
 
-
 //玩家上报游戏结果
 //玩家上报结果
 func (room *Room) UploadResult(playerID int64, reports []*protocol.PlayerResult) {
 	//TODO 处理玩家的上报结果
-
+	//game := room.EnsureGame()
 
 }
 
 //游戏是否开始
 func (room *Room) IsGameStart() bool {
-	return room.game != nil
+	return room.game != nil && room.game.IsStart()
 }
 
-func (room *Room) EnsureGame() *Game {
+func (room *Room) EnsureGame() game.Game {
 	if room.game == nil {
 		exception.GameException(protocol.Code_gameNotFound)
 	}
@@ -174,3 +154,7 @@ func (room *Room) BroadcastOtherPlayer(playerID int64, message proto.Message) {
 	}
 }
 
+//接收玩家数据，同步给其他玩家
+func (room *Room) AcceptPlayerData(playerID int64, data string) {
+	room.game.AcceptPlayerData(playerID, data)
+}

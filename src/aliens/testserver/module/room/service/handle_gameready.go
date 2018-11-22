@@ -10,15 +10,12 @@
 package service
 
 import (
-	"aliens/testserver/module/room/manager"
+	"aliens/testserver/module/room/core"
 	"aliens/testserver/protocol"
 )
 
-
-
-
 //
 func handleGameReady(authID int64, gateID string, request *protocol.GameReady) {
-	room := manager.RoomManager.GetRoomByPlayerID(authID)
+	room := core.RoomManager.GetRoomByPlayerID(authID)
 	room.PlayerReady(authID)
 }

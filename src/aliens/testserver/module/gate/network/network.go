@@ -51,7 +51,7 @@ func (this *Network) Push(msg *base.Any) {
 
 func (this *Network) KickOut(kickType protocol.KickType) {
 	pushMsg := &protocol.Response{
-		Gate:&protocol.Response_Kick{
+		Gate: &protocol.Response_Kick{
 			Kick: kickType,
 		},
 	}
@@ -70,7 +70,7 @@ func (this *Network) handleResponse(response *base.Any, err error) {
 	}
 	//TODO 返回服务不可用,或者尝试重发其他有效的节点
 	if err != nil {
-		log.Debugf("handle response %v err : %v",response, err)
+		log.Debugf("handle response %v err : %v", response, err)
 		return
 	}
 	//更新验权id
@@ -123,9 +123,7 @@ func (this *Network) HandleMessage(request *base.Any) {
 	//log.Debugf("data  : %+v - %+v", request, response)
 	log.Debugf("r-r : %+v - %+v", req, resp)
 
-
 	this.handleResponse(response, err)
-
 
 	////更新验权id
 	//if response.GetAuthId() > 0 {

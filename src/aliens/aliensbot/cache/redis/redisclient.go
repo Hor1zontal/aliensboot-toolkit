@@ -12,7 +12,7 @@ package redis
 import (
 	"aliens/aliensbot/config"
 	"aliens/aliensbot/log"
-	"github.com/gomodule/redigo/redis"
+	"github.com/garyburd/redigo/redis"
 	"time"
 )
 

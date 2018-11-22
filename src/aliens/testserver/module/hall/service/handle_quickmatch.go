@@ -14,9 +14,6 @@ import (
 	"aliens/testserver/protocol"
 )
 
-
-
-
 //
 func handleQuickMatch(authID int64, gateID string, request *protocol.QuickMatch) {
 	match.Manager.Add(request.GetAppid(), authID)

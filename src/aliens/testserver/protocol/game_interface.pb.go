@@ -43,16 +43,21 @@
 		Response
 		ShowUser
 		ShowUserRet
-		GameCreate
-		GameInit
-		GameReady
+		JoinRoom
+		JoinRoomRet
+		GetRoomInfo
+		GetRoomInfoRet
+		RoomCreate
 		GameData
+		GameReady
 		FrameData
 		UploadGameResult
 		UploadGameResultRet
 		OnceMore
 		OnceMoreRet
-		GameCreatedRet
+		RoomCreatedRet
+		PlayerLeaveRet
+		PlayerJoinRet
 		GameStartRet
 		GameDataRet
 		FrameDataRet

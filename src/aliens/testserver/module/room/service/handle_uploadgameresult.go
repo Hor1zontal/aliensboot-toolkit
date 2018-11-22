@@ -3,15 +3,12 @@
 package service
 
 import (
-	"aliens/testserver/module/room/manager"
+	"aliens/testserver/module/room/core"
 	"aliens/testserver/protocol"
 )
 
-
-
-
 //
 func handleUploadGameResult(authID int64, gateID string, request *protocol.UploadGameResult) {
-	game := manager.RoomManager.GetRoomByPlayerID(authID)
+	game := core.RoomManager.GetRoomByPlayerID(authID)
 	game.UploadResult(authID, request.GetDetail())
 }

@@ -3,7 +3,7 @@
 package service
 
 import (
-	"aliens/aliensbot/log"
+
 	"github.com/gogo/protobuf/proto"
     "aliens/aliensbot/chanrpc"
     "aliens/aliensbot/exception"
@@ -59,7 +59,7 @@ func handle(request *base.Any) (response *base.Any) {
 }
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) bool {
-	log.Debugf("%v:%v handle %v - %v",authID, gateID, request, response)
+	
 	if request.GetShowUser() != nil {
 		messageRet := &protocol.ShowUserRet{}
 		handleShowUser(authID, gateID, request.GetShowUser(), messageRet)
@@ -67,14 +67,28 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return true
 	}
 	
+	if request.GetGetRoomInfo() != nil {
+		messageRet := &protocol.GetRoomInfoRet{}
+		handleGetRoomInfo(authID, gateID, request.GetGetRoomInfo(), messageRet)
+		response.Room = &protocol.Response_GetRoomInfoRet{messageRet}
+		return true
+	}
 	
-    if request.GetGameData() != nil {
-    	handleGameData(authID, gateID, request.GetGameData())
+	if request.GetJoinRoom() != nil {
+		messageRet := &protocol.JoinRoomRet{}
+		handleJoinRoom(authID, gateID, request.GetJoinRoom(), messageRet)
+		response.Room = &protocol.Response_JoinRoomRet{messageRet}
+		return true
+	}
+	
+	
+    if request.GetUploadGameResult() != nil {
+    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
     	return false
     }
     
-    if request.GetFrameData() != nil {
-    	handleFrameData(authID, gateID, request.GetFrameData())
+    if request.GetRoomCreate() != nil {
+    	handleRoomCreate(authID, gateID, request.GetRoomCreate())
     	return false
     }
     
@@ -83,18 +97,13 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     	return false
     }
     
-    if request.GetUploadGameResult() != nil {
-    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
+    if request.GetFrameData() != nil {
+    	handleFrameData(authID, gateID, request.GetFrameData())
     	return false
     }
     
-    if request.GetGameCreate() != nil {
-    	handleGameCreate(authID, gateID, request.GetGameCreate())
-    	return false
-    }
-    
-    if request.GetGameInit() != nil {
-    	handleGameInit(authID, gateID, request.GetGameInit())
+    if request.GetGameData() != nil {
+    	handleGameData(authID, gateID, request.GetGameData())
     	return false
     }
     

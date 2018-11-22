@@ -24,12 +24,32 @@ func (this *roomRPCHandler) ShowUser(node string, request *protocol.ShowUser) *p
 	return messageRet.GetShowUserRet()
 }
 
-
-
-func (this *roomRPCHandler) FrameData(node string, request *protocol.FrameData) error {
+func (this *roomRPCHandler) GetRoomInfo(node string, request *protocol.GetRoomInfo) *protocol.GetRoomInfoRet {
 	message := &protocol.Request{
-		Room:&protocol.Request_FrameData{
-			FrameData:request,
+		Room:&protocol.Request_GetRoomInfo{
+			GetRoomInfo:request,
+		},
+	}
+	messageRet := this.Request(node, message)
+	return messageRet.GetGetRoomInfoRet()
+}
+
+func (this *roomRPCHandler) JoinRoom(node string, request *protocol.JoinRoom) *protocol.JoinRoomRet {
+	message := &protocol.Request{
+		Room:&protocol.Request_JoinRoom{
+			JoinRoom:request,
+		},
+	}
+	messageRet := this.Request(node, message)
+	return messageRet.GetJoinRoomRet()
+}
+
+
+
+func (this *roomRPCHandler) GameReady(node string, request *protocol.GameReady) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_GameReady{
+			GameReady:request,
 		},
 	}
 	return this.Send(node, message)
@@ -44,19 +64,19 @@ func (this *roomRPCHandler) GameData(node string, request *protocol.GameData) er
 	return this.Send(node, message)
 }
 
-func (this *roomRPCHandler) GameInit(node string, request *protocol.GameInit) error {
+func (this *roomRPCHandler) FrameData(node string, request *protocol.FrameData) error {
 	message := &protocol.Request{
-		Room:&protocol.Request_GameInit{
-			GameInit:request,
+		Room:&protocol.Request_FrameData{
+			FrameData:request,
 		},
 	}
 	return this.Send(node, message)
 }
 
-func (this *roomRPCHandler) GameReady(node string, request *protocol.GameReady) error {
+func (this *roomRPCHandler) RoomCreate(node string, request *protocol.RoomCreate) error {
 	message := &protocol.Request{
-		Room:&protocol.Request_GameReady{
-			GameReady:request,
+		Room:&protocol.Request_RoomCreate{
+			RoomCreate:request,
 		},
 	}
 	return this.Send(node, message)
@@ -66,15 +86,6 @@ func (this *roomRPCHandler) UploadGameResult(node string, request *protocol.Uplo
 	message := &protocol.Request{
 		Room:&protocol.Request_UploadGameResult{
 			UploadGameResult:request,
-		},
-	}
-	return this.Send(node, message)
-}
-
-func (this *roomRPCHandler) GameCreate(node string, request *protocol.GameCreate) error {
-	message := &protocol.Request{
-		Room:&protocol.Request_GameCreate{
-			GameCreate:request,
 		},
 	}
 	return this.Send(node, message)

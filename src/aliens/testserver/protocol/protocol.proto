@@ -44,14 +44,17 @@ message Request {
     //-----------------房间服务器接口-------------
     oneof room {
         showUser showUser = 100;
+        getRoomInfo getRoomInfo = 101;
+        joinRoom joinRoom = 102;
 
         //push
-        gameCreate gameCreate = 110;
-        gameInit gameInit = 120;
+        roomCreate roomCreate = 110;
+        //gameInit gameInit = 120;
         gameReady gameReady = 121;
         gameData gameData = 122;
         frameData frameData = 123;
         uploadGameResult uploadGameResult = 124;
+
 
     }
 
@@ -93,9 +96,13 @@ message Response {
 
     oneof room {
         showUserRet showUserRet = 100;
+        getRoomInfoRet getRoomInfoRet = 101;
+        joinRoomRet joinRoomRet = 102;
+
 
         //push
-        gameCreatedRet gameCreatedRet = 1100;
+        roomCreatedRet roomCreatedRet = 1100;
+
         gameStartRet gameStartRet = 1101;
         gameDataRet gameDataRet = 1102;
         frameDataRet frameDataRet = 1103;
@@ -103,6 +110,9 @@ message Response {
         networkRet networkRet = 1105;
         voiceRet voiceRet = 1106;
         gameResetRet gameResetRet = 1107;
+        playerLeaveRet playerLeaveRet = 1108;
+        playerJoinRet playerJoinRet = 1109;
+
     }
 
     oneof hall {

@@ -11,9 +11,6 @@ package service
 
 import "aliens/testserver/protocol"
 
-
-
-
 //
 func handleFrameData(authID int64, gateID string, request *protocol.FrameData) {
 

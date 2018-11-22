@@ -55,7 +55,6 @@ func convertModule(moduleConfig *model.ModuleConfig, module *Module) {
 
 		content := string(b)
 
-
 		if outputConfig.Prefix == "" {
 			//写一个文件
 			content = convertService(content, module, MESSAGE_SPLIT_STR)
@@ -71,7 +70,6 @@ func convertModule(moduleConfig *model.ModuleConfig, module *Module) {
 	}
 
 }
-
 
 func convertService(templateContent string, module *Module, split string) string {
 	results := strings.Split(templateContent, split)
@@ -96,9 +94,8 @@ func convertService(templateContent string, module *Module, split string) string
 	} else {
 		header = replaceMessage(templateContent, module)
 	}
-	return header+content+tailf
+	return header + content + tailf
 }
-
 
 func convertHandle(rp1 string, rp2 string, content string, module *Module, outputConfig *model.Output) {
 	handlers := convertHandler(content, module, rp1)
@@ -134,7 +131,7 @@ func convertHandler(templateContent string, module *Module, split string) map[st
 				continue
 			}
 			handleStr = replaceHandle(handleStr, handler)
-			handlers[handler.GetName()] =  header+handleStr+tailf
+			handlers[handler.GetName()] = header + handleStr + tailf
 		}
 	}
 	return handlers
@@ -165,12 +162,12 @@ func convertHandler1(templateContent string, module *Module, split string, handl
 				continue
 			}
 			handleStr = replaceHandle(handleStr, handler)
-			return header+handleStr+tailf
+			return header + handleStr + tailf
 		}
 	} else {
 		header = replaceMessage(templateContent, module)
 	}
-	return header+ content +tailf
+	return header + content + tailf
 }
 
 func writeFile(filePath string, content string, overwrite bool) {

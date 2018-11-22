@@ -14,6 +14,28 @@ message showUserRet {
     Player player = 1;
 }
 
+message joinRoom {
+    string appID = 1;
+    string roomID = 2; //快速加入房间
+}
+
+//玩家加入房间信息
+message joinRoomRet {
+    string roomID = 1; //房间id
+    repeated Player players = 2; //当前房间的玩家
+}
+
+message getRoomInfo {
+    string appID = 1;
+    string roomID = 2; //快速加入房间
+}
+
+message getRoomInfoRet {
+    string roomID = 1; //房间id
+    repeated Player players = 2; //当前房间的玩家
+}
+
+
 //----------------------单请求---------------
 
 //创建房间 匹配成功后内部调用
@@ -22,14 +44,7 @@ message roomCreate {
     repeated Player players = 2; //匹配成功的玩家
 }
 
-//帧同步游戏初始化
-message gameInit {
-    bool openFraming = 1; //是否开启帧同步
-    int32 fpsExpect = 2; //每秒的逻辑帧数量  默认5帧
-}
 
-message gameReady {
-}
 
 //发送游戏数据, data参数结构由游戏自拟，接收方收到的data与发送方发送的结构和内容一致。
 //1v1游戏中，玩家A调用invoke gameData发送消息，玩家B使用onMessage gameData接收消息。
@@ -37,6 +52,15 @@ message gameReady {
 //但是B、C、D并不知道消息的发送方为哪位玩家，所以在2v2游戏中调用invoke gameData发送消息时，需显示声明发送者的身份。
 message gameData {
     string data = 1; //游戏数据 玩家自定义
+}
+
+//帧同步游戏初始化
+//message gameInit {
+//    bool openFraming = 1; //是否开启帧同步
+//    int32 fpsExpect = 2; //每秒的逻辑帧数量  默认5帧
+//}
+
+message gameReady {
 }
 
 //上报帧数据
@@ -74,6 +98,19 @@ message onceMoreRet {
 //大厅收到游戏gameInit，开始匹配对手玩家，并建立双方玩家通信通道，完成后通过channelCreated将双方玩家信息发送给游戏，玩家信息格式如下：
 message roomCreatedRet {
     repeated Player players = 1; //玩家信息
+}
+
+//-----------------------------推送房间消息------------------------------------
+
+//玩家离开房间推送
+message playerLeaveRet {
+    int32 playerID = 1; //玩家离开房间
+}
+
+//玩家加入房间推送
+message playerJoinRet {
+    string roomID = 1; //房间id
+    Player player = 2; //加入的玩家信息
 }
 
 //收到所有玩家gameReady，大厅通知游戏开始。

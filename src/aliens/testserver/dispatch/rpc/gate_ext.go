@@ -32,7 +32,6 @@ func (this *gateRPCHandler) BindService1(authID int64, node string, service serv
 	return nil
 }
 
-
 //推送玩家消息
 func (this *gateRPCHandler) Push(fromService string, authID int64, node string, response *protocol.Response) error {
 	data, err := proto.Marshal(response)
@@ -40,14 +39,13 @@ func (this *gateRPCHandler) Push(fromService string, authID int64, node string, 
 		return err
 	}
 	pushMessage := &protocol.PushMessage{
-		AuthID: authID,
-		Data:   data,
+		AuthID:  authID,
+		Data:    data,
 		Service: fromService,
 	}
 	this.PushMessage(node, pushMessage)
 	return nil
 }
-
 
 func (this *gateRPCHandler) BroadcastAll(node string, response *protocol.Response) {
 	data, _ := proto.Marshal(response)

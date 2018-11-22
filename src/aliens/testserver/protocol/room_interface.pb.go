@@ -47,63 +47,127 @@ func (m *ShowUserRet) GetPlayer() *Player {
 	return nil
 }
 
-// 创建游戏 匹配成功后内部调用
-type GameCreate struct {
-	AppID   string    `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
-	Players []*Player `protobuf:"bytes,2,rep,name=players" json:"players,omitempty"`
+type JoinRoom struct {
+	AppID  string `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	RoomID string `protobuf:"bytes,2,opt,name=roomID,proto3" json:"roomID,omitempty"`
 }
 
-func (m *GameCreate) Reset()                    { *m = GameCreate{} }
-func (m *GameCreate) String() string            { return proto.CompactTextString(m) }
-func (*GameCreate) ProtoMessage()               {}
-func (*GameCreate) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{2} }
+func (m *JoinRoom) Reset()                    { *m = JoinRoom{} }
+func (m *JoinRoom) String() string            { return proto.CompactTextString(m) }
+func (*JoinRoom) ProtoMessage()               {}
+func (*JoinRoom) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{2} }
 
-func (m *GameCreate) GetAppID() string {
+func (m *JoinRoom) GetAppID() string {
 	if m != nil {
 		return m.AppID
 	}
 	return ""
 }
 
-func (m *GameCreate) GetPlayers() []*Player {
+func (m *JoinRoom) GetRoomID() string {
+	if m != nil {
+		return m.RoomID
+	}
+	return ""
+}
+
+// 玩家加入房间信息
+type JoinRoomRet struct {
+	RoomID  string    `protobuf:"bytes,1,opt,name=roomID,proto3" json:"roomID,omitempty"`
+	Players []*Player `protobuf:"bytes,2,rep,name=players" json:"players,omitempty"`
+}
+
+func (m *JoinRoomRet) Reset()                    { *m = JoinRoomRet{} }
+func (m *JoinRoomRet) String() string            { return proto.CompactTextString(m) }
+func (*JoinRoomRet) ProtoMessage()               {}
+func (*JoinRoomRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{3} }
+
+func (m *JoinRoomRet) GetRoomID() string {
+	if m != nil {
+		return m.RoomID
+	}
+	return ""
+}
+
+func (m *JoinRoomRet) GetPlayers() []*Player {
 	if m != nil {
 		return m.Players
 	}
 	return nil
 }
 
-// 帧同步游戏初始化
-type GameInit struct {
-	OpenFraming bool  `protobuf:"varint,1,opt,name=openFraming,proto3" json:"openFraming,omitempty"`
-	FpsExpect   int32 `protobuf:"varint,2,opt,name=fpsExpect,proto3" json:"fpsExpect,omitempty"`
+type GetRoomInfo struct {
+	AppID  string `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	RoomID string `protobuf:"bytes,2,opt,name=roomID,proto3" json:"roomID,omitempty"`
 }
 
-func (m *GameInit) Reset()                    { *m = GameInit{} }
-func (m *GameInit) String() string            { return proto.CompactTextString(m) }
-func (*GameInit) ProtoMessage()               {}
-func (*GameInit) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{3} }
+func (m *GetRoomInfo) Reset()                    { *m = GetRoomInfo{} }
+func (m *GetRoomInfo) String() string            { return proto.CompactTextString(m) }
+func (*GetRoomInfo) ProtoMessage()               {}
+func (*GetRoomInfo) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{4} }
 
-func (m *GameInit) GetOpenFraming() bool {
+func (m *GetRoomInfo) GetAppID() string {
 	if m != nil {
-		return m.OpenFraming
+		return m.AppID
 	}
-	return false
+	return ""
 }
 
-func (m *GameInit) GetFpsExpect() int32 {
+func (m *GetRoomInfo) GetRoomID() string {
 	if m != nil {
-		return m.FpsExpect
+		return m.RoomID
 	}
-	return 0
+	return ""
 }
 
-type GameReady struct {
+type GetRoomInfoRet struct {
+	RoomID  string    `protobuf:"bytes,1,opt,name=roomID,proto3" json:"roomID,omitempty"`
+	Players []*Player `protobuf:"bytes,2,rep,name=players" json:"players,omitempty"`
 }
 
-func (m *GameReady) Reset()                    { *m = GameReady{} }
-func (m *GameReady) String() string            { return proto.CompactTextString(m) }
-func (*GameReady) ProtoMessage()               {}
-func (*GameReady) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{4} }
+func (m *GetRoomInfoRet) Reset()                    { *m = GetRoomInfoRet{} }
+func (m *GetRoomInfoRet) String() string            { return proto.CompactTextString(m) }
+func (*GetRoomInfoRet) ProtoMessage()               {}
+func (*GetRoomInfoRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{5} }
+
+func (m *GetRoomInfoRet) GetRoomID() string {
+	if m != nil {
+		return m.RoomID
+	}
+	return ""
+}
+
+func (m *GetRoomInfoRet) GetPlayers() []*Player {
+	if m != nil {
+		return m.Players
+	}
+	return nil
+}
+
+// 创建房间 匹配成功后内部调用
+type RoomCreate struct {
+	AppID   string    `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Players []*Player `protobuf:"bytes,2,rep,name=players" json:"players,omitempty"`
+}
+
+func (m *RoomCreate) Reset()                    { *m = RoomCreate{} }
+func (m *RoomCreate) String() string            { return proto.CompactTextString(m) }
+func (*RoomCreate) ProtoMessage()               {}
+func (*RoomCreate) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{6} }
+
+func (m *RoomCreate) GetAppID() string {
+	if m != nil {
+		return m.AppID
+	}
+	return ""
+}
+
+func (m *RoomCreate) GetPlayers() []*Player {
+	if m != nil {
+		return m.Players
+	}
+	return nil
+}
 
 // 发送游戏数据, data参数结构由游戏自拟，接收方收到的data与发送方发送的结构和内容一致。
 // 1v1游戏中，玩家A调用invoke gameData发送消息，玩家B使用onMessage gameData接收消息。
@@ -116,7 +180,7 @@ type GameData struct {
 func (m *GameData) Reset()                    { *m = GameData{} }
 func (m *GameData) String() string            { return proto.CompactTextString(m) }
 func (*GameData) ProtoMessage()               {}
-func (*GameData) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{5} }
+func (*GameData) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{7} }
 
 func (m *GameData) GetData() string {
 	if m != nil {
@@ -124,6 +188,14 @@ func (m *GameData) GetData() string {
 	}
 	return ""
 }
+
+type GameReady struct {
+}
+
+func (m *GameReady) Reset()                    { *m = GameReady{} }
+func (m *GameReady) String() string            { return proto.CompactTextString(m) }
+func (*GameReady) ProtoMessage()               {}
+func (*GameReady) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{8} }
 
 // 上报帧数据
 type FrameData struct {
@@ -133,7 +205,7 @@ type FrameData struct {
 func (m *FrameData) Reset()                    { *m = FrameData{} }
 func (m *FrameData) String() string            { return proto.CompactTextString(m) }
 func (*FrameData) ProtoMessage()               {}
-func (*FrameData) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{6} }
+func (*FrameData) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{9} }
 
 func (m *FrameData) GetData() []byte {
 	if m != nil {
@@ -150,7 +222,7 @@ type UploadGameResult struct {
 func (m *UploadGameResult) Reset()                    { *m = UploadGameResult{} }
 func (m *UploadGameResult) String() string            { return proto.CompactTextString(m) }
 func (*UploadGameResult) ProtoMessage()               {}
-func (*UploadGameResult) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{7} }
+func (*UploadGameResult) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{10} }
 
 func (m *UploadGameResult) GetDetail() []*PlayerResult {
 	if m != nil {
@@ -163,10 +235,12 @@ type UploadGameResultRet struct {
 	Result int32 `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
 }
 
-func (m *UploadGameResultRet) Reset()                    { *m = UploadGameResultRet{} }
-func (m *UploadGameResultRet) String() string            { return proto.CompactTextString(m) }
-func (*UploadGameResultRet) ProtoMessage()               {}
-func (*UploadGameResultRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{8} }
+func (m *UploadGameResultRet) Reset()         { *m = UploadGameResultRet{} }
+func (m *UploadGameResultRet) String() string { return proto.CompactTextString(m) }
+func (*UploadGameResultRet) ProtoMessage()    {}
+func (*UploadGameResultRet) Descriptor() ([]byte, []int) {
+	return fileDescriptorRoomInterface, []int{11}
+}
 
 func (m *UploadGameResultRet) GetResult() int32 {
 	if m != nil {
@@ -182,7 +256,7 @@ type OnceMore struct {
 func (m *OnceMore) Reset()                    { *m = OnceMore{} }
 func (m *OnceMore) String() string            { return proto.CompactTextString(m) }
 func (*OnceMore) ProtoMessage()               {}
-func (*OnceMore) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{9} }
+func (*OnceMore) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{12} }
 
 //
 type OnceMoreRet struct {
@@ -191,21 +265,63 @@ type OnceMoreRet struct {
 func (m *OnceMoreRet) Reset()                    { *m = OnceMoreRet{} }
 func (m *OnceMoreRet) String() string            { return proto.CompactTextString(m) }
 func (*OnceMoreRet) ProtoMessage()               {}
-func (*OnceMoreRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{10} }
+func (*OnceMoreRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{13} }
 
 // 大厅收到游戏gameInit，开始匹配对手玩家，并建立双方玩家通信通道，完成后通过channelCreated将双方玩家信息发送给游戏，玩家信息格式如下：
-type GameCreatedRet struct {
+type RoomCreatedRet struct {
 	Players []*Player `protobuf:"bytes,1,rep,name=players" json:"players,omitempty"`
 }
 
-func (m *GameCreatedRet) Reset()                    { *m = GameCreatedRet{} }
-func (m *GameCreatedRet) String() string            { return proto.CompactTextString(m) }
-func (*GameCreatedRet) ProtoMessage()               {}
-func (*GameCreatedRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{11} }
+func (m *RoomCreatedRet) Reset()                    { *m = RoomCreatedRet{} }
+func (m *RoomCreatedRet) String() string            { return proto.CompactTextString(m) }
+func (*RoomCreatedRet) ProtoMessage()               {}
+func (*RoomCreatedRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{14} }
 
-func (m *GameCreatedRet) GetPlayers() []*Player {
+func (m *RoomCreatedRet) GetPlayers() []*Player {
 	if m != nil {
 		return m.Players
+	}
+	return nil
+}
+
+// 玩家离开房间推送
+type PlayerLeaveRet struct {
+	PlayerID int32 `protobuf:"varint,1,opt,name=playerID,proto3" json:"playerID,omitempty"`
+}
+
+func (m *PlayerLeaveRet) Reset()                    { *m = PlayerLeaveRet{} }
+func (m *PlayerLeaveRet) String() string            { return proto.CompactTextString(m) }
+func (*PlayerLeaveRet) ProtoMessage()               {}
+func (*PlayerLeaveRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{15} }
+
+func (m *PlayerLeaveRet) GetPlayerID() int32 {
+	if m != nil {
+		return m.PlayerID
+	}
+	return 0
+}
+
+// 玩家加入房间推送
+type PlayerJoinRet struct {
+	RoomID string  `protobuf:"bytes,1,opt,name=roomID,proto3" json:"roomID,omitempty"`
+	Player *Player `protobuf:"bytes,2,opt,name=player" json:"player,omitempty"`
+}
+
+func (m *PlayerJoinRet) Reset()                    { *m = PlayerJoinRet{} }
+func (m *PlayerJoinRet) String() string            { return proto.CompactTextString(m) }
+func (*PlayerJoinRet) ProtoMessage()               {}
+func (*PlayerJoinRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{16} }
+
+func (m *PlayerJoinRet) GetRoomID() string {
+	if m != nil {
+		return m.RoomID
+	}
+	return ""
+}
+
+func (m *PlayerJoinRet) GetPlayer() *Player {
+	if m != nil {
+		return m.Player
 	}
 	return nil
 }
@@ -217,7 +333,7 @@ type GameStartRet struct {
 func (m *GameStartRet) Reset()                    { *m = GameStartRet{} }
 func (m *GameStartRet) String() string            { return proto.CompactTextString(m) }
 func (*GameStartRet) ProtoMessage()               {}
-func (*GameStartRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{12} }
+func (*GameStartRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{17} }
 
 // 接收其他玩家发送的data，接收到的数据与发送的数据结构和内容一致。
 // 比如，玩家A通过invoke gameData发送数据{x:1, y: 2}，玩家B通过onMessage gameData收到的数据也为{x:1, y: 2}。
@@ -228,7 +344,7 @@ type GameDataRet struct {
 func (m *GameDataRet) Reset()                    { *m = GameDataRet{} }
 func (m *GameDataRet) String() string            { return proto.CompactTextString(m) }
 func (*GameDataRet) ProtoMessage()               {}
-func (*GameDataRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{13} }
+func (*GameDataRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{18} }
 
 func (m *GameDataRet) GetData() string {
 	if m != nil {
@@ -246,7 +362,7 @@ type FrameDataRet struct {
 func (m *FrameDataRet) Reset()                    { *m = FrameDataRet{} }
 func (m *FrameDataRet) String() string            { return proto.CompactTextString(m) }
 func (*FrameDataRet) ProtoMessage()               {}
-func (*FrameDataRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{14} }
+func (*FrameDataRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{19} }
 
 func (m *FrameDataRet) GetIndex() int32 {
 	if m != nil {
@@ -262,6 +378,7 @@ func (m *FrameDataRet) GetData() string {
 	return ""
 }
 
+// 玩家离开游戏 或房间
 type LeaveRet struct {
 	Playerid int64 `protobuf:"varint,1,opt,name=playerid,proto3" json:"playerid,omitempty"`
 }
@@ -269,7 +386,7 @@ type LeaveRet struct {
 func (m *LeaveRet) Reset()                    { *m = LeaveRet{} }
 func (m *LeaveRet) String() string            { return proto.CompactTextString(m) }
 func (*LeaveRet) ProtoMessage()               {}
-func (*LeaveRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{15} }
+func (*LeaveRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{20} }
 
 func (m *LeaveRet) GetPlayerid() int64 {
 	if m != nil {
@@ -278,6 +395,7 @@ func (m *LeaveRet) GetPlayerid() int64 {
 	return 0
 }
 
+// 玩家断开网络
 type NetworkRet struct {
 	Playerid int64 `protobuf:"varint,1,opt,name=playerid,proto3" json:"playerid,omitempty"`
 	Online   bool  `protobuf:"varint,2,opt,name=online,proto3" json:"online,omitempty"`
@@ -286,7 +404,7 @@ type NetworkRet struct {
 func (m *NetworkRet) Reset()                    { *m = NetworkRet{} }
 func (m *NetworkRet) String() string            { return proto.CompactTextString(m) }
 func (*NetworkRet) ProtoMessage()               {}
-func (*NetworkRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{16} }
+func (*NetworkRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{21} }
 
 func (m *NetworkRet) GetPlayerid() int64 {
 	if m != nil {
@@ -302,6 +420,7 @@ func (m *NetworkRet) GetOnline() bool {
 	return false
 }
 
+// 玩家音频信息
 type VoiceRet struct {
 	Playerid int64 `protobuf:"varint,1,opt,name=playerid,proto3" json:"playerid,omitempty"`
 	Open     bool  `protobuf:"varint,2,opt,name=open,proto3" json:"open,omitempty"`
@@ -311,7 +430,7 @@ type VoiceRet struct {
 func (m *VoiceRet) Reset()                    { *m = VoiceRet{} }
 func (m *VoiceRet) String() string            { return proto.CompactTextString(m) }
 func (*VoiceRet) ProtoMessage()               {}
-func (*VoiceRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{17} }
+func (*VoiceRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{22} }
 
 func (m *VoiceRet) GetPlayerid() int64 {
 	if m != nil {
@@ -341,21 +460,26 @@ type GameResetRet struct {
 func (m *GameResetRet) Reset()                    { *m = GameResetRet{} }
 func (m *GameResetRet) String() string            { return proto.CompactTextString(m) }
 func (*GameResetRet) ProtoMessage()               {}
-func (*GameResetRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{18} }
+func (*GameResetRet) Descriptor() ([]byte, []int) { return fileDescriptorRoomInterface, []int{23} }
 
 func init() {
 	proto.RegisterType((*ShowUser)(nil), "protocol.showUser")
 	proto.RegisterType((*ShowUserRet)(nil), "protocol.showUserRet")
-	proto.RegisterType((*GameCreate)(nil), "protocol.gameCreate")
-	proto.RegisterType((*GameInit)(nil), "protocol.gameInit")
-	proto.RegisterType((*GameReady)(nil), "protocol.gameReady")
+	proto.RegisterType((*JoinRoom)(nil), "protocol.joinRoom")
+	proto.RegisterType((*JoinRoomRet)(nil), "protocol.joinRoomRet")
+	proto.RegisterType((*GetRoomInfo)(nil), "protocol.getRoomInfo")
+	proto.RegisterType((*GetRoomInfoRet)(nil), "protocol.getRoomInfoRet")
+	proto.RegisterType((*RoomCreate)(nil), "protocol.roomCreate")
 	proto.RegisterType((*GameData)(nil), "protocol.gameData")
+	proto.RegisterType((*GameReady)(nil), "protocol.gameReady")
 	proto.RegisterType((*FrameData)(nil), "protocol.frameData")
 	proto.RegisterType((*UploadGameResult)(nil), "protocol.uploadGameResult")
 	proto.RegisterType((*UploadGameResultRet)(nil), "protocol.uploadGameResultRet")
 	proto.RegisterType((*OnceMore)(nil), "protocol.onceMore")
 	proto.RegisterType((*OnceMoreRet)(nil), "protocol.onceMoreRet")
-	proto.RegisterType((*GameCreatedRet)(nil), "protocol.gameCreatedRet")
+	proto.RegisterType((*RoomCreatedRet)(nil), "protocol.roomCreatedRet")
+	proto.RegisterType((*PlayerLeaveRet)(nil), "protocol.playerLeaveRet")
+	proto.RegisterType((*PlayerJoinRet)(nil), "protocol.playerJoinRet")
 	proto.RegisterType((*GameStartRet)(nil), "protocol.gameStartRet")
 	proto.RegisterType((*GameDataRet)(nil), "protocol.gameDataRet")
 	proto.RegisterType((*FrameDataRet)(nil), "protocol.frameDataRet")
@@ -415,7 +539,7 @@ func (m *ShowUserRet) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *GameCreate) Marshal() (dAtA []byte, err error) {
+func (m *JoinRoom) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -425,7 +549,139 @@ func (m *GameCreate) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *GameCreate) MarshalTo(dAtA []byte) (int, error) {
+func (m *JoinRoom) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.AppID) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.AppID)))
+		i += copy(dAtA[i:], m.AppID)
+	}
+	if len(m.RoomID) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.RoomID)))
+		i += copy(dAtA[i:], m.RoomID)
+	}
+	return i, nil
+}
+
+func (m *JoinRoomRet) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *JoinRoomRet) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.RoomID) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.RoomID)))
+		i += copy(dAtA[i:], m.RoomID)
+	}
+	if len(m.Players) > 0 {
+		for _, msg := range m.Players {
+			dAtA[i] = 0x12
+			i++
+			i = encodeVarintRoomInterface(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *GetRoomInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetRoomInfo) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.AppID) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.AppID)))
+		i += copy(dAtA[i:], m.AppID)
+	}
+	if len(m.RoomID) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.RoomID)))
+		i += copy(dAtA[i:], m.RoomID)
+	}
+	return i, nil
+}
+
+func (m *GetRoomInfoRet) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetRoomInfoRet) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.RoomID) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.RoomID)))
+		i += copy(dAtA[i:], m.RoomID)
+	}
+	if len(m.Players) > 0 {
+		for _, msg := range m.Players {
+			dAtA[i] = 0x12
+			i++
+			i = encodeVarintRoomInterface(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *RoomCreate) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RoomCreate) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -451,57 +707,6 @@ func (m *GameCreate) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *GameInit) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GameInit) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.OpenFraming {
-		dAtA[i] = 0x8
-		i++
-		if m.OpenFraming {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i++
-	}
-	if m.FpsExpect != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintRoomInterface(dAtA, i, uint64(m.FpsExpect))
-	}
-	return i, nil
-}
-
-func (m *GameReady) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GameReady) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	return i, nil
-}
-
 func (m *GameData) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -523,6 +728,24 @@ func (m *GameData) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.Data)))
 		i += copy(dAtA[i:], m.Data)
 	}
+	return i, nil
+}
+
+func (m *GameReady) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GameReady) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
 	return i, nil
 }
 
@@ -639,7 +862,7 @@ func (m *OnceMoreRet) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *GameCreatedRet) Marshal() (dAtA []byte, err error) {
+func (m *RoomCreatedRet) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -649,7 +872,7 @@ func (m *GameCreatedRet) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *GameCreatedRet) MarshalTo(dAtA []byte) (int, error) {
+func (m *RoomCreatedRet) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -665,6 +888,63 @@ func (m *GameCreatedRet) MarshalTo(dAtA []byte) (int, error) {
 			}
 			i += n
 		}
+	}
+	return i, nil
+}
+
+func (m *PlayerLeaveRet) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayerLeaveRet) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.PlayerID != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(m.PlayerID))
+	}
+	return i, nil
+}
+
+func (m *PlayerJoinRet) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayerJoinRet) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.RoomID) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(len(m.RoomID)))
+		i += copy(dAtA[i:], m.RoomID)
+	}
+	if m.Player != nil {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintRoomInterface(dAtA, i, uint64(m.Player.Size()))
+		n2, err := m.Player.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n2
 	}
 	return i, nil
 }
@@ -885,7 +1165,67 @@ func (m *ShowUserRet) Size() (n int) {
 	return n
 }
 
-func (m *GameCreate) Size() (n int) {
+func (m *JoinRoom) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.AppID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	l = len(m.RoomID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	return n
+}
+
+func (m *JoinRoomRet) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.RoomID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	if len(m.Players) > 0 {
+		for _, e := range m.Players {
+			l = e.Size()
+			n += 1 + l + sovRoomInterface(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *GetRoomInfo) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.AppID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	l = len(m.RoomID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	return n
+}
+
+func (m *GetRoomInfoRet) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.RoomID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	if len(m.Players) > 0 {
+		for _, e := range m.Players {
+			l = e.Size()
+			n += 1 + l + sovRoomInterface(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *RoomCreate) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.AppID)
@@ -901,24 +1241,6 @@ func (m *GameCreate) Size() (n int) {
 	return n
 }
 
-func (m *GameInit) Size() (n int) {
-	var l int
-	_ = l
-	if m.OpenFraming {
-		n += 2
-	}
-	if m.FpsExpect != 0 {
-		n += 1 + sovRoomInterface(uint64(m.FpsExpect))
-	}
-	return n
-}
-
-func (m *GameReady) Size() (n int) {
-	var l int
-	_ = l
-	return n
-}
-
 func (m *GameData) Size() (n int) {
 	var l int
 	_ = l
@@ -926,6 +1248,12 @@ func (m *GameData) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovRoomInterface(uint64(l))
 	}
+	return n
+}
+
+func (m *GameReady) Size() (n int) {
+	var l int
+	_ = l
 	return n
 }
 
@@ -972,7 +1300,7 @@ func (m *OnceMoreRet) Size() (n int) {
 	return n
 }
 
-func (m *GameCreatedRet) Size() (n int) {
+func (m *RoomCreatedRet) Size() (n int) {
 	var l int
 	_ = l
 	if len(m.Players) > 0 {
@@ -980,6 +1308,29 @@ func (m *GameCreatedRet) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovRoomInterface(uint64(l))
 		}
+	}
+	return n
+}
+
+func (m *PlayerLeaveRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.PlayerID != 0 {
+		n += 1 + sovRoomInterface(uint64(m.PlayerID))
+	}
+	return n
+}
+
+func (m *PlayerJoinRet) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.RoomID)
+	if l > 0 {
+		n += 1 + l + sovRoomInterface(uint64(l))
+	}
+	if m.Player != nil {
+		l = m.Player.Size()
+		n += 1 + l + sovRoomInterface(uint64(l))
 	}
 	return n
 }
@@ -1220,7 +1571,7 @@ func (m *ShowUserRet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GameCreate) Unmarshal(dAtA []byte) error {
+func (m *JoinRoom) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1243,10 +1594,446 @@ func (m *GameCreate) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: gameCreate: wiretype end group for non-group")
+			return fmt.Errorf("proto: joinRoom: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: gameCreate: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: joinRoom: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AppID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AppID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RoomID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RoomID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *JoinRoomRet) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: joinRoomRet: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: joinRoomRet: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RoomID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RoomID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Players", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Players = append(m.Players, &Player{})
+			if err := m.Players[len(m.Players)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetRoomInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: getRoomInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: getRoomInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AppID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AppID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RoomID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RoomID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetRoomInfoRet) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: getRoomInfoRet: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: getRoomInfoRet: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RoomID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RoomID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Players", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Players = append(m.Players, &Player{})
+			if err := m.Players[len(m.Players)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RoomCreate) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: roomCreate: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: roomCreate: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1330,145 +2117,6 @@ func (m *GameCreate) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GameInit) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowRoomInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: gameInit: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: gameInit: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field OpenFraming", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRoomInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.OpenFraming = bool(v != 0)
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FpsExpect", wireType)
-			}
-			m.FpsExpect = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRoomInterface
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.FpsExpect |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipRoomInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthRoomInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *GameReady) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowRoomInterface
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: gameReady: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: gameReady: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipRoomInterface(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthRoomInterface
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *GameData) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1527,6 +2175,56 @@ func (m *GameData) Unmarshal(dAtA []byte) error {
 			}
 			m.Data = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GameReady) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: gameReady: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: gameReady: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipRoomInterface(dAtA[iNdEx:])
@@ -1879,7 +2577,7 @@ func (m *OnceMoreRet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GameCreatedRet) Unmarshal(dAtA []byte) error {
+func (m *RoomCreatedRet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1902,10 +2600,10 @@ func (m *GameCreatedRet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: gameCreatedRet: wiretype end group for non-group")
+			return fmt.Errorf("proto: roomCreatedRet: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: gameCreatedRet: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: roomCreatedRet: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1936,6 +2634,187 @@ func (m *GameCreatedRet) Unmarshal(dAtA []byte) error {
 			}
 			m.Players = append(m.Players, &Player{})
 			if err := m.Players[len(m.Players)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayerLeaveRet) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: playerLeaveRet: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: playerLeaveRet: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PlayerID", wireType)
+			}
+			m.PlayerID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PlayerID |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRoomInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayerJoinRet) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRoomInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: playerJoinRet: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: playerJoinRet: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RoomID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RoomID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Player", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRoomInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRoomInterface
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Player == nil {
+				m.Player = &Player{}
+			}
+			if err := m.Player.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2612,34 +3491,37 @@ var (
 func init() { proto.RegisterFile("room_interface.proto", fileDescriptorRoomInterface) }
 
 var fileDescriptorRoomInterface = []byte{
-	// 464 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x52, 0x4d, 0x6f, 0x13, 0x31,
-	0x10, 0xd5, 0x26, 0x24, 0x75, 0x66, 0x43, 0x15, 0x99, 0xa8, 0x5a, 0x55, 0x28, 0x04, 0x1f, 0xaa,
-	0x08, 0x89, 0x1c, 0xe0, 0x00, 0x07, 0x0e, 0xa8, 0x14, 0x50, 0x91, 0x40, 0xc8, 0xc0, 0x19, 0x99,
-	0xdd, 0x49, 0x59, 0xd5, 0xb1, 0x57, 0x5e, 0xf7, 0xeb, 0x1f, 0x72, 0xe4, 0x27, 0xa0, 0xfc, 0x12,
-	0xe4, 0x59, 0x6f, 0x1a, 0x41, 0xd4, 0x9c, 0x3c, 0x6f, 0xe6, 0xcd, 0x9b, 0xf1, 0xd3, 0xc0, 0xd8,
-	0x59, 0xbb, 0xfc, 0x5e, 0x1a, 0x8f, 0x6e, 0xa1, 0x72, 0x9c, 0x57, 0xce, 0x7a, 0xcb, 0x19, 0x3d,
-	0xb9, 0xd5, 0x87, 0x23, 0xaa, 0x2f, 0x6d, 0x81, 0xba, 0xa9, 0x89, 0x23, 0x60, 0xf5, 0x4f, 0x7b,
-	0xf5, 0xad, 0x46, 0xc7, 0x0f, 0x81, 0x55, 0x5a, 0xdd, 0xa0, 0x2b, 0x8b, 0x2c, 0x99, 0x26, 0xb3,
-	0xae, 0x5c, 0x63, 0xf1, 0x02, 0xd2, 0x96, 0x27, 0xd1, 0xf3, 0x19, 0xf4, 0x9b, 0x12, 0x11, 0xd3,
-	0x67, 0xa3, 0x79, 0x3b, 0x63, 0xfe, 0x99, 0xf2, 0x32, 0xd6, 0xc5, 0x27, 0x80, 0x33, 0xb5, 0xc4,
-	0x37, 0x0e, 0x95, 0x47, 0x3e, 0x86, 0x9e, 0xaa, 0xaa, 0xd3, 0x13, 0x6a, 0x1b, 0xc8, 0x06, 0xf0,
-	0x27, 0xb0, 0xd7, 0xb0, 0xeb, 0xac, 0x33, 0xed, 0x6e, 0x95, 0x6b, 0x09, 0xe2, 0x03, 0xb0, 0xa0,
-	0x77, 0x6a, 0x4a, 0xcf, 0xa7, 0x90, 0xda, 0x0a, 0xcd, 0x3b, 0xa7, 0x96, 0xa5, 0x39, 0x23, 0x4d,
-	0x26, 0x37, 0x53, 0xfc, 0x21, 0x0c, 0x16, 0x55, 0xfd, 0xf6, 0xba, 0xc2, 0xdc, 0x67, 0x9d, 0x69,
-	0x32, 0xeb, 0xc9, 0xdb, 0x84, 0x48, 0x61, 0x10, 0xb4, 0x24, 0xaa, 0xe2, 0x46, 0x4c, 0x1a, 0xe1,
-	0x13, 0xe5, 0x15, 0xe7, 0x70, 0xaf, 0x50, 0x5e, 0xc5, 0x2d, 0x29, 0x16, 0x8f, 0x60, 0xb0, 0x70,
-	0xdb, 0x08, 0xc3, 0x48, 0x38, 0x86, 0xd1, 0x45, 0xa5, 0xad, 0x2a, 0xde, 0x93, 0x66, 0x7d, 0xa1,
-	0x3d, 0x9f, 0x43, 0xbf, 0x40, 0xaf, 0x4a, 0x9d, 0x25, 0xf4, 0xb1, 0x83, 0xff, 0x3e, 0x46, 0x3c,
-	0x19, 0x59, 0xe2, 0x29, 0x3c, 0xf8, 0x57, 0x23, 0xd8, 0x7d, 0x00, 0x7d, 0x47, 0x80, 0x06, 0xf6,
-	0x64, 0x44, 0x02, 0x80, 0x59, 0x93, 0xe3, 0x47, 0xeb, 0x50, 0xdc, 0x87, 0xb4, 0x8d, 0x25, 0x7a,
-	0xf1, 0x0a, 0xf6, 0x6f, 0x7d, 0x2f, 0x82, 0xc8, 0x86, 0xcb, 0xc9, 0x2e, 0x97, 0xf7, 0x61, 0x18,
-	0xba, 0xbf, 0x78, 0xe5, 0xc2, 0x02, 0xe2, 0x31, 0xa4, 0xad, 0x39, 0x41, 0x6a, 0x9b, 0x3f, 0x2f,
-	0x61, 0xb8, 0xf6, 0x27, 0x70, 0xc6, 0xd0, 0x2b, 0x4d, 0x81, 0xd7, 0x71, 0xe5, 0x06, 0xac, 0x3b,
-	0x3b, 0x1b, 0x9d, 0x47, 0xc0, 0x34, 0xaa, 0xcb, 0xb0, 0xf6, 0x9d, 0x37, 0xf8, 0x1a, 0xc0, 0xa0,
-	0xbf, 0xb2, 0xee, 0x7c, 0x07, 0x33, 0xf8, 0x65, 0x8d, 0x2e, 0x0d, 0xd2, 0x1c, 0x26, 0x23, 0x12,
-	0x5f, 0x81, 0x5d, 0xda, 0x32, 0xdf, 0x35, 0x29, 0x6c, 0x19, 0xae, 0x28, 0x76, 0x53, 0xcc, 0x33,
-	0xd8, 0xf3, 0x4a, 0x9f, 0x87, 0x43, 0xeb, 0x52, 0xba, 0x85, 0xad, 0x59, 0x12, 0x6b, 0x0c, 0x66,
-	0x1d, 0x0f, 0x7f, 0xad, 0x26, 0xc9, 0xef, 0xd5, 0x24, 0xf9, 0xb3, 0x9a, 0x24, 0x3f, 0xfa, 0x64,
-	0xf2, 0xf3, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xea, 0x90, 0x46, 0xa8, 0x9c, 0x03, 0x00, 0x00,
+	// 512 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0xc1, 0x6e, 0x13, 0x31,
+	0x10, 0xd5, 0x26, 0x24, 0xdd, 0xcc, 0xa6, 0x51, 0x64, 0xa2, 0x6a, 0xd5, 0x43, 0x28, 0x3e, 0x54,
+	0x15, 0x82, 0x1c, 0xe0, 0x40, 0x25, 0x38, 0xa0, 0x12, 0x09, 0x05, 0x01, 0xa2, 0xa6, 0x9c, 0x91,
+	0xc9, 0x4e, 0xc2, 0xd2, 0x8d, 0x67, 0xe5, 0xb8, 0x2d, 0xfd, 0x43, 0x8e, 0x7c, 0x02, 0xca, 0x97,
+	0x20, 0x7b, 0xed, 0x24, 0xa2, 0x81, 0xa8, 0x52, 0x4f, 0x99, 0xe7, 0x79, 0x6f, 0xe6, 0xe5, 0x79,
+	0x0d, 0x3d, 0x4d, 0x34, 0xfb, 0x92, 0x2b, 0x83, 0x7a, 0x22, 0xc7, 0x38, 0x28, 0x35, 0x19, 0x62,
+	0xb1, 0xfb, 0x19, 0x53, 0xb1, 0xdf, 0x75, 0xfd, 0x19, 0x65, 0x58, 0x54, 0x3d, 0x7e, 0x08, 0xf1,
+	0xfc, 0x1b, 0x5d, 0x7d, 0x9e, 0xa3, 0x66, 0xfb, 0x10, 0x97, 0x85, 0xbc, 0x46, 0x9d, 0x67, 0x69,
+	0x74, 0x10, 0x1d, 0xd5, 0xc5, 0x12, 0xf3, 0xe7, 0x90, 0x04, 0x9e, 0x40, 0xc3, 0x8e, 0xa0, 0x59,
+	0xb5, 0x1c, 0x31, 0x79, 0xda, 0x1d, 0x84, 0x1d, 0x83, 0x8f, 0xee, 0x5c, 0xf8, 0x3e, 0x3f, 0x86,
+	0xf8, 0x3b, 0xe5, 0x4a, 0x10, 0xcd, 0x58, 0x0f, 0x1a, 0xb2, 0x2c, 0x47, 0x43, 0x27, 0x6a, 0x89,
+	0x0a, 0xb0, 0x3d, 0x68, 0x5a, 0x5b, 0xa3, 0x61, 0x5a, 0x73, 0xc7, 0x1e, 0xf1, 0x53, 0x48, 0x82,
+	0xd2, 0xae, 0x5c, 0xd1, 0xa2, 0x75, 0x1a, 0x7b, 0x04, 0x3b, 0xd5, 0xaa, 0x79, 0x5a, 0x3b, 0xa8,
+	0x6f, 0xf4, 0x12, 0x08, 0xfc, 0x05, 0x24, 0x53, 0x34, 0x76, 0xe2, 0x48, 0x4d, 0xe8, 0x96, 0x7e,
+	0xce, 0xa0, 0xb3, 0x26, 0xbe, 0x2b, 0x4b, 0x1f, 0x00, 0xac, 0xea, 0xb5, 0x46, 0x69, 0xf0, 0x1f,
+	0x8e, 0x6e, 0x33, 0xaf, 0x0f, 0xf1, 0x54, 0xce, 0x70, 0x28, 0x8d, 0x64, 0x0c, 0xee, 0x65, 0xd2,
+	0x48, 0x3f, 0xcc, 0xd5, 0x3c, 0x81, 0x96, 0xed, 0x0b, 0x94, 0xd9, 0x35, 0x7f, 0x00, 0xad, 0x89,
+	0xde, 0xc4, 0x6e, 0x7b, 0xf6, 0x09, 0x74, 0x2f, 0xca, 0x82, 0x64, 0xf6, 0xc6, 0x69, 0xe6, 0x17,
+	0x85, 0x61, 0x03, 0x68, 0x66, 0x68, 0x64, 0x5e, 0xa4, 0x91, 0x33, 0xb3, 0x77, 0xc3, 0x8c, 0xe3,
+	0x09, 0xcf, 0xe2, 0x4f, 0xe0, 0xfe, 0xdf, 0x33, 0x42, 0x78, 0x0e, 0xb8, 0x85, 0x0d, 0xe1, 0x11,
+	0x07, 0x88, 0x49, 0x8d, 0xf1, 0x3d, 0x69, 0xe4, 0xbb, 0x90, 0x84, 0x5a, 0xa0, 0xe1, 0x2f, 0xa1,
+	0xb3, 0xca, 0x2a, 0xb3, 0x43, 0xd6, 0x92, 0x89, 0xb6, 0x25, 0xf3, 0x18, 0x3a, 0x55, 0xf9, 0x0e,
+	0xe5, 0xa5, 0x9d, 0xb7, 0xfa, 0xe0, 0x7d, 0xe0, 0x0d, 0xb1, 0xc4, 0xfc, 0x14, 0x76, 0xab, 0xfa,
+	0xad, 0xfd, 0x06, 0xff, 0x73, 0xd9, 0xab, 0xa7, 0x50, 0xdb, 0xf2, 0x14, 0x3a, 0xd0, 0xb6, 0xd1,
+	0x7f, 0x32, 0x52, 0xdb, 0x04, 0xf8, 0x43, 0x48, 0xc2, 0x55, 0xd9, 0x05, 0x9b, 0x6e, 0xeb, 0x18,
+	0xda, 0xcb, 0x0b, 0xb2, 0x9c, 0x1e, 0x34, 0x72, 0x95, 0xe1, 0x0f, 0x6f, 0xb7, 0x02, 0x4b, 0x65,
+	0x6d, 0x4d, 0x79, 0x08, 0x71, 0x71, 0xe3, 0x7f, 0x6e, 0x78, 0xd8, 0xaf, 0x00, 0x14, 0x9a, 0x2b,
+	0xd2, 0xe7, 0x5b, 0x98, 0x36, 0x00, 0x52, 0x45, 0xae, 0xd0, 0xed, 0x89, 0x85, 0x47, 0xfc, 0x0c,
+	0xe2, 0x4b, 0xca, 0xc7, 0xdb, 0x36, 0x59, 0x97, 0x54, 0xa2, 0xf2, 0x6a, 0x57, 0xb3, 0x14, 0x76,
+	0x8c, 0x2c, 0xce, 0x73, 0x35, 0x4d, 0xeb, 0xee, 0x38, 0xc0, 0x10, 0x96, 0xc0, 0x39, 0xda, 0xb0,
+	0x4e, 0xda, 0x3f, 0x17, 0xfd, 0xe8, 0xd7, 0xa2, 0x1f, 0xfd, 0x5e, 0xf4, 0xa3, 0xaf, 0x4d, 0x97,
+	0xf1, 0xb3, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xd7, 0xef, 0x1a, 0x96, 0xf1, 0x04, 0x00, 0x00,
 }
