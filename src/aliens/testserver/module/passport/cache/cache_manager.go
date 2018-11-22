@@ -76,12 +76,7 @@ func NewUser(username string, password string, channel string, channelUID string
 		Avatar:     avatar,
 		RegTime:    time.Now().Unix(),
 	}
-	//uid, err := db.DatabaseHandler.GenTimestampId(user)
-	//if err != nil {
-	//	log.Debugf("insert user error %v", err)
-	//	exception.GameException(passport.Code_DBExcetpion)
-	//}
-	//user.Id = uid
+
 	err1 := db.DatabaseHandler.Insert(user)
 	if err1 != nil {
 		log.Debugf("insert user error %v", err1)
@@ -96,7 +91,10 @@ func NewUser(username string, password string, channel string, channelUID string
  *  获取用户数据
  */
 func GetUser(username string) *protocol.User {
-	uid := PassportCache.GetUidByUsername(username)
+	uid, err := PassportCache.GetUidByUsername(username)
+	if err != nil {
+		exception.GameException(protocol.Code_DBExcetpion)
+	}
 	if uid == 0 {
 		return nil
 	}

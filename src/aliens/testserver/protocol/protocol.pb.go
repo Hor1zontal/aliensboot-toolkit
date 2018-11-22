@@ -20,8 +20,8 @@ type Request struct {
 	// ----------------网关模块接口-----------
 	//
 	// Types that are valid to be assigned to Gate:
-	//	*Request_KickOut
 	//	*Request_BindService
+	//	*Request_KickOut
 	//	*Request_PushMessage
 	Gate isRequest_Gate `protobuf_oneof:"gate"`
 	// Types that are valid to be assigned to Passport:
@@ -35,6 +35,20 @@ type Request struct {
 	//	*Request_LoginRole
 	//	*Request_ChangeNickname
 	Game isRequest_Game `protobuf_oneof:"game"`
+	// -----------------房间服务器接口-------------
+	//
+	// Types that are valid to be assigned to Room:
+	//	*Request_ShowUser
+	//	*Request_GameCreate
+	//	*Request_GameInit
+	//	*Request_GameReady
+	//	*Request_GameData
+	//	*Request_FrameData
+	//	*Request_UploadGameResult
+	Room isRequest_Room `protobuf_oneof:"room"`
+	// Types that are valid to be assigned to Hall:
+	//	*Request_QuickMatch
+	Hall isRequest_Hall `protobuf_oneof:"hall"`
 }
 
 func (m *Request) Reset()                    { *m = Request{} }
@@ -57,24 +71,34 @@ type isRequest_Game interface {
 	MarshalTo([]byte) (int, error)
 	Size() int
 }
-
-type Request_KickOut struct {
-	KickOut *KickOut `protobuf:"bytes,4,opt,name=kickOut,oneof"`
+type isRequest_Room interface {
+	isRequest_Room()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
+type isRequest_Hall interface {
+	isRequest_Hall()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+
 type Request_BindService struct {
 	BindService *BindService `protobuf:"bytes,5,opt,name=bindService,oneof"`
 }
+type Request_KickOut struct {
+	KickOut *KickOut `protobuf:"bytes,10,opt,name=kickOut,oneof"`
+}
 type Request_PushMessage struct {
-	PushMessage *PushMessage `protobuf:"bytes,6,opt,name=pushMessage,oneof"`
+	PushMessage *PushMessage `protobuf:"bytes,11,opt,name=pushMessage,oneof"`
 }
 type Request_UserRegister struct {
-	UserRegister *UserRegister `protobuf:"bytes,10,opt,name=userRegister,oneof"`
+	UserRegister *UserRegister `protobuf:"bytes,20,opt,name=userRegister,oneof"`
 }
 type Request_UserLogin struct {
-	UserLogin *UserLogin `protobuf:"bytes,11,opt,name=userLogin,oneof"`
+	UserLogin *UserLogin `protobuf:"bytes,21,opt,name=userLogin,oneof"`
 }
 type Request_TokenLogin struct {
-	TokenLogin *TokenLogin `protobuf:"bytes,12,opt,name=tokenLogin,oneof"`
+	TokenLogin *TokenLogin `protobuf:"bytes,22,opt,name=tokenLogin,oneof"`
 }
 type Request_LoginRole struct {
 	LoginRole *LoginRole `protobuf:"bytes,51,opt,name=loginRole,oneof"`
@@ -82,15 +106,47 @@ type Request_LoginRole struct {
 type Request_ChangeNickname struct {
 	ChangeNickname *ChangeNickname `protobuf:"bytes,52,opt,name=changeNickname,oneof"`
 }
+type Request_ShowUser struct {
+	ShowUser *ShowUser `protobuf:"bytes,100,opt,name=showUser,oneof"`
+}
+type Request_GameCreate struct {
+	GameCreate *GameCreate `protobuf:"bytes,110,opt,name=gameCreate,oneof"`
+}
+type Request_GameInit struct {
+	GameInit *GameInit `protobuf:"bytes,120,opt,name=gameInit,oneof"`
+}
+type Request_GameReady struct {
+	GameReady *GameReady `protobuf:"bytes,121,opt,name=gameReady,oneof"`
+}
+type Request_GameData struct {
+	GameData *GameData `protobuf:"bytes,122,opt,name=gameData,oneof"`
+}
+type Request_FrameData struct {
+	FrameData *FrameData `protobuf:"bytes,123,opt,name=frameData,oneof"`
+}
+type Request_UploadGameResult struct {
+	UploadGameResult *UploadGameResult `protobuf:"bytes,124,opt,name=uploadGameResult,oneof"`
+}
+type Request_QuickMatch struct {
+	QuickMatch *QuickMatch `protobuf:"bytes,200,opt,name=quickMatch,oneof"`
+}
 
-func (*Request_KickOut) isRequest_Gate()          {}
 func (*Request_BindService) isRequest_Gate()      {}
+func (*Request_KickOut) isRequest_Gate()          {}
 func (*Request_PushMessage) isRequest_Gate()      {}
 func (*Request_UserRegister) isRequest_Passport() {}
 func (*Request_UserLogin) isRequest_Passport()    {}
 func (*Request_TokenLogin) isRequest_Passport()   {}
 func (*Request_LoginRole) isRequest_Game()        {}
 func (*Request_ChangeNickname) isRequest_Game()   {}
+func (*Request_ShowUser) isRequest_Room()         {}
+func (*Request_GameCreate) isRequest_Room()       {}
+func (*Request_GameInit) isRequest_Room()         {}
+func (*Request_GameReady) isRequest_Room()        {}
+func (*Request_GameData) isRequest_Room()         {}
+func (*Request_FrameData) isRequest_Room()        {}
+func (*Request_UploadGameResult) isRequest_Room() {}
+func (*Request_QuickMatch) isRequest_Hall()       {}
 
 func (m *Request) GetGate() isRequest_Gate {
 	if m != nil {
@@ -110,6 +166,18 @@ func (m *Request) GetGame() isRequest_Game {
 	}
 	return nil
 }
+func (m *Request) GetRoom() isRequest_Room {
+	if m != nil {
+		return m.Room
+	}
+	return nil
+}
+func (m *Request) GetHall() isRequest_Hall {
+	if m != nil {
+		return m.Hall
+	}
+	return nil
+}
 
 func (m *Request) GetSession() int32 {
 	if m != nil {
@@ -118,16 +186,16 @@ func (m *Request) GetSession() int32 {
 	return 0
 }
 
-func (m *Request) GetKickOut() *KickOut {
-	if x, ok := m.GetGate().(*Request_KickOut); ok {
-		return x.KickOut
+func (m *Request) GetBindService() *BindService {
+	if x, ok := m.GetGate().(*Request_BindService); ok {
+		return x.BindService
 	}
 	return nil
 }
 
-func (m *Request) GetBindService() *BindService {
-	if x, ok := m.GetGate().(*Request_BindService); ok {
-		return x.BindService
+func (m *Request) GetKickOut() *KickOut {
+	if x, ok := m.GetGate().(*Request_KickOut); ok {
+		return x.KickOut
 	}
 	return nil
 }
@@ -174,17 +242,81 @@ func (m *Request) GetChangeNickname() *ChangeNickname {
 	return nil
 }
 
+func (m *Request) GetShowUser() *ShowUser {
+	if x, ok := m.GetRoom().(*Request_ShowUser); ok {
+		return x.ShowUser
+	}
+	return nil
+}
+
+func (m *Request) GetGameCreate() *GameCreate {
+	if x, ok := m.GetRoom().(*Request_GameCreate); ok {
+		return x.GameCreate
+	}
+	return nil
+}
+
+func (m *Request) GetGameInit() *GameInit {
+	if x, ok := m.GetRoom().(*Request_GameInit); ok {
+		return x.GameInit
+	}
+	return nil
+}
+
+func (m *Request) GetGameReady() *GameReady {
+	if x, ok := m.GetRoom().(*Request_GameReady); ok {
+		return x.GameReady
+	}
+	return nil
+}
+
+func (m *Request) GetGameData() *GameData {
+	if x, ok := m.GetRoom().(*Request_GameData); ok {
+		return x.GameData
+	}
+	return nil
+}
+
+func (m *Request) GetFrameData() *FrameData {
+	if x, ok := m.GetRoom().(*Request_FrameData); ok {
+		return x.FrameData
+	}
+	return nil
+}
+
+func (m *Request) GetUploadGameResult() *UploadGameResult {
+	if x, ok := m.GetRoom().(*Request_UploadGameResult); ok {
+		return x.UploadGameResult
+	}
+	return nil
+}
+
+func (m *Request) GetQuickMatch() *QuickMatch {
+	if x, ok := m.GetHall().(*Request_QuickMatch); ok {
+		return x.QuickMatch
+	}
+	return nil
+}
+
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*Request) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _Request_OneofMarshaler, _Request_OneofUnmarshaler, _Request_OneofSizer, []interface{}{
-		(*Request_KickOut)(nil),
 		(*Request_BindService)(nil),
+		(*Request_KickOut)(nil),
 		(*Request_PushMessage)(nil),
 		(*Request_UserRegister)(nil),
 		(*Request_UserLogin)(nil),
 		(*Request_TokenLogin)(nil),
 		(*Request_LoginRole)(nil),
 		(*Request_ChangeNickname)(nil),
+		(*Request_ShowUser)(nil),
+		(*Request_GameCreate)(nil),
+		(*Request_GameInit)(nil),
+		(*Request_GameReady)(nil),
+		(*Request_GameData)(nil),
+		(*Request_FrameData)(nil),
+		(*Request_UploadGameResult)(nil),
+		(*Request_QuickMatch)(nil),
 	}
 }
 
@@ -192,18 +324,18 @@ func _Request_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	m := msg.(*Request)
 	// gate
 	switch x := m.Gate.(type) {
-	case *Request_KickOut:
-		_ = b.EncodeVarint(4<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.KickOut); err != nil {
-			return err
-		}
 	case *Request_BindService:
 		_ = b.EncodeVarint(5<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.BindService); err != nil {
 			return err
 		}
+	case *Request_KickOut:
+		_ = b.EncodeVarint(10<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.KickOut); err != nil {
+			return err
+		}
 	case *Request_PushMessage:
-		_ = b.EncodeVarint(6<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(11<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.PushMessage); err != nil {
 			return err
 		}
@@ -214,17 +346,17 @@ func _Request_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	// passport
 	switch x := m.Passport.(type) {
 	case *Request_UserRegister:
-		_ = b.EncodeVarint(10<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(20<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.UserRegister); err != nil {
 			return err
 		}
 	case *Request_UserLogin:
-		_ = b.EncodeVarint(11<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(21<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.UserLogin); err != nil {
 			return err
 		}
 	case *Request_TokenLogin:
-		_ = b.EncodeVarint(12<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(22<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.TokenLogin); err != nil {
 			return err
 		}
@@ -248,20 +380,64 @@ func _Request_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	default:
 		return fmt.Errorf("Request.Game has unexpected type %T", x)
 	}
+	// room
+	switch x := m.Room.(type) {
+	case *Request_ShowUser:
+		_ = b.EncodeVarint(100<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.ShowUser); err != nil {
+			return err
+		}
+	case *Request_GameCreate:
+		_ = b.EncodeVarint(110<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameCreate); err != nil {
+			return err
+		}
+	case *Request_GameInit:
+		_ = b.EncodeVarint(120<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameInit); err != nil {
+			return err
+		}
+	case *Request_GameReady:
+		_ = b.EncodeVarint(121<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameReady); err != nil {
+			return err
+		}
+	case *Request_GameData:
+		_ = b.EncodeVarint(122<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameData); err != nil {
+			return err
+		}
+	case *Request_FrameData:
+		_ = b.EncodeVarint(123<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.FrameData); err != nil {
+			return err
+		}
+	case *Request_UploadGameResult:
+		_ = b.EncodeVarint(124<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.UploadGameResult); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Request.Room has unexpected type %T", x)
+	}
+	// hall
+	switch x := m.Hall.(type) {
+	case *Request_QuickMatch:
+		_ = b.EncodeVarint(200<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.QuickMatch); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Request.Hall has unexpected type %T", x)
+	}
 	return nil
 }
 
 func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
 	m := msg.(*Request)
 	switch tag {
-	case 4: // gate.kickOut
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(KickOut)
-		err := b.DecodeMessage(msg)
-		m.Gate = &Request_KickOut{msg}
-		return true, err
 	case 5: // gate.bindService
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
@@ -270,7 +446,15 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Gate = &Request_BindService{msg}
 		return true, err
-	case 6: // gate.pushMessage
+	case 10: // gate.kickOut
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(KickOut)
+		err := b.DecodeMessage(msg)
+		m.Gate = &Request_KickOut{msg}
+		return true, err
+	case 11: // gate.pushMessage
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -278,7 +462,7 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Gate = &Request_PushMessage{msg}
 		return true, err
-	case 10: // passport.userRegister
+	case 20: // passport.userRegister
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -286,7 +470,7 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Passport = &Request_UserRegister{msg}
 		return true, err
-	case 11: // passport.userLogin
+	case 21: // passport.userLogin
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -294,7 +478,7 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Passport = &Request_UserLogin{msg}
 		return true, err
-	case 12: // passport.tokenLogin
+	case 22: // passport.tokenLogin
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -318,6 +502,70 @@ func _Request_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer
 		err := b.DecodeMessage(msg)
 		m.Game = &Request_ChangeNickname{msg}
 		return true, err
+	case 100: // room.showUser
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ShowUser)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_ShowUser{msg}
+		return true, err
+	case 110: // room.gameCreate
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameCreate)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_GameCreate{msg}
+		return true, err
+	case 120: // room.gameInit
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameInit)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_GameInit{msg}
+		return true, err
+	case 121: // room.gameReady
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameReady)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_GameReady{msg}
+		return true, err
+	case 122: // room.gameData
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameData)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_GameData{msg}
+		return true, err
+	case 123: // room.frameData
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(FrameData)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_FrameData{msg}
+		return true, err
+	case 124: // room.uploadGameResult
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(UploadGameResult)
+		err := b.DecodeMessage(msg)
+		m.Room = &Request_UploadGameResult{msg}
+		return true, err
+	case 200: // hall.quickMatch
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(QuickMatch)
+		err := b.DecodeMessage(msg)
+		m.Hall = &Request_QuickMatch{msg}
+		return true, err
 	default:
 		return false, nil
 	}
@@ -327,19 +575,19 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 	m := msg.(*Request)
 	// gate
 	switch x := m.Gate.(type) {
-	case *Request_KickOut:
-		s := proto.Size(x.KickOut)
-		n += proto.SizeVarint(4<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
 	case *Request_BindService:
 		s := proto.Size(x.BindService)
 		n += proto.SizeVarint(5<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
+	case *Request_KickOut:
+		s := proto.Size(x.KickOut)
+		n += proto.SizeVarint(10<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
 	case *Request_PushMessage:
 		s := proto.Size(x.PushMessage)
-		n += proto.SizeVarint(6<<3 | proto.WireBytes)
+		n += proto.SizeVarint(11<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -350,17 +598,17 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 	switch x := m.Passport.(type) {
 	case *Request_UserRegister:
 		s := proto.Size(x.UserRegister)
-		n += proto.SizeVarint(10<<3 | proto.WireBytes)
+		n += proto.SizeVarint(20<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *Request_UserLogin:
 		s := proto.Size(x.UserLogin)
-		n += proto.SizeVarint(11<<3 | proto.WireBytes)
+		n += proto.SizeVarint(21<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *Request_TokenLogin:
 		s := proto.Size(x.TokenLogin)
-		n += proto.SizeVarint(12<<3 | proto.WireBytes)
+		n += proto.SizeVarint(22<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -383,6 +631,58 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
+	// room
+	switch x := m.Room.(type) {
+	case *Request_ShowUser:
+		s := proto.Size(x.ShowUser)
+		n += proto.SizeVarint(100<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_GameCreate:
+		s := proto.Size(x.GameCreate)
+		n += proto.SizeVarint(110<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_GameInit:
+		s := proto.Size(x.GameInit)
+		n += proto.SizeVarint(120<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_GameReady:
+		s := proto.Size(x.GameReady)
+		n += proto.SizeVarint(121<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_GameData:
+		s := proto.Size(x.GameData)
+		n += proto.SizeVarint(122<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_FrameData:
+		s := proto.Size(x.FrameData)
+		n += proto.SizeVarint(123<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Request_UploadGameResult:
+		s := proto.Size(x.UploadGameResult)
+		n += proto.SizeVarint(124<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	// hall
+	switch x := m.Hall.(type) {
+	case *Request_QuickMatch:
+		s := proto.Size(x.QuickMatch)
+		n += proto.SizeVarint(200<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
 	return n
 }
 
@@ -390,10 +690,11 @@ func _Request_OneofSizer(msg proto.Message) (n int) {
 type Response struct {
 	Session int32 `protobuf:"varint,1,opt,name=session,proto3" json:"session,omitempty"`
 	Code    Code  `protobuf:"varint,2,opt,name=code,proto3,enum=protocol.Code" json:"code,omitempty"`
-	// -----------------登录模块响应接口---------------
+	// -----------------网关模块响应接口---------------
 	//
 	// Types that are valid to be assigned to Gate:
 	//	*Response_BindServiceRet
+	//	*Response_Kick
 	Gate isResponse_Gate `protobuf_oneof:"gate"`
 	// Types that are valid to be assigned to Passport:
 	//	*Response_UserRegisterRet
@@ -406,6 +707,20 @@ type Response struct {
 	//	*Response_LoginRoleRet
 	//	*Response_ChangeNicknameRet
 	Game isResponse_Game `protobuf_oneof:"game"`
+	// Types that are valid to be assigned to Room:
+	//	*Response_ShowUserRet
+	//	*Response_GameCreatedRet
+	//	*Response_GameStartRet
+	//	*Response_GameDataRet
+	//	*Response_FrameDataRet
+	//	*Response_LeaveRet
+	//	*Response_NetworkRet
+	//	*Response_VoiceRet
+	//	*Response_GameResetRet
+	Room isResponse_Room `protobuf_oneof:"room"`
+	// Types that are valid to be assigned to Hall:
+	//	*Response_QuickMatchRet
+	Hall isResponse_Hall `protobuf_oneof:"hall"`
 }
 
 func (m *Response) Reset()                    { *m = Response{} }
@@ -428,18 +743,31 @@ type isResponse_Game interface {
 	MarshalTo([]byte) (int, error)
 	Size() int
 }
+type isResponse_Room interface {
+	isResponse_Room()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+type isResponse_Hall interface {
+	isResponse_Hall()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
 
 type Response_BindServiceRet struct {
 	BindServiceRet *BindServiceRet `protobuf:"bytes,5,opt,name=bindServiceRet,oneof"`
 }
+type Response_Kick struct {
+	Kick KickType `protobuf:"varint,1005,opt,name=kick,proto3,enum=protocol.KickType,oneof"`
+}
 type Response_UserRegisterRet struct {
-	UserRegisterRet *UserRegisterRet `protobuf:"bytes,10,opt,name=userRegisterRet,oneof"`
+	UserRegisterRet *UserRegisterRet `protobuf:"bytes,20,opt,name=userRegisterRet,oneof"`
 }
 type Response_UserLoginRet struct {
-	UserLoginRet *UserLoginRet `protobuf:"bytes,11,opt,name=userLoginRet,oneof"`
+	UserLoginRet *UserLoginRet `protobuf:"bytes,21,opt,name=userLoginRet,oneof"`
 }
 type Response_TokenLoginRet struct {
-	TokenLoginRet *TokenLoginRet `protobuf:"bytes,12,opt,name=tokenLoginRet,oneof"`
+	TokenLoginRet *TokenLoginRet `protobuf:"bytes,22,opt,name=tokenLoginRet,oneof"`
 }
 type Response_LoginRoleRet struct {
 	LoginRoleRet *LoginRoleRet `protobuf:"bytes,51,opt,name=loginRoleRet,oneof"`
@@ -447,13 +775,54 @@ type Response_LoginRoleRet struct {
 type Response_ChangeNicknameRet struct {
 	ChangeNicknameRet *ChangeNicknameRet `protobuf:"bytes,52,opt,name=changeNicknameRet,oneof"`
 }
+type Response_ShowUserRet struct {
+	ShowUserRet *ShowUserRet `protobuf:"bytes,100,opt,name=showUserRet,oneof"`
+}
+type Response_GameCreatedRet struct {
+	GameCreatedRet *GameCreatedRet `protobuf:"bytes,1100,opt,name=gameCreatedRet,oneof"`
+}
+type Response_GameStartRet struct {
+	GameStartRet *GameStartRet `protobuf:"bytes,1101,opt,name=gameStartRet,oneof"`
+}
+type Response_GameDataRet struct {
+	GameDataRet *GameDataRet `protobuf:"bytes,1102,opt,name=gameDataRet,oneof"`
+}
+type Response_FrameDataRet struct {
+	FrameDataRet *FrameDataRet `protobuf:"bytes,1103,opt,name=frameDataRet,oneof"`
+}
+type Response_LeaveRet struct {
+	LeaveRet *LeaveRet `protobuf:"bytes,1104,opt,name=leaveRet,oneof"`
+}
+type Response_NetworkRet struct {
+	NetworkRet *NetworkRet `protobuf:"bytes,1105,opt,name=networkRet,oneof"`
+}
+type Response_VoiceRet struct {
+	VoiceRet *VoiceRet `protobuf:"bytes,1106,opt,name=voiceRet,oneof"`
+}
+type Response_GameResetRet struct {
+	GameResetRet *GameResetRet `protobuf:"bytes,1107,opt,name=gameResetRet,oneof"`
+}
+type Response_QuickMatchRet struct {
+	QuickMatchRet *QuickMatchRet `protobuf:"bytes,1200,opt,name=quickMatchRet,oneof"`
+}
 
 func (*Response_BindServiceRet) isResponse_Gate()      {}
+func (*Response_Kick) isResponse_Gate()                {}
 func (*Response_UserRegisterRet) isResponse_Passport() {}
 func (*Response_UserLoginRet) isResponse_Passport()    {}
 func (*Response_TokenLoginRet) isResponse_Passport()   {}
 func (*Response_LoginRoleRet) isResponse_Game()        {}
 func (*Response_ChangeNicknameRet) isResponse_Game()   {}
+func (*Response_ShowUserRet) isResponse_Room()         {}
+func (*Response_GameCreatedRet) isResponse_Room()      {}
+func (*Response_GameStartRet) isResponse_Room()        {}
+func (*Response_GameDataRet) isResponse_Room()         {}
+func (*Response_FrameDataRet) isResponse_Room()        {}
+func (*Response_LeaveRet) isResponse_Room()            {}
+func (*Response_NetworkRet) isResponse_Room()          {}
+func (*Response_VoiceRet) isResponse_Room()            {}
+func (*Response_GameResetRet) isResponse_Room()        {}
+func (*Response_QuickMatchRet) isResponse_Hall()       {}
 
 func (m *Response) GetGate() isResponse_Gate {
 	if m != nil {
@@ -470,6 +839,18 @@ func (m *Response) GetPassport() isResponse_Passport {
 func (m *Response) GetGame() isResponse_Game {
 	if m != nil {
 		return m.Game
+	}
+	return nil
+}
+func (m *Response) GetRoom() isResponse_Room {
+	if m != nil {
+		return m.Room
+	}
+	return nil
+}
+func (m *Response) GetHall() isResponse_Hall {
+	if m != nil {
+		return m.Hall
 	}
 	return nil
 }
@@ -493,6 +874,13 @@ func (m *Response) GetBindServiceRet() *BindServiceRet {
 		return x.BindServiceRet
 	}
 	return nil
+}
+
+func (m *Response) GetKick() KickType {
+	if x, ok := m.GetGate().(*Response_Kick); ok {
+		return x.Kick
+	}
+	return KickType_None
 }
 
 func (m *Response) GetUserRegisterRet() *UserRegisterRet {
@@ -530,15 +918,96 @@ func (m *Response) GetChangeNicknameRet() *ChangeNicknameRet {
 	return nil
 }
 
+func (m *Response) GetShowUserRet() *ShowUserRet {
+	if x, ok := m.GetRoom().(*Response_ShowUserRet); ok {
+		return x.ShowUserRet
+	}
+	return nil
+}
+
+func (m *Response) GetGameCreatedRet() *GameCreatedRet {
+	if x, ok := m.GetRoom().(*Response_GameCreatedRet); ok {
+		return x.GameCreatedRet
+	}
+	return nil
+}
+
+func (m *Response) GetGameStartRet() *GameStartRet {
+	if x, ok := m.GetRoom().(*Response_GameStartRet); ok {
+		return x.GameStartRet
+	}
+	return nil
+}
+
+func (m *Response) GetGameDataRet() *GameDataRet {
+	if x, ok := m.GetRoom().(*Response_GameDataRet); ok {
+		return x.GameDataRet
+	}
+	return nil
+}
+
+func (m *Response) GetFrameDataRet() *FrameDataRet {
+	if x, ok := m.GetRoom().(*Response_FrameDataRet); ok {
+		return x.FrameDataRet
+	}
+	return nil
+}
+
+func (m *Response) GetLeaveRet() *LeaveRet {
+	if x, ok := m.GetRoom().(*Response_LeaveRet); ok {
+		return x.LeaveRet
+	}
+	return nil
+}
+
+func (m *Response) GetNetworkRet() *NetworkRet {
+	if x, ok := m.GetRoom().(*Response_NetworkRet); ok {
+		return x.NetworkRet
+	}
+	return nil
+}
+
+func (m *Response) GetVoiceRet() *VoiceRet {
+	if x, ok := m.GetRoom().(*Response_VoiceRet); ok {
+		return x.VoiceRet
+	}
+	return nil
+}
+
+func (m *Response) GetGameResetRet() *GameResetRet {
+	if x, ok := m.GetRoom().(*Response_GameResetRet); ok {
+		return x.GameResetRet
+	}
+	return nil
+}
+
+func (m *Response) GetQuickMatchRet() *QuickMatchRet {
+	if x, ok := m.GetHall().(*Response_QuickMatchRet); ok {
+		return x.QuickMatchRet
+	}
+	return nil
+}
+
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*Response) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _Response_OneofMarshaler, _Response_OneofUnmarshaler, _Response_OneofSizer, []interface{}{
 		(*Response_BindServiceRet)(nil),
+		(*Response_Kick)(nil),
 		(*Response_UserRegisterRet)(nil),
 		(*Response_UserLoginRet)(nil),
 		(*Response_TokenLoginRet)(nil),
 		(*Response_LoginRoleRet)(nil),
 		(*Response_ChangeNicknameRet)(nil),
+		(*Response_ShowUserRet)(nil),
+		(*Response_GameCreatedRet)(nil),
+		(*Response_GameStartRet)(nil),
+		(*Response_GameDataRet)(nil),
+		(*Response_FrameDataRet)(nil),
+		(*Response_LeaveRet)(nil),
+		(*Response_NetworkRet)(nil),
+		(*Response_VoiceRet)(nil),
+		(*Response_GameResetRet)(nil),
+		(*Response_QuickMatchRet)(nil),
 	}
 }
 
@@ -551,6 +1020,9 @@ func _Response_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 		if err := b.EncodeMessage(x.BindServiceRet); err != nil {
 			return err
 		}
+	case *Response_Kick:
+		_ = b.EncodeVarint(1005<<3 | proto.WireVarint)
+		_ = b.EncodeVarint(uint64(x.Kick))
 	case nil:
 	default:
 		return fmt.Errorf("Response.Gate has unexpected type %T", x)
@@ -558,17 +1030,17 @@ func _Response_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	// passport
 	switch x := m.Passport.(type) {
 	case *Response_UserRegisterRet:
-		_ = b.EncodeVarint(10<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(20<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.UserRegisterRet); err != nil {
 			return err
 		}
 	case *Response_UserLoginRet:
-		_ = b.EncodeVarint(11<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(21<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.UserLoginRet); err != nil {
 			return err
 		}
 	case *Response_TokenLoginRet:
-		_ = b.EncodeVarint(12<<3 | proto.WireBytes)
+		_ = b.EncodeVarint(22<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.TokenLoginRet); err != nil {
 			return err
 		}
@@ -592,6 +1064,68 @@ func _Response_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	default:
 		return fmt.Errorf("Response.Game has unexpected type %T", x)
 	}
+	// room
+	switch x := m.Room.(type) {
+	case *Response_ShowUserRet:
+		_ = b.EncodeVarint(100<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.ShowUserRet); err != nil {
+			return err
+		}
+	case *Response_GameCreatedRet:
+		_ = b.EncodeVarint(1100<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameCreatedRet); err != nil {
+			return err
+		}
+	case *Response_GameStartRet:
+		_ = b.EncodeVarint(1101<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameStartRet); err != nil {
+			return err
+		}
+	case *Response_GameDataRet:
+		_ = b.EncodeVarint(1102<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameDataRet); err != nil {
+			return err
+		}
+	case *Response_FrameDataRet:
+		_ = b.EncodeVarint(1103<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.FrameDataRet); err != nil {
+			return err
+		}
+	case *Response_LeaveRet:
+		_ = b.EncodeVarint(1104<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.LeaveRet); err != nil {
+			return err
+		}
+	case *Response_NetworkRet:
+		_ = b.EncodeVarint(1105<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.NetworkRet); err != nil {
+			return err
+		}
+	case *Response_VoiceRet:
+		_ = b.EncodeVarint(1106<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.VoiceRet); err != nil {
+			return err
+		}
+	case *Response_GameResetRet:
+		_ = b.EncodeVarint(1107<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.GameResetRet); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Response.Room has unexpected type %T", x)
+	}
+	// hall
+	switch x := m.Hall.(type) {
+	case *Response_QuickMatchRet:
+		_ = b.EncodeVarint(1200<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.QuickMatchRet); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Response.Hall has unexpected type %T", x)
+	}
 	return nil
 }
 
@@ -606,7 +1140,14 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Gate = &Response_BindServiceRet{msg}
 		return true, err
-	case 10: // passport.userRegisterRet
+	case 1005: // gate.kick
+		if wire != proto.WireVarint {
+			return true, proto.ErrInternalBadWireType
+		}
+		x, err := b.DecodeVarint()
+		m.Gate = &Response_Kick{KickType(x)}
+		return true, err
+	case 20: // passport.userRegisterRet
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -614,7 +1155,7 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Passport = &Response_UserRegisterRet{msg}
 		return true, err
-	case 11: // passport.userLoginRet
+	case 21: // passport.userLoginRet
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -622,7 +1163,7 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Passport = &Response_UserLoginRet{msg}
 		return true, err
-	case 12: // passport.tokenLoginRet
+	case 22: // passport.tokenLoginRet
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -646,6 +1187,86 @@ func _Response_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Game = &Response_ChangeNicknameRet{msg}
 		return true, err
+	case 100: // room.showUserRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ShowUserRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_ShowUserRet{msg}
+		return true, err
+	case 1100: // room.gameCreatedRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameCreatedRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_GameCreatedRet{msg}
+		return true, err
+	case 1101: // room.gameStartRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameStartRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_GameStartRet{msg}
+		return true, err
+	case 1102: // room.gameDataRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameDataRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_GameDataRet{msg}
+		return true, err
+	case 1103: // room.frameDataRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(FrameDataRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_FrameDataRet{msg}
+		return true, err
+	case 1104: // room.leaveRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(LeaveRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_LeaveRet{msg}
+		return true, err
+	case 1105: // room.networkRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(NetworkRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_NetworkRet{msg}
+		return true, err
+	case 1106: // room.voiceRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(VoiceRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_VoiceRet{msg}
+		return true, err
+	case 1107: // room.gameResetRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(GameResetRet)
+		err := b.DecodeMessage(msg)
+		m.Room = &Response_GameResetRet{msg}
+		return true, err
+	case 1200: // hall.quickMatchRet
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(QuickMatchRet)
+		err := b.DecodeMessage(msg)
+		m.Hall = &Response_QuickMatchRet{msg}
+		return true, err
 	default:
 		return false, nil
 	}
@@ -660,6 +1281,9 @@ func _Response_OneofSizer(msg proto.Message) (n int) {
 		n += proto.SizeVarint(5<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
+	case *Response_Kick:
+		n += proto.SizeVarint(1005<<3 | proto.WireVarint)
+		n += proto.SizeVarint(uint64(x.Kick))
 	case nil:
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
@@ -668,17 +1292,17 @@ func _Response_OneofSizer(msg proto.Message) (n int) {
 	switch x := m.Passport.(type) {
 	case *Response_UserRegisterRet:
 		s := proto.Size(x.UserRegisterRet)
-		n += proto.SizeVarint(10<<3 | proto.WireBytes)
+		n += proto.SizeVarint(20<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *Response_UserLoginRet:
 		s := proto.Size(x.UserLoginRet)
-		n += proto.SizeVarint(11<<3 | proto.WireBytes)
+		n += proto.SizeVarint(21<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *Response_TokenLoginRet:
 		s := proto.Size(x.TokenLoginRet)
-		n += proto.SizeVarint(12<<3 | proto.WireBytes)
+		n += proto.SizeVarint(22<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -701,30 +1325,74 @@ func _Response_OneofSizer(msg proto.Message) (n int) {
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
-	return n
-}
-
-// 推送消息支持多条结构
-type Push struct {
-	Kick KickType `protobuf:"varint,1,opt,name=kick,proto3,enum=protocol.KickType" json:"kick,omitempty"`
-}
-
-func (m *Push) Reset()                    { *m = Push{} }
-func (m *Push) String() string            { return proto.CompactTextString(m) }
-func (*Push) ProtoMessage()               {}
-func (*Push) Descriptor() ([]byte, []int) { return fileDescriptorProtocol, []int{2} }
-
-func (m *Push) GetKick() KickType {
-	if m != nil {
-		return m.Kick
+	// room
+	switch x := m.Room.(type) {
+	case *Response_ShowUserRet:
+		s := proto.Size(x.ShowUserRet)
+		n += proto.SizeVarint(100<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_GameCreatedRet:
+		s := proto.Size(x.GameCreatedRet)
+		n += proto.SizeVarint(1100<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_GameStartRet:
+		s := proto.Size(x.GameStartRet)
+		n += proto.SizeVarint(1101<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_GameDataRet:
+		s := proto.Size(x.GameDataRet)
+		n += proto.SizeVarint(1102<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_FrameDataRet:
+		s := proto.Size(x.FrameDataRet)
+		n += proto.SizeVarint(1103<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_LeaveRet:
+		s := proto.Size(x.LeaveRet)
+		n += proto.SizeVarint(1104<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_NetworkRet:
+		s := proto.Size(x.NetworkRet)
+		n += proto.SizeVarint(1105<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_VoiceRet:
+		s := proto.Size(x.VoiceRet)
+		n += proto.SizeVarint(1106<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Response_GameResetRet:
+		s := proto.Size(x.GameResetRet)
+		n += proto.SizeVarint(1107<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
-	return KickType_None
+	// hall
+	switch x := m.Hall.(type) {
+	case *Response_QuickMatchRet:
+		s := proto.Size(x.QuickMatchRet)
+		n += proto.SizeVarint(1200<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
 }
 
 func init() {
 	proto.RegisterType((*Request)(nil), "protocol.Request")
 	proto.RegisterType((*Response)(nil), "protocol.Response")
-	proto.RegisterType((*Push)(nil), "protocol.Push")
 }
 func (m *Request) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -767,44 +1435,30 @@ func (m *Request) MarshalTo(dAtA []byte) (int, error) {
 		}
 		i += nn3
 	}
-	return i, nil
-}
-
-func (m *Request_KickOut) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.KickOut != nil {
-		dAtA[i] = 0x22
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.KickOut.Size()))
-		n4, err := m.KickOut.MarshalTo(dAtA[i:])
+	if m.Room != nil {
+		nn4, err := m.Room.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n4
+		i += nn4
+	}
+	if m.Hall != nil {
+		nn5, err := m.Hall.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn5
 	}
 	return i, nil
 }
+
 func (m *Request_BindService) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	if m.BindService != nil {
 		dAtA[i] = 0x2a
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.BindService.Size()))
-		n5, err := m.BindService.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n5
-	}
-	return i, nil
-}
-func (m *Request_PushMessage) MarshalTo(dAtA []byte) (int, error) {
-	i := 0
-	if m.PushMessage != nil {
-		dAtA[i] = 0x32
-		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.PushMessage.Size()))
-		n6, err := m.PushMessage.MarshalTo(dAtA[i:])
+		n6, err := m.BindService.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
@@ -812,13 +1466,13 @@ func (m *Request_PushMessage) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
-func (m *Request_UserRegister) MarshalTo(dAtA []byte) (int, error) {
+func (m *Request_KickOut) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
-	if m.UserRegister != nil {
+	if m.KickOut != nil {
 		dAtA[i] = 0x52
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.UserRegister.Size()))
-		n7, err := m.UserRegister.MarshalTo(dAtA[i:])
+		i = encodeVarintProtocol(dAtA, i, uint64(m.KickOut.Size()))
+		n7, err := m.KickOut.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
@@ -826,13 +1480,13 @@ func (m *Request_UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
-func (m *Request_UserLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *Request_PushMessage) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
-	if m.UserLogin != nil {
+	if m.PushMessage != nil {
 		dAtA[i] = 0x5a
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.UserLogin.Size()))
-		n8, err := m.UserLogin.MarshalTo(dAtA[i:])
+		i = encodeVarintProtocol(dAtA, i, uint64(m.PushMessage.Size()))
+		n8, err := m.PushMessage.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
@@ -840,17 +1494,51 @@ func (m *Request_UserLogin) MarshalTo(dAtA []byte) (int, error) {
 	}
 	return i, nil
 }
-func (m *Request_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
+func (m *Request_UserRegister) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
-	if m.TokenLogin != nil {
-		dAtA[i] = 0x62
+	if m.UserRegister != nil {
+		dAtA[i] = 0xa2
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.TokenLogin.Size()))
-		n9, err := m.TokenLogin.MarshalTo(dAtA[i:])
+		dAtA[i] = 0x1
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.UserRegister.Size()))
+		n9, err := m.UserRegister.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
 		i += n9
+	}
+	return i, nil
+}
+func (m *Request_UserLogin) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.UserLogin != nil {
+		dAtA[i] = 0xaa
+		i++
+		dAtA[i] = 0x1
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.UserLogin.Size()))
+		n10, err := m.UserLogin.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n10
+	}
+	return i, nil
+}
+func (m *Request_TokenLogin) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.TokenLogin != nil {
+		dAtA[i] = 0xb2
+		i++
+		dAtA[i] = 0x1
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.TokenLogin.Size()))
+		n11, err := m.TokenLogin.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n11
 	}
 	return i, nil
 }
@@ -862,11 +1550,11 @@ func (m *Request_LoginRole) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRole.Size()))
-		n10, err := m.LoginRole.MarshalTo(dAtA[i:])
+		n12, err := m.LoginRole.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n10
+		i += n12
 	}
 	return i, nil
 }
@@ -878,11 +1566,139 @@ func (m *Request_ChangeNickname) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.ChangeNickname.Size()))
-		n11, err := m.ChangeNickname.MarshalTo(dAtA[i:])
+		n13, err := m.ChangeNickname.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n11
+		i += n13
+	}
+	return i, nil
+}
+func (m *Request_ShowUser) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.ShowUser != nil {
+		dAtA[i] = 0xa2
+		i++
+		dAtA[i] = 0x6
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.ShowUser.Size()))
+		n14, err := m.ShowUser.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n14
+	}
+	return i, nil
+}
+func (m *Request_GameCreate) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameCreate != nil {
+		dAtA[i] = 0xf2
+		i++
+		dAtA[i] = 0x6
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameCreate.Size()))
+		n15, err := m.GameCreate.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n15
+	}
+	return i, nil
+}
+func (m *Request_GameInit) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameInit != nil {
+		dAtA[i] = 0xc2
+		i++
+		dAtA[i] = 0x7
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameInit.Size()))
+		n16, err := m.GameInit.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n16
+	}
+	return i, nil
+}
+func (m *Request_GameReady) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameReady != nil {
+		dAtA[i] = 0xca
+		i++
+		dAtA[i] = 0x7
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameReady.Size()))
+		n17, err := m.GameReady.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n17
+	}
+	return i, nil
+}
+func (m *Request_GameData) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameData != nil {
+		dAtA[i] = 0xd2
+		i++
+		dAtA[i] = 0x7
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameData.Size()))
+		n18, err := m.GameData.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n18
+	}
+	return i, nil
+}
+func (m *Request_FrameData) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.FrameData != nil {
+		dAtA[i] = 0xda
+		i++
+		dAtA[i] = 0x7
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.FrameData.Size()))
+		n19, err := m.FrameData.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n19
+	}
+	return i, nil
+}
+func (m *Request_UploadGameResult) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.UploadGameResult != nil {
+		dAtA[i] = 0xe2
+		i++
+		dAtA[i] = 0x7
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.UploadGameResult.Size()))
+		n20, err := m.UploadGameResult.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n20
+	}
+	return i, nil
+}
+func (m *Request_QuickMatch) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.QuickMatch != nil {
+		dAtA[i] = 0xc2
+		i++
+		dAtA[i] = 0xc
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.QuickMatch.Size()))
+		n21, err := m.QuickMatch.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n21
 	}
 	return i, nil
 }
@@ -912,25 +1728,39 @@ func (m *Response) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintProtocol(dAtA, i, uint64(m.Code))
 	}
 	if m.Gate != nil {
-		nn12, err := m.Gate.MarshalTo(dAtA[i:])
+		nn22, err := m.Gate.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn12
+		i += nn22
 	}
 	if m.Passport != nil {
-		nn13, err := m.Passport.MarshalTo(dAtA[i:])
+		nn23, err := m.Passport.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn13
+		i += nn23
 	}
 	if m.Game != nil {
-		nn14, err := m.Game.MarshalTo(dAtA[i:])
+		nn24, err := m.Game.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += nn14
+		i += nn24
+	}
+	if m.Room != nil {
+		nn25, err := m.Room.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn25
+	}
+	if m.Hall != nil {
+		nn26, err := m.Hall.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn26
 	}
 	return i, nil
 }
@@ -941,53 +1771,59 @@ func (m *Response_BindServiceRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x2a
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.BindServiceRet.Size()))
-		n15, err := m.BindServiceRet.MarshalTo(dAtA[i:])
+		n27, err := m.BindServiceRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n15
+		i += n27
 	}
 	return i, nil
 }
 func (m *Response_UserRegisterRet) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	if m.UserRegisterRet != nil {
-		dAtA[i] = 0x52
+		dAtA[i] = 0xa2
+		i++
+		dAtA[i] = 0x1
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.UserRegisterRet.Size()))
-		n16, err := m.UserRegisterRet.MarshalTo(dAtA[i:])
+		n28, err := m.UserRegisterRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n16
+		i += n28
 	}
 	return i, nil
 }
 func (m *Response_UserLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	if m.UserLoginRet != nil {
-		dAtA[i] = 0x5a
+		dAtA[i] = 0xaa
+		i++
+		dAtA[i] = 0x1
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.UserLoginRet.Size()))
-		n17, err := m.UserLoginRet.MarshalTo(dAtA[i:])
+		n29, err := m.UserLoginRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n17
+		i += n29
 	}
 	return i, nil
 }
 func (m *Response_TokenLoginRet) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	if m.TokenLoginRet != nil {
-		dAtA[i] = 0x62
+		dAtA[i] = 0xb2
+		i++
+		dAtA[i] = 0x1
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.TokenLoginRet.Size()))
-		n18, err := m.TokenLoginRet.MarshalTo(dAtA[i:])
+		n30, err := m.TokenLoginRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n18
+		i += n30
 	}
 	return i, nil
 }
@@ -999,11 +1835,11 @@ func (m *Response_LoginRoleRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.LoginRoleRet.Size()))
-		n19, err := m.LoginRoleRet.MarshalTo(dAtA[i:])
+		n31, err := m.LoginRoleRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n19
+		i += n31
 	}
 	return i, nil
 }
@@ -1015,37 +1851,183 @@ func (m *Response_ChangeNicknameRet) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x3
 		i++
 		i = encodeVarintProtocol(dAtA, i, uint64(m.ChangeNicknameRet.Size()))
-		n20, err := m.ChangeNicknameRet.MarshalTo(dAtA[i:])
+		n32, err := m.ChangeNicknameRet.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n20
+		i += n32
 	}
 	return i, nil
 }
-func (m *Push) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Push) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Kick != 0 {
-		dAtA[i] = 0x8
+func (m *Response_ShowUserRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.ShowUserRet != nil {
+		dAtA[i] = 0xa2
 		i++
-		i = encodeVarintProtocol(dAtA, i, uint64(m.Kick))
+		dAtA[i] = 0x6
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.ShowUserRet.Size()))
+		n33, err := m.ShowUserRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n33
 	}
 	return i, nil
 }
-
+func (m *Response_Kick) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0xe8
+	i++
+	dAtA[i] = 0x3e
+	i++
+	i = encodeVarintProtocol(dAtA, i, uint64(m.Kick))
+	return i, nil
+}
+func (m *Response_GameCreatedRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameCreatedRet != nil {
+		dAtA[i] = 0xe2
+		i++
+		dAtA[i] = 0x44
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameCreatedRet.Size()))
+		n34, err := m.GameCreatedRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n34
+	}
+	return i, nil
+}
+func (m *Response_GameStartRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameStartRet != nil {
+		dAtA[i] = 0xea
+		i++
+		dAtA[i] = 0x44
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameStartRet.Size()))
+		n35, err := m.GameStartRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n35
+	}
+	return i, nil
+}
+func (m *Response_GameDataRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameDataRet != nil {
+		dAtA[i] = 0xf2
+		i++
+		dAtA[i] = 0x44
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameDataRet.Size()))
+		n36, err := m.GameDataRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n36
+	}
+	return i, nil
+}
+func (m *Response_FrameDataRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.FrameDataRet != nil {
+		dAtA[i] = 0xfa
+		i++
+		dAtA[i] = 0x44
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.FrameDataRet.Size()))
+		n37, err := m.FrameDataRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n37
+	}
+	return i, nil
+}
+func (m *Response_LeaveRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.LeaveRet != nil {
+		dAtA[i] = 0x82
+		i++
+		dAtA[i] = 0x45
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.LeaveRet.Size()))
+		n38, err := m.LeaveRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n38
+	}
+	return i, nil
+}
+func (m *Response_NetworkRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.NetworkRet != nil {
+		dAtA[i] = 0x8a
+		i++
+		dAtA[i] = 0x45
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.NetworkRet.Size()))
+		n39, err := m.NetworkRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n39
+	}
+	return i, nil
+}
+func (m *Response_VoiceRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.VoiceRet != nil {
+		dAtA[i] = 0x92
+		i++
+		dAtA[i] = 0x45
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.VoiceRet.Size()))
+		n40, err := m.VoiceRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n40
+	}
+	return i, nil
+}
+func (m *Response_GameResetRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.GameResetRet != nil {
+		dAtA[i] = 0x9a
+		i++
+		dAtA[i] = 0x45
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.GameResetRet.Size()))
+		n41, err := m.GameResetRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n41
+	}
+	return i, nil
+}
+func (m *Response_QuickMatchRet) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.QuickMatchRet != nil {
+		dAtA[i] = 0x82
+		i++
+		dAtA[i] = 0x4b
+		i++
+		i = encodeVarintProtocol(dAtA, i, uint64(m.QuickMatchRet.Size()))
+		n42, err := m.QuickMatchRet.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n42
+	}
+	return i, nil
+}
 func encodeVarintProtocol(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -1070,23 +2052,29 @@ func (m *Request) Size() (n int) {
 	if m.Game != nil {
 		n += m.Game.Size()
 	}
-	return n
-}
-
-func (m *Request_KickOut) Size() (n int) {
-	var l int
-	_ = l
-	if m.KickOut != nil {
-		l = m.KickOut.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+	if m.Room != nil {
+		n += m.Room.Size()
+	}
+	if m.Hall != nil {
+		n += m.Hall.Size()
 	}
 	return n
 }
+
 func (m *Request_BindService) Size() (n int) {
 	var l int
 	_ = l
 	if m.BindService != nil {
 		l = m.BindService.Size()
+		n += 1 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_KickOut) Size() (n int) {
+	var l int
+	_ = l
+	if m.KickOut != nil {
+		l = m.KickOut.Size()
 		n += 1 + l + sovProtocol(uint64(l))
 	}
 	return n
@@ -1105,7 +2093,7 @@ func (m *Request_UserRegister) Size() (n int) {
 	_ = l
 	if m.UserRegister != nil {
 		l = m.UserRegister.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1114,7 +2102,7 @@ func (m *Request_UserLogin) Size() (n int) {
 	_ = l
 	if m.UserLogin != nil {
 		l = m.UserLogin.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1123,7 +2111,7 @@ func (m *Request_TokenLogin) Size() (n int) {
 	_ = l
 	if m.TokenLogin != nil {
 		l = m.TokenLogin.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1141,6 +2129,78 @@ func (m *Request_ChangeNickname) Size() (n int) {
 	_ = l
 	if m.ChangeNickname != nil {
 		l = m.ChangeNickname.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_ShowUser) Size() (n int) {
+	var l int
+	_ = l
+	if m.ShowUser != nil {
+		l = m.ShowUser.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_GameCreate) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameCreate != nil {
+		l = m.GameCreate.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_GameInit) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameInit != nil {
+		l = m.GameInit.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_GameReady) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameReady != nil {
+		l = m.GameReady.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_GameData) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameData != nil {
+		l = m.GameData.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_FrameData) Size() (n int) {
+	var l int
+	_ = l
+	if m.FrameData != nil {
+		l = m.FrameData.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_UploadGameResult) Size() (n int) {
+	var l int
+	_ = l
+	if m.UploadGameResult != nil {
+		l = m.UploadGameResult.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Request_QuickMatch) Size() (n int) {
+	var l int
+	_ = l
+	if m.QuickMatch != nil {
+		l = m.QuickMatch.Size()
 		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
@@ -1163,6 +2223,12 @@ func (m *Response) Size() (n int) {
 	if m.Game != nil {
 		n += m.Game.Size()
 	}
+	if m.Room != nil {
+		n += m.Room.Size()
+	}
+	if m.Hall != nil {
+		n += m.Hall.Size()
+	}
 	return n
 }
 
@@ -1180,7 +2246,7 @@ func (m *Response_UserRegisterRet) Size() (n int) {
 	_ = l
 	if m.UserRegisterRet != nil {
 		l = m.UserRegisterRet.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1189,7 +2255,7 @@ func (m *Response_UserLoginRet) Size() (n int) {
 	_ = l
 	if m.UserLoginRet != nil {
 		l = m.UserLoginRet.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1198,7 +2264,7 @@ func (m *Response_TokenLoginRet) Size() (n int) {
 	_ = l
 	if m.TokenLoginRet != nil {
 		l = m.TokenLoginRet.Size()
-		n += 1 + l + sovProtocol(uint64(l))
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1220,11 +2286,99 @@ func (m *Response_ChangeNicknameRet) Size() (n int) {
 	}
 	return n
 }
-func (m *Push) Size() (n int) {
+func (m *Response_ShowUserRet) Size() (n int) {
 	var l int
 	_ = l
-	if m.Kick != 0 {
-		n += 1 + sovProtocol(uint64(m.Kick))
+	if m.ShowUserRet != nil {
+		l = m.ShowUserRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_Kick) Size() (n int) {
+	var l int
+	_ = l
+	n += 2 + sovProtocol(uint64(m.Kick))
+	return n
+}
+func (m *Response_GameCreatedRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameCreatedRet != nil {
+		l = m.GameCreatedRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_GameStartRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameStartRet != nil {
+		l = m.GameStartRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_GameDataRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameDataRet != nil {
+		l = m.GameDataRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_FrameDataRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.FrameDataRet != nil {
+		l = m.FrameDataRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_LeaveRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.LeaveRet != nil {
+		l = m.LeaveRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_NetworkRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.NetworkRet != nil {
+		l = m.NetworkRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_VoiceRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.VoiceRet != nil {
+		l = m.VoiceRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_GameResetRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.GameResetRet != nil {
+		l = m.GameResetRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
+	}
+	return n
+}
+func (m *Response_QuickMatchRet) Size() (n int) {
+	var l int
+	_ = l
+	if m.QuickMatchRet != nil {
+		l = m.QuickMatchRet.Size()
+		n += 2 + l + sovProtocol(uint64(l))
 	}
 	return n
 }
@@ -1290,38 +2444,6 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field KickOut", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProtocol
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			v := &KickOut{}
-			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			m.Gate = &Request_KickOut{v}
-			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BindService", wireType)
@@ -1354,7 +2476,39 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.Gate = &Request_BindService{v}
 			iNdEx = postIndex
-		case 6:
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field KickOut", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &KickOut{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Gate = &Request_KickOut{v}
+			iNdEx = postIndex
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PushMessage", wireType)
 			}
@@ -1386,7 +2540,7 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.Gate = &Request_PushMessage{v}
 			iNdEx = postIndex
-		case 10:
+		case 20:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UserRegister", wireType)
 			}
@@ -1418,7 +2572,7 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.Passport = &Request_UserRegister{v}
 			iNdEx = postIndex
-		case 11:
+		case 21:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UserLogin", wireType)
 			}
@@ -1450,7 +2604,7 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.Passport = &Request_UserLogin{v}
 			iNdEx = postIndex
-		case 12:
+		case 22:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TokenLogin", wireType)
 			}
@@ -1545,6 +2699,262 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			m.Game = &Request_ChangeNickname{v}
+			iNdEx = postIndex
+		case 100:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ShowUser", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &ShowUser{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_ShowUser{v}
+			iNdEx = postIndex
+		case 110:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameCreate", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameCreate{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_GameCreate{v}
+			iNdEx = postIndex
+		case 120:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameInit", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameInit{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_GameInit{v}
+			iNdEx = postIndex
+		case 121:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameReady", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameReady{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_GameReady{v}
+			iNdEx = postIndex
+		case 122:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameData", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameData{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_GameData{v}
+			iNdEx = postIndex
+		case 123:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FrameData", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &FrameData{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_FrameData{v}
+			iNdEx = postIndex
+		case 124:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UploadGameResult", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &UploadGameResult{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Request_UploadGameResult{v}
+			iNdEx = postIndex
+		case 200:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field QuickMatch", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &QuickMatch{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Hall = &Request_QuickMatch{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1666,7 +3076,7 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			}
 			m.Gate = &Response_BindServiceRet{v}
 			iNdEx = postIndex
-		case 10:
+		case 20:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UserRegisterRet", wireType)
 			}
@@ -1698,7 +3108,7 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			}
 			m.Passport = &Response_UserRegisterRet{v}
 			iNdEx = postIndex
-		case 11:
+		case 21:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UserLoginRet", wireType)
 			}
@@ -1730,7 +3140,7 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			}
 			m.Passport = &Response_UserLoginRet{v}
 			iNdEx = postIndex
-		case 12:
+		case 22:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TokenLoginRet", wireType)
 			}
@@ -1826,61 +3236,11 @@ func (m *Response) Unmarshal(dAtA []byte) error {
 			}
 			m.Game = &Response_ChangeNicknameRet{v}
 			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipProtocol(dAtA[iNdEx:])
-			if err != nil {
-				return err
+		case 100:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ShowUserRet", wireType)
 			}
-			if skippy < 0 {
-				return ErrInvalidLengthProtocol
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *Push) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowProtocol
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Push: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Push: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Kick", wireType)
-			}
-			m.Kick = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowProtocol
@@ -1890,11 +3250,332 @@ func (m *Push) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Kick |= (KickType(b) & 0x7F) << shift
+				msglen |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &ShowUserRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_ShowUserRet{v}
+			iNdEx = postIndex
+		case 1005:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Kick", wireType)
+			}
+			var v KickType
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (KickType(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Gate = &Response_Kick{v}
+		case 1100:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameCreatedRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameCreatedRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_GameCreatedRet{v}
+			iNdEx = postIndex
+		case 1101:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameStartRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameStartRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_GameStartRet{v}
+			iNdEx = postIndex
+		case 1102:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameDataRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameDataRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_GameDataRet{v}
+			iNdEx = postIndex
+		case 1103:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FrameDataRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &FrameDataRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_FrameDataRet{v}
+			iNdEx = postIndex
+		case 1104:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LeaveRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &LeaveRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_LeaveRet{v}
+			iNdEx = postIndex
+		case 1105:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NetworkRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &NetworkRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_NetworkRet{v}
+			iNdEx = postIndex
+		case 1106:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VoiceRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &VoiceRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_VoiceRet{v}
+			iNdEx = postIndex
+		case 1107:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameResetRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &GameResetRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Room = &Response_GameResetRet{v}
+			iNdEx = postIndex
+		case 1200:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field QuickMatchRet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProtocol
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProtocol
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &QuickMatchRet{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Hall = &Response_QuickMatchRet{v}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipProtocol(dAtA[iNdEx:])
@@ -2024,38 +3705,59 @@ var (
 func init() { proto.RegisterFile("protocol.proto", fileDescriptorProtocol) }
 
 var fileDescriptorProtocol = []byte{
-	// 526 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x93, 0xcd, 0x8e, 0xd3, 0x3e,
-	0x14, 0xc5, 0xc7, 0xfd, 0x67, 0xda, 0xfe, 0x6f, 0x4b, 0x18, 0x4c, 0x05, 0xa6, 0x48, 0x55, 0xd5,
-	0x05, 0xea, 0xaa, 0x8b, 0x29, 0x62, 0x81, 0x90, 0x90, 0x0a, 0x48, 0x91, 0x86, 0x2f, 0x19, 0xf6,
-	0x55, 0x26, 0xbd, 0xa4, 0x51, 0x9a, 0x38, 0xc4, 0x0e, 0x12, 0xcf, 0xc0, 0x8b, 0xb1, 0xe4, 0x11,
-	0x50, 0x5f, 0x83, 0x0d, 0xb2, 0x3d, 0x69, 0x3e, 0x5a, 0x66, 0x17, 0xfb, 0x9c, 0xdf, 0xbd, 0x55,
-	0xcf, 0x31, 0xb8, 0x59, 0x2e, 0x94, 0x08, 0xc4, 0x6e, 0x61, 0x3e, 0x68, 0xbf, 0x3c, 0x8f, 0x2f,
-	0x72, 0x94, 0xc5, 0x4e, 0x05, 0x62, 0x83, 0x56, 0x1b, 0x8f, 0x42, 0x5f, 0xe1, 0x3a, 0x4a, 0x15,
-	0xe6, 0x5f, 0xfc, 0xa0, 0xbc, 0xbd, 0x30, 0xb7, 0x89, 0xd8, 0xe0, 0xcd, 0x8c, 0x31, 0xcb, 0x7c,
-	0x29, 0x33, 0x91, 0xab, 0x23, 0xef, 0x28, 0xf4, 0x93, 0xa3, 0x09, 0xb3, 0x1f, 0x0e, 0xf4, 0x38,
-	0x7e, 0x2d, 0x50, 0x2a, 0xca, 0xa0, 0x27, 0x51, 0xca, 0x48, 0xa4, 0x8c, 0x4c, 0xc9, 0xfc, 0x9c,
-	0x97, 0x47, 0xba, 0x80, 0x5e, 0x1c, 0x05, 0xf1, 0x87, 0x42, 0x31, 0x67, 0x4a, 0xe6, 0x83, 0x4b,
-	0xba, 0x38, 0xfc, 0x76, 0x2d, 0xac, 0x45, 0xa1, 0xbc, 0x33, 0x5e, 0x9a, 0xe8, 0x73, 0x18, 0x5c,
-	0x47, 0xe9, 0xe6, 0x13, 0xe6, 0xdf, 0xa2, 0x00, 0xd9, 0xb9, 0x61, 0x1e, 0x54, 0x8c, 0x16, 0xd7,
-	0xd2, 0xaa, 0xde, 0x19, 0xaf, 0x9b, 0x35, 0x9b, 0x15, 0x72, 0xfb, 0x0e, 0xa5, 0xf4, 0x43, 0x64,
-	0xdd, 0x36, 0xab, 0xc5, 0x75, 0x62, 0x55, 0xcd, 0xd6, 0xcc, 0xf4, 0x05, 0x0c, 0x0b, 0x89, 0x39,
-	0xc7, 0x30, 0x92, 0x0a, 0x73, 0x06, 0x6d, 0xb8, 0xae, 0x7a, 0x84, 0x37, 0xdc, 0x74, 0x09, 0xff,
-	0xeb, 0xf3, 0x5b, 0x11, 0x46, 0x29, 0x1b, 0x18, 0xf4, 0x7e, 0x13, 0x35, 0x92, 0x47, 0x78, 0xe5,
-	0xa3, 0xcf, 0x00, 0x94, 0x88, 0x31, 0xb5, 0xd4, 0xd0, 0x50, 0xa3, 0x8a, 0xaa, 0x34, 0x8f, 0xf0,
-	0x9a, 0x53, 0x2f, 0xdb, 0xe9, 0x0f, 0x2e, 0x76, 0xc8, 0x96, 0xed, 0x65, 0x07, 0xc9, 0xeb, 0xf0,
-	0xca, 0x47, 0x57, 0xe0, 0x06, 0x5b, 0x3f, 0x0d, 0xf1, 0x7d, 0x14, 0xc4, 0xa9, 0x9f, 0x20, 0x7b,
-	0x6a, 0x48, 0x56, 0x91, 0x4d, 0xdd, 0xeb, 0xf0, 0x16, 0xb1, 0xea, 0x82, 0xa3, 0x5b, 0xb3, 0x02,
-	0xe8, 0x97, 0x5d, 0xb1, 0x77, 0x09, 0xce, 0xfe, 0xfc, 0x07, 0x7d, 0x8e, 0x32, 0x13, 0xa9, 0xc4,
-	0x5b, 0xea, 0x30, 0x03, 0x47, 0x57, 0x93, 0x75, 0xa6, 0x64, 0xee, 0x5e, 0xba, 0xd5, 0xf2, 0x57,
-	0x62, 0x83, 0xdc, 0x68, 0xf4, 0x35, 0xb8, 0xb5, 0x54, 0x39, 0xaa, 0x9b, 0x16, 0x8c, 0x4f, 0xb7,
-	0x60, 0x9d, 0xa3, 0x6e, 0x50, 0x8b, 0xa1, 0x6f, 0xe0, 0x6e, 0x3d, 0x22, 0x3d, 0xc6, 0x66, 0xfa,
-	0xe8, 0x74, 0xa6, 0x1c, 0x95, 0x47, 0x78, 0x9b, 0x29, 0x7b, 0x61, 0xfe, 0x79, 0x3d, 0x63, 0x70,
-	0xaa, 0x17, 0xa5, 0x5a, 0xf6, 0xa2, 0x3c, 0xd3, 0x97, 0x70, 0xa7, 0x0a, 0x4e, 0xe3, 0x36, 0xe5,
-	0x87, 0xa7, 0x52, 0xb6, 0x7c, 0xd3, 0xaf, 0xd7, 0x1f, 0x32, 0xd4, 0xfc, 0xb2, 0xbd, 0xbe, 0xae,
-	0x7a, 0x1d, 0xde, 0x70, 0xd3, 0x2b, 0xb8, 0xd7, 0x8c, 0x50, 0x8f, 0xb0, 0xb9, 0x3f, 0xfe, 0x57,
-	0xee, 0x76, 0xce, 0x31, 0x77, 0x6b, 0xfa, 0x0b, 0x70, 0x3e, 0x16, 0x72, 0x4b, 0x9f, 0x80, 0xa3,
-	0x1f, 0xb2, 0x49, 0xdd, 0xad, 0x3f, 0xf5, 0xab, 0x28, 0x88, 0x3f, 0x7f, 0xcf, 0x90, 0x1b, 0x7d,
-	0x35, 0xfc, 0xb9, 0x9f, 0x90, 0x5f, 0xfb, 0x09, 0xf9, 0xbd, 0x9f, 0x90, 0xeb, 0xae, 0xb1, 0x2d,
-	0xff, 0x06, 0x00, 0x00, 0xff, 0xff, 0xe3, 0xc4, 0x5b, 0x8a, 0xd6, 0x04, 0x00, 0x00,
+	// 863 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x55, 0x5d, 0x6f, 0xe4, 0x34,
+	0x14, 0xdd, 0x74, 0x66, 0x77, 0x52, 0xb7, 0x3b, 0x14, 0x33, 0x5d, 0xcc, 0x20, 0x55, 0x55, 0x9f,
+	0xca, 0x4b, 0x05, 0x5b, 0x04, 0x02, 0x81, 0x40, 0xed, 0x22, 0x8c, 0x96, 0x05, 0xc9, 0x0b, 0xcf,
+	0x23, 0x6f, 0x72, 0x77, 0x26, 0x9a, 0x4c, 0x3c, 0x1b, 0x3b, 0x5d, 0x0a, 0xfc, 0x08, 0x7e, 0x0a,
+	0x3f, 0x63, 0x1f, 0xf8, 0x28, 0x20, 0xf1, 0x8c, 0xfa, 0xce, 0x7f, 0x40, 0xd7, 0xa9, 0x13, 0xc7,
+	0x19, 0x90, 0x78, 0x8a, 0xaf, 0xcf, 0x39, 0x3e, 0xe3, 0x9b, 0x9c, 0x3b, 0x64, 0xbc, 0x2e, 0x95,
+	0x51, 0x89, 0xca, 0x4f, 0xec, 0x82, 0xc6, 0xae, 0x9e, 0xee, 0x95, 0xa0, 0xab, 0xdc, 0x24, 0x2a,
+	0x85, 0x1a, 0x9b, 0xee, 0xcd, 0xa5, 0x81, 0xd9, 0x4a, 0xa5, 0x70, 0xc3, 0x9e, 0x4e, 0xec, 0x4e,
+	0x56, 0x18, 0x28, 0x9f, 0xca, 0xc4, 0xf1, 0xd8, 0x5a, 0x6a, 0xbd, 0x56, 0xa5, 0xe9, 0x21, 0x93,
+	0xb9, 0x5c, 0xf5, 0xf9, 0x93, 0x52, 0xa9, 0x55, 0x7f, 0x77, 0x21, 0xf3, 0x3c, 0xdc, 0x3d, 0xfa,
+	0x73, 0x44, 0x46, 0x02, 0x9e, 0x55, 0xa0, 0x0d, 0x65, 0x64, 0xa4, 0x41, 0xeb, 0x4c, 0x15, 0x2c,
+	0x3a, 0x8c, 0x8e, 0x6f, 0x0b, 0x57, 0xd2, 0xf7, 0xc9, 0xce, 0x93, 0xac, 0x48, 0x1f, 0x43, 0x79,
+	0x91, 0x25, 0xc0, 0x6e, 0x1f, 0x46, 0xc7, 0x3b, 0xf7, 0xef, 0x9d, 0x34, 0x77, 0x45, 0x70, 0xa6,
+	0x6b, 0x94, 0xdf, 0x12, 0x3e, 0x99, 0x9e, 0x90, 0xd1, 0x32, 0x4b, 0x96, 0x5f, 0x56, 0x86, 0x11,
+	0xab, 0xa3, 0xad, 0x0e, 0x81, 0x99, 0xaa, 0x0c, 0xbf, 0x25, 0x1c, 0x09, 0xbd, 0xd6, 0x95, 0x5e,
+	0x3c, 0x02, 0xad, 0xe5, 0x1c, 0xd8, 0x4e, 0xe8, 0x85, 0xe0, 0x6c, 0x55, 0xa3, 0xe8, 0xe5, 0x91,
+	0xe9, 0x07, 0x64, 0xb7, 0xd2, 0x50, 0x0a, 0x98, 0x67, 0xda, 0x40, 0xc9, 0x26, 0xa1, 0xd8, 0x47,
+	0x79, 0x24, 0x3a, 0x6c, 0x7a, 0x4a, 0xb6, 0xb1, 0xfe, 0x5c, 0xcd, 0xb3, 0x82, 0xed, 0x5b, 0xe9,
+	0x2b, 0x5d, 0xa9, 0x85, 0x78, 0x24, 0x5a, 0x1e, 0x7d, 0x87, 0x10, 0xa3, 0x96, 0x50, 0xd4, 0xaa,
+	0x7b, 0x56, 0x35, 0x69, 0x55, 0x2d, 0xc6, 0x23, 0xe1, 0x31, 0xd1, 0x2c, 0xc7, 0x85, 0x50, 0x39,
+	0xb0, 0xd3, 0xd0, 0xac, 0x81, 0xf8, 0x96, 0x68, 0x79, 0xf4, 0x8c, 0x8c, 0x93, 0x85, 0x2c, 0xe6,
+	0xf0, 0x45, 0x96, 0x2c, 0x0b, 0xb9, 0x02, 0xf6, 0xb6, 0x55, 0xb2, 0x56, 0xd9, 0xc5, 0xf9, 0x96,
+	0x08, 0x14, 0xf4, 0x4d, 0x12, 0xeb, 0x85, 0x7a, 0xfe, 0xb5, 0x86, 0x92, 0xa5, 0xe1, 0x0b, 0x71,
+	0x08, 0x1f, 0x88, 0x86, 0x85, 0x57, 0xc4, 0xef, 0xec, 0xbc, 0x04, 0x69, 0x80, 0x15, 0xe1, 0x15,
+	0x5b, 0x8c, 0x0f, 0x84, 0xc7, 0x44, 0x27, 0xac, 0x3e, 0x2b, 0x32, 0xc3, 0xbe, 0x09, 0x9d, 0x1c,
+	0x82, 0x4e, 0x6e, 0x8d, 0x4d, 0xc1, 0xb5, 0x00, 0x99, 0x5e, 0xb2, 0xcb, 0xb0, 0x29, 0x0d, 0xc4,
+	0x07, 0xa2, 0xe5, 0x39, 0x9b, 0x07, 0xd2, 0x48, 0xf6, 0xed, 0x26, 0x1b, 0x44, 0x9c, 0x0d, 0xae,
+	0xd1, 0xe6, 0x69, 0xe9, 0x24, 0xdf, 0x85, 0x36, 0x0d, 0x84, 0x36, 0x4d, 0x41, 0x39, 0xd9, 0xab,
+	0xd6, 0xb9, 0x92, 0xe9, 0xa7, 0xd6, 0x19, 0xb3, 0xcc, 0xbe, 0xb7, 0xda, 0xa9, 0xf7, 0x91, 0x04,
+	0x0c, 0x3e, 0x10, 0x3d, 0x15, 0x7d, 0x97, 0x90, 0x67, 0x55, 0x96, 0x2c, 0x1f, 0x49, 0x93, 0x2c,
+	0xd8, 0x8b, 0x28, 0x6c, 0x68, 0x0b, 0xf2, 0xa1, 0xf0, 0xa8, 0x67, 0x77, 0xc8, 0x10, 0x07, 0xc4,
+	0x19, 0x21, 0xb1, 0x1b, 0x09, 0xf5, 0xde, 0x0a, 0xf0, 0x89, 0xb1, 0xc7, 0x27, 0x06, 0xfd, 0xe8,
+	0x87, 0x6d, 0x12, 0x0b, 0xd0, 0x6b, 0x55, 0x68, 0xf8, 0x8f, 0x64, 0x1f, 0x91, 0x21, 0x4e, 0x24,
+	0xb6, 0x75, 0x18, 0x1d, 0x8f, 0xef, 0x8f, 0xdb, 0x1f, 0x71, 0xae, 0x52, 0x10, 0x16, 0xa3, 0x0f,
+	0xc8, 0xd8, 0x0b, 0xb4, 0x00, 0x73, 0x33, 0x00, 0xa6, 0x9b, 0x07, 0xc0, 0xac, 0x04, 0x0c, 0x74,
+	0xa0, 0xa1, 0x9f, 0x90, 0x97, 0xfc, 0xb4, 0xe1, 0x31, 0x75, 0x3c, 0x5f, 0xdb, 0x1c, 0x4f, 0x01,
+	0x86, 0x47, 0x22, 0xd4, 0xb8, 0x88, 0xdb, 0x10, 0xe1, 0x19, 0xfb, 0x9b, 0x22, 0xee, 0x50, 0x17,
+	0x71, 0x57, 0xd3, 0x8f, 0xc8, 0xdd, 0x36, 0x83, 0x28, 0xaf, 0x03, 0xfb, 0xea, 0xa6, 0xc0, 0xd6,
+	0xfa, 0x2e, 0x1f, 0xed, 0x9b, 0x38, 0xa2, 0xfe, 0x34, 0xb4, 0xf7, 0x51, 0xbe, 0x25, 0x3a, 0x6c,
+	0xfa, 0x90, 0xbc, 0xdc, 0x4d, 0x23, 0x1e, 0x51, 0x47, 0xf8, 0xf5, 0x7f, 0x8b, 0x70, 0x7d, 0x4e,
+	0x5f, 0x47, 0xdf, 0x23, 0x3b, 0x2e, 0xa2, 0x78, 0x4c, 0x9d, 0xe5, 0xfd, 0x7e, 0x96, 0xf1, 0x80,
+	0x81, 0xf0, 0xb9, 0xf4, 0x0d, 0x32, 0xc4, 0x71, 0xcb, 0xfe, 0x1e, 0xd9, 0xd7, 0xee, 0xe5, 0xe5,
+	0x61, 0x96, 0x2c, 0xbf, 0xba, 0x5c, 0xe3, 0x64, 0xb5, 0x14, 0x7a, 0x4e, 0xc6, 0x6d, 0xa4, 0x53,
+	0x34, 0xfa, 0x29, 0x0e, 0x67, 0x4e, 0x97, 0xc0, 0x07, 0x22, 0x90, 0xd0, 0x0f, 0xc9, 0x2e, 0xee,
+	0x3c, 0x36, 0xb2, 0x34, 0x78, 0xc4, 0xcf, 0x71, 0xd8, 0x36, 0x1f, 0xe6, 0x03, 0xd1, 0xa1, 0xe3,
+	0x5f, 0x82, 0xcb, 0x2e, 0xaa, 0x7f, 0x89, 0xc3, 0xab, 0x7a, 0x28, 0x5e, 0xd5, 0x2b, 0xd1, 0xba,
+	0xc9, 0x30, 0x8a, 0x7f, 0xed, 0x59, 0xfb, 0x30, 0x5a, 0xfb, 0x35, 0x7d, 0x8b, 0xc4, 0x39, 0xc8,
+	0x0b, 0xfb, 0xa2, 0xae, 0xe2, 0x70, 0xba, 0x38, 0x08, 0xa7, 0x8b, 0x5b, 0x63, 0xbc, 0x0b, 0x30,
+	0xcf, 0x55, 0xb9, 0x44, 0xd1, 0x6f, 0x71, 0x18, 0xef, 0x16, 0xc4, 0x79, 0xd9, 0x56, 0xe8, 0x75,
+	0xa1, 0x6e, 0x12, 0xf6, 0x7b, 0xcf, 0xcb, 0x41, 0xe8, 0xe5, 0xd6, 0xae, 0xb1, 0x02, 0x34, 0xd8,
+	0xc6, 0xfe, 0xb1, 0xb1, 0xb1, 0x0e, 0x76, 0x8d, 0x75, 0x35, 0xfd, 0x98, 0xdc, 0x6d, 0xc7, 0x0b,
+	0xea, 0x7f, 0xdc, 0x0e, 0xf3, 0xd0, 0xc1, 0xf9, 0x50, 0x74, 0x05, 0xff, 0x67, 0x24, 0x9d, 0xed,
+	0xbe, 0xb8, 0x3e, 0x88, 0xae, 0xae, 0x0f, 0xa2, 0xbf, 0xae, 0x0f, 0xa2, 0x27, 0x77, 0xac, 0xc5,
+	0xe9, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x6b, 0x71, 0x8d, 0xb1, 0x32, 0x09, 0x00, 0x00,
 }

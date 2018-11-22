@@ -9,10 +9,14 @@
 		game_model.proto
 		gate_interface.proto
 		gate_model.proto
+		hall_interface.proto
+		hall_model.proto
 		passport_interface.proto
 		passport_model.proto
 		protocol.proto
 		resultcode.proto
+		room_interface.proto
+		room_model.proto
 
 	It has these top-level messages:
 		LoginRole
@@ -21,9 +25,11 @@
 		ChangeNicknameRet
 		Role
 		KickOut
+		PushMessage
 		BindService
 		BindServiceRet
-		PushMessage
+		QuickMatch
+		QuickMatchRet
 		UserRegister
 		UserRegisterRet
 		UserLogin
@@ -35,7 +41,28 @@
 		User
 		Request
 		Response
-		Push
+		ShowUser
+		ShowUserRet
+		GameCreate
+		GameInit
+		GameReady
+		GameData
+		FrameData
+		UploadGameResult
+		UploadGameResultRet
+		OnceMore
+		OnceMoreRet
+		GameCreatedRet
+		GameStartRet
+		GameDataRet
+		FrameDataRet
+		LeaveRet
+		NetworkRet
+		VoiceRet
+		GameResetRet
+		PlayerResult
+		Record
+		Player
 */
 package protocol
 

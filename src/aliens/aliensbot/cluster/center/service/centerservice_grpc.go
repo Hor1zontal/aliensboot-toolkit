@@ -128,7 +128,7 @@ func (this *GRPCService) IsLocal() bool {
 //关闭服务
 func (this *GRPCService) Close() {
 	//if this.pid != nil {
-	//	this.pid.Stop()
+	//	this.pid.Reset()
 	//	this.pid = nil
 	//}
 	if this.server != nil {

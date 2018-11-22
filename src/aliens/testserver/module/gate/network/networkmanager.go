@@ -50,16 +50,16 @@ func (this *networkManager) Init() {
 //	this.handler.Go(f, c)
 //}
 
-func (this *networkManager) handleResponse(args []interface{}) {
-	network := args[0].(*Network)
-	response := args[1].(*base.Any)
-	err, ok := args[2].(error)
-	if ok {
-		network.handleResponse(response, err)
-	} else {
-		network.handleResponse(response, nil)
-	}
-}
+//func (this *networkManager) handleResponse(args []interface{}) {
+//	network := args[0].(*Network)
+//	response := args[1].(*base.Any)
+//	err, ok := args[2].(error)
+//	if ok {
+//		network.handleResponse(response, err)
+//	} else {
+//		network.handleResponse(response, nil)
+//	}
+//}
 
 func (this *networkManager) BindService(authID int64, binds map[string]string) {
 	auth := this.authNetworks[authID]
@@ -112,15 +112,15 @@ func (this *networkManager) RemoveNetwork(network *Network) {
 }
 
 func (this *networkManager) DealAuthTimeout() {
-	this.networks.Range(func(element interface{}) {
-		network := element.(*Network)
-		//连接超过固定时长没有验证权限需要退出
-		if network.IsAuthTimeout() {
-			//log.Debug("Network auth timeout : %v", networker.GetRemoteAddr())
-			network.KickOut(protocol.KickType_Timeout)
-			this.networks.Remove(network)
-		}
-	})
+	//this.networks.Range(func(element interface{}) {
+	//	network := element.(*Network)
+	//	//连接超过固定时长没有验证权限需要退出
+	//	if network.IsAuthTimeout() {
+	//		//log.Debug("Network auth timeout : %v", networker.GetRemoteAddr())
+	//		network.KickOut(protocol.KickType_Timeout)
+	//		this.networks.Remove(network)
+	//	}
+	//})
 }
 
 //验权限
@@ -129,14 +129,13 @@ func (this *networkManager) auth(authID int64, network *Network) {
 	this.networks.Remove(network)
 
 	oldNetwork, ok := this.authNetworks[authID]
-
 	//顶号处理
 	if ok {
 		oldNetwork.KickOut(protocol.KickType_OtherSession)
 	} else {
 		node := cache.ClusterCache.GetAuthGateID(authID)
 		//用户在其他网关节点登录 需要发送远程T人
-		if node != this.node {
+		if node != "" && node != this.node {
 			kickMsg := &protocol.KickOut{
 				AuthID:   authID,
 				KickType: protocol.KickType_OtherSession,

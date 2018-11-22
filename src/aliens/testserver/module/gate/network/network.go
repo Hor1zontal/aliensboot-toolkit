@@ -11,7 +11,6 @@ package network
 
 import (
 	"aliens/aliensbot/cluster/center"
-	"aliens/aliensbot/cluster/center/service"
 	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/gate"
 	"aliens/aliensbot/log"
@@ -51,8 +50,10 @@ func (this *Network) Push(msg *base.Any) {
 }
 
 func (this *Network) KickOut(kickType protocol.KickType) {
-	pushMsg := &protocol.Push{
-		Kick: kickType,
+	pushMsg := &protocol.Response{
+		Gate:&protocol.Response_Kick{
+			Kick: kickType,
+		},
 	}
 	data, _ := pushMsg.Marshal()
 	this.Push(&base.Any{Id: 1000, Value: data})
@@ -64,14 +65,20 @@ func (this *Network) KickOut(kickType protocol.KickType) {
 //}
 
 func (this *Network) handleResponse(response *base.Any, err error) {
+	if response == nil || response.Value == nil || len(response.Value) == 0 {
+		return
+	}
+	//TODO 返回服务不可用,或者尝试重发其他有效的节点
 	if err != nil {
-		//TODO 返回服务不可用,或者尝试重发其他有效的节点
-		log.Debugf("handle response err : %v", err)
+		log.Debugf("handle response %v err : %v",response, err)
 		return
 	}
 	//更新验权id
 	if response.GetAuthId() > 0 && !this.IsAuth() {
 		this.Auth(response.GetAuthId())
+	}
+	if response.GetValue() == nil || len(response.GetValue()) == 0 {
+		return
 	}
 	this.agent.WriteMsg(response)
 	//lpc.StatisticsHandler.AddServiceStatistic(route.GetServiceByeSeq(response.Id), 1, 0.001)
@@ -87,31 +94,39 @@ func (this *Network) HandleMessage(request *base.Any) {
 
 	//消息增加网关id
 	request.GateId = center.ClusterCenter.GetNodeID()
-
 	node, _ := this.bindRoutes[request.Id]
-	var err error = nil
-	if node != "" {
-		err = route.AsyncHandleNodeMessage(node, service.NewAsyncCall(request, handler.Go, this.handleResponse))
-	} else {
-		err = route.AsyncHandleMessage(this.hashKey, service.NewAsyncCall(request, handler.Go, this.handleResponse))
-	}
-	if err != nil {
-		log.Debug(err.Error())
-	}
 
-	//start := time.Now()
-	//node, ok := this.bindRoutes[request.Id]
-	//var response *base.Any = nil
 	//var err error = nil
-	//if ok {
-	//	response, err = route.HandleNodeMessage(request, node)
+	//if node != "" {
+	//	err = route.AsyncHandleNodeMessage(node, service.NewAsyncCall(request, handler.Go, this.handleResponse))
 	//} else {
-	//	response, err = route.HandleMessage(request, this.hashKey)
+	//	err = route.AsyncHandleMessage(this.hashKey, service.NewAsyncCall(request, handler.Go, this.handleResponse))
 	//}
 	//if err != nil {
-	//	//TODO 返回服务不可用等处理方式
 	//	log.Debug(err.Error())
 	//}
+
+	var response *base.Any = nil
+	var err error = nil
+	if node != "" {
+		response, err = route.HandleNodeMessage(request, node)
+	} else {
+		response, err = route.HandleMessage(request, this.hashKey)
+	}
+
+	req := &protocol.Request{}
+	req.Unmarshal(request.GetValue())
+
+	resp := &protocol.Response{}
+	resp.Unmarshal(response.GetValue())
+
+	//log.Debugf("data  : %+v - %+v", request, response)
+	log.Debugf("r-r : %+v - %+v", req, resp)
+
+
+	this.handleResponse(response, err)
+
+
 	////更新验权id
 	//if response.GetAuthId() > 0 {
 	//	this.Auth(response.GetAuthId())

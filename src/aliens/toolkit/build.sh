@@ -1,4 +1,4 @@
-GOROOT=/usr/local/Cellar/go/1.10/libexec #gosetup
+#GOROOT=/usr/local/Cellar/go/1.11/libexec #gosetup
 PROJECT=/Users/hejialin/git/server/aliensbot
 GOLIB=/Users/hejialin/git/server/alienslib
 GOPATH=${PROJECT}:${GOLIB} #gosetup

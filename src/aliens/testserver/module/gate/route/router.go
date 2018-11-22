@@ -27,13 +27,9 @@ var serviceSeqMapping = make(map[string]uint16)
 //goroutine pool, deal async request and callback
 
 func Init() {
-	routes := conf.Config.Route
-	for _, route := range routes {
-		if route.Service == "" {
-			continue
-		}
-		seqServiceMapping[route.Seq] = route.Service
-		serviceSeqMapping[route.Service] = route.Seq
+	for service, seq := range conf.Config.Route {
+		seqServiceMapping[seq] = service
+		serviceSeqMapping[service] = seq
 	}
 }
 
@@ -77,6 +73,22 @@ func AsyncHandleNodeMessage(serviceID string, asyncCall *service.AsyncCall) erro
 		return errors.New(fmt.Sprintf("un expect request id %v", asyncCall.ReqID()))
 	}
 	return dispatch.AsyncRequestNode(serviceName, serviceID, asyncCall)
+}
+
+func SendNodeMessage(serviceID string, request *base.Any) error {
+	serviceName, ok := seqServiceMapping[request.Id]
+	if !ok {
+		return errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+	}
+	return dispatch.SendNode(serviceName, serviceID, request)
+}
+
+func SendMessage(request *base.Any, hashKey string) error {
+	serviceName, ok := seqServiceMapping[request.Id]
+	if !ok {
+		return errors.New(fmt.Sprintf("un expect request id %v", request.Id))
+	}
+	return dispatch.Send(serviceName, request, hashKey)
 }
 
 func HandleMessage(request *base.Any, hashKey string) (*base.Any, error) {

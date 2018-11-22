@@ -17,6 +17,6 @@ import (
 
 //
 func handleAllocFreeRoomSeat(request *room.AllocFreeRoomSeat, response *room.AllocFreeRoomSeatRet, agent network.Agent) {
-	core.Manager.AllocFreeRoom(request.GetGameID())
+	manager.Manager.AllocFreeRoom(request.GetGameID())
 
 }

@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	SPLIT_STR = "<message>"
+	MESSAGE_SPLIT_STR = "<message>"
+	REQUEST_SPLIT_STR = "<request>" //单请求
 )
 
 func Convert(config *model.CodeGenConfig) {
@@ -51,41 +52,125 @@ func convertModule(moduleConfig *model.ModuleConfig, module *Module) {
 			fmt.Printf(err.Error())
 			return
 		}
-		templateContent := string(b)
 
-		results := strings.Split(templateContent, SPLIT_STR)
+		content := string(b)
 
-		header := ""
-		content := ""
-		tailf := ""
 
-		if len(results) == 3 {
-			header = replaceMessage(results[0], module)
-			tailf = replaceMessage(results[2], module)
-
-			for _, handler := range module.Handlers {
-				handleStr := replaceMessage(results[1], module)
-				if !handler.IsValid() {
-					continue
-				}
-				handleStr = replaceHandle(handleStr, handler)
-				if outputConfig.Prefix != "" {
-					filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler.GetName()), -1)
-					//单独写文件
-					writeFile(filePath, header+handleStr+tailf, outputConfig.Overwrite)
-				} else {
-					content += handleStr
-				}
-			}
-		} else {
-			header = replaceMessage(templateContent, module)
-		}
 		if outputConfig.Prefix == "" {
 			//写一个文件
-			writeFile(outputConfig.Output, header+content+tailf, outputConfig.Overwrite)
+			content = convertService(content, module, MESSAGE_SPLIT_STR)
+			content = convertService(content, module, REQUEST_SPLIT_STR)
+
+			writeFile(outputConfig.Output, content, outputConfig.Overwrite)
+		} else {
+
+			convertHandle(MESSAGE_SPLIT_STR, REQUEST_SPLIT_STR, content, module, outputConfig)
+			convertHandle(REQUEST_SPLIT_STR, MESSAGE_SPLIT_STR, content, module, outputConfig)
 		}
+
 	}
 
+}
+
+
+func convertService(templateContent string, module *Module, split string) string {
+	results := strings.Split(templateContent, split)
+	header := ""
+	content := ""
+	tailf := ""
+
+	if len(results) == 3 {
+		header = replaceMessage(results[0], module)
+		tailf = replaceMessage(results[2], module)
+		for _, handler := range module.Handlers {
+			handleStr := replaceMessage(results[1], module)
+			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
+				continue
+			}
+			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
+				continue
+			}
+			handleStr = replaceHandle(handleStr, handler)
+			content += handleStr
+		}
+	} else {
+		header = replaceMessage(templateContent, module)
+	}
+	return header+content+tailf
+}
+
+
+func convertHandle(rp1 string, rp2 string, content string, module *Module, outputConfig *model.Output) {
+	handlers := convertHandler(content, module, rp1)
+
+	if handlers != nil {
+		for handler, content := range handlers {
+			//templateContent string, module *Module, outputConfig *model.Output, split string, handlerName string
+			newContent := convertHandler1(content, module, rp2, handler)
+			filePath := outputConfig.Output + "/" + strings.Replace(outputConfig.Prefix, "${}", strings.ToLower(handler), -1)
+			writeFile(filePath, newContent, outputConfig.Overwrite)
+		}
+	}
+}
+
+func convertHandler(templateContent string, module *Module, split string) map[string]string {
+	results := strings.Split(templateContent, split)
+
+	handlers := make(map[string]string)
+
+	header := ""
+	//content := ""
+	tailf := ""
+
+	if len(results) == 3 {
+		header = replaceMessage(results[0], module)
+		tailf = replaceMessage(results[2], module)
+		for _, handler := range module.Handlers {
+			handleStr := replaceMessage(results[1], module)
+			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
+				continue
+			}
+			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
+				continue
+			}
+			handleStr = replaceHandle(handleStr, handler)
+			handlers[handler.GetName()] =  header+handleStr+tailf
+		}
+	}
+	return handlers
+}
+
+func convertHandler1(templateContent string, module *Module, split string, handlerName string) string {
+	results := strings.Split(templateContent, split)
+
+	header := ""
+	content := ""
+	tailf := ""
+
+	if len(results) == 3 {
+		header = replaceMessage(results[0], module)
+		tailf = replaceMessage(results[2], module)
+
+		for _, handler := range module.Handlers {
+			if handlerName != handler.GetName() {
+				continue
+			}
+			handleStr := replaceMessage(results[1], module)
+
+			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
+				continue
+			}
+
+			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
+				continue
+			}
+			handleStr = replaceHandle(handleStr, handler)
+			return header+handleStr+tailf
+		}
+	} else {
+		header = replaceMessage(templateContent, module)
+	}
+	return header+ content +tailf
 }
 
 func writeFile(filePath string, content string, overwrite bool) {

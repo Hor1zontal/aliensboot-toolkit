@@ -17,7 +17,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 )
 
-func (this *gateRPCHandle) BindService1(authID int64, node string, service service.IService) error {
+func (this *gateRPCHandler) BindService1(authID int64, node string, service service.IService) error {
 	if service == nil {
 		return errors.New("service can not be nil")
 	}
@@ -28,11 +28,13 @@ func (this *gateRPCHandle) BindService1(authID int64, node string, service servi
 		AuthID: authID,
 		//Binds:center.ClusterCenter.GetNodeID()
 	}
-	return this.BindService(node, request)
+	this.BindService(node, request)
+	return nil
 }
 
+
 //推送玩家消息
-func (this *gateRPCHandle) Push(authID int64, node string, response *protocol.Response) error {
+func (this *gateRPCHandler) Push(fromService string, authID int64, node string, response *protocol.Response) error {
 	data, err := proto.Marshal(response)
 	if err != nil {
 		return err
@@ -40,12 +42,14 @@ func (this *gateRPCHandle) Push(authID int64, node string, response *protocol.Re
 	pushMessage := &protocol.PushMessage{
 		AuthID: authID,
 		Data:   data,
+		Service: fromService,
 	}
 	this.PushMessage(node, pushMessage)
 	return nil
 }
 
-func (this *gateRPCHandle) BroadcastAll(node string, response *protocol.Response) {
+
+func (this *gateRPCHandler) BroadcastAll(node string, response *protocol.Response) {
 	data, _ := proto.Marshal(response)
 	message := &protocol.Request{
 		Gate: &protocol.Request_PushMessage{

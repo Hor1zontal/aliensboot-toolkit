@@ -3,6 +3,7 @@ package internal
 import (
 	"aliens/aliensbot/gate"
 	"aliens/aliensbot/module/base"
+	"aliens/testserver/module/gate/cache"
 	"aliens/testserver/module/gate/conf"
 	"aliens/testserver/module/gate/http"
 	"aliens/testserver/module/gate/msg"
@@ -27,7 +28,6 @@ func (m *Module) GetConfig() interface{} {
 
 func (m *Module) OnInit() {
 	//conf.Init(m.GetName())
-
 	m.Gate = &gate.Gate{
 		TcpConfig:    conf.Config.TCP,
 		WsConfig:     conf.Config.WebSocket,
@@ -35,6 +35,7 @@ func (m *Module) OnInit() {
 		AgentChanRPC: Skeleton.ChanRPCServer,
 	}
 	route.Init()
+	cache.Init()
 	network.Init(Skeleton)
 	service.Init(Skeleton.ChanRPCServer)
 	http.Init(conf.Config.Http)

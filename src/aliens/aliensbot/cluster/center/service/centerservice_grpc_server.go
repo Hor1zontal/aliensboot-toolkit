@@ -76,6 +76,7 @@ func (this *rpcServer) request(args []interface{}) {
 	server := args[1].(base.RPCService_RequestServer)
 	response := this.handler(request)
 	if response != nil {
+		response.Id = request.Id
 		server.Send(response)
 	}
 }

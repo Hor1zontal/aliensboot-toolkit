@@ -78,7 +78,7 @@ func (tw *TimeWheel) Start() {
 	go tw.start()
 }
 
-// Stop 停止时间轮
+// Reset 停止时间轮
 func (tw *TimeWheel) Stop() {
 	tw.stopChannel <- true
 }

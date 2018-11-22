@@ -2,10 +2,14 @@ syntax = "proto3";
 package protocol;
 
 import "resultcode.proto";
-import "gate_interface.proto";
 import "gate_model.proto";
+
+import "gate_interface.proto";
 import "passport_interface.proto";
 import "game_interface.proto";
+import "room_interface.proto";
+import "hall_interface.proto";
+
 
 //TODO 支持接口权限声明 是否支持客户端调用， 是否支持内部调用
 
@@ -15,23 +19,46 @@ message Request {
 
     //----------------网关模块接口-----------
     oneof gate {
-        kick_out kickOut = 4; //T人
         bind_service bindService = 5; //绑定服务-定向转发
-        push_message pushMessage = 6; //推送消息
+
+        //push
+        kick_out kickOut = 10; //T人
+        push_message pushMessage = 11; //推送消息
     }
 
     //-----------------登录模块接口---------------
 
     oneof passport {
-        userRegister userRegister = 10;
-        userLogin userLogin = 11;
-        tokenLogin tokenLogin = 12; //token登录
+        userRegister userRegister = 20;
+        userLogin userLogin = 21;
+        tokenLogin tokenLogin = 22; //token登录
     }
 
     //-----------------游戏模块接口---------------
     oneof game {
         loginRole loginRole = 51;
         changeNickname changeNickname = 52;
+    }
+
+
+    //-----------------房间服务器接口-------------
+    oneof room {
+        showUser showUser = 100;
+
+        //push
+        gameCreate gameCreate = 110;
+        gameInit gameInit = 120;
+        gameReady gameReady = 121;
+        gameData gameData = 122;
+        frameData frameData = 123;
+        uploadGameResult uploadGameResult = 124;
+
+    }
+
+    oneof hall {
+
+        //push
+        quickMatch quickMatch = 200;
     }
 
 
@@ -44,15 +71,18 @@ message Response {
 
     Code code = 2; //错误码
 
-    //-----------------登录模块响应接口---------------
+    //-----------------网关模块响应接口---------------
     oneof gate {
         bind_service_ret bindServiceRet = 5;
+
+        //push
+        KickType kick = 1005; //T人
     }
 
     oneof passport {
-        userRegisterRet userRegisterRet = 10;
-        userLoginRet userLoginRet = 11;
-        tokenLoginRet tokenLoginRet = 12; //token登录
+        userRegisterRet userRegisterRet = 20;
+        userLoginRet userLoginRet = 21;
+        tokenLoginRet tokenLoginRet = 22; //token登录
     }
 
     //-----------------游戏模块接口---------------
@@ -61,10 +91,25 @@ message Response {
         changeNicknameRet changeNicknameRet = 52;
     }
 
-}
+    oneof room {
+        showUserRet showUserRet = 100;
+
+        //push
+        gameCreatedRet gameCreatedRet = 1100;
+        gameStartRet gameStartRet = 1101;
+        gameDataRet gameDataRet = 1102;
+        frameDataRet frameDataRet = 1103;
+        leaveRet leaveRet = 1104;
+        networkRet networkRet = 1105;
+        voiceRet voiceRet = 1106;
+        gameResetRet gameResetRet = 1107;
+    }
+
+    oneof hall {
+
+        //push
+        quickMatchRet quickMatchRet = 1200;
+    }
 
 
-//推送消息支持多条结构
-message Push {
-    KickType kick = 1; //T人
 }

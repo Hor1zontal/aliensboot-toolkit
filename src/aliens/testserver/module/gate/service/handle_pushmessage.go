@@ -12,12 +12,14 @@ package service
 import (
 	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/module/gate/network"
+	"aliens/testserver/module/gate/route"
 	"aliens/testserver/protocol"
 )
 
 //
 func handlePushMessage(request *protocol.PushMessage) {
-	msg := &base.Any{Id: 1000, Value: request.GetData()}
+	msgID := route.GetServiceSeq(request.GetService())
+	msg := &base.Any{Id: msgID, Value: request.GetData()}
 	authID := request.GetAuthID()
 	if authID == -1 {
 		network.Manager.Broadcast(msg)

@@ -53,8 +53,14 @@ type ProtoHandler struct {
 	//OPush string
 }
 
-func (this *ProtoHandler) IsValid() bool {
-	return this.ORequest != ""
+func (this *ProtoHandler) IsSession() bool {
+	return this.ORequest != "" && this.OResponse != ""
+	//return this.ORequest != "" && this.OResponse != ""
+}
+
+//纯请求
+func (this *ProtoHandler) IsRequest() bool {
+	return this.ORequest != "" && this.OResponse == ""
 	//return this.ORequest != "" && this.OResponse != ""
 }
 

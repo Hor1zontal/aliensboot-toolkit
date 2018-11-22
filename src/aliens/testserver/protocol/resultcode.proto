@@ -11,6 +11,15 @@ enum Code {
     //game
     ValidateException = 9; //验证用户失败、需要重新登录校验
 
+    //room
+    appIDNotFound = 50; //游戏配置未找到
+    playerNotFound = 51; //玩家未找到
+
+    roomNotFound = 60; //房间未找到
+
+    gameNotFound = 101; //游戏未找到
+    gameAlreadyStart = 103; //游戏已经开始、无效的操作
+
     InvalidService = 1000; //服务不可用
 
 }

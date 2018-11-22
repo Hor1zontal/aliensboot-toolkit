@@ -9,9 +9,26 @@
  *******************************************************************************/
 package service
 
-import "aliens/testserver/protocol"
+import (
+	"aliens/testserver/module/passport/cache"
+	"aliens/testserver/protocol"
+)
 
 //
 func handleUserLogin(request *protocol.UserLogin, response *protocol.UserLoginRet) int64 {
-	return 0
+	username := request.GetUsername()
+	password := request.GetPassword()
+	passwordHash := PasswordHash(username, password)
+
+	uid, _ := cache.PassportCache.GetUidByUsername(username)
+
+	if uid <= 0 {
+		uid = cache.NewUser(username, passwordHash, "", "", "", "").GetId()
+	}
+
+	response.Uid = uid
+	//response.Token = NewToken()
+	//cache.PassportCache.SetUserToken(uid, response.Token)
+	response.Result = protocol.LoginResult_loginSuccess
+	return response.Uid
 }

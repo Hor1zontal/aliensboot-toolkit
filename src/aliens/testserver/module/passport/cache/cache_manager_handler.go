@@ -56,17 +56,17 @@ func (this *cacheManager) GetUserOnline(uid int64) (bool, error) {
 }
 
 //用户名是否存在
-func (this *cacheManager) IsUsernameExist(username string) bool {
-	return this.GetUidByUsername(username) != 0
+func (this *cacheManager) IsUsernameExist(username string) (bool, error) {
+	uid, err := this.GetUidByUsername(username)
+	return uid != 0, err
 }
 
 func (this *cacheManager) SetUsernameUidMapping(username string, uid int64) error {
 	return this.redisClient.SetData(USERNAME_KEY_PREFIX+username, uid)
 }
 
-func (this *cacheManager) GetUidByUsername(username string) int64 {
-	result, _ := this.redisClient.GetDataInt64(USERNAME_KEY_PREFIX + username)
-	return result
+func (this *cacheManager) GetUidByUsername(username string) (int64, error) {
+	return this.redisClient.GetDataInt64(USERNAME_KEY_PREFIX + username)
 }
 
 //获取用户所有信息数据

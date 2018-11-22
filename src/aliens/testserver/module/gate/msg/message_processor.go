@@ -49,6 +49,7 @@ func (this *MessageProcessor) Unmarshal(data []byte) (interface{}, error) {
 	} else {
 		id = binary.BigEndian.Uint16(data)
 	}
+	//log.Debugf("marshal %v - %v", id, data)
 	return &base.Any{Id: id, Value: data[2:]}, nil
 }
 
@@ -64,5 +65,6 @@ func (this *MessageProcessor) Marshal(msg interface{}) ([][]byte, error) {
 	} else {
 		binary.BigEndian.PutUint16(id, any.Id)
 	}
+	//log.Debugf("marshal %v - %v", any.Id, id)
 	return [][]byte{id, any.Value}, nil
 }

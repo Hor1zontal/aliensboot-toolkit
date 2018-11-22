@@ -17,5 +17,5 @@ import (
 
 //
 func handleLeaveRoom(request *room.LeaveRoom, response *room.LeaveRoomRet, agent network.Agent) {
-	core.Manager.AcceptRoomMessage(request.GetRoomID(), request, response, agent)
+	manager.Manager.AcceptRoomMessage(request.GetRoomID(), request, response, agent)
 }

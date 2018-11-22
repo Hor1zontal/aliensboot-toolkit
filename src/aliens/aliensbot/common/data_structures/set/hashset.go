@@ -34,7 +34,7 @@ func (set *HashSet) Contains(e interface{}) bool {
 }
 
 func (set *HashSet) Range(callback func(element interface{})) {
-	for _, element := range set.m {
+	for element, _ := range set.m {
 		callback(element)
 	}
 }

@@ -42,6 +42,13 @@ func SendNodeMessage(serviceName string, serviceID string, message *protocol.Req
 	return SendNode(serviceName, serviceID, request)
 }
 
+//异步发送信息
+func SendMessage(serviceName string, message *protocol.Request, hashKey string) error {
+	data, _ := message.Marshal()
+	request := &base.Any{Value: data}
+	return Send(serviceName, request, hashKey)
+}
+
 func Broadcast(serviceName string, message *protocol.Request) {
 	service := allocService(serviceName)
 	data, _ := message.Marshal()

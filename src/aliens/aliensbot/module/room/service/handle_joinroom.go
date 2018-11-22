@@ -17,5 +17,5 @@ import (
 
 //
 func handleJoinRoom(request *room.JoinRoom, response *room.JoinRoomRet, agent network.Agent) {
-	core.Manager.AcceptRoomMessage(request.GetRoomID(), request, response, agent)
+	manager.Manager.AcceptRoomMessage(request.GetRoomID(), request, response, agent)
 }

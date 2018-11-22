@@ -39,7 +39,7 @@ type serviceCategory struct {
 func (this *serviceCategory) setLbs(lbsStr string) {
 	//更新负载均衡策略
 	this.lbs = lbs.GetLBS(lbsStr)
-	log.Debug("update lbs strategy %v - %v", this.category, lbsStr)
+	log.Debugf("update lbs strategy %v - %v", this.category, lbsStr)
 }
 
 //分配一个可用服务

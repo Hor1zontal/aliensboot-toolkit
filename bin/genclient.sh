@@ -1,0 +1,1 @@
+python protoToJs.py ../src/aliens/testserver/protocol/  /Users/hejialin/git/minigame/miniGame/assets/fireScene/scripts/basic/alienssdk/protocol.js
