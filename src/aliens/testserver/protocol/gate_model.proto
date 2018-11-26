@@ -8,4 +8,6 @@ enum KickType {
     ServerClose = 3;  //服务器关闭
     ServerStop = 4;   //停服
     ServerMaintain = 5; //服务器维护
+
+    KickOut = 20; //房主T人
 }

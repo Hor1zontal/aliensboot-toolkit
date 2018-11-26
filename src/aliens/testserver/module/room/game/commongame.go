@@ -62,3 +62,7 @@ func (game *CommonGame) AcceptPlayerData(playerID int64, data string) {
 	}
 	game.BroadcastOtherPlayer(playerID, push)
 }
+
+func (game *CommonGame) AcceptPlayerMessage(playerID int64, request interface{}, response interface{}) {
+
+}

@@ -50,7 +50,7 @@ func (this *manager) TryMatch() {
 
 			rpc.Room.RoomCreate("", &protocol.RoomCreate{
 				AppID:   appID,
-				Players: results,
+				//Players: results,
 			})
 		}
 	}

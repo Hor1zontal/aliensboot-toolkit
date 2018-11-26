@@ -14,6 +14,16 @@ type passportRPCHandler struct {
 }
 
 
+func (this *passportRPCHandler) UserRegister(node string, request *protocol.UserRegister) *protocol.UserRegisterRet {
+	message := &protocol.Request{
+		Passport:&protocol.Request_UserRegister{
+			UserRegister:request,
+		},
+	}
+	messageRet := this.Request(node, message)
+	return messageRet.GetUserRegisterRet()
+}
+
 func (this *passportRPCHandler) UserLogin(node string, request *protocol.UserLogin) *protocol.UserLoginRet {
 	message := &protocol.Request{
 		Passport:&protocol.Request_UserLogin{
@@ -32,16 +42,6 @@ func (this *passportRPCHandler) TokenLogin(node string, request *protocol.TokenL
 	}
 	messageRet := this.Request(node, message)
 	return messageRet.GetTokenLoginRet()
-}
-
-func (this *passportRPCHandler) UserRegister(node string, request *protocol.UserRegister) *protocol.UserRegisterRet {
-	message := &protocol.Request{
-		Passport:&protocol.Request_UserRegister{
-			UserRegister:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetUserRegisterRet()
 }
 
 

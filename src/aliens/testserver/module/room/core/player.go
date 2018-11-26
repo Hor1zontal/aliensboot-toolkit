@@ -10,8 +10,10 @@
 package core
 
 import (
+	"aliens/testserver/constant"
 	"aliens/testserver/dispatch/rpc"
 	"aliens/testserver/protocol"
+	"github.com/gogo/protobuf/proto"
 )
 
 type Player struct {
@@ -32,8 +34,24 @@ func (player *Player) SendMsg(data []byte) {
 	rpc.Gate.PushMessage(player.gateID, pushMessage)
 }
 
+func (player *Player) SendProtoMsg(message proto.Message) {
+	sendData, _ := proto.Marshal(message)
+	player.SendMsg(sendData)
+}
+
+func (player *Player) kick(kickType protocol.KickType) {
+	rpc.Gate.KickOut("", &protocol.KickOut{
+		AuthID:player.GetPlayerid(),
+		KickType:kickType,
+	})
+}
+
 func (player *Player) Ready() {
 	player.ready = true
+}
+
+func (player *Player) IsAnchor() bool {
+	return player.GroupId == constant.RoleAnchor
 }
 
 func (player *Player) IsReady() bool {

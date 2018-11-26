@@ -10,7 +10,10 @@
 package core
 
 import (
+	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/exception"
+	"aliens/aliensbot/log"
+	"aliens/testserver/constant"
 	"aliens/testserver/module/room/config"
 	"aliens/testserver/module/room/game"
 	"aliens/testserver/protocol"
@@ -18,6 +21,16 @@ import (
 )
 
 type Seat int32
+
+const (
+	RoomStateReady int32 = 0
+	RoomState int32 = 1
+	RoomStateOver  int32 = 1
+	RoomStateRoundOver int32 = 1
+
+	PlayerStateJoin int32 = 0
+	PlayerStatekick int32 = 1
+)
 
 type Room struct {
 
@@ -29,45 +42,113 @@ type Room struct {
 
 	game game.Game //房间内进行的游戏对象
 
+	state int32 //0-准备中，1-游戏中，2-游戏房间已结束，3-回合结束
+
+	viewer map[int64]*Player //观众
+
 }
 
 func (room *Room) GetID() string {
 	return room.id
 }
 
+
+
+func (room *Room) AcceptJoinGame(author int64, acceptID int64) {
+	player := room.viewer[acceptID]
+	if player == nil {
+		exception.GameException(protocol.Code_playerNotFound)
+	}
+
+	//成为嘉宾
+	player.GroupId = constant.RoleGuest
+
+	//通知关注加入游戏
+	push := &protocol.Response{Room: &protocol.Response_PlayerJoinRet{PlayerJoinRet: &protocol.PlayerJoinRet{
+		RoomID:room.GetID(),
+		Player:player.Player,
+	}}}
+	player.SendProtoMsg(push)
+
+}
+
+func (room *Room) JoinGame(playerID int64) {
+	player := room.viewer[playerID]
+	if player == nil || player.GroupId != constant.RoleGuest{
+		exception.GameException(protocol.Code_playerNotFound)
+	}
+
+	room.AddPlayerToGame(player)
+	delete(room.viewer, playerID)
+
+	//通知主播加入游戏
+	push := &protocol.Response{Room: &protocol.Response_PreJoinGameReq{PreJoinGameReq: &protocol.PreJoinGameReq{
+		Player:player.Player,
+	}}}
+	room.SendToAnchor(push)
+}
+
+func (room *Room) GetViewer(playerID int64) *Player {
+	return room.viewer[playerID]
+}
+
+func (room *Room) RequestJoinGame(playerID int64) {
+	player := room.viewer[playerID]
+
+	log.Debugf("request join game %v - %v : %v", playerID, player, room.GetAllPlayerData())
+	if player == nil {
+		exception.GameException(protocol.Code_playerNotFound)
+	}
+	push := &protocol.Response{Room: &protocol.Response_ContinueJoinGameReq{ContinueJoinGameReq: &protocol.ContinueJoinGameReq{
+		PlayerID:playerID,
+	}}}
+	room.SendToAnchor(push)
+}
+
 //新增玩家
-func (room *Room) AddPlayer(player *protocol.Player) {
-	ok := room.Add(&Player{Player:player})
+func (room *Room) AddPlayer(playerID int64, groupID int32) *Player {
+	player := &protocol.Player{
+		Playerid:playerID,
+		Nickname:"蛇皮" + util.Int64ToString(playerID),
+		GroupId:groupID,
+	}
+	result := &Player{Player:player}
+	if groupID == constant.RoleViewer {
+		room.viewer[playerID] = result
+	} else {
+		room.AddPlayerToGame(result)
+	}
+	return result
+}
+
+func (room *Room) AddPlayerToGame(player *Player) {
+	ok := room.Add(player)
 	if !ok {
 		exception.GameException(protocol.Code_roomMaxPlayer)
 	}
-	if room.IsFull() {
-		//通知所有玩家初始化成功
-		push := &protocol.Response{Room: &protocol.Response_PlayerJoinRet{PlayerJoinRet: &protocol.PlayerJoinRet{
-			RoomID:room.GetID(),
-			Player:player,
-		}}}
-		room.BroadcastOtherPlayer(player.GetPlayerid(), push)
-	}
+
+
+	//room.BroadcastOtherPlayer(-1, push)
 }
 
 //一次性添加房间人员
-func (room *Room) InitPlayers(players []*protocol.Player) {
-	if players == nil {
-		return
-	}
-	//初始化玩家
-	for _, player := range players {
-		room.AddPlayer(player)
-	}
-}
+//func (room *Room) InitPlayers(players []*protocol.Player) {
+//	if players == nil {
+//		return
+//	}
+//	//初始化玩家
+//	for _, player := range players {
+//		room.AddPlayer(player)
+//	}
+//}
 
 //关闭房间
-func (room *Room) Close() {
+func (room *Room) Close(callback func(playerID int64)) {
+	room.Foreach(func(player *Player) {
+		player.kick(protocol.KickType_KickOut)
+		callback(player.GetPlayerid())
+	})
 	room.Clean()
-	//for _, player := range players {
-	//	delete(this.players, player.GetPlayerid())
-	//}
 	if room.game != nil {
 		room.game.Stop()
 	}
@@ -130,6 +211,16 @@ func (room *Room) EnsureGame() game.Game {
 	return room.game
 }
 
+
+//T人
+func (room *Room) kickPlayer(playerID int64) *Player {
+	player := room.Delete(playerID)
+	if player != nil {
+		player.kick(protocol.KickType_KickOut)
+	}
+	return player
+}
+
 //广播其他玩家
 func (room *Room) BroadcastOtherPlayer(playerID int64, message proto.Message) {
 	sendData, _ := proto.Marshal(message)
@@ -140,7 +231,29 @@ func (room *Room) BroadcastOtherPlayer(playerID int64, message proto.Message) {
 	})
 }
 
+//广播给所有观众
+func (room *Room) BroadcastViewer(message proto.Message) {
+	sendData, _ := proto.Marshal(message)
+	for _, player := range room.viewer {
+		player.SendMsg(sendData)
+	}
+}
+
+func (room *Room) SendToAnchor(message proto.Message) {
+	sendData, _ := proto.Marshal(message)
+	room.Foreach(func(player *Player) {
+		if player.GetGroupId() == constant.RoleAnchor {
+			player.SendMsg(sendData)
+		}
+	})
+}
+
 //接收玩家数据，同步给其他玩家
 func (room *Room) AcceptPlayerData(playerID int64, data string) {
 	room.game.AcceptPlayerData(playerID, data)
+}
+
+//接收玩家消息
+func (room *Room) AcceptPlayerMessage(playerID int64, request interface{}, response interface{}) {
+	room.game.AcceptPlayerMessage(playerID, request, response)
 }

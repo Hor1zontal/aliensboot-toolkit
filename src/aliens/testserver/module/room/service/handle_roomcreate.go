@@ -8,14 +8,10 @@ import (
 )
 
 
-
-
-//push
-func handleRoomCreate(authID int64, gateID string, request *protocol.RoomCreate) {
-	room := core.RoomManager.AllocRoom(request.GetAppID(), request.GetPlayers())
-	//通知所有玩家房间创建成功
-	push := &protocol.Response{Room: &protocol.Response_RoomCreatedRet{RoomCreatedRet: &protocol.RoomCreatedRet{
-		Players: room.GetAllPlayerData(),
-	}}}
-	room.BroadcastOtherPlayer(-1, push)
+//
+func handleRoomCreate(authID int64, gateID string, request *protocol.RoomCreate, response *protocol.RoomCreateRet) {
+	room := core.RoomManager.CreateRoom(request.GetAppID(), authID, request.GetRoomID(), request.GetForce())
+	response.RoomID = room.GetID()
+	response.Players = room.GetAllPlayerData()
 }
+

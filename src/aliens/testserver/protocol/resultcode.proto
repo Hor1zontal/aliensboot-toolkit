@@ -17,9 +17,11 @@ enum Code {
 
     roomNotFound = 60; //房间未找到
     roomMaxPlayer = 61; //房间人数已满
+    roomAlreadyExist = 62; //房间已经存在
 
     gameNotFound = 101; //游戏未找到
     gameAlreadyStart = 103; //游戏已经开始、无效的操作
+    gameInvalidMsgFormat = 104; //无效的游戏消息格式
 
     InvalidService = 1000; //服务不可用
 

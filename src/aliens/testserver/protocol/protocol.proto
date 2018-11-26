@@ -46,14 +46,25 @@ message Request {
         showUser showUser = 100;
         getRoomInfo getRoomInfo = 101;
         joinRoom joinRoom = 102;
+        roomCreate roomCreate = 103;
+        getBigoData getBigoData = 104;
+        onPlayerStateChange onPlayerStateChange = 105;
+        onGameStateChange onGameStateChange = 106;
 
         //push
-        roomCreate roomCreate = 110;
         //gameInit gameInit = 120;
         gameReady gameReady = 121;
         gameData gameData = 122;
         frameData frameData = 123;
         uploadGameResult uploadGameResult = 124;
+        updateBigoData updateBigoData = 125;
+        continueJoinGame continueJoinGame = 127;
+        preJoinGame preJoinGame = 128;
+
+        requestJoinGame requestJoinGame = 129;
+        respondJoinGame respondJoinGame = 130;
+        broadcastViewer broadcastViewer = 131;
+
 
 
     }
@@ -98,10 +109,12 @@ message Response {
         showUserRet showUserRet = 100;
         getRoomInfoRet getRoomInfoRet = 101;
         joinRoomRet joinRoomRet = 102;
-
+        roomCreateRet roomCreateRet = 103;
+        getBigoDataRet getBigoDataRet = 104;
+        onPlayerStateChangeRet onPlayerStateChangeRet = 105;
+        onGameStateChangeRet onGameStateChangeRet = 106;
 
         //push
-        roomCreatedRet roomCreatedRet = 1100;
 
         gameStartRet gameStartRet = 1101;
         gameDataRet gameDataRet = 1102;
@@ -112,6 +125,12 @@ message Response {
         gameResetRet gameResetRet = 1107;
         playerLeaveRet playerLeaveRet = 1108;
         playerJoinRet playerJoinRet = 1109;
+        updateBigoDataRet updateBigoDataRet = 1110;
+        continueJoinGameReq continueJoinGameReq = 1111;
+        preJoinGameReq preJoinGameReq = 1112;
+        broadcastViewerRet broadcastViewerRet = 1113;
+        endGameRet endGameRet = 1114;
+
 
     }
 

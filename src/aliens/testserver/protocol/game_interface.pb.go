@@ -43,23 +43,40 @@
 		Response
 		ShowUser
 		ShowUserRet
+		RoomCreate
+		RoomCreateRet
 		JoinRoom
 		JoinRoomRet
+		RequestJoinGame
+		RespondJoinGame
+		ContinueJoinGame
+		OnGameStateChange
+		OnGameStateChangeRet
+		OnPlayerStateChange
+		OnPlayerStateChangeRet
+		PreJoinGame
+		BroadcastViewer
 		GetRoomInfo
 		GetRoomInfoRet
-		RoomCreate
 		GameData
+		UpdateBigoData
+		GetBigoData
+		GetBigoDataRet
 		GameReady
 		FrameData
 		UploadGameResult
 		UploadGameResultRet
 		OnceMore
 		OnceMoreRet
-		RoomCreatedRet
+		ContinueJoinGameReq
+		PreJoinGameReq
 		PlayerLeaveRet
+		EndGameRet
 		PlayerJoinRet
 		GameStartRet
+		BroadcastViewerRet
 		GameDataRet
+		UpdateBigoDataRet
 		FrameDataRet
 		LeaveRet
 		NetworkRet

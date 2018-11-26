@@ -26,19 +26,19 @@ func (this *gateRPCHandler) BindService(node string, request *protocol.BindServi
 
 
 
-func (this *gateRPCHandler) PushMessage(node string, request *protocol.PushMessage) error {
+func (this *gateRPCHandler) KickOut(node string, request *protocol.KickOut) error {
 	message := &protocol.Request{
-		Gate:&protocol.Request_PushMessage{
-			PushMessage:request,
+		Gate:&protocol.Request_KickOut{
+			KickOut:request,
 		},
 	}
 	return this.Send(node, message)
 }
 
-func (this *gateRPCHandler) KickOut(node string, request *protocol.KickOut) error {
+func (this *gateRPCHandler) PushMessage(node string, request *protocol.PushMessage) error {
 	message := &protocol.Request{
-		Gate:&protocol.Request_KickOut{
-			KickOut:request,
+		Gate:&protocol.Request_PushMessage{
+			PushMessage:request,
 		},
 	}
 	return this.Send(node, message)

@@ -31,7 +31,7 @@ message Record {
 
 message Player {
     int64 playerid = 1;
-    string groupId = 2;
+    int32 groupId = 2;
     int32 seat = 3; // 1v1为1-2，2v2为1-4
     string nickname = 4;
     string headurl = 5;

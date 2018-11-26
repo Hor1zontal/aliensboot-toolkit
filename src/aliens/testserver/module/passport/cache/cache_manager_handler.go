@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	FLAG_LOADUSER       string = "flag_user_load_" //标识，是否加载用户数据到缓存
-	USERNAME_KEY_PREFIX string = "unk_"
+	FLAG_LOADUSER       string = "test_flag:user_load" //标识，是否加载用户数据到缓存
+	USERNAME_KEY_PREFIX string = "test_username:"
 )
 
 var user = &protocol.User{}

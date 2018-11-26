@@ -14,16 +14,6 @@ type gameRPCHandler struct {
 }
 
 
-func (this *gameRPCHandler) LoginRole(node string, request *protocol.LoginRole) *protocol.LoginRoleRet {
-	message := &protocol.Request{
-		Game:&protocol.Request_LoginRole{
-			LoginRole:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetLoginRoleRet()
-}
-
 func (this *gameRPCHandler) ChangeNickname(node string, request *protocol.ChangeNickname) *protocol.ChangeNicknameRet {
 	message := &protocol.Request{
 		Game:&protocol.Request_ChangeNickname{
@@ -32,6 +22,16 @@ func (this *gameRPCHandler) ChangeNickname(node string, request *protocol.Change
 	}
 	messageRet := this.Request(node, message)
 	return messageRet.GetChangeNicknameRet()
+}
+
+func (this *gameRPCHandler) LoginRole(node string, request *protocol.LoginRole) *protocol.LoginRoleRet {
+	message := &protocol.Request{
+		Game:&protocol.Request_LoginRole{
+			LoginRole:request,
+		},
+	}
+	messageRet := this.Request(node, message)
+	return messageRet.GetLoginRoleRet()
 }
 
 

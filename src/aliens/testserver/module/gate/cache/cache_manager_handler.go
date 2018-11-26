@@ -12,7 +12,7 @@ package cache
 import "aliens/aliensbot/common/util"
 
 const (
-	userGatePrefix string = "gate_" //
+	userGatePrefix string = "test_gate:" //
 )
 
 func getAuthGateKey(authID int64) string {
