@@ -69,7 +69,7 @@ func (this *roomManager) ChangeGameState(authID int64, state int32) int32 {
 		//通知所有玩家游戏结束
 		room.game.Stop()
 	}
-	return 1
+	return 0
 }
 
 //获取玩家在哪个房间
@@ -108,12 +108,19 @@ func (this *roomManager) JoinRoom(appID string, roomID string, playerID int64) *
 
 
 //房主创建新房间
-func (this *roomManager) CreateRoom(appID string, playerID int64, roomID string, force bool) *Room {
+func (this *roomManager) CreateRoom(appID string, playerID int64, roomID string, force bool, maxSeat int32) *Room {
 	if roomID != "" && force {
 		this.RemoveRoom(roomID)
 	}
-	config := conf.GetRoomConfig(appID)
-	room := this.newRoom(config, roomID)
+	roomConfig := conf.GetRoomConfig(appID)
+
+	if maxSeat > 0 {
+		roomConfig = &config.RoomConfig{
+			AppID:roomConfig.AppID,
+			MaxSeat:int(maxSeat),
+		}
+	}
+	room := this.newRoom(roomConfig, roomID)
 	//room.InitPlayers(players)
 	this.rooms[room.GetID()] = room
 	room.AddPlayer(playerID, constant.RoleAnchor)

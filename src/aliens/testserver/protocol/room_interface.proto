@@ -20,6 +20,7 @@ message roomCreate {
     string appID = 1; //游戏id
     string roomID = 2; //指定房间id ""不指定
     bool force = 3; //是否强制创建 会清理之前的房间
+    int32 maxSeat = 4; //<=0 默认4个
     //repeated Player players = 2; //匹配成功的玩家
 }
 

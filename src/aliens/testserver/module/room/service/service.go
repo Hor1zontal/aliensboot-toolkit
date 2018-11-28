@@ -60,24 +60,10 @@ func handle(request *base.Any) (response *base.Any) {
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) bool {
 	
-	if request.GetRoomCreate() != nil {
-		messageRet := &protocol.RoomCreateRet{}
-		handleRoomCreate(authID, gateID, request.GetRoomCreate(), messageRet)
-		response.Room = &protocol.Response_RoomCreateRet{messageRet}
-		return true
-	}
-	
-	if request.GetJoinRoom() != nil {
-		messageRet := &protocol.JoinRoomRet{}
-		handleJoinRoom(authID, gateID, request.GetJoinRoom(), messageRet)
-		response.Room = &protocol.Response_JoinRoomRet{messageRet}
-		return true
-	}
-	
-	if request.GetGetBigoData() != nil {
-		messageRet := &protocol.GetBigoDataRet{}
-		handleGetBigoData(authID, gateID, request.GetGetBigoData(), messageRet)
-		response.Room = &protocol.Response_GetBigoDataRet{messageRet}
+	if request.GetShowUser() != nil {
+		messageRet := &protocol.ShowUserRet{}
+		handleShowUser(authID, gateID, request.GetShowUser(), messageRet)
+		response.Room = &protocol.Response_ShowUserRet{messageRet}
 		return true
 	}
 	
@@ -88,17 +74,17 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return true
 	}
 	
-	if request.GetShowUser() != nil {
-		messageRet := &protocol.ShowUserRet{}
-		handleShowUser(authID, gateID, request.GetShowUser(), messageRet)
-		response.Room = &protocol.Response_ShowUserRet{messageRet}
-		return true
-	}
-	
 	if request.GetOnGameStateChange() != nil {
 		messageRet := &protocol.OnGameStateChangeRet{}
 		handleOnGameStateChange(authID, gateID, request.GetOnGameStateChange(), messageRet)
 		response.Room = &protocol.Response_OnGameStateChangeRet{messageRet}
+		return true
+	}
+	
+	if request.GetGetBigoData() != nil {
+		messageRet := &protocol.GetBigoDataRet{}
+		handleGetBigoData(authID, gateID, request.GetGetBigoData(), messageRet)
+		response.Room = &protocol.Response_GetBigoDataRet{messageRet}
 		return true
 	}
 	
@@ -109,9 +95,23 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return true
 	}
 	
+	if request.GetJoinRoom() != nil {
+		messageRet := &protocol.JoinRoomRet{}
+		handleJoinRoom(authID, gateID, request.GetJoinRoom(), messageRet)
+		response.Room = &protocol.Response_JoinRoomRet{messageRet}
+		return true
+	}
 	
-    if request.GetBroadcastViewer() != nil {
-    	handleBroadcastViewer(authID, gateID, request.GetBroadcastViewer())
+	if request.GetRoomCreate() != nil {
+		messageRet := &protocol.RoomCreateRet{}
+		handleRoomCreate(authID, gateID, request.GetRoomCreate(), messageRet)
+		response.Room = &protocol.Response_RoomCreateRet{messageRet}
+		return true
+	}
+	
+	
+    if request.GetUploadGameResult() != nil {
+    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
     	return false
     }
     
@@ -120,23 +120,13 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     	return false
     }
     
-    if request.GetRequestJoinGame() != nil {
-    	handleRequestJoinGame(authID, gateID, request.GetRequestJoinGame())
+    if request.GetBroadcastViewer() != nil {
+    	handleBroadcastViewer(authID, gateID, request.GetBroadcastViewer())
     	return false
     }
     
-    if request.GetGameData() != nil {
-    	handleGameData(authID, gateID, request.GetGameData())
-    	return false
-    }
-    
-    if request.GetFrameData() != nil {
-    	handleFrameData(authID, gateID, request.GetFrameData())
-    	return false
-    }
-    
-    if request.GetUploadGameResult() != nil {
-    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
+    if request.GetContinueJoinGame() != nil {
+    	handleContinueJoinGame(authID, gateID, request.GetContinueJoinGame())
     	return false
     }
     
@@ -145,18 +135,28 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     	return false
     }
     
+    if request.GetGameData() != nil {
+    	handleGameData(authID, gateID, request.GetGameData())
+    	return false
+    }
+    
+    if request.GetRequestJoinGame() != nil {
+    	handleRequestJoinGame(authID, gateID, request.GetRequestJoinGame())
+    	return false
+    }
+    
     if request.GetGameReady() != nil {
     	handleGameReady(authID, gateID, request.GetGameReady())
     	return false
     }
     
-    if request.GetUpdateBigoData() != nil {
-    	handleUpdateBigoData(authID, gateID, request.GetUpdateBigoData())
+    if request.GetFrameData() != nil {
+    	handleFrameData(authID, gateID, request.GetFrameData())
     	return false
     }
     
-    if request.GetContinueJoinGame() != nil {
-    	handleContinueJoinGame(authID, gateID, request.GetContinueJoinGame())
+    if request.GetUpdateBigoData() != nil {
+    	handleUpdateBigoData(authID, gateID, request.GetUpdateBigoData())
     	return false
     }
     
