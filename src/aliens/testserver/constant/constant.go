@@ -18,4 +18,8 @@ const (
 	RoleAnchor int32 = 1
 	RoleGuest int32 = 2
 	RoleViewer int32 = 3
+
+
+
+
 )

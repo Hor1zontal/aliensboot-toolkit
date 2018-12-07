@@ -23,6 +23,13 @@ enum Code {
     gameAlreadyStart = 103; //游戏已经开始、无效的操作
     gameInvalidMsgFormat = 104; //无效的游戏消息格式
 
+    //scene
+    entityNotFound = 200;
+    invalidEntityCall = 201; //无效的方法调用
+
     InvalidService = 1000; //服务不可用
+
+
+
 
 }

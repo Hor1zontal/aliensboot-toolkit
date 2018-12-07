@@ -3,7 +3,7 @@
 package service
 
 import (
-
+	"aliens/aliensbot/log"
 	"github.com/gogo/protobuf/proto"
     "aliens/aliensbot/chanrpc"
     "aliens/aliensbot/exception"
@@ -44,6 +44,7 @@ func handle(request *base.Any) (response *base.Any) {
 			}
 		}
 		if !isResponse {
+			log.Errorf("errCode : %v", responseProxy.Code)
             return
         }
 		data, _ := proto.Marshal(responseProxy)
@@ -59,6 +60,13 @@ func handle(request *base.Any) (response *base.Any) {
 }
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) bool {
+	
+	if request.GetGetRoleInfo() != nil {
+		messageRet := &protocol.GetRoleInfoRet{}
+		handleGetRoleInfo(authID, gateID, request.GetGetRoleInfo(), messageRet)
+		response.Game = &protocol.Response_GetRoleInfoRet{messageRet}
+		return true
+	}
 	
 	if request.GetLoginRole() != nil {
 		messageRet := &protocol.LoginRoleRet{}

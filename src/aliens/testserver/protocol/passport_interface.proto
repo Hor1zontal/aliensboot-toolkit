@@ -16,6 +16,7 @@ message userRegisterRet {
     int64 uid = 2;                 //用户id 注册成功返回此字段
     string token = 3;              //登录令牌 注册成功返回此字段
     string msg = 4;                //反馈消息 登录失败返回
+    int64 serverTime = 5;  //服务器时间
 }
 
 //用户名密码登录服务器
@@ -30,6 +31,7 @@ message userLoginRet {
     int64 uid = 2;             //用户id
     string token = 3;          //登录令牌
     string msg = 4;                //反馈消息 登录失败返回
+    int64 serverTime = 5;  //服务器时间
 }
 
 //渠道登录
@@ -45,6 +47,7 @@ message channelLogin {
 message channelLoginRet {
     int64 uid = 1; //登录成功后游戏的uid
     string token = 2; //登录成功后的token信息
+    int64 serverTime = 3;  //服务器时间
     //string gameServer = 3; //游戏服务器地址信息
 }
 
@@ -57,5 +60,6 @@ message tokenLogin {
 
 message tokenLoginRet {
     LoginResult result = 1;	//登录结果
+    int64 serverTime = 2;  //服务器时间
 }
 

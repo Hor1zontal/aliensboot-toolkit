@@ -1,0 +1,20 @@
+syntax = "proto3";
+package protocol;
+
+//矢量
+message Vector {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+//实体
+message Entity {
+    string id = 1;  //实体id uid,uuid
+    string typeName = 2; //实体类型
+    Vector position = 3; //实体位置
+    //Vector direction = 4; //实体的方向
+    float yaw = 6; //向量
+    bytes attr = 9; //实体属性
+    //google.protobuf.Timestamp nullableTimestamp = 5 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
+}

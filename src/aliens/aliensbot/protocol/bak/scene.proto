@@ -25,9 +25,9 @@ import "scene_model.proto";
 
 //调用实体方法
 message entity_call {
-    string callID = 1;
-    string method = 2;
-    bytes args = 3;  //内部编解码
+    string entityID = 1; //调用的实体对象
+    string method = 2; //调用的实体方法
+    bytes args = 3;  //内部 msgpack 编解码
 }
 
 //场景数据变更推送

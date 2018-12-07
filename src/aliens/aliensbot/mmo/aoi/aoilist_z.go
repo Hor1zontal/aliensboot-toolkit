@@ -1,16 +1,18 @@
 package aoi
 
+import "aliens/aliensbot/mmo/unit"
+
 type yAOIList struct {
-	aoidist float32
-	head    *xzaoi
-	tail    *xzaoi
+	aoidist unit.Coord
+	head    *xzAOI
+	tail    *xzAOI
 }
 
-func newYAOIList(aoidist float32) *yAOIList {
+func newYAOIList(aoidist unit.Coord) *yAOIList {
 	return &yAOIList{aoidist: aoidist}
 }
 
-func (sl *yAOIList) Insert(aoi *xzaoi) {
+func (sl *yAOIList) Insert(aoi *xzAOI) {
 	insertCoord := aoi.aoi.y
 	if sl.head != nil {
 		p := sl.head
@@ -18,12 +20,12 @@ func (sl *yAOIList) Insert(aoi *xzaoi) {
 			p = p.yNext
 		}
 		// now, p == nil or p.coord >= insertCoord
-		if p == nil { // if p == nil, insert xzaoi at the end of list
+		if p == nil { // if p == nil, insert xzAOI at the end of list
 			tail := sl.tail
 			tail.yNext = aoi
 			aoi.yPrev = tail
 			sl.tail = aoi
-		} else { // otherwise, p >= xzaoi, insert xzaoi before p
+		} else { // otherwise, p >= xzAOI, insert xzAOI before p
 			prev := p.yPrev
 			aoi.yNext = p
 			p.yPrev = aoi
@@ -31,7 +33,7 @@ func (sl *yAOIList) Insert(aoi *xzaoi) {
 
 			if prev != nil {
 				prev.yNext = aoi
-			} else { // p is the head, so xzaoi should be the new head
+			} else { // p is the head, so xzAOI should be the new head
 				sl.head = aoi
 			}
 		}
@@ -41,7 +43,7 @@ func (sl *yAOIList) Insert(aoi *xzaoi) {
 	}
 }
 
-func (sl *yAOIList) Remove(aoi *xzaoi) {
+func (sl *yAOIList) Remove(aoi *xzAOI) {
 	prev := aoi.yPrev
 	next := aoi.yNext
 	if prev != nil {
@@ -58,7 +60,7 @@ func (sl *yAOIList) Remove(aoi *xzaoi) {
 	}
 }
 
-func (sl *yAOIList) Move(aoi *xzaoi, oldCoord float32) {
+func (sl *yAOIList) Move(aoi *xzAOI, oldCoord unit.Coord) {
 	coord := aoi.aoi.y
 	if coord > oldCoord {
 		// moving to next ...
@@ -68,11 +70,11 @@ func (sl *yAOIList) Move(aoi *xzaoi, oldCoord float32) {
 			return
 		}
 		prev := aoi.yPrev
-		//fmt.Println(1, prev, next, prev == nil || prev.yNext == xzaoi)
+		//fmt.Println(1, prev, next, prev == nil || prev.yNext == xzAOI)
 		if prev != nil {
-			prev.yNext = next // remove xzaoi from list
+			prev.yNext = next // remove xzAOI from list
 		} else {
-			sl.head = next // xzaoi is the head, trim it
+			sl.head = next // xzAOI is the head, trim it
 		}
 		next.yPrev = prev
 
@@ -106,9 +108,9 @@ func (sl *yAOIList) Move(aoi *xzaoi, oldCoord float32) {
 		if next != nil {
 			next.yPrev = prev
 		} else {
-			sl.tail = prev // xzaoi is the head, trim it
+			sl.tail = prev // xzAOI is the head, trim it
 		}
-		prev.yNext = next // remove xzaoi from list
+		prev.yNext = next // remove xzAOI from list
 
 		next, prev = prev, prev.yPrev
 		for prev != nil && prev.aoi.y > coord {
@@ -126,7 +128,7 @@ func (sl *yAOIList) Move(aoi *xzaoi, oldCoord float32) {
 	}
 }
 
-func (sl *yAOIList) Mark(aoi *xzaoi) {
+func (sl *yAOIList) Mark(aoi *xzAOI) {
 	prev := aoi.yPrev
 	coord := aoi.aoi.y
 
@@ -144,7 +146,7 @@ func (sl *yAOIList) Mark(aoi *xzaoi) {
 	}
 }
 
-func (sl *yAOIList) ClearMark(aoi *xzaoi) {
+func (sl *yAOIList) ClearMark(aoi *xzAOI) {
 	prev := aoi.yPrev
 	coord := aoi.aoi.y
 

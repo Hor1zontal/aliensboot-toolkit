@@ -9,6 +9,7 @@ import "passport_interface.proto";
 import "game_interface.proto";
 import "room_interface.proto";
 import "hall_interface.proto";
+import "scene_interface.proto";
 
 
 //TODO 支持接口权限声明 是否支持客户端调用， 是否支持内部调用
@@ -19,7 +20,7 @@ message Request {
 
     //----------------网关模块接口-----------
     oneof gate {
-        bind_service bindService = 5; //绑定服务-定向转发
+        bindService bindService = 5; //绑定服务-定向转发
 
         //push
         kick_out kickOut = 10; //T人
@@ -36,6 +37,7 @@ message Request {
 
     //-----------------游戏模块接口---------------
     oneof game {
+        getRoleInfo getRoleInfo = 50; //获取角色基础信息
         loginRole loginRole = 51;
         changeNickname changeNickname = 52;
     }
@@ -70,11 +72,15 @@ message Request {
     }
 
     oneof hall {
-
         //push
         quickMatch quickMatch = 200;
     }
 
+
+    oneof scene {
+        entityCall entityCall = 300; //调用服务端实体方法
+        LoginScene LoginScene = 301; //玩家登录到场景
+    }
 
 
 }
@@ -87,7 +93,7 @@ message Response {
 
     //-----------------网关模块响应接口---------------
     oneof gate {
-        bind_service_ret bindServiceRet = 5;
+        //bindServiceRet bindServiceRet = 5;
 
         //push
         KickType kick = 1005; //T人
@@ -101,6 +107,7 @@ message Response {
 
     //-----------------游戏模块接口---------------
     oneof game {
+        getRoleInfoRet getRoleInfoRet = 50; //获取角色基础信息
         loginRoleRet loginRoleRet = 51;
         changeNicknameRet changeNicknameRet = 52;
     }
@@ -135,10 +142,18 @@ message Response {
     }
 
     oneof hall {
-
         //push
         quickMatchRet quickMatchRet = 1200;
     }
+
+
+    //场景服务
+    oneof scene {
+        entityCall entityCall = 1300; //调用客户端实体方法
+        entityPush entityPush = 1301; //推送实体变更属性信息
+        LoginSceneRet LoginSceneRet = 1302; //登陆到场景数据返回
+    }
+
 
 
 }

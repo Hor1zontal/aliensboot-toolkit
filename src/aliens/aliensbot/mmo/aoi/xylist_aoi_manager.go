@@ -1,12 +1,6 @@
 package aoi
 
-type xzaoi struct {
-	aoi          *AOI
-	neighbors    map[*xzaoi]struct{}
-	xPrev, xNext *xzaoi
-	yPrev, yNext *xzaoi
-	markVal      int
-}
+import "aliens/aliensbot/mmo/unit"
 
 // XZListAOIManager is an implementation of AOICalculator using XZ lists
 type XZListAOIManager struct {
@@ -16,7 +10,7 @@ type XZListAOIManager struct {
 }
 
 // NewXZListAOIManager creates a new XZListAOIManager
-func NewXZListAOIManager(aoidist float32) Manager {
+func NewXZListAOIManager(aoidist unit.Coord) Manager {
 	return &XZListAOIManager{
 		//aoidist:    aoidist,
 		xSweepList: newXAOIList(aoidist),
@@ -25,12 +19,12 @@ func NewXZListAOIManager(aoidist float32) Manager {
 }
 
 // Enter is called when Entity enters Space
-func (aoiman *XZListAOIManager) Enter(aoi *AOI, x, y float32) {
+func (aoiman *XZListAOIManager) Enter(aoi *AOI, x, y unit.Coord) {
 	//aoi.viewRadius = aoiman.aoidist
 
-	xzaoi := &xzaoi{
+	xzaoi := &xzAOI{
 		aoi:       aoi,
-		neighbors: map[*xzaoi]struct{}{},
+		neighbors: map[*xzAOI]struct{}{},
 	}
 	aoi.x, aoi.y = x, y
 	aoi.implData = xzaoi
@@ -39,24 +33,24 @@ func (aoiman *XZListAOIManager) Enter(aoi *AOI, x, y float32) {
 	aoiman.adjust(xzaoi)
 }
 
-func (aoiman *XZListAOIManager) ChangeViewRadius(aoi *AOI, radius float32) {
+func (aoiman *XZListAOIManager) ChangeViewRadius(aoi *AOI, radius unit.Coord) {
 	//TODO 后续支持
 }
 
 // Leave is called when Entity leaves Space
 func (aoiman *XZListAOIManager) Leave(aoi *AOI) {
-	xzaoi := aoi.implData.(*xzaoi)
+	xzaoi := aoi.implData.(*xzAOI)
 	aoiman.xSweepList.Remove(xzaoi)
 	aoiman.zSweepList.Remove(xzaoi)
 	aoiman.adjust(xzaoi)
 }
 
 // Moved is called when Entity moves in Space
-func (aoiman *XZListAOIManager) Moved(aoi *AOI, x, y float32) {
+func (aoiman *XZListAOIManager) Moved(aoi *AOI, x, y unit.Coord) {
 	oldX := aoi.x
 	oldY := aoi.y
 	aoi.x, aoi.y = x, y
-	xzaoi := aoi.implData.(*xzaoi)
+	xzaoi := aoi.implData.(*xzAOI)
 	if oldX != x {
 		aoiman.xSweepList.Move(xzaoi, oldX)
 	}
@@ -67,7 +61,7 @@ func (aoiman *XZListAOIManager) Moved(aoi *AOI, x, y float32) {
 }
 
 // adjust is called by Entity to adjust neighbors
-func (aoiman *XZListAOIManager) adjust(aoi *xzaoi) {
+func (aoiman *XZListAOIManager) adjust(aoi *xzAOI) {
 	aoiman.xSweepList.Mark(aoi)
 	aoiman.zSweepList.Mark(aoi)
 	// AOI marked twice are neighbors

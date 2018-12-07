@@ -25,8 +25,8 @@ type Seat int32
 const (
 	RoomStateReady int32 = 0
 	RoomState int32 = 1
-	RoomStateOver  int32 = 1
-	RoomStateRoundOver int32 = 1
+	RoomStateOver  int32 = 2
+	RoomStateRoundOver int32 = 3
 
 	PlayerStateJoin int32 = 0
 	PlayerStatekick int32 = 1

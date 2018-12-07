@@ -1,8 +1,10 @@
 package aoi
 
+import "aliens/aliensbot/mmo/unit"
+
 //九宫格灯塔模型
 
-func NewTowerAOIManager(minX, maxX, minY, maxY float32, towerRange float32) Manager {
+func NewTowerAOIManager(minX, maxX, minY, maxY unit.Coord, towerRange unit.Coord) Manager {
 	this := &TowerAOIManager{minX: minX, maxX: maxX, minY: minY, maxY: maxY, towerRadius: towerRange}
 	this.init()
 	return this
@@ -24,14 +26,14 @@ func (this *TowerAOIManager) init() {
 }
 
 type TowerAOIManager struct {
-	minX, maxX, minY, maxY float32   //AOI 监控区域
-	towerRadius            float32   //灯塔监控范围
+	minX, maxX, minY, maxY unit.Coord   //AOI 监控区域
+	towerRadius            unit.Coord   //灯塔监控范围
 	towers                 [][]tower //灯塔二位数组
 	xTowerNum, yTowerNum   int       //灯塔的横向和纵向的数量
 }
 
 //update aoi when change view radius
-func (this *TowerAOIManager) ChangeViewRadius(aoi *AOI, newDist float32) {
+func (this *TowerAOIManager) ChangeViewRadius(aoi *AOI, newDist unit.Coord) {
 	diff := newDist - aoi.viewRadius
 	if diff == 0 {
 		return
@@ -51,7 +53,7 @@ func (this *TowerAOIManager) ChangeViewRadius(aoi *AOI, newDist float32) {
 }
 
 //add AOI node
-func (this *TowerAOIManager) Enter(aoi *AOI, x, y float32) {
+func (this *TowerAOIManager) Enter(aoi *AOI, x, y unit.Coord) {
 	aoi.x = x
 	aoi.y = y
 
@@ -70,7 +72,7 @@ func (this *TowerAOIManager) Leave(aoi *AOI) {
 	})
 }
 
-func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y float32) {
+func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y unit.Coord) {
 	oldX := aoiNode.x
 	oldY := aoiNode.y
 	aoiNode.x = x
@@ -107,7 +109,7 @@ func (this *TowerAOIManager) Moved(aoiNode *AOI, x, y float32) {
 	}
 }
 
-func (this *TowerAOIManager) transTowerXY(x, y float32) (int, int) {
+func (this *TowerAOIManager) transTowerXY(x, y unit.Coord) (int, int) {
 	xi := int((x - this.minX) / this.towerRadius)
 	yi := int((y - this.minY) / this.towerRadius)
 	return this.normalizeXi(xi), this.normalizeYi(yi)
@@ -131,18 +133,18 @@ func (this *TowerAOIManager) normalizeYi(yi int) int {
 	return yi
 }
 
-func (this *TowerAOIManager) getTower(x, y float32) *tower {
+func (this *TowerAOIManager) getTower(x, y unit.Coord) *tower {
 	xi, yi := this.transTowerXY(x, y)
 	return &this.towers[xi][yi]
 }
 
-func (this *TowerAOIManager) getWatchedTowers(x float32, y float32, aoiDistance float32) (int, int, int, int) {
+func (this *TowerAOIManager) getWatchedTowers(x unit.Coord, y unit.Coord, aoiDistance unit.Coord) (int, int, int, int) {
 	xMin, yMin := this.transTowerXY(x-aoiDistance, y-aoiDistance)
 	xMax, yMax := this.transTowerXY(x+aoiDistance, y+aoiDistance)
 	return xMin, xMax, yMin, yMax
 }
 
-func (this *TowerAOIManager) visitWatchedTowers(x float32, y float32, aoiDistance float32, callback func(*tower)) {
+func (this *TowerAOIManager) visitWatchedTowers(x unit.Coord, y unit.Coord, aoiDistance unit.Coord, callback func(*tower)) {
 	xMin, xMax, yMin, yMax := this.getWatchedTowers(x, y, aoiDistance)
 	for xi := xMin; xi <= xMax; xi++ {
 		for yi := yMin; yi <= yMax; yi++ {

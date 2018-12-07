@@ -10,23 +10,18 @@
 package rpc
 
 import (
-	"aliens/aliensbot/cluster/center/service"
+	"aliens/aliensbot/cluster/center"
 	"aliens/testserver/dispatch"
 	"aliens/testserver/protocol"
-	"errors"
 	"github.com/gogo/protobuf/proto"
 )
 
-func (this *gateRPCHandler) BindService1(authID int64, node string, service service.IService) error {
-	if service == nil {
-		return errors.New("service can not be nil")
-	}
-	service.GetName()
-	service.GetID()
-
+func (this *gateRPCHandler) BindService1(node string, authID int64, service string) error {
+	binds := make(map[string]string)
+	binds[service] = center.ClusterCenter.GetNodeID()
 	request := &protocol.BindService{
 		AuthID: authID,
-		//Binds:center.ClusterCenter.GetNodeID()
+		Binds:binds,
 	}
 	this.BindService(node, request)
 	return nil

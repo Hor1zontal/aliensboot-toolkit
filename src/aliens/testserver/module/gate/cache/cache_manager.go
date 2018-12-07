@@ -15,18 +15,18 @@ import (
 	"aliens/testserver/module/gate/conf"
 )
 
-var ClusterCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
+var GateCache = &cacheManager{redisClient: &redis.RedisCacheClient{}}
 
 type cacheManager struct {
 	redisClient *redis.RedisCacheClient
 }
 
 func Init() {
-	ClusterCache.Init(conf.Config.Cache)
+	GateCache.Init(conf.Config.Cache)
 }
 
 func Close() {
-	ClusterCache.Close()
+	GateCache.Close()
 }
 
 func (this *cacheManager) Init(config config.CacheConfig) {

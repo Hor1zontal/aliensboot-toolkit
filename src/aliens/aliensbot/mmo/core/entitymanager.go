@@ -13,31 +13,34 @@ import (
 	"aliens/aliensbot/common/data_structures/set"
 	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/log"
-	"aliens/aliensbot/protocol"
-	"github.com/xiaonanln/goworld/engine/gwlog"
+	"aliens/aliensbot/mmo/unit"
+	"errors"
+	"fmt"
 	"reflect"
-	"strings"
 )
 
 var EntityManager = newEntityManager()
 
 type _EntityManager struct {
-	entities       EntityMap
-	entitiesByType map[string]EntityMap
-	entitiesDesc   map[string]*EntityDesc
+
+	entities       EntityMap //所有实体 id-entity
+
+	entitiesByType map[EntityType]EntityMap //实体按类型分类 type[id-entity]
+
+	entitiesDesc   map[EntityType]*EntityDesc //实体元数据 type-entity_meta
 }
 
 func newEntityManager() *_EntityManager {
 	return &_EntityManager{
 		entities:       EntityMap{},
-		entitiesByType: map[string]EntityMap{},
-		entitiesDesc:   map[string]*EntityDesc{},
+		entitiesByType: map[EntityType]EntityMap{},
+		entitiesDesc:   map[EntityType]*EntityDesc{},
 	}
 }
 
 func (em *_EntityManager) put(entity *Entity) {
 	em.entities.Add(entity)
-	etype := entity.TypeName
+	etype := entity.GetType()
 	eid := entity.GetID()
 	if entities, ok := em.entitiesByType[etype]; ok {
 		entities.Add(entity)
@@ -49,13 +52,13 @@ func (em *_EntityManager) put(entity *Entity) {
 func (em *_EntityManager) del(e *Entity) {
 	eid := e.GetID()
 	em.entities.Del(eid)
-	if entities, ok := em.entitiesByType[e.TypeName]; ok {
+	if entities, ok := em.entitiesByType[e.GetType()]; ok {
 		entities.Del(eid)
 	}
 }
 
-func (em *_EntityManager) traverseByType(etype string, cb func(e *Entity)) {
-	entities := em.entitiesByType[etype]
+func (em *_EntityManager) traverseByType(eType EntityType, cb func(e *Entity)) {
+	entities := em.entitiesByType[eType]
 	for _, e := range entities {
 		cb(e)
 	}
@@ -66,42 +69,55 @@ func (em *_EntityManager) genEntityID() EntityID {
 	return EntityID(util.GenUUID())
 }
 
-func (em *_EntityManager) getEntityTypeName(entity IEntity) string {
-	entityType := reflect.TypeOf(entity)
-	return entityType.Name()
-}
-
 func (em *_EntityManager) GetEntity(id EntityID) *Entity {
 	return em.entities.Get(id)
 }
 
-func (em *_EntityManager) UNRegisterEntity(entity IEntity) {
-	typeName := em.getEntityTypeName(entity)
-	delete(em.entitiesDesc, typeName)
+//处理远程调用
+func (em *_EntityManager) HandleRemoteEntityCall(authID int64, id EntityID, method string, args[][]byte) (*Entity, error) {
+	entity := em.GetEntity(id)
+	if entity == nil {
+		return nil, nil
+	}
+	return entity, entity.onCallFromRemote(authID, method, args)
 }
 
+
+//处理本地调用
+func (em *_EntityManager) HandleLocalEntityCall(id EntityID, method string, args []interface{}) (*Entity, error) {
+	entity := em.GetEntity(id)
+	if entity == nil {
+		return nil, nil
+	}
+	return entity, entity.OnCallFromLocal(method, args)
+}
+
+//func (em *_EntityManager) UNRegisterEntity(entity IEntity) {
+//
+//	delete(em.entitiesDesc, typeName)
+//}
+
 // RegisterEntity registers custom entity type and define entity behaviors
-func (em *_EntityManager) RegisterEntity(entity IEntity, meta interface{}) *EntityDesc {
+func (em *_EntityManager) RegisterEntity(entity IEntity) *EntityDesc {
 	entityVal := reflect.ValueOf(entity)
 	entityType := entityVal.Type()
-	typeName := em.getEntityTypeName(entity)
+	if entityType.Kind() == reflect.Ptr {
+		entityType = entityType.Elem()
+	}
+	typeName := EntityType(entityType.Name())
 
 	if desc, ok := em.entitiesDesc[typeName]; ok {
 		log.Warnf("RegisterEntity: Entity type %s already registered", typeName)
 		return desc
 	}
 
-	if entityType.Kind() == reflect.Ptr {
-		entityType = entityType.Elem()
-	}
-
-	methodDescs := methodDescMap{}
-	// register the string of e
+	methodDesc := methodDescMap{}
 	entityTypeDesc := &EntityDesc{
 		name:         typeName,
 		useAOI:       false,
 		entityType:   entityType,
-		selfAttrs:    set.StringSet{},
+		methodDesc:   methodDesc,
+		clientAttrs:  set.StringSet{},
 		allAttrs:     set.StringSet{},
 		persistAttrs: set.StringSet{},
 	}
@@ -112,66 +128,48 @@ func (em *_EntityManager) RegisterEntity(entity IEntity, meta interface{}) *Enti
 
 	for i := 0; i < numMethods; i++ {
 		method := entityPtrType.Method(i)
-		methodDescs.visit(method)
+		methodDesc.visit(method)
 	}
 
-	log.Infof(">>> RegisterEntity %s => %s <<<", typeName, entityType.Name())
 	//// define entity Attrs
 	entity.DescribeEntityType(entityTypeDesc)
-
-	em.registerAttr(entityTypeDesc, meta)
+	log.Infof(">>> RegisterEntity %s => %s <<<", typeName, entityType.Name())
 	return entityTypeDesc
 }
 
-func (em *_EntityManager) registerAttr(desc *EntityDesc, meta interface{}) {
-	util.VisitTag(meta, AttrTagFeature, func(fieldName string, tagValue string) {
-		if strings.Contains(tagValue, AttrTagFeatureSelf) {
-			desc.selfAttrs.Add(fieldName)
-		} else if strings.Contains(tagValue, AttrTagFeatureAll) {
-			desc.allAttrs.Add(fieldName)
-		}
 
-		if strings.Contains(tagValue, AttrTagFeaturePersist) {
-			desc.persistAttrs.Add(fieldName)
-		}
-	})
-}
-
-//创建一个默认实体
-func (em *_EntityManager) CreateLocalEntity(typeName string, space *Space, pos *protocol.Vector) *Entity {
-	return em.createEntity(typeName, space, pos, "", nil)
-}
-
-//func (em *_EntityManager) NewPersistEntity(typeName string, space *Space, pos *protocol.Vector, entityID EntityID, attr Attr) *Entity {
-//
-//}
-
-func (em *_EntityManager) createEntity(typeName string, space *Space, pos *protocol.Vector, entityID EntityID, attr Attr) *Entity {
-	entityTypeDesc, ok := em.entitiesDesc[typeName]
+//从元数据中初始化一个实体
+func (em *_EntityManager) CreateEntity(entityType EntityType, space *Space, pos unit.Vector, entityID EntityID) (*Entity, error) {
+	entityDesc, ok := em.entitiesDesc[entityType]
 
 	if !ok {
-		gwlog.Panicf("unknown entity type: %s", typeName)
+		return nil, errors.New(fmt.Sprintf("unknown entity type: %s", entityType))
 	}
 
+	//没有实体id自定义生成
 	if entityID == "" {
 		entityID = em.genEntityID()
 	}
 
-	var entity *Entity
-	var entityInstance reflect.Value
 
-	entityInstance = reflect.New(entityTypeDesc.entityType)
-	entity = reflect.Indirect(entityInstance).FieldByName("Entity").Addr().Interface().(*Entity)
-	entity.init(typeName, entityID, entityInstance, attr)
+	entityInstance := reflect.New(entityDesc.entityType)
+	entity := reflect.Indirect(entityInstance).FieldByName("Entity").Addr().Interface().(*Entity)
+	//entity := &entity1
+	entity.desc = entityDesc
+
+	entity.init(entityID, entityInstance)
 	em.put(entity)
 
 	log.Debugf("Entity %s created.", entity)
+
+	//entity.OnCreated()
+	entity.I.OnCreated()
 
 	if space != nil {
 		space.enter(entity, pos)
 	}
 
-	return entity
+	return entity, nil
 }
 
 //func (em *_EntityManager) onGateDisconnected(gateid uint16) {

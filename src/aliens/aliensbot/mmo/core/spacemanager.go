@@ -9,13 +9,10 @@
  *******************************************************************************/
 package core
 
-var (
-	spaceManager = newSpaceManager()
-)
 
-func GetSpace(id EntityID) *Space {
-	return spaceManager.spaces[id]
-}
+var (
+	SpaceManager = newSpaceManager()
+)
 
 type _SpaceManager struct {
 	spaces map[EntityID]*Space
@@ -27,25 +24,21 @@ func newSpaceManager() *_SpaceManager {
 	}
 }
 
-// CreateSpaceLocally creates a space in the local game server
-func CreateSpaceLocally(typeName string) *Space {
-	e := EntityManager.createEntity(typeName, nil, nil, "", nil)
-	return e.AsSpace()
+func (spmgr *_SpaceManager) GetSpace(id EntityID) *Space {
+	return spmgr.spaces[id]
 }
 
+
+
 func (spmgr *_SpaceManager) putSpace(space *Space) {
-	spmgr.spaces[space.id] = space
+	spmgr.spaces[space.GetID()] = space
 }
 
 func (spmgr *_SpaceManager) delSpace(id EntityID) {
 	delete(spmgr.spaces, id)
 }
 
-func (spmgr *_SpaceManager) getSpace(id EntityID) *Space {
-	return spmgr.spaces[id]
-}
-
 //release exist space
-func (spmgr *_SpaceManager) ReleaseSpace(id EntityID) {
+func (spmgr *_SpaceManager) releaseSpace(id EntityID) {
 	delete(spmgr.spaces, id)
 }

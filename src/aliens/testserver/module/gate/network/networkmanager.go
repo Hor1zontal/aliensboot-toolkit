@@ -101,9 +101,10 @@ func (this *networkManager) AddNetwork(network *Network) {
 }
 
 func (this *networkManager) RemoveNetwork(network *Network) {
+	network.OnClose()
 	if network.IsAuth() {
 		delete(this.authNetworks, network.authID)
-		cache.ClusterCache.CleanAuthGateID(network.authID)
+		cache.GateCache.CleanAuthGateID(network.authID)
 	} else {
 		//this.timeWheel.RemoveTimer(network)
 		this.networks.Remove(network)
@@ -133,7 +134,7 @@ func (this *networkManager) auth(authID int64, network *Network) {
 	if ok {
 		oldNetwork.KickOut(protocol.KickType_OtherSession)
 	} else {
-		node := cache.ClusterCache.GetAuthGateID(authID)
+		node := cache.GateCache.GetAuthGateID(authID)
 		//用户在其他网关节点登录 需要发送远程T人
 		if node != "" && node != this.node {
 			kickMsg := &protocol.KickOut{
@@ -143,7 +144,7 @@ func (this *networkManager) auth(authID int64, network *Network) {
 			rpc.Gate.KickOut(node, kickMsg)
 		}
 	}
-	cache.ClusterCache.SetAuthGateID(authID, this.node)
+	cache.GateCache.SetAuthGateID(authID, this.node)
 	this.authNetworks[authID] = network
 	//cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())
 }

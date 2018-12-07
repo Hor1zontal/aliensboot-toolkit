@@ -1,34 +1,11 @@
 syntax = "proto3";
 package protocol;
 
-//import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-//import "google/protobuf/timestamp.proto";
-
-
-//import "gogo.proto";
-
 message Vector {
     float x = 1;
     float y = 2;
     float z = 3;
 }
-
-
-//id    EntityID   //id
-//
-//typeName string  //类型名
-//
-//position  *protocol.Vector   //entity position
-//
-//direction *protocol.Vector   //entity direction
-//
-//yaw Yaw
-//
-//layer int8	//玩家当前的层级
-//
-//topSpeed float32 //实体XY轴最大速度
-//
-//topSpeedZ float32 //实体Z轴最大的速度
 
 message Entity {
     string id = 1;  //实体id uid,uuid

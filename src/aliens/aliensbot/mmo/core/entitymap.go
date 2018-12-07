@@ -69,31 +69,3 @@ func (es EntitySet) String() string {
 	b.WriteString("}")
 	return b.String()
 }
-
-//// EntityIDSet is the data structure for a collection of entity IDs
-//type EntityIDSet map[int32]struct{}
-//
-//// Add adds an entity id to EntityIDSet
-//func (es EntityIDSet) Add(id int32) {
-//	es[id] = struct{}{}
-//}
-//
-//// Del removes an entity id from EntityIDSet
-//func (es EntityIDSet) Del(id int32) {
-//	delete(es, id)
-//}
-//
-//// Contains checks if entity id is in EntityIDSet
-//func (es EntityIDSet) Contains(id int32) bool {
-//	_, ok := es[id]
-//	return ok
-//}
-//
-//// ToList convert EntityIDSet to a slice of entity IDs
-//func (es EntityIDSet) ToList() []int32 {
-//	list := make([]int32, 0, len(es))
-//	for eid := range es {
-//		list = append(list, eid)
-//	}
-//	return list
-//}

@@ -1,1 +1,1 @@
-python protoToJs.py ../src/aliens/testserver/protocol/  /Users/hejialin/git/T01/client/assets/common/script/basic/alienssdk/protocol.js
+python protoToJs.py ../src/aliens/testserver/protocol/  /Users/hejialin/git/aliensbot_client_cocos/assets/Script/aliensbot/protocol/protocol.js

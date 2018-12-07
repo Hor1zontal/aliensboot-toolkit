@@ -11,28 +11,25 @@ package core
 
 import (
 	"aliens/aliensbot/common/data_structures/set"
+	"aliens/aliensbot/log"
+	"aliens/aliensbot/mmo/unit"
 	"reflect"
 	"strings"
 )
 
-var _VALID_ATTR_DEFS = set.StringSet{} // all valid attribute defs
-
 func init() {
-	_VALID_ATTR_DEFS.Add(AttrTagFeatureSelf) //
-	_VALID_ATTR_DEFS.Add(AttrTagFeatureAll)
-	_VALID_ATTR_DEFS.Add(AttrTagFeaturePersist)
 }
 
 const (
 	rfServer      = 1 << iota
 	rfOwnClient   = 1 << iota
 	rfOtherClient = 1 << iota
+)
 
-	AttrTagFeature = "feature"
-
-	AttrTagFeatureSelf    = "self"
-	AttrTagFeatureAll     = "all"
-	AttrTagFeaturePersist = "persist"
+const (
+	AttrClient    = 1 << iota //entity本身访问的属性
+	AttrAllClient = 1 << iota //所有entity能够访问的属性
+	AttrPersist   = 1 << iota //是否需要持久化
 )
 
 type methodDesc struct {
@@ -48,10 +45,10 @@ func (rdm methodDescMap) visit(method reflect.Method) {
 	methodName := method.Name
 	var flag uint
 	var rpcName string
-	if strings.HasSuffix(methodName, "_Client") {
+	if strings.HasSuffix(methodName, "_Self") {
 		flag |= rfServer + rfOwnClient
 		rpcName = methodName[:len(methodName)-7]
-	} else if strings.HasSuffix(methodName, "_AllClients") {
+	} else if strings.HasSuffix(methodName, "_All") {
 		flag |= rfServer + rfOwnClient + rfOtherClient
 		rpcName = methodName[:len(methodName)-11]
 	} else {
@@ -70,18 +67,18 @@ func (rdm methodDescMap) visit(method reflect.Method) {
 
 // EntityTypeDesc is the entity type description for registering entity types
 type EntityDesc struct {
-	name string //entity type name
 
-	client bool //is client exist this entity
+	name EntityType
 
 	useAOI      bool
-	aoiDistance float32
+
+	aoiDistance unit.Coord
 
 	entityType reflect.Type
 
-	methodDescs methodDescMap
+	methodDesc methodDescMap
 
-	selfAttrs set.StringSet
+	clientAttrs set.StringSet
 
 	allAttrs set.StringSet
 
@@ -91,3 +88,26 @@ type EntityDesc struct {
 func (desc *EntityDesc) IsPersistent() bool {
 	return !desc.persistAttrs.IsEmpty()
 }
+
+func (desc *EntityDesc) DefineAttr(attr string, flag uint) {
+	if flag &AttrClient != 0 {
+		desc.clientAttrs.Add(attr)
+	}
+	if flag &AttrAllClient != 0 {
+		desc.allAttrs.Add(attr)
+	}
+	if flag & AttrPersist != 0 {
+		desc.persistAttrs.Add(attr)
+	}
+}
+
+func (desc *EntityDesc) SetUseAOI(useAOI bool, aoiDistance unit.Coord) {
+	if aoiDistance < 0 {
+		log.Panic("aoi distance < 0")
+	}
+
+	desc.useAOI = useAOI
+	desc.aoiDistance = aoiDistance
+}
+
+

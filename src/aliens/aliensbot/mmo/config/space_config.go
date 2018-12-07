@@ -9,13 +9,15 @@
  *******************************************************************************/
 package config
 
+import "aliens/aliensbot/mmo/unit"
+
 type SpaceConfig struct {
 	Type       string  //类型名 用来分类
-	MinX       float32 //x轴左边距
-	MaxX       float32
-	MinY       float32
-	MaxY       float32
-	TowerRange float32
+	MinX       unit.Coord //x轴左边距
+	MaxX       unit.Coord
+	MinY       unit.Coord
+	MaxY       unit.Coord
+	TowerRange unit.Coord
 }
 
 type EntityConfig struct {

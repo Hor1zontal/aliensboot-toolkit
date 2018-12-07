@@ -23,6 +23,8 @@ const (
 	TimerDispatcherLen = 10000
 	AsynCallLen        = 10000
 	ChanRPCLen         = 10000
+
+	TickInterval = time.Millisecond * 5 // server tick interval => affect timer resolution
 )
 
 func NewSkeleton() *Skeleton {
@@ -31,6 +33,7 @@ func NewSkeleton() *Skeleton {
 		TimerDispatcherLen: TimerDispatcherLen,
 		AsynCallLen:        AsynCallLen,
 		ChanRPCServer:      chanrpc.NewServer(ChanRPCLen),
+		ticker: time.Tick(TickInterval),
 	}
 	skeleton.Init()
 	return skeleton
@@ -46,6 +49,9 @@ type Skeleton struct {
 	client             *chanrpc.Client
 	server             *chanrpc.Server
 	commandServer      *chanrpc.Server
+
+	ticker             <-chan time.Time
+	tick               func()
 }
 
 func (s *Skeleton) Init() {
@@ -70,12 +76,17 @@ func (s *Skeleton) Init() {
 	s.commandServer = chanrpc.NewServer(0)
 }
 
+func (s *Skeleton) SetTick(tick func()) {
+	s.tick = tick
+}
+
 func (s *Skeleton) Run(closeSig chan bool) {
 	for {
 		select {
 		case <-closeSig:
 			s.commandServer.Close()
 			s.server.Close()
+
 			for !s.g.Idle() || !s.client.Idle() {
 				s.g.Close()
 				s.client.Close()
@@ -91,6 +102,10 @@ func (s *Skeleton) Run(closeSig chan bool) {
 			s.g.Cb(cb)
 		case t := <-s.dispatcher.ChanTimer:
 			t.Cb()
+		case <-s.ticker:
+			if s.tick != nil {
+				s.tick()
+			}
 		}
 	}
 }

@@ -49,13 +49,13 @@ func handleRequest(request *protocol.Request) {
 	}
 	
 	
-     if request.GetPushMessage() != nil {
-        handlePushMessage(request.GetPushMessage())
+     if request.GetKickOut() != nil {
+        handleKickOut(request.GetKickOut())
       	return
      }
     
-     if request.GetKickOut() != nil {
-        handleKickOut(request.GetKickOut())
+     if request.GetPushMessage() != nil {
+        handlePushMessage(request.GetPushMessage())
       	return
      }
     

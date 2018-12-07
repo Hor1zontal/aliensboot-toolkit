@@ -8,7 +8,7 @@ GOGOPATH=${GOPATH}/src; protoc --proto_path=${GOPATH}:${GOGOPATH}:./ --gogofast_
 #生成服务代码
 cd $basepath/..
 
-modules=(game gate passport hall room)
+modules=(game gate passport hall room scene)
 
 for i in "${!modules[@]}"; do
 	aliensbot module gen ${modules[$i]}

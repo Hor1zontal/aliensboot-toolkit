@@ -15,6 +15,8 @@ import (
 	"aliens/aliensbot/gate"
 	"aliens/aliensbot/log"
 	"aliens/aliensbot/protocol/base"
+	"aliens/testserver/constant"
+	"aliens/testserver/dispatch"
 	"aliens/testserver/module/gate/conf"
 	"aliens/testserver/module/gate/route"
 	"aliens/testserver/protocol"
@@ -26,6 +28,7 @@ func NewNetwork(agent gate.Agent) *Network {
 	network := &Network{agent: agent, createTime: time.Now(), heartbeatTime: time.Now()}
 	network.hashKey = agent.RemoteAddr().String()
 	network.bindRoutes = make(map[uint16]string)
+	network.bindServices = make(map[string]string)
 	return network
 }
 
@@ -42,6 +45,9 @@ type Network struct {
 	heartbeatTime time.Time //上次的心跳时间
 
 	bindRoutes map[uint16]string //绑定路由表 对应服务消息转发到指定节点上 比如场景服务器需要固定转发服务器
+
+	//绑定的服务 离线需要通知
+	bindServices map[string]string
 }
 
 //发送消息给客户端
@@ -59,6 +65,21 @@ func (this *Network) KickOut(kickType protocol.KickType) {
 	this.Push(&base.Any{Id: 1000, Value: data})
 	this.agent.Close()
 }
+
+
+func (this *Network) OnClose() {
+	if !this.IsAuth() {
+		return
+	}
+	offlineMsg := &base.Any{
+		Id:constant.MsgOffline,
+		AuthId:this.authID,
+	}
+	for service, node := range this.bindServices {
+		dispatch.RequestNode(service, node, offlineMsg)
+	}
+}
+
 
 //func (this *Network) requestCallback(request *base.Any, err error) {
 //	Manager.acceptResponse(this, request, err)
@@ -145,6 +166,7 @@ func (this *Network) BindService(binds map[string]string) {
 		}
 		this.bindRoutes[serviceSeq] = serviceID
 	}
+	this.bindServices = binds
 }
 
 func (this *Network) GetRemoteAddr() net.Addr {
@@ -175,3 +197,4 @@ func (this *Network) IsHeartbeatTimeout() bool {
 func (this *Network) HeartBeat() {
 	this.heartbeatTime = time.Now()
 }
+

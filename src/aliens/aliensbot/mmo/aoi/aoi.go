@@ -1,11 +1,22 @@
 package aoi
 
-type AOI struct {
-	x     float32
-	y     float32
-	tower *tower
+import "aliens/aliensbot/mmo/unit"
 
-	viewRadius float32 //视野范围
+type xzAOI struct {
+	aoi          *AOI
+	neighbors    map[*xzAOI]struct{}
+	xPrev, xNext *xzAOI
+	yPrev, yNext *xzAOI
+	markVal      int
+}
+
+
+type AOI struct {
+	x     unit.Coord
+	y     unit.Coord
+	viewRadius unit.Coord //视野范围
+
+	tower *tower
 
 	Callback AOICallback
 
@@ -13,11 +24,11 @@ type AOI struct {
 	//implData interface{}
 }
 
-func (this *AOI) GetViewRadius() float32 {
+func (this *AOI) GetViewRadius() unit.Coord {
 	return this.viewRadius
 }
 
-func NewAOI(data AOICallback, viewRadius float32) *AOI {
+func NewAOI(data AOICallback, viewRadius unit.Coord) *AOI {
 	return &AOI{
 		viewRadius: viewRadius,
 		Callback:   data,

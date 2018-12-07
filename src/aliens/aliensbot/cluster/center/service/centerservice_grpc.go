@@ -148,9 +148,9 @@ func (this *GRPCService) Request(request *base.Any) (*base.Any, error) {
 		return nil, errors.New("service is not initial")
 	}
 	//本地启动的服务直接调用，不需要经过grpc中转
-	//TODO 后续考虑直接调用本地的优化
+	////TODO 后续考虑直接调用本地的优化
 	//if this.IsLocal() {
-	//	return this.server.SyncRequest(request)
+	//	return this.server.Request().SyncRequest(request)
 	//}
 
 	//加入超时机制，防止卡死

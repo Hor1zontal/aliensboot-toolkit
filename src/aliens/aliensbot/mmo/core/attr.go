@@ -1,22 +1,75 @@
-/*******************************************************************************
- * Copyright (c) 2015, 2018 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
- * Date:
- *     2018/8/31
- * Contributors:
- *     aliens idea(xiamen) Corporation - initial API and implementation
- *     jialin.he <kylinh@gmail.com>
- *******************************************************************************/
 package core
 
-import "encoding/json"
+import "github.com/xiaonanln/goworld/engine/gwlog"
 
-type Attr map[string]interface{}
+type attrFlag int
 
-func (attr *Attr) Marshal() ([]byte, error) {
-	return json.Marshal(attr)
+const (
+	afClient attrFlag = 1 << iota
+	afAllClient
+)
+
+func getPathFromOwner(a interface{}, path []interface{}) []interface{} {
+loop:
+	for {
+		switch ma := a.(type) {
+		case *MapAttr:
+			if ma.parent != nil {
+				path = append(path, ma.pkey)
+				a = ma.parent
+			} else {
+				break loop
+			}
+		case *ListAttr:
+			if ma.parent != nil {
+				path = append(path, ma.pkey)
+				a = ma.parent
+			} else {
+				break loop
+			}
+		default:
+			gwlog.Panicf("getPathFromOwner: invalid parent type: %T", a)
+		}
+	}
+
+	return path
 }
 
-func (attr *Attr) Unmarshal(data []byte) error {
-	return json.Unmarshal(data, attr)
+// uniformAttrType convert v to uniform attr type: int64, float64, bool, string
+func uniformAttrType(v interface{}) interface{} {
+	switch av := v.(type) {
+	case bool:
+		return av
+	case string:
+		return av
+	case float64:
+		return float64(av)
+	case float32:
+		return float64(av)
+	case int64:
+		return av
+	case uint64:
+		return int64(av)
+	case int:
+		return int64(av)
+	case uint:
+		return int64(av)
+	case int32:
+		return int64(av)
+	case uint32:
+		return int64(av)
+	case int16:
+		return int64(av)
+	case uint16:
+		return int64(av)
+	case int8:
+		return int64(av)
+	case byte:
+		return int64(av)
+
+	default:
+		gwlog.Panicf("can not uniform attr val %+v type %T", v, v)
+		return v
+	}
+
 }

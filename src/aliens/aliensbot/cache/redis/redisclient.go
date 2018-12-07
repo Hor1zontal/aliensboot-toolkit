@@ -136,10 +136,10 @@ func (this *RedisCacheClient) SelectDB(dbNumber int) error {
 	return err
 }
 
-func (this *RedisCacheClient) GetDataInt32(key string) (int, error) {
+func (this *RedisCacheClient) GetDataInt32(key string) (int32, error) {
 	conn := this.pool.Get()
 	defer conn.Close()
-	return redis.Int(conn.Do(OP_GET, key))
+	return redis.Int32(conn.Do(OP_GET, key))
 }
 
 func (this *RedisCacheClient) GetDataInt64(key string) (int64, error) {

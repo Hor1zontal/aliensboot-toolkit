@@ -2,70 +2,96 @@ package core
 
 import (
 	"aliens/aliensbot/log"
-	"aliens/aliensbot/mmorpg/aoi"
-	"aliens/aliensbot/mmorpg/config"
-	"aliens/aliensbot/protocol"
+	"aliens/aliensbot/mmo/aoi"
+	"aliens/aliensbot/mmo/config"
+	"aliens/aliensbot/mmo/unit"
 	"fmt"
-	"github.com/gogo/protobuf/proto"
 )
 
 type ISpace interface {
-	IEntity
-	//GetConfig() config.SpaceConfig //
 
-	GetMeta() proto.Message
+	IEntity
+
+	// Called when initializing space struct, override to initialize custom space fields
+	OnSpaceInit()
+
+	// Called when space is created
+	OnSpaceCreated()
+
+	// Called just before space is destroyed
+	OnSpaceDestroy()
 
 	// Called when any entity enters space
-	OnEntityEnter(entity *Entity)
+	OnEntityEnterSpace(entity *Entity)
 
 	// Called when any entity leaves space
-	OnEntityLeave(entity *Entity)
+	OnEntityLeaveSpace(entity *Entity)
 
-	// Called when any entity leaves space
-	OnEntityMove(entity *Entity)
 }
 
-type Space struct {
-	id EntityID
+const (
+	SpaceAttrType = "spaceType"
+)
 
-	entities EntityMap //entities in current space
+type Space struct {
+
+	Entity
+
+	I ISpace
+
+	entities EntitySet //entities in current space
 
 	aoiMgr aoi.Manager
 
-	proxy ISpace
 }
 
-func (space *Space) GetID() EntityID {
-	return space.id
+// OnInit initialize Space entity
+func (space *Space) OnInit() {
+	space.entities = EntitySet{}
+	space.I = space.Entity.I.(ISpace)
+
+	spaceConfig := &config.SpaceConfig{"testSpace",-500,500,-500,500, 50}
+	space.aoiMgr = aoi.NewTowerAOIManager(spaceConfig.MinX, spaceConfig.MaxX, spaceConfig.MinY, spaceConfig.MaxY, spaceConfig.TowerRange)
+	space.I.OnSpaceInit()
+}
+
+func (space *Space) OnCreated() {
+	space.I.OnSpaceCreated()
+	SpaceManager.putSpace(space)
+}
+
+// OnDestroy is called when Space entity is destroyed
+func (space *Space) OnDestroy() {
+	space.I.OnSpaceDestroy()
+	for e := range space.entities {
+		e.Destroy()
+	}
+	SpaceManager.delSpace(space.GetID())
+}
+
+func (space *Space) DescribeEntityType(desc *EntityDesc) {
+	desc.DefineAttr(SpaceAttrType, AttrAllClient)
 }
 
 func (space *Space) String() string {
 	return fmt.Sprintf("space<%d>", space.GetID())
 }
 
-// Init initialize space entity
-func (space *Space) Init(proxy ISpace, spaceConfig config.SpaceConfig) {
-	//TODO 通过地形数据生成对象
-	space.entities = EntityMap{}
-	space.proxy = proxy
-	space.aoiMgr = aoi.NewTowerAOIManager(spaceConfig.MinX, spaceConfig.MaxX, spaceConfig.MinY, spaceConfig.MaxY, spaceConfig.TowerRange)
-}
-
-//修改视野范围
-//func (space *Space) EntityChangeViewRadius(entity *Entity, radius float32) {
-//	space.aoiMgr.ChangeViewRadius(entity.aoi, radius)
-//}
-
 //进入场景
-func (space *Space) enter(entity *Entity, pos *protocol.Vector) {
+func (space *Space) enter(entity *Entity, pos unit.Vector) {
 	if entity.space != nil {
 		log.Panicf("%s.enter(%s): current space is not nil, but %s", space, entity, entity.space)
 	}
 
 	entity.space = space
 	space.entities.Add(entity)
-	space.aoiMgr.Enter(entity.aoi, pos.X, pos.Y)
-	space.proxy.OnEntityEnter(entity)
+
+	if space.aoiMgr != nil && entity.IsUseAOI() {
+		space.aoiMgr.Enter(entity.aoi, pos.X, pos.Y)
+	}
+
+	entity.I.OnEnterSpace()
+	space.I.OnEntityEnterSpace(entity)
 }
 
 //离开场景
@@ -75,13 +101,16 @@ func (space *Space) leave(entity *Entity) {
 	}
 
 	entity.space = nil
-	space.entities.Del(entity.GetID())
-	space.aoiMgr.Leave(entity.aoi)
-	space.proxy.OnEntityLeave(entity)
+	space.entities.Del(entity)
+	if space.aoiMgr != nil && entity.IsUseAOI() {
+		space.aoiMgr.Leave(entity.aoi)
+	}
+	space.I.OnEntityLeaveSpace(entity)
+	entity.I.OnLeaveSpace(space)
 }
 
 //场景中移动
-func (space *Space) move(entity *Entity, newPos *protocol.Vector) {
+func (space *Space) move(entity *Entity, newPos unit.Vector) {
 	if entity.space != space {
 		log.Panicf("%s.leave(%s): entity is not in this Space", space, entity)
 	}
@@ -95,17 +124,10 @@ func (space *Space) move(entity *Entity, newPos *protocol.Vector) {
 }
 
 // CreateEntity creates a new local entity in this space
-func (space *Space) CreateEntity(typeName string, pos *protocol.Vector) {
-	EntityManager.CreateLocalEntity(typeName, space, pos)
+func (space *Space) CreateEntity(eType EntityType, pos unit.Vector, id EntityID) (*Entity, error) {
+	return EntityManager.CreateEntity(eType, space, pos, id)
 }
 
-func (space *Space) GetNeighbors(entityID EntityID) EntitySet {
-	entity := space.entities.Get(entityID)
-	if entity == nil {
-		return nil
-	}
-	return entity.interestedIn
-}
 
 // GetEntityCount returns the total count of entities in space
 func (space *Space) GetEntityCount() int {
@@ -114,12 +136,29 @@ func (space *Space) GetEntityCount() int {
 
 // ForEachEntity visits all entities in space and call function f with each entity
 func (space *Space) ForEachEntity(f func(e *Entity)) {
-	for _, entity := range space.entities {
+	for entity, _ := range space.entities {
 		f(entity)
 	}
 }
 
-// GetEntity returns the entity in space with specified id, nil otherwise
-func (space *Space) GetEntity(entityID EntityID) *Entity {
-	return space.entities.Get(entityID)
+//--------------------abstract method----------------
+
+func (space *Space) OnSpaceInit() {
+
+}
+
+func (space *Space) OnSpaceCreated() {
+
+}
+
+func (space *Space) OnSpaceDestroy() {
+
+}
+
+func (space *Space) OnEntityEnterSpace(entity *Entity) {
+
+}
+
+func (space *Space) OnEntityLeaveSpace(entity *Entity) {
+
 }

@@ -10,28 +10,28 @@
 package manager
 
 import (
+	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/exception"
+	"aliens/aliensbot/log"
 	"aliens/testserver/module/game/db"
 	"aliens/testserver/protocol"
 	"reflect"
 )
 
 func NewRoleManager(uid int64) *RoleManager {
-	var user = &protocol.Role{Uid: uid}
-	err := db.Database.QueryOneCondition(user, "uid", uid)
-
+	var role = &protocol.Role{}
+	err := db.Database.QueryOneCondition(role, "uid", uid)
 	if err != nil {
 		//创建数据
-		user.Uid = uid
-		user.Nickname = "我叫猪大肠"
-
-		err1 := db.Database.Insert(user)
+		role.Uid = uid
+		role.Nickname = "蛇皮" + util.Int64ToString(uid)
+		err1 := db.Database.Insert(role)
 		if err1 != nil {
+			log.Errorf("insert role error : %v", err1)
 			exception.GameException(protocol.Code_DBExcetpion)
 		}
 	}
-
-	dataManager := &RoleManager{data: user}
+	dataManager := &RoleManager{data: role}
 	dataManager.Init()
 	return dataManager
 }
