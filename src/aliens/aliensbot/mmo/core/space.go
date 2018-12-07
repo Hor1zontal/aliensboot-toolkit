@@ -50,7 +50,7 @@ func (space *Space) OnInit() {
 	space.entities = EntitySet{}
 	space.I = space.Entity.I.(ISpace)
 
-	spaceConfig := &config.SpaceConfig{"testSpace",-500,500,-500,500, 50}
+	spaceConfig := &config.SpaceConfig{"testSpace",-5000,5000,-5000,5000, 500}
 	space.aoiMgr = aoi.NewTowerAOIManager(spaceConfig.MinX, spaceConfig.MaxX, spaceConfig.MinY, spaceConfig.MaxY, spaceConfig.TowerRange)
 	space.I.OnSpaceInit()
 }

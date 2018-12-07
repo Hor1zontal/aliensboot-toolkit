@@ -45,10 +45,10 @@ func (rdm methodDescMap) visit(method reflect.Method) {
 	methodName := method.Name
 	var flag uint
 	var rpcName string
-	if strings.HasSuffix(methodName, "_Self") {
+	if strings.HasSuffix(methodName, "_Client") {
 		flag |= rfServer + rfOwnClient
 		rpcName = methodName[:len(methodName)-7]
-	} else if strings.HasSuffix(methodName, "_All") {
+	} else if strings.HasSuffix(methodName, "_AllClient") {
 		flag |= rfServer + rfOwnClient + rfOtherClient
 		rpcName = methodName[:len(methodName)-11]
 	} else {

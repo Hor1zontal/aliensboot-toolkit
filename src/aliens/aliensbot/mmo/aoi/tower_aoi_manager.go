@@ -2,8 +2,6 @@ package aoi
 
 import "aliens/aliensbot/mmo/unit"
 
-//九宫格灯塔模型
-
 func NewTowerAOIManager(minX, maxX, minY, maxY unit.Coord, towerRange unit.Coord) Manager {
 	this := &TowerAOIManager{minX: minX, maxX: maxX, minY: minY, maxY: maxY, towerRadius: towerRange}
 	this.init()

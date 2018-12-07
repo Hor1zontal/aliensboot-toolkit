@@ -14,16 +14,6 @@ type roomRPCHandler struct {
 }
 
 
-func (this *roomRPCHandler) OnPlayerStateChange(node string, request *protocol.OnPlayerStateChange) *protocol.OnPlayerStateChangeRet {
-	message := &protocol.Request{
-		Room:&protocol.Request_OnPlayerStateChange{
-			OnPlayerStateChange:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetOnPlayerStateChangeRet()
-}
-
 func (this *roomRPCHandler) JoinRoom(node string, request *protocol.JoinRoom) *protocol.JoinRoomRet {
 	message := &protocol.Request{
 		Room:&protocol.Request_JoinRoom{
@@ -32,16 +22,6 @@ func (this *roomRPCHandler) JoinRoom(node string, request *protocol.JoinRoom) *p
 	}
 	messageRet := this.Request(node, message)
 	return messageRet.GetJoinRoomRet()
-}
-
-func (this *roomRPCHandler) OnGameStateChange(node string, request *protocol.OnGameStateChange) *protocol.OnGameStateChangeRet {
-	message := &protocol.Request{
-		Room:&protocol.Request_OnGameStateChange{
-			OnGameStateChange:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetOnGameStateChangeRet()
 }
 
 func (this *roomRPCHandler) ShowUser(node string, request *protocol.ShowUser) *protocol.ShowUserRet {
@@ -64,16 +44,6 @@ func (this *roomRPCHandler) GetRoomInfo(node string, request *protocol.GetRoomIn
 	return messageRet.GetGetRoomInfoRet()
 }
 
-func (this *roomRPCHandler) RoomCreate(node string, request *protocol.RoomCreate) *protocol.RoomCreateRet {
-	message := &protocol.Request{
-		Room:&protocol.Request_RoomCreate{
-			RoomCreate:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetRoomCreateRet()
-}
-
 func (this *roomRPCHandler) GetBigoData(node string, request *protocol.GetBigoData) *protocol.GetBigoDataRet {
 	message := &protocol.Request{
 		Room:&protocol.Request_GetBigoData{
@@ -84,52 +54,37 @@ func (this *roomRPCHandler) GetBigoData(node string, request *protocol.GetBigoDa
 	return messageRet.GetGetBigoDataRet()
 }
 
-
-
-func (this *roomRPCHandler) UpdateBigoData(node string, request *protocol.UpdateBigoData) error {
+func (this *roomRPCHandler) OnGameStateChange(node string, request *protocol.OnGameStateChange) *protocol.OnGameStateChangeRet {
 	message := &protocol.Request{
-		Room:&protocol.Request_UpdateBigoData{
-			UpdateBigoData:request,
+		Room:&protocol.Request_OnGameStateChange{
+			OnGameStateChange:request,
 		},
 	}
-	return this.Send(node, message)
+	messageRet := this.Request(node, message)
+	return messageRet.GetOnGameStateChangeRet()
 }
 
-func (this *roomRPCHandler) UploadGameResult(node string, request *protocol.UploadGameResult) error {
+func (this *roomRPCHandler) RoomCreate(node string, request *protocol.RoomCreate) *protocol.RoomCreateRet {
 	message := &protocol.Request{
-		Room:&protocol.Request_UploadGameResult{
-			UploadGameResult:request,
+		Room:&protocol.Request_RoomCreate{
+			RoomCreate:request,
 		},
 	}
-	return this.Send(node, message)
+	messageRet := this.Request(node, message)
+	return messageRet.GetRoomCreateRet()
 }
 
-func (this *roomRPCHandler) RequestJoinGame(node string, request *protocol.RequestJoinGame) error {
+func (this *roomRPCHandler) OnPlayerStateChange(node string, request *protocol.OnPlayerStateChange) *protocol.OnPlayerStateChangeRet {
 	message := &protocol.Request{
-		Room:&protocol.Request_RequestJoinGame{
-			RequestJoinGame:request,
+		Room:&protocol.Request_OnPlayerStateChange{
+			OnPlayerStateChange:request,
 		},
 	}
-	return this.Send(node, message)
+	messageRet := this.Request(node, message)
+	return messageRet.GetOnPlayerStateChangeRet()
 }
 
-func (this *roomRPCHandler) FrameData(node string, request *protocol.FrameData) error {
-	message := &protocol.Request{
-		Room:&protocol.Request_FrameData{
-			FrameData:request,
-		},
-	}
-	return this.Send(node, message)
-}
 
-func (this *roomRPCHandler) PreJoinGame(node string, request *protocol.PreJoinGame) error {
-	message := &protocol.Request{
-		Room:&protocol.Request_PreJoinGame{
-			PreJoinGame:request,
-		},
-	}
-	return this.Send(node, message)
-}
 
 func (this *roomRPCHandler) GameData(node string, request *protocol.GameData) error {
 	message := &protocol.Request{
@@ -149,10 +104,37 @@ func (this *roomRPCHandler) GameReady(node string, request *protocol.GameReady) 
 	return this.Send(node, message)
 }
 
-func (this *roomRPCHandler) ContinueJoinGame(node string, request *protocol.ContinueJoinGame) error {
+func (this *roomRPCHandler) UploadGameResult(node string, request *protocol.UploadGameResult) error {
 	message := &protocol.Request{
-		Room:&protocol.Request_ContinueJoinGame{
-			ContinueJoinGame:request,
+		Room:&protocol.Request_UploadGameResult{
+			UploadGameResult:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *roomRPCHandler) UpdateBigoData(node string, request *protocol.UpdateBigoData) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_UpdateBigoData{
+			UpdateBigoData:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *roomRPCHandler) RequestJoinGame(node string, request *protocol.RequestJoinGame) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_RequestJoinGame{
+			RequestJoinGame:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *roomRPCHandler) PreJoinGame(node string, request *protocol.PreJoinGame) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_PreJoinGame{
+			PreJoinGame:request,
 		},
 	}
 	return this.Send(node, message)
@@ -171,6 +153,24 @@ func (this *roomRPCHandler) BroadcastViewer(node string, request *protocol.Broad
 	message := &protocol.Request{
 		Room:&protocol.Request_BroadcastViewer{
 			BroadcastViewer:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *roomRPCHandler) ContinueJoinGame(node string, request *protocol.ContinueJoinGame) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_ContinueJoinGame{
+			ContinueJoinGame:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *roomRPCHandler) FrameData(node string, request *protocol.FrameData) error {
+	message := &protocol.Request{
+		Room:&protocol.Request_FrameData{
+			FrameData:request,
 		},
 	}
 	return this.Send(node, message)

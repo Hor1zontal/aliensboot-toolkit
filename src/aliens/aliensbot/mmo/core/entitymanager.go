@@ -74,12 +74,12 @@ func (em *_EntityManager) GetEntity(id EntityID) *Entity {
 }
 
 //处理远程调用
-func (em *_EntityManager) HandleRemoteEntityCall(authID int64, id EntityID, method string, args[][]byte) (*Entity, error) {
+func (em *_EntityManager) HandleRemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
 	entity := em.GetEntity(id)
 	if entity == nil {
 		return nil, nil
 	}
-	return entity, entity.onCallFromRemote(authID, method, args)
+	return entity, entity.onCallFromRemote(caller, method, args)
 }
 
 
@@ -171,12 +171,3 @@ func (em *_EntityManager) CreateEntity(entityType EntityType, space *Space, pos 
 
 	return entity, nil
 }
-
-//func (em *_EntityManager) onGateDisconnected(gateid uint16) {
-//	for _, entity := range em.entities {
-//		client := entity.client
-//		if client != nil && client.gateid == gateid {
-//			entity.notifyClientDisconnected()
-//		}
-//	}
-//}

@@ -43,12 +43,12 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(request *protocol.Request) {
 	
-	if request.GetBindService() != nil {
-		handleBindService(request.GetBindService())
-		return
-	}
 	
-	
+     if request.GetBindService() != nil {
+        handleBindService(request.GetBindService())
+      	return
+     }
+    
      if request.GetKickOut() != nil {
         handleKickOut(request.GetKickOut())
       	return

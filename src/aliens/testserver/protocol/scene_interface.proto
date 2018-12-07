@@ -15,12 +15,20 @@ message LoginSceneRet {
     Entity entity = 1; //玩家实体信息
 }
 
-//message get_state {
-//}
-//
-//message get_state_ret {
-//    repeated Entity neighbors = 1; //周围的实体信息
-//}
+
+//entity
+message MigrateOut {
+    string entityID = 1;
+    string toSpaceID = 2;
+}
+
+//entity
+message MigrateIn {
+    Entity entity = 1;
+    int64 authID = 2;
+    string gateID = 3;
+    string spaceID = 4;
+}
 
 //调用实体方法
 message entityCall {

@@ -85,8 +85,8 @@ func EnterSpace(spaceID EntityID, eType EntityType, entityID EntityID, pos unit.
 
 
 //handle
-func HandlerRemoteEntityCall(authID int64, id EntityID, method string, args[][]byte) (*Entity, error) {
-	return core.EntityManager.HandleRemoteEntityCall(authID, id, method, args)
+func HandlerRemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
+	return core.EntityManager.HandleRemoteEntityCall(caller, id, method, args)
 }
 
 //call entity method

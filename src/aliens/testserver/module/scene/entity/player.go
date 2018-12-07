@@ -11,6 +11,7 @@ package entity
 
 import (
 	"aliens/aliensbot/common/util"
+	"aliens/aliensbot/log"
 	"aliens/aliensbot/mmo"
 	"aliens/aliensbot/mmo/core"
 	"aliens/aliensbot/mmo/unit"
@@ -40,7 +41,8 @@ type Player struct {
 }
 
 func (player *Player) DescribeEntityType(desc *core.EntityDesc) {
-	desc.SetUseAOI(true, 100)
+	//视野范围
+	desc.SetUseAOI(true, 500)
 	desc.DefineAttr("lv", core.AttrAllClient| core.AttrPersist)
 	desc.DefineAttr("hp", core.AttrAllClient| core.AttrPersist)
 	desc.DefineAttr("maxHp", core.AttrAllClient| core.AttrPersist)
@@ -66,7 +68,7 @@ func (player *Player) Login(authID int64, gateID string) {
 	rpc.Gate.Push(conf.GetServiceName(), player.authID, player.gateID, syncMessage)
 
 	//玩家每100ms同步一次数据
-	player.syncTimerID = player.AddTimer(100 * time.Millisecond, "SyncData")
+	player.syncTimerID = player.AddTimer(200 * time.Millisecond, "SyncData")
 }
 
 
@@ -75,8 +77,11 @@ func (player *Player) Logout() {
 }
 
 
-func (player *Player) Move(x float32, y float32) {
-	player.SetPosition(unit.Vector{X:unit.Coord(x), Y:unit.Coord(y), Z:0})
+func (player *Player) Move_Client(x string, y string) {
+	log.Debugf("%v move %v - %v", player.GetID(), x, y)
+
+
+	player.SetPosition(unit.Vector{X:unit.Coord(util.StringToFloat32(x)), Y:unit.Coord(util.StringToFloat32(y)), Z:0})
 }
 
 

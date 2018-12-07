@@ -14,31 +14,30 @@ type gateRPCHandler struct {
 }
 
 
-func (this *gateRPCHandler) BindService(node string, request *protocol.BindService) *protocol.BindServiceRet {
-	message := &protocol.Request{
-		Gate:&protocol.Request_BindService{
-			BindService:request,
-		},
-	}
-	messageRet := this.Request(node, message)
-	return messageRet.GetBindServiceRet()
-}
 
-
-
-func (this *gateRPCHandler) KickOut(node string, request *protocol.KickOut) error {
-	message := &protocol.Request{
-		Gate:&protocol.Request_KickOut{
-			KickOut:request,
-		},
-	}
-	return this.Send(node, message)
-}
 
 func (this *gateRPCHandler) PushMessage(node string, request *protocol.PushMessage) error {
 	message := &protocol.Request{
 		Gate:&protocol.Request_PushMessage{
 			PushMessage:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *gateRPCHandler) BindService(node string, request *protocol.BindService) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_BindService{
+			BindService:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
+func (this *gateRPCHandler) KickOut(node string, request *protocol.KickOut) error {
+	message := &protocol.Request{
+		Gate:&protocol.Request_KickOut{
+			KickOut:request,
 		},
 	}
 	return this.Send(node, message)

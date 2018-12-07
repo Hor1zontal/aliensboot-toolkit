@@ -3,7 +3,7 @@
 package service
 
 import (
-	"aliens/aliensbot/log"
+
 	"github.com/gogo/protobuf/proto"
     "aliens/aliensbot/chanrpc"
     "aliens/aliensbot/exception"
@@ -44,7 +44,6 @@ func handle(request *base.Any) (response *base.Any) {
 			}
 		}
 		if !isResponse {
-			log.Errorf("errCode : %v", responseProxy.Code)
             return
         }
 		data, _ := proto.Marshal(responseProxy)

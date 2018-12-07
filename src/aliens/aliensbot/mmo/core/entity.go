@@ -72,7 +72,7 @@ type Entity struct {
 
 	id EntityID
 
-	clientID ClientID
+	//clientID ClientID
 
 	I IEntity //实现类
 
@@ -247,7 +247,7 @@ func (e *Entity) OnCallFromLocal(methodName string, args []interface{}) error {
 }
 
 //远程调用
-func (e *Entity) onCallFromRemote(authID int64, methodName string, args [][]byte) error {
+func (e *Entity) onCallFromRemote(caller EntityID, methodName string, args [][]byte) error {
 	rpcDesc := e.desc.methodDesc[methodName]
 	if rpcDesc == nil {
 		return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s is not a valid RPC, args=%v", e, methodName, args))
@@ -255,12 +255,12 @@ func (e *Entity) onCallFromRemote(authID int64, methodName string, args [][]byte
 
 	methodType := rpcDesc.MethodType
 
-	isFromOwnClient := e.clientID.isMatch(authID)
+	isFromOwnClient := e.GetID() == caller
 
 	if rpcDesc.Flags & rfOwnClient == 0 && isFromOwnClient {
 		return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s can not be called from OwnClient: flags=%v", e, methodName, rpcDesc.Flags))
 	} else if rpcDesc.Flags & rfOtherClient == 0 && !isFromOwnClient {
-		return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s can not be called from OtherClient: flags=%v, OwnClient=%v, OtherClient=%v", e, methodName, rpcDesc.Flags, e.clientID, authID))
+		return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s can not be called from OtherClient: flags=%v, OwnClient=%v, OtherClient=%v", e, methodName, rpcDesc.Flags, e.GetID(), caller))
 	}
 
 	if rpcDesc.NumArgs < len(args) {
@@ -275,7 +275,7 @@ func (e *Entity) onCallFromRemote(authID int64, methodName string, args [][]byte
 		argValPtr := reflect.New(argType)
 		err := msgpack.Unmarshal(arg, argValPtr.Interface())
 		if err != nil {
-			return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s receives %d arguments, but given %d", e, methodName, rpcDesc.NumArgs, len(args)))
+			return errors.New(fmt.Sprintf("%s.onCallFromRemote: Method %s parse argument invalid : %v", e, methodName, err))
 		}
 		in[i+1] = reflect.Indirect(argValPtr)
 	}
@@ -311,12 +311,33 @@ func (e *Entity) GetAllClientData() map[string]interface{} {
 	return e.attrs.ToMapWithFilter(e.desc.allAttrs.Contains)
 }
 
+// GetYaw gets entity Yaw
+func (e *Entity) GetYaw() unit.Yaw {
+	return e.Yaw
+}
 
-// OnInit is called when entity is initializing
-//
+// SetYaw sets entity Yaw
+func (e *Entity) SetYaw(yaw unit.Yaw) {
+	e.Yaw = yaw
+}
+
+// FaceTo let entity face to another entity by setting Yaw accordingly
+func (e *Entity) FaceTo(other *Entity) {
+	e.FaceToPos(other.Position)
+}
+
+// FaceTo let entity face to a specified position, setting Yaw accordingly
+
+func (e *Entity) FaceToPos(pos unit.Vector) {
+	dir := pos.Sub(e.Position)
+	dir.Y = 0
+	e.SetYaw(dir.DirToYaw())
+}
+
+
 // Can override this function in custom entity type
 func (e *Entity) OnInit() {
-	//gwlog.Warnf("%s.OnInit not implemented", e)
+
 }
 
 // OnAttrsReady is called when entity's attribute is ready
@@ -328,7 +349,7 @@ func (e *Entity) OnAttrsReady() {
 
 
 func (e *Entity) OnCreated() {
-	//gwlog.Debugf("%s.OnCreated", e)
+
 }
 
 // OnFreeze is called when entity is freezed

@@ -80,6 +80,8 @@ message Request {
     oneof scene {
         entityCall entityCall = 300; //调用服务端实体方法
         LoginScene LoginScene = 301; //玩家登录到场景
+        MigrateIn MigrateIn = 302; //数据迁入
+        MigrateOut MigrateOut = 303; //数据迁出
     }
 
 
