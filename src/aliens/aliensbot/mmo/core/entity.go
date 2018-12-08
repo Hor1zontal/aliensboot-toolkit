@@ -30,17 +30,9 @@ type IEntity interface {
 	OnMigrateOut() // Called just before entity is migrating out
 	OnMigrateIn()  // Called just after entity is migrating in
 
-	// Freeze && Restore
-	OnFreeze()   // Called when entity is freezing
-	OnRestored() // Called when entity is restored
-
 	// Space Operations
 	OnEnterSpace()             // Called when entity leaves space
 	OnLeaveSpace(space *Space) // Called when entity enters space
-
-	// Client Notifications
-	OnClientConnected()    // Called when Client is connected to entity (become player)
-	OnClientDisconnected() // Called when Client disconnected
 
 	DescribeEntityType(desc *EntityDesc) // Define entity attributes in this function
 
@@ -105,6 +97,10 @@ type Entity struct {
 
 func (e *Entity) GetID() EntityID {
 	return e.id
+}
+
+func (e *Entity) GetSpaceID() EntityID {
+	return e.space.id
 }
 
 func (e *Entity) GetType() EntityType {

@@ -28,10 +28,26 @@ func handleLoginScene(authID int64, gateID string, request *protocol.LoginScene)
 
 	//是当前服务器节点
 	if node == center.ClusterCenter.GetNodeID() {
+		playerID := entity.GetPlayerID(authID)
+
+		//playerNode, err1 := cache.Manager.GetEntityNode(string(playerID)) {
+		//	if err1 != nil {
+		//		log.Errorf("enter space error : %v", err)
+		//		return
+		//	}
+		//}
+		//
+		//
+		////玩家在其他空间上
+		//if playerNode != "" && playerNode != center.ClusterCenter.GetNodeID() {
+		//
+		//}
+
+
 		entity, err := mmo.EnterSpace(
 			mmo.EntityID(request.GetSpaceID()),
 			entity.TypePlayer,
-			entity.GetPlayerID(authID),
+			playerID,
 			unit.Vector{X:0,Y:0,Z:0})
 		if err != nil {
 			log.Errorf("enter space error : %v", err)

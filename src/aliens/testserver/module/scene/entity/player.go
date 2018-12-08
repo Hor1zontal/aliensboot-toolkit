@@ -36,6 +36,7 @@ func GetPlayerID(authID int64) mmo.EntityID {
 
 //
 type Player struct {
+
 	mmo.Entity   // Entity type should always inherit entity.Entity
 
 	syncTimerID mmo.EntityTimerID
@@ -56,13 +57,35 @@ func (player *Player) DescribeEntityType(desc *core.EntityDesc) {
 }
 
 
+func (player *Player) OnMigrateOut() {
+
+}
+
+func (player *Player) OnMigrateIn() {
+
+	player.onLoad()
+}
+
+
+
 func (player *Player) Login(authID int64, gateID string) {
 	player.Set(playerAttrUid, authID)
 	player.Set(playerAttrGateid, gateID)
 
+
+	player.onLoad()
+	//玩家每100ms同步一次数据
+	player.syncTimerID = player.AddTimer(200 * time.Millisecond, "SyncData")
+}
+
+func (player *Player) onLoad() {
+
+	gateID := player.GetString(playerAttrGateid)
+	authID := player.GetInt64(playerAttrUid)
 	syncMessage := &protocol.Response{
 		Scene:&protocol.Response_LoginSceneRet{
 			LoginSceneRet:&protocol.LoginSceneRet{
+				SpaceID:string(player.GetSpaceID()),
 				Entity:utils.BuildEntity(player.Entity, true),
 			},
 		},
@@ -73,8 +96,6 @@ func (player *Player) Login(authID int64, gateID string) {
 
 	rpc.Gate.Push(conf.GetServiceName(), authID, gateID, syncMessage)
 
-	//玩家每100ms同步一次数据
-	player.syncTimerID = player.AddTimer(200 * time.Millisecond, "SyncData")
 }
 
 

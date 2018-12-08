@@ -90,10 +90,10 @@
 		Record
 		Player
 		LoginScene
-		LoginSceneRet
 		MigrateOut
 		MigrateIn
 		EntityCall
+		LoginSceneRet
 		EntityPush
 		Vector
 		Entity

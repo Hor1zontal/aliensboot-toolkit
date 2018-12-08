@@ -79,9 +79,10 @@ message Request {
 
     oneof scene {
         entityCall entityCall = 300; //调用服务端实体方法
-        LoginScene LoginScene = 301; //玩家登录到场景
-        MigrateIn MigrateIn = 302; //数据迁入
-        MigrateOut MigrateOut = 303; //数据迁出
+        loginScene loginScene = 301; //玩家登录到场景
+        moveScene moveScene = 302  //玩家移动到新的场景
+        migrateIn migrateIn = 303; //数据迁入
+        migrateOut migrateOut = 304; //数据迁出
     }
 
 
@@ -153,7 +154,7 @@ message Response {
     oneof scene {
         entityCall entityCall = 1300; //调用客户端实体方法
         entityPush entityPush = 1301; //推送实体变更属性信息
-        LoginSceneRet LoginSceneRet = 1302; //登陆到场景数据返回
+        scenePush scenePush = 1302; //登陆到场景数据返回
     }
 
 
