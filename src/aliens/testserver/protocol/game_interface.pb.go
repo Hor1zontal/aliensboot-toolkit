@@ -91,6 +91,8 @@
 		Player
 		LoginScene
 		LoginSceneRet
+		MigrateOut
+		MigrateIn
 		EntityCall
 		EntityPush
 		Vector

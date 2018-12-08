@@ -16,12 +16,16 @@ import (
 	"aliens/aliensbot/mmo/unit"
 	"errors"
 	"fmt"
+	"github.com/vmihailenco/msgpack"
 	"reflect"
+	"time"
 )
 
 var EntityManager = newEntityManager()
 
 type _EntityManager struct {
+
+	handler IEntityHandler
 
 	entities       EntityMap //所有实体 id-entity
 
@@ -32,11 +36,13 @@ type _EntityManager struct {
 
 func newEntityManager() *_EntityManager {
 	return &_EntityManager{
+		handler: emptyHandler,
 		entities:       EntityMap{},
 		entitiesByType: map[EntityType]EntityMap{},
 		entitiesDesc:   map[EntityType]*EntityDesc{},
 	}
 }
+
 
 func (em *_EntityManager) put(entity *Entity) {
 	em.entities.Add(entity)
@@ -69,12 +75,20 @@ func (em *_EntityManager) genEntityID() EntityID {
 	return EntityID(util.GenUUID())
 }
 
+func (em *_EntityManager) RegisterHandler(handler IEntityHandler) {
+	em.handler = handler
+}
+
+func (em *_EntityManager) GetHandler() IEntityHandler {
+	return em.handler
+}
+
 func (em *_EntityManager) GetEntity(id EntityID) *Entity {
 	return em.entities.Get(id)
 }
 
 //处理远程调用
-func (em *_EntityManager) HandleRemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
+func (em *_EntityManager) RemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
 	entity := em.GetEntity(id)
 	if entity == nil {
 		return nil, nil
@@ -84,7 +98,7 @@ func (em *_EntityManager) HandleRemoteEntityCall(caller EntityID, id EntityID, m
 
 
 //处理本地调用
-func (em *_EntityManager) HandleLocalEntityCall(id EntityID, method string, args []interface{}) (*Entity, error) {
+func (em *_EntityManager) LocalEntityCall(id EntityID, method string, args []interface{}) (*Entity, error) {
 	entity := em.GetEntity(id)
 	if entity == nil {
 		return nil, nil
@@ -93,7 +107,6 @@ func (em *_EntityManager) HandleLocalEntityCall(id EntityID, method string, args
 }
 
 //func (em *_EntityManager) UNRegisterEntity(entity IEntity) {
-//
 //	delete(em.entitiesDesc, typeName)
 //}
 
@@ -120,6 +133,7 @@ func (em *_EntityManager) RegisterEntity(entity IEntity) *EntityDesc {
 		clientAttrs:  set.StringSet{},
 		allAttrs:     set.StringSet{},
 		persistAttrs: set.StringSet{},
+		persistInterval: time.Minute, //
 	}
 	em.entitiesDesc[typeName] = entityTypeDesc
 
@@ -162,6 +176,11 @@ func (em *_EntityManager) CreateEntity(entityType EntityType, space *Space, pos 
 
 	log.Debugf("Entity %s created.", entity)
 
+	// startup the periodical timer for saving entity
+	if entity.IsPersistent() {
+		entity.setupSaveTimer()
+	}
+
 	//entity.OnCreated()
 	entity.I.OnCreated()
 
@@ -170,4 +189,75 @@ func (em *_EntityManager) CreateEntity(entityType EntityType, space *Space, pos 
 	}
 
 	return entity, nil
+}
+
+//
+func (em *_EntityManager) MigrateOut(spaceID EntityID, entityID EntityID) error {
+	entity := em.GetEntity(entityID)
+	if entity == nil {
+		return errors.New(fmt.Sprintf("migrate entity not found : %v", entityID))
+	}
+	if entity.space.GetID() == spaceID {
+		return errors.New(fmt.Sprintf("migrate entity already exist : %v", entityID))
+	}
+
+	migrateData := entity.GetMigrateData()
+	data, err := msgpack.Marshal(migrateData)
+	if err != nil {
+		return errors.New(fmt.Sprintf("%s is migrating to space %s, but pack migrate data failed: %s", entity, spaceID, err))
+	}
+	// disable the entity
+	entity.destroyEntity(true)
+
+	em.handler.MigrateRemote(spaceID, entityID, data)
+	return nil
+}
+
+
+//
+func (em *_EntityManager) MigrateIn(entityID EntityID, space *Space, data []byte) error {
+	var mData *entityMigrateData
+	err := msgpack.Unmarshal(data, mData)
+	if err != nil {
+		return err
+	}
+
+	typeName := mData.Type
+	entityTypeDesc, ok := em.entitiesDesc[typeName]
+	if !ok {
+		return errors.New(fmt.Sprintf("restore unknown entity type: %s", typeName))
+	}
+
+	var entity *Entity
+	var entityInstance reflect.Value
+
+	entityInstance = reflect.New(entityTypeDesc.entityType)
+	entity = reflect.Indirect(entityInstance).FieldByName("Entity").Addr().Interface().(*Entity)
+	entity.init(entityID, entityInstance)
+
+	entity.space = space
+	entity.Position = mData.Pos
+	entity.Yaw = mData.Yaw
+
+	em.put(entity)
+	entity.AssignMap(mData.Attrs)
+
+	timerData := mData.TimerData
+	if timerData != nil {
+		entity.restoreTimers(timerData)
+	}
+
+	isPersistent := entity.desc.IsPersistent()
+	if isPersistent { // startup the periodical timer for saving e
+		entity.setupSaveTimer()
+	}
+
+	entity.I.OnAttrsReady()
+	entity.I.OnMigrateIn()
+
+	if space != nil {
+		space.enter(entity, mData.Pos)
+	}
+	entity.I.OnRestored()
+	return nil
 }

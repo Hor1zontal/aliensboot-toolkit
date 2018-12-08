@@ -17,11 +17,6 @@ import (
 	"github.com/vmihailenco/msgpack"
 )
 
-type RemoteSender interface {
-
-	CallRemote(id EntityID, method string, args [][]byte) error
-
-}
 
 type PlayerClient interface {
 
@@ -29,11 +24,7 @@ type PlayerClient interface {
 
 }
 
-var sender RemoteSender = nil
 
-func RegisterRemoteSender(newSender RemoteSender) {
-	sender = newSender
-}
 
 type Space = core.Space
 
@@ -53,6 +44,10 @@ func RegisterEntity(entity core.IEntity) {
 	core.EntityManager.RegisterEntity(entity)
 }
 
+func RegisterEntityHandler(handler core.IEntityHandler) {
+	core.EntityManager.RegisterHandler(handler)
+}
+
 func CreateSpace(eType EntityType, id EntityID) (*Space, error) {
 	e, err := core.EntityManager.CreateEntity(eType, nil, unit.EmptyVector, id)
 	return e.AsSpace(), err
@@ -68,6 +63,19 @@ func GetSpace(id EntityID) *Space {
 	return core.SpaceManager.GetSpace(id)
 }
 
+//entity迁移
+func MigrateOut(spaceID EntityID, entityID EntityID) error {
+	return core.EntityManager.MigrateOut(spaceID, entityID)
+}
+
+
+func MigrateIn(spaceID EntityID, entityID EntityID, data []byte) error {
+	space := GetSpace(spaceID)
+	if space == nil {
+		return errors.New(fmt.Sprintf("space %v not found ", spaceID))
+	}
+	core.EntityManager.MigrateIn(entityID, space, data)
+}
 
 //实体登录到场景
 func EnterSpace(spaceID EntityID, eType EntityType, entityID EntityID, pos unit.Vector) (*Entity, error) {
@@ -85,13 +93,13 @@ func EnterSpace(spaceID EntityID, eType EntityType, entityID EntityID, pos unit.
 
 
 //handle
-func HandlerRemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
-	return core.EntityManager.HandleRemoteEntityCall(caller, id, method, args)
+func RemoteEntityCall(caller EntityID, id EntityID, method string, args[][]byte) (*Entity, error) {
+	return core.EntityManager.RemoteEntityCall(caller, id, method, args)
 }
 
 //call entity method
 func Call(id EntityID, method string, args ...interface{}) error {
-	entity, err := core.EntityManager.HandleLocalEntityCall(id, method, args)
+	entity, err := core.EntityManager.LocalEntityCall(id, method, args)
 	//本地不存在、调用远程对象
 	if entity == nil {
 		return callRemote(id, method, args)

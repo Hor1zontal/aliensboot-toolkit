@@ -24,18 +24,20 @@ import (
 
 const (
 	TypePlayer mmo.EntityType = "Player"
+
+	playerAttrUid = "uid"
+	playerAttrGateid = "gid"
+
 )
 
 func GetPlayerID(authID int64) mmo.EntityID {
-	return mmo.EntityID("P" + util.Int64ToString(authID))
+	return mmo.EntityID("P_" + util.Int64ToString(authID))
 }
 
 //
 type Player struct {
 	mmo.Entity   // Entity type should always inherit entity.Entity
 
-	authID int64   //玩家id
-	gateID string  //玩家当前连接的网关id
 	syncTimerID mmo.EntityTimerID
 
 }
@@ -43,16 +45,20 @@ type Player struct {
 func (player *Player) DescribeEntityType(desc *core.EntityDesc) {
 	//视野范围
 	desc.SetUseAOI(true, 500)
+	desc.DefineAttr(playerAttrUid, core.AttrAllClient| core.AttrPersist) //用户id
+	desc.DefineAttr(playerAttrGateid, core.AttrClient)	//网关id
+
 	desc.DefineAttr("lv", core.AttrAllClient| core.AttrPersist)
 	desc.DefineAttr("hp", core.AttrAllClient| core.AttrPersist)
 	desc.DefineAttr("maxHp", core.AttrAllClient| core.AttrPersist)
 	desc.DefineAttr("action", core.AttrAllClient| core.AttrPersist)
+
 }
 
 
 func (player *Player) Login(authID int64, gateID string) {
-	player.authID = authID
-	player.gateID = gateID
+	player.Set(playerAttrUid, authID)
+	player.Set(playerAttrGateid, gateID)
 
 	syncMessage := &protocol.Response{
 		Scene:&protocol.Response_LoginSceneRet{
@@ -65,7 +71,7 @@ func (player *Player) Login(authID int64, gateID string) {
 	//玩家的消息绑定到当前服务器节点
 	rpc.Gate.BindService1(gateID, authID, conf.GetServiceName())
 
-	rpc.Gate.Push(conf.GetServiceName(), player.authID, player.gateID, syncMessage)
+	rpc.Gate.Push(conf.GetServiceName(), authID, gateID, syncMessage)
 
 	//玩家每100ms同步一次数据
 	player.syncTimerID = player.AddTimer(200 * time.Millisecond, "SyncData")
@@ -109,11 +115,11 @@ func (player *Player) SyncData() {
 		},
 	}
 
-	rpc.Gate.Push("scene", player.authID, player.gateID, syncMessage)
+	rpc.Gate.Push(conf.GetServiceName(), player.GetInt64(playerAttrUid), player.GetString(playerAttrGateid), syncMessage)
 }
 
 
 
 func (player *Player) IsLogin() bool {
-	return player.authID > 0 && player.gateID != ""
+	return player.GetInt64(playerAttrUid) > 0
 }

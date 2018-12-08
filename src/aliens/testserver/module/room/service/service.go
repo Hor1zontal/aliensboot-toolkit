@@ -67,24 +67,10 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return true
 	}
 	
-	if request.GetOnPlayerStateChange() != nil {
-		messageRet := &protocol.OnPlayerStateChangeRet{}
-		handleOnPlayerStateChange(authID, gateID, request.GetOnPlayerStateChange(), messageRet)
-		response.Room = &protocol.Response_OnPlayerStateChangeRet{messageRet}
-		return true
-	}
-	
 	if request.GetJoinRoom() != nil {
 		messageRet := &protocol.JoinRoomRet{}
 		handleJoinRoom(authID, gateID, request.GetJoinRoom(), messageRet)
 		response.Room = &protocol.Response_JoinRoomRet{messageRet}
-		return true
-	}
-	
-	if request.GetShowUser() != nil {
-		messageRet := &protocol.ShowUserRet{}
-		handleShowUser(authID, gateID, request.GetShowUser(), messageRet)
-		response.Room = &protocol.Response_ShowUserRet{messageRet}
 		return true
 	}
 	
@@ -109,19 +95,23 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
 		return true
 	}
 	
+	if request.GetOnPlayerStateChange() != nil {
+		messageRet := &protocol.OnPlayerStateChangeRet{}
+		handleOnPlayerStateChange(authID, gateID, request.GetOnPlayerStateChange(), messageRet)
+		response.Room = &protocol.Response_OnPlayerStateChangeRet{messageRet}
+		return true
+	}
 	
-    if request.GetUpdateBigoData() != nil {
-    	handleUpdateBigoData(authID, gateID, request.GetUpdateBigoData())
-    	return false
-    }
-    
-    if request.GetRequestJoinGame() != nil {
-    	handleRequestJoinGame(authID, gateID, request.GetRequestJoinGame())
-    	return false
-    }
-    
-    if request.GetPreJoinGame() != nil {
-    	handlePreJoinGame(authID, gateID, request.GetPreJoinGame())
+	if request.GetShowUser() != nil {
+		messageRet := &protocol.ShowUserRet{}
+		handleShowUser(authID, gateID, request.GetShowUser(), messageRet)
+		response.Room = &protocol.Response_ShowUserRet{messageRet}
+		return true
+	}
+	
+	
+    if request.GetUploadGameResult() != nil {
+    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
     	return false
     }
     
@@ -135,18 +125,13 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     	return false
     }
     
-    if request.GetFrameData() != nil {
-    	handleFrameData(authID, gateID, request.GetFrameData())
-    	return false
-    }
-    
     if request.GetContinueJoinGame() != nil {
     	handleContinueJoinGame(authID, gateID, request.GetContinueJoinGame())
     	return false
     }
     
-    if request.GetGameData() != nil {
-    	handleGameData(authID, gateID, request.GetGameData())
+    if request.GetUpdateBigoData() != nil {
+    	handleUpdateBigoData(authID, gateID, request.GetUpdateBigoData())
     	return false
     }
     
@@ -155,8 +140,23 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     	return false
     }
     
-    if request.GetUploadGameResult() != nil {
-    	handleUploadGameResult(authID, gateID, request.GetUploadGameResult())
+    if request.GetGameData() != nil {
+    	handleGameData(authID, gateID, request.GetGameData())
+    	return false
+    }
+    
+    if request.GetFrameData() != nil {
+    	handleFrameData(authID, gateID, request.GetFrameData())
+    	return false
+    }
+    
+    if request.GetPreJoinGame() != nil {
+    	handlePreJoinGame(authID, gateID, request.GetPreJoinGame())
+    	return false
+    }
+    
+    if request.GetRequestJoinGame() != nil {
+    	handleRequestJoinGame(authID, gateID, request.GetRequestJoinGame())
     	return false
     }
     

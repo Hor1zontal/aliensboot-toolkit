@@ -48,16 +48,6 @@ type IEntity interface {
 
 }
 
-
-type ClientID struct {
-	gateID   string
-	authID   int64
-}
-
-func (clientID ClientID) isMatch(authID int64) bool {
-	return clientID.authID == authID
-}
-
 type EntityType string
 
 // EntityID type
@@ -68,7 +58,19 @@ func (id EntityID) IsNil() bool {
 	return id == ""
 }
 
+
+// entity info that should be migrated
+type entityMigrateData struct {
+	Type              EntityType             `msgpack:"T"`
+	Attrs             map[string]interface{} `msgpack:"A"`
+	Pos               unit.Vector            `msgpack:"Pos"`
+	Yaw               unit.Yaw               `msgpack:"Yaw"`
+	TimerData         []byte                 `msgpack:"TD,omitempty"`
+}
+
 type Entity struct {
+
+	*MapAttr //属性
 
 	id EntityID
 
@@ -87,8 +89,6 @@ type Entity struct {
 	space *Space //实体所在的空间
 
 	aoi *aoi.AOI //aoi
-
-	attrs *MapAttr //属性
 
 	interestedIn EntitySet //当前实体视野范围内的实体
 
@@ -120,6 +120,8 @@ func (e *Entity) IsUseAOI() bool {
 	return e.desc.useAOI
 }
 
+
+
 func (e *Entity) setPositionYaw(pos unit.Vector, yaw unit.Yaw) {
 	space := e.space
 	if space == nil {
@@ -127,7 +129,7 @@ func (e *Entity) setPositionYaw(pos unit.Vector, yaw unit.Yaw) {
 		return
 	}
 	space.move(e, pos)
-	//e.yaw = yaw
+	e.Yaw = yaw
 }
 
 func (e *Entity) init(entityID EntityID, entityInstance reflect.Value) {
@@ -137,7 +139,7 @@ func (e *Entity) init(entityID EntityID, entityInstance reflect.Value) {
 
 	attrs := NewMapAttr()
 	attrs.owner = e
-	e.attrs = attrs
+	e.MapAttr = attrs
 	e.timers = make(map[EntityTimerID]*entityTimerInfo)
 	e.rawTimers = make(map[*util.Timer]struct{})
 
@@ -157,16 +159,6 @@ func (e *Entity) OnLeaveAOI(otherAoi *aoi.AOI) {
 }
 
 
-func (e *Entity) getAttrFlag(attrName string) (flag attrFlag) {
-	if e.desc.allAttrs.Contains(attrName) {
-		flag = afAllClient
-	} else if e.desc.clientAttrs.Contains(attrName) {
-		flag = afClient
-	}
-
-	return
-}
-
 // Destroy destroys the entity
 func (e *Entity) Destroy() {
 	if e.destroyed {
@@ -183,12 +175,12 @@ func (e *Entity) destroyEntity(isMigrate bool) {
 	} else {
 		e.I.OnMigrateOut()
 	}
-	if !isMigrate {
-		//e.SetClient(nil) // always set Client to nil before destroy
-		//e.Save()
-	} else {
-		//e.assignClient(nil)
-	}
+	//if !isMigrate {
+	//	//e.SetClient(nil) // always Set Client to nil before destroy
+	//	//e.Save()
+	//} else {
+	//	//e.assignClient(nil)
+	//}
 	e.destroyed = true
 	EntityManager.del(e)
 }
@@ -303,14 +295,6 @@ func (e *Entity) GetInterest() EntitySet {
 	return e.interestedIn
 }
 
-func (e *Entity) GetClientData() map[string]interface{} {
-	return e.attrs.ToMapWithFilter(e.desc.clientAttrs.Contains)
-}
-
-func (e *Entity) GetAllClientData() map[string]interface{} {
-	return e.attrs.ToMapWithFilter(e.desc.allAttrs.Contains)
-}
-
 // GetYaw gets entity Yaw
 func (e *Entity) GetYaw() unit.Yaw {
 	return e.Yaw
@@ -334,13 +318,12 @@ func (e *Entity) FaceToPos(pos unit.Vector) {
 	e.SetYaw(dir.DirToYaw())
 }
 
-
 // Can override this function in custom entity type
 func (e *Entity) OnInit() {
 
 }
 
-// OnAttrsReady is called when entity's attribute is ready
+// OnattrsReady is called when entity's attribute is ready
 //
 // Can override this function in custom entity type
 func (e *Entity) OnAttrsReady() {

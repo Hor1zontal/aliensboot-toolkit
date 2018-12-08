@@ -17,7 +17,6 @@ import (
 
 //
 func handleLoginScene(authID int64, gateID string, request *protocol.LoginScene) {
-	log.Debugf("login scene : %v", request)
 	//获取空间所在的服务器节点
 	node, err := cache.Manager.GetSpaceNode(request.GetSpaceID())
 	if err != nil {

@@ -15,6 +15,7 @@ import (
 	"aliens/aliensbot/mmo/unit"
 	"reflect"
 	"strings"
+	"time"
 )
 
 func init() {
@@ -83,6 +84,8 @@ type EntityDesc struct {
 	allAttrs set.StringSet
 
 	persistAttrs set.StringSet
+
+	persistInterval time.Duration
 }
 
 func (desc *EntityDesc) IsPersistent() bool {

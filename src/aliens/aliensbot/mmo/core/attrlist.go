@@ -80,7 +80,7 @@ func (a *ListAttr) setOwner(owner *Entity, flag attrFlag) {
 	a.owner = owner
 	a.flag = flag
 
-	// set owner of children recursively
+	// Set owner of children recursively
 	for _, v := range a.items {
 		switch a := v.(type) {
 		case *MapAttr:
@@ -96,8 +96,8 @@ func (a *ListAttr) set(index int, val interface{}) {
 	a.items[index] = val
 	switch sa := val.(type) {
 	case *MapAttr:
-		// val is MapAttr, set parent and owner accordingly
-		if sa.parent != nil || sa.owner != nil || sa.pkey != nil {
+		// val is MapAttr, Set parent and owner accordingly
+		if sa.parent != nil || sa.owner != nil || sa.pKey != nil {
 			gwlog.Panicf("MapAttr reused in index %d", index)
 		}
 
@@ -156,7 +156,7 @@ func (a *ListAttr) get(index int) interface{} {
 	return a.items[index]
 }
 
-// GetInt gets item value as int
+// GetInt64 gets item value as int
 func (a *ListAttr) GetInt(index int) int64 {
 	return a.get(index).(int64)
 }
@@ -166,7 +166,7 @@ func (a *ListAttr) GetFloat(index int) float64 {
 	return a.get(index).(float64)
 }
 
-// GetStr gets item value as string
+// GetString gets item value as string
 func (a *ListAttr) GetStr(index int) string {
 	return a.get(index).(string)
 }
@@ -268,14 +268,14 @@ func (a *ListAttr) append(val interface{}) {
 
 	switch sa := val.(type) {
 	case *MapAttr:
-		// val is ListAttr, set parent and owner accordingly
-		if sa.parent != nil || sa.owner != nil || sa.pkey != nil {
+		// val is ListAttr, Set parent and owner accordingly
+		if sa.parent != nil || sa.owner != nil || sa.pKey != nil {
 			gwlog.Panicf("MapAttr reused in append")
 		}
 
 		sa.parent = a
 		sa.owner = a.owner
-		sa.pkey = index
+		sa.pKey = index
 		sa.flag = a.flag
 
 		a.sendListAttrAppendToClients(sa.ToMap())
@@ -291,7 +291,7 @@ func (a *ListAttr) append(val interface{}) {
 	}
 }
 
-// SetInt sets int value at the index
+// SetInt64 sets int value at the index
 func (a *ListAttr) SetInt(index int, v int64) {
 	a.set(index, v)
 }

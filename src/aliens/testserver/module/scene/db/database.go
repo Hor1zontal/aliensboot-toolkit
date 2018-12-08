@@ -12,7 +12,7 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	//Database.EnsureTable("collection", &protocol.Collection{})
+	Database.EnsureTable("entity", &Entity{})
 }
 
 func Close() {

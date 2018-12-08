@@ -8,3 +8,11 @@
  *     jialin.he <kylinh@gmail.com>
  *******************************************************************************/
 package db
+
+import "aliens/aliensbot/mmo"
+
+type Entity struct {
+	ID 		mmo.EntityID  `bson:"_id"`
+	Type 	mmo.EntityType  `bson:"type"`
+	Data 	[]byte  `bson:"data"`
+}

@@ -13,7 +13,7 @@ import (
 
 //
 func handleEntityCall(authID int64, gateID string, request *protocol.EntityCall) {
-	entity, err := mmo.HandlerRemoteEntityCall(entity2.GetPlayerID(authID), core.EntityID(request.GetEntityID()), request.GetMethod(), request.GetArgs())
+	entity, err := mmo.RemoteEntityCall(entity2.GetPlayerID(authID), core.EntityID(request.GetEntityID()), request.GetMethod(), request.GetArgs())
 	if entity == nil {
 		exception.GameException(protocol.Code_entityNotFound)
 	}

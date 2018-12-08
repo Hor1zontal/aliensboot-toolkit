@@ -27,3 +27,13 @@ func (this *cacheManager) SetSpaceNode(spaceID string) error {
 func (this *cacheManager) GetSpaceNode(spaceID string) (string, error) {
 	return this.redisClient.GetData(spaceNodeKey + spaceID)
 }
+
+//设置entity所在的服务节点信息
+func (this *cacheManager) SetEntityNode(entityID string) error {
+	return this.redisClient.SetData(entityNodeKey + entityID, center.ClusterCenter.GetNodeID())
+}
+
+//获取entity所在的服务节点信息
+func (this *cacheManager) GetEntityNode(entityID string) (string, error) {
+	return this.redisClient.GetData(entityNodeKey + entityID)
+}

@@ -66,6 +66,16 @@ func (e *Entity) addRawTimer(d time.Duration, cb util.CallbackFunc) *util.Timer 
 	return t
 }
 
+func (e *Entity) addRawCallback(d time.Duration, cb util.CallbackFunc) *util.Timer {
+	var t *util.Timer
+	t = util.AddCallback(d, func() {
+		delete(e.rawTimers, t)
+		cb()
+	})
+	e.rawTimers[t] = struct{}{}
+	return t
+}
+
 
 func (e *Entity) genTimerId() EntityTimerID {
 	e.lastTimerId += 1

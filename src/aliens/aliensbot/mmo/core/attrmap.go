@@ -1,18 +1,16 @@
 package core
 
 import (
-	"strings"
-
+	"errors"
 	"fmt"
-
-	"github.com/xiaonanln/goworld/engine/gwlog"
+	"strings"
 )
 
 // MapAttr is a map attribute containing muiltiple attributes indexed by string keys
 type MapAttr struct {
 	owner  *Entity
 	parent interface{}
-	pkey   interface{} // key of this item in parent
+	pKey   interface{} // key of this item in parent
 	path   []interface{}
 	flag   attrFlag
 	attrs  map[string]interface{}
@@ -80,17 +78,17 @@ func (a *MapAttr) ForEach(f func(key string, val interface{})) {
 }
 
 // Set sets the key-attribute pair in MapAttr
-func (a *MapAttr) set(key string, val interface{}) {
+func (a *MapAttr) Set(key string, val interface{}) error {
 	var flag attrFlag
 	a.attrs[key] = val
 	switch sa := val.(type) {
 	case *MapAttr:
-		// val is MapAttr, set parent and owner accordingly
-		if sa.parent != nil || sa.owner != nil || sa.pkey != nil {
-			gwlog.Panicf("MapAttr reused in key %s", key)
+		// val is MapAttr, Set parent and owner accordingly
+		if sa.parent != nil || sa.owner != nil || sa.pKey != nil {
+			return errors.New(fmt.Sprintf("MapAttr reused in key %s", key))
 		}
 
-		if a.owner != nil && a == a.owner.attrs { // this is the root
+		if a.owner != nil && a == a.owner.MapAttr { // this is the root
 			flag = a.owner.getAttrFlag(key)
 		} else {
 			flag = a.flag
@@ -98,12 +96,11 @@ func (a *MapAttr) set(key string, val interface{}) {
 		sa.setParent(a.owner, a, key, flag)
 		a.sendAttrChangeToClients(key, sa.ToMap())
 	case *ListAttr:
-		// val is ListATtr, set parent and owner accordingly
+		// val is ListATtr, Set parent and owner accordingly
 		if sa.parent != nil || sa.owner != nil || sa.pkey != nil {
-			gwlog.Panicf("ListAttr reused in key %s", key)
+			return errors.New(fmt.Sprintf("ListAttr reused in key %s", key))
 		}
-
-		if a.owner != nil && a == a.owner.attrs { // this is the root
+		if a.owner != nil && a == a.owner.MapAttr { // this is the root
 			flag = a.owner.getAttrFlag(key)
 		} else {
 			flag = a.flag
@@ -113,77 +110,78 @@ func (a *MapAttr) set(key string, val interface{}) {
 	default:
 		a.sendAttrChangeToClients(key, val)
 	}
+	return nil
 }
 
-// SetInt sets int value at the key
-func (a *MapAttr) SetInt(key string, v int64) {
-	a.set(key, v)
+// SetInt64 sets int value at the key
+func (a *MapAttr) SetInt64(key string, v int64) {
+	a.Set(key, v)
 }
 
 // SetFloat sets float value at the key
 func (a *MapAttr) SetFloat(key string, v float64) {
-	a.set(key, v)
+	a.Set(key, v)
 }
 
 // SetBool sets bool value at the key
 func (a *MapAttr) SetBool(key string, v bool) {
-	a.set(key, v)
+	a.Set(key, v)
 }
 
 // SetStr sets string value at the key
 func (a *MapAttr) SetStr(key string, v string) {
-	a.set(key, v)
+	a.Set(key, v)
 }
 
 // SetMapAttr sets MapAttr value at the key
 func (a *MapAttr) SetMapAttr(key string, attr *MapAttr) {
-	a.set(key, attr)
+	a.Set(key, attr)
 }
 
 // SetListAttr sets ListAttr value at the key
 func (a *MapAttr) SetListAttr(key string, attr *ListAttr) {
-	a.set(key, attr)
+	a.Set(key, attr)
 }
 
 // SetDefaultInt sets default int value at the key
 func (a *MapAttr) SetDefaultInt(key string, v int64) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, v)
+		a.Set(key, v)
 	}
 }
 
 // SetDefaultFloat sets default float value at the key
 func (a *MapAttr) SetDefaultFloat(key string, v float64) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, v)
+		a.Set(key, v)
 	}
 }
 
 // SetDefaultBool sets default bool value at the key
 func (a *MapAttr) SetDefaultBool(key string, v bool) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, v)
+		a.Set(key, v)
 	}
 }
 
 // SetDefaultStr sets default string value at the key
 func (a *MapAttr) SetDefaultStr(key string, v string) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, v)
+		a.Set(key, v)
 	}
 }
 
 // SetDefaultMapAttr sets default MapAttr value at the key
 func (a *MapAttr) SetDefaultMapAttr(key string, attr *MapAttr) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, attr)
+		a.Set(key, attr)
 	}
 }
 
 // SetDefaultListAttr sets default ListAttr value at the key
 func (a *MapAttr) SetDefaultListAttr(key string, attr *ListAttr) {
 	if _, ok := a.attrs[key]; !ok {
-		a.set(key, attr)
+		a.Set(key, attr)
 	}
 }
 
@@ -219,21 +217,18 @@ func (a *MapAttr) _getPathFromOwner() []interface{} {
 	}
 
 	path := make([]interface{}, 0, 4)
-	path = append(path, a.pkey)
+	path = append(path, a.pKey)
 	return getPathFromOwner(a.parent, path)
 }
 
-// get returns the attribute of specified key in MapAttr
-func (a *MapAttr) get(key string) interface{} {
-	val, ok := a.attrs[key]
-	if !ok {
-		gwlog.Panicf("key not exists: %s", key)
-	}
+// Get returns the attribute of specified key in MapAttr
+func (a *MapAttr) Get(key string) interface{} {
+	val, _ := a.attrs[key]
 	return val
 }
 
-// GetInt returns the attribute of specified key in MapAttr as int64
-func (a *MapAttr) GetInt(key string) int64 {
+// GetInt64 returns the attribute of specified key in MapAttr as int64
+func (a *MapAttr) GetInt64(key string) int64 {
 	if val, ok := a.attrs[key]; ok {
 		return val.(int64)
 	} else {
@@ -241,8 +236,8 @@ func (a *MapAttr) GetInt(key string) int64 {
 	}
 }
 
-// GetStr returns the attribute of specified key in MapAttr as string
-func (a *MapAttr) GetStr(key string) string {
+// GetString returns the attribute of specified key in MapAttr as string
+func (a *MapAttr) GetString(key string) string {
 	if val, ok := a.attrs[key]; ok {
 		return val.(string)
 	} else {
@@ -274,7 +269,7 @@ func (a *MapAttr) GetMapAttr(key string) *MapAttr {
 		return val.(*MapAttr)
 	} else {
 		v := NewMapAttr()
-		a.set(key, v)
+		a.Set(key, v)
 		return v
 	}
 }
@@ -285,7 +280,7 @@ func (a *MapAttr) GetListAttr(key string) *ListAttr {
 		return val.(*ListAttr)
 	} else {
 		v := NewListAttr()
-		a.set(key, v)
+		a.Set(key, v)
 		return v
 	}
 }
@@ -437,13 +432,13 @@ func (a *MapAttr) AssignMap(doc map[string]interface{}) {
 		case map[string]interface{}:
 			ia := NewMapAttr()
 			ia.AssignMap(iv)
-			a.set(k, ia)
+			a.Set(k, ia)
 		case []interface{}:
 			ia := NewListAttr()
 			ia.AssignList(iv)
-			a.set(k, ia)
+			a.Set(k, ia)
 		default:
-			a.set(k, uniformAttrType(v))
+			a.Set(k, uniformAttrType(v))
 		}
 	}
 }
@@ -458,20 +453,20 @@ func (a *MapAttr) AssignMapWithFilter(doc map[string]interface{}, filter func(st
 		if iv, ok := v.(map[string]interface{}); ok {
 			ia := NewMapAttr()
 			ia.AssignMap(iv)
-			a.set(k, ia)
+			a.Set(k, ia)
 		} else if iv, ok := v.([]interface{}); ok {
 			ia := NewListAttr()
 			ia.AssignList(iv)
-			a.set(k, ia)
+			a.Set(k, ia)
 		} else {
-			a.set(k, uniformAttrType(v))
+			a.Set(k, uniformAttrType(v))
 		}
 	}
 }
 
 func (a *MapAttr) removeFromParent() {
 	a.parent = nil
-	a.pkey = nil
+	a.pKey = nil
 	a.clearOwner()
 }
 
@@ -493,7 +488,7 @@ func (a *MapAttr) clearOwner() {
 
 func (a *MapAttr) setParent(owner *Entity, parent interface{}, pkey interface{}, flag attrFlag) {
 	a.parent = parent
-	a.pkey = pkey
+	a.pKey = pkey
 	a.setOwner(owner, flag)
 }
 
@@ -501,7 +496,7 @@ func (a *MapAttr) setOwner(owner *Entity, flag attrFlag) {
 	a.owner = owner
 	a.flag = flag
 
-	// set owner of children recursively
+	// Set owner of children recursively
 	for _, v := range a.attrs {
 		switch a := v.(type) {
 		case *MapAttr:

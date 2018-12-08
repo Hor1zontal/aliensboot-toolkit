@@ -15,7 +15,7 @@ loop:
 		switch ma := a.(type) {
 		case *MapAttr:
 			if ma.parent != nil {
-				path = append(path, ma.pkey)
+				path = append(path, ma.pKey)
 				a = ma.parent
 			} else {
 				break loop

@@ -24,10 +24,9 @@ message MigrateOut {
 
 //entity
 message MigrateIn {
-    Entity entity = 1;
-    int64 authID = 2;
-    string gateID = 3;
-    string spaceID = 4;
+    string spaceID = 1;
+    string entityID = 2;
+    bytes data = 3;
 }
 
 //调用实体方法
