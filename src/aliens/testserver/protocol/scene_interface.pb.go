@@ -47,6 +47,23 @@ func (m *LoginScene) GetSpaceID() string {
 	return ""
 }
 
+// 移动到场景
+type MoveScene struct {
+	SpaceID string `protobuf:"bytes,3,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
+}
+
+func (m *MoveScene) Reset()                    { *m = MoveScene{} }
+func (m *MoveScene) String() string            { return proto.CompactTextString(m) }
+func (*MoveScene) ProtoMessage()               {}
+func (*MoveScene) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{1} }
+
+func (m *MoveScene) GetSpaceID() string {
+	if m != nil {
+		return m.SpaceID
+	}
+	return ""
+}
+
 // entity
 type MigrateOut struct {
 	EntityID  string `protobuf:"bytes,1,opt,name=entityID,proto3" json:"entityID,omitempty"`
@@ -56,7 +73,7 @@ type MigrateOut struct {
 func (m *MigrateOut) Reset()                    { *m = MigrateOut{} }
 func (m *MigrateOut) String() string            { return proto.CompactTextString(m) }
 func (*MigrateOut) ProtoMessage()               {}
-func (*MigrateOut) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{1} }
+func (*MigrateOut) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{2} }
 
 func (m *MigrateOut) GetEntityID() string {
 	if m != nil {
@@ -82,7 +99,7 @@ type MigrateIn struct {
 func (m *MigrateIn) Reset()                    { *m = MigrateIn{} }
 func (m *MigrateIn) String() string            { return proto.CompactTextString(m) }
 func (*MigrateIn) ProtoMessage()               {}
-func (*MigrateIn) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{2} }
+func (*MigrateIn) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{3} }
 
 func (m *MigrateIn) GetSpaceID() string {
 	if m != nil {
@@ -115,7 +132,7 @@ type EntityCall struct {
 func (m *EntityCall) Reset()                    { *m = EntityCall{} }
 func (m *EntityCall) String() string            { return proto.CompactTextString(m) }
 func (*EntityCall) ProtoMessage()               {}
-func (*EntityCall) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{3} }
+func (*EntityCall) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{4} }
 
 func (m *EntityCall) GetEntityID() string {
 	if m != nil {
@@ -138,32 +155,32 @@ func (m *EntityCall) GetArgs() [][]byte {
 	return nil
 }
 
-//
-type LoginSceneRet struct {
+// 场景变更推送
+type ScenePush struct {
 	SpaceID string  `protobuf:"bytes,1,opt,name=spaceID,proto3" json:"spaceID,omitempty"`
 	Entity  *Entity `protobuf:"bytes,2,opt,name=entity" json:"entity,omitempty"`
 }
 
-func (m *LoginSceneRet) Reset()                    { *m = LoginSceneRet{} }
-func (m *LoginSceneRet) String() string            { return proto.CompactTextString(m) }
-func (*LoginSceneRet) ProtoMessage()               {}
-func (*LoginSceneRet) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{4} }
+func (m *ScenePush) Reset()                    { *m = ScenePush{} }
+func (m *ScenePush) String() string            { return proto.CompactTextString(m) }
+func (*ScenePush) ProtoMessage()               {}
+func (*ScenePush) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{5} }
 
-func (m *LoginSceneRet) GetSpaceID() string {
+func (m *ScenePush) GetSpaceID() string {
 	if m != nil {
 		return m.SpaceID
 	}
 	return ""
 }
 
-func (m *LoginSceneRet) GetEntity() *Entity {
+func (m *ScenePush) GetEntity() *Entity {
 	if m != nil {
 		return m.Entity
 	}
 	return nil
 }
 
-// 场景数据变更推送
+// entity数据变更推送
 type EntityPush struct {
 	Neighbors       []*Entity `protobuf:"bytes,1,rep,name=neighbors" json:"neighbors,omitempty"`
 	DistoryEntities []string  `protobuf:"bytes,2,rep,name=distoryEntities" json:"distoryEntities,omitempty"`
@@ -172,7 +189,7 @@ type EntityPush struct {
 func (m *EntityPush) Reset()                    { *m = EntityPush{} }
 func (m *EntityPush) String() string            { return proto.CompactTextString(m) }
 func (*EntityPush) ProtoMessage()               {}
-func (*EntityPush) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{5} }
+func (*EntityPush) Descriptor() ([]byte, []int) { return fileDescriptorSceneInterface, []int{6} }
 
 func (m *EntityPush) GetNeighbors() []*Entity {
 	if m != nil {
@@ -189,11 +206,12 @@ func (m *EntityPush) GetDistoryEntities() []string {
 }
 
 func init() {
-	proto.RegisterType((*LoginScene)(nil), "protocol.LoginScene")
-	proto.RegisterType((*MigrateOut)(nil), "protocol.MigrateOut")
-	proto.RegisterType((*MigrateIn)(nil), "protocol.MigrateIn")
+	proto.RegisterType((*LoginScene)(nil), "protocol.loginScene")
+	proto.RegisterType((*MoveScene)(nil), "protocol.moveScene")
+	proto.RegisterType((*MigrateOut)(nil), "protocol.migrateOut")
+	proto.RegisterType((*MigrateIn)(nil), "protocol.migrateIn")
 	proto.RegisterType((*EntityCall)(nil), "protocol.entityCall")
-	proto.RegisterType((*LoginSceneRet)(nil), "protocol.LoginSceneRet")
+	proto.RegisterType((*ScenePush)(nil), "protocol.scenePush")
 	proto.RegisterType((*EntityPush)(nil), "protocol.entityPush")
 }
 func (m *LoginScene) Marshal() (dAtA []byte, err error) {
@@ -222,6 +240,30 @@ func (m *LoginScene) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintSceneInterface(dAtA, i, uint64(len(m.GateID)))
 		i += copy(dAtA[i:], m.GateID)
 	}
+	if len(m.SpaceID) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintSceneInterface(dAtA, i, uint64(len(m.SpaceID)))
+		i += copy(dAtA[i:], m.SpaceID)
+	}
+	return i, nil
+}
+
+func (m *MoveScene) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MoveScene) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
 	if len(m.SpaceID) > 0 {
 		dAtA[i] = 0x1a
 		i++
@@ -335,7 +377,7 @@ func (m *EntityCall) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *LoginSceneRet) Marshal() (dAtA []byte, err error) {
+func (m *ScenePush) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -345,7 +387,7 @@ func (m *LoginSceneRet) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *LoginSceneRet) MarshalTo(dAtA []byte) (int, error) {
+func (m *ScenePush) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -440,6 +482,16 @@ func (m *LoginScene) Size() (n int) {
 	return n
 }
 
+func (m *MoveScene) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.SpaceID)
+	if l > 0 {
+		n += 1 + l + sovSceneInterface(uint64(l))
+	}
+	return n
+}
+
 func (m *MigrateOut) Size() (n int) {
 	var l int
 	_ = l
@@ -492,7 +544,7 @@ func (m *EntityCall) Size() (n int) {
 	return n
 }
 
-func (m *LoginSceneRet) Size() (n int) {
+func (m *ScenePush) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.SpaceID)
@@ -560,10 +612,10 @@ func (m *LoginScene) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LoginScene: wiretype end group for non-group")
+			return fmt.Errorf("proto: loginScene: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LoginScene: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: loginScene: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -664,6 +716,85 @@ func (m *LoginScene) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *MoveScene) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowSceneInterface
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: moveScene: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: moveScene: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SpaceID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowSceneInterface
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthSceneInterface
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SpaceID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipSceneInterface(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthSceneInterface
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *MigrateOut) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -687,10 +818,10 @@ func (m *MigrateOut) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MigrateOut: wiretype end group for non-group")
+			return fmt.Errorf("proto: migrateOut: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MigrateOut: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: migrateOut: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -795,10 +926,10 @@ func (m *MigrateIn) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MigrateIn: wiretype end group for non-group")
+			return fmt.Errorf("proto: migrateIn: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MigrateIn: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: migrateIn: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1048,7 +1179,7 @@ func (m *EntityCall) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *LoginSceneRet) Unmarshal(dAtA []byte) error {
+func (m *ScenePush) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1071,10 +1202,10 @@ func (m *LoginSceneRet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LoginSceneRet: wiretype end group for non-group")
+			return fmt.Errorf("proto: scenePush: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LoginSceneRet: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: scenePush: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1378,26 +1509,27 @@ var (
 func init() { proto.RegisterFile("scene_interface.proto", fileDescriptorSceneInterface) }
 
 var fileDescriptorSceneInterface = []byte{
-	// 330 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x91, 0xd1, 0x4a, 0xc3, 0x30,
-	0x14, 0x86, 0xc9, 0x2a, 0x75, 0x3d, 0x4e, 0xd4, 0x80, 0xa3, 0x0c, 0x19, 0xa5, 0x57, 0xbd, 0xea,
-	0x85, 0xbe, 0x81, 0x4e, 0x61, 0xa0, 0x28, 0x99, 0x7a, 0x2b, 0x59, 0x9b, 0xb5, 0x81, 0xae, 0x19,
-	0xcd, 0xd9, 0xc5, 0xde, 0xd0, 0x4b, 0x1f, 0x41, 0xf6, 0x24, 0xd2, 0x34, 0xb5, 0x6e, 0xc8, 0xae,
-	0x9a, 0xff, 0xfc, 0xa7, 0xdf, 0xff, 0xb7, 0x81, 0x4b, 0x9d, 0x88, 0x52, 0x7c, 0xc8, 0x12, 0x45,
-	0xb5, 0xe0, 0x89, 0x88, 0x57, 0x95, 0x42, 0x45, 0xfb, 0xe6, 0x91, 0xa8, 0x62, 0x74, 0xd1, 0x2c,
-	0x2c, 0x55, 0x2a, 0x8a, 0xc6, 0x0c, 0xdf, 0x01, 0x1e, 0x55, 0x26, 0xcb, 0x59, 0xed, 0xd0, 0x21,
-	0xb8, 0x7c, 0x8d, 0xf9, 0x74, 0xe2, 0x93, 0x80, 0x44, 0x0e, 0xb3, 0xaa, 0x9e, 0x67, 0x1c, 0xc5,
-	0x74, 0xe2, 0xf7, 0x02, 0x12, 0x79, 0xcc, 0x2a, 0xea, 0xc3, 0xb1, 0x5e, 0xf1, 0xa4, 0x36, 0x1c,
-	0x63, 0xb4, 0x32, 0x7c, 0x00, 0x78, 0x92, 0x59, 0xc5, 0x51, 0x3c, 0xaf, 0x91, 0x8e, 0xa0, 0x2f,
-	0x4a, 0x94, 0xb8, 0xb1, 0x64, 0x8f, 0xfd, 0x6a, 0x7a, 0x05, 0x1e, 0xaa, 0x99, 0xa5, 0x34, 0xf8,
-	0x6e, 0x10, 0xbe, 0x81, 0x67, 0x39, 0xd3, 0xf2, 0x6f, 0x1c, 0xd9, 0x89, 0xdb, 0x09, 0xe8, 0xed,
-	0x05, 0x50, 0x38, 0x4a, 0x39, 0x72, 0xd3, 0x70, 0xc0, 0xcc, 0x39, 0x7c, 0x05, 0x68, 0xfc, 0x3b,
-	0x5e, 0x14, 0x07, 0xeb, 0x0d, 0xc1, 0x5d, 0x0a, 0xcc, 0x55, 0xda, 0x7e, 0x7a, 0xa3, 0x6a, 0x2a,
-	0xaf, 0x32, 0xed, 0x3b, 0x81, 0x53, 0x53, 0xeb, 0x73, 0x38, 0x83, 0xd3, 0xee, 0x67, 0x32, 0x81,
-	0x07, 0x0a, 0x47, 0xe0, 0x36, 0x11, 0x06, 0x7b, 0x72, 0x7d, 0x1e, 0xb7, 0xb7, 0x14, 0xdf, 0x9b,
-	0x39, 0xb3, 0x7e, 0xb8, 0x68, 0xab, 0xbe, 0xac, 0x75, 0x4e, 0x63, 0xf0, 0x4a, 0x21, 0xb3, 0x7c,
-	0xae, 0x2a, 0xed, 0x93, 0xc0, 0xf9, 0xf7, 0xd5, 0x6e, 0x85, 0x46, 0x70, 0x96, 0x4a, 0x8d, 0xaa,
-	0xda, 0x18, 0x4f, 0x0a, 0xed, 0xf7, 0x02, 0x27, 0xf2, 0xd8, 0xfe, 0xf8, 0x76, 0xf0, 0xb9, 0x1d,
-	0x93, 0xaf, 0xed, 0x98, 0x7c, 0x6f, 0xc7, 0x64, 0xee, 0x1a, 0xe6, 0xcd, 0x4f, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x7e, 0x7a, 0xb2, 0xa9, 0x54, 0x02, 0x00, 0x00,
+	// 338 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x91, 0xd1, 0x4a, 0xfb, 0x30,
+	0x14, 0xc6, 0xc9, 0xfa, 0xa7, 0xff, 0xe5, 0x38, 0x50, 0x03, 0x8e, 0x32, 0x64, 0x94, 0x82, 0xd0,
+	0xab, 0x5e, 0xe8, 0x1b, 0xe8, 0x14, 0x76, 0x35, 0xe9, 0xd4, 0x5b, 0xc9, 0xda, 0xac, 0x0d, 0xb4,
+	0xcd, 0x68, 0xce, 0x84, 0xbd, 0xa1, 0x97, 0x3e, 0x82, 0xec, 0x49, 0xa4, 0x49, 0xeb, 0xdc, 0xd0,
+	0x5d, 0x35, 0xdf, 0xf9, 0x4e, 0x7f, 0xdf, 0x47, 0x02, 0x17, 0x3a, 0x11, 0x95, 0x78, 0x95, 0x15,
+	0x8a, 0x7a, 0xc9, 0x13, 0x11, 0xad, 0x6a, 0x85, 0x8a, 0xf5, 0xcd, 0x27, 0x51, 0xc5, 0xe8, 0xdc,
+	0x2e, 0x94, 0x2a, 0x15, 0x85, 0x35, 0x83, 0x17, 0x80, 0x42, 0x65, 0xb2, 0x9a, 0x37, 0x0e, 0x1b,
+	0x82, 0xcb, 0xd7, 0x98, 0x4f, 0x27, 0x1e, 0xf1, 0x49, 0xe8, 0xc4, 0xad, 0x6a, 0xe6, 0x19, 0x47,
+	0x31, 0x9d, 0x78, 0x3d, 0x9f, 0x84, 0x34, 0x6e, 0x15, 0xf3, 0xe0, 0xbf, 0x5e, 0xf1, 0xa4, 0x31,
+	0x1c, 0x63, 0x74, 0x32, 0xb8, 0x02, 0x5a, 0xaa, 0x37, 0x61, 0xb1, 0x7f, 0xaf, 0x3d, 0x00, 0x94,
+	0x32, 0xab, 0x39, 0x8a, 0xd9, 0x1a, 0xd9, 0x08, 0xfa, 0xa2, 0x42, 0x89, 0x9b, 0xb6, 0x00, 0x8d,
+	0xbf, 0x35, 0xbb, 0x04, 0x8a, 0x6a, 0xde, 0x52, 0x6c, 0x8b, 0xdd, 0x20, 0x78, 0x06, 0xda, 0x72,
+	0xa6, 0xd5, 0xcf, 0x38, 0xb2, 0x17, 0xb7, 0x17, 0xd0, 0x3b, 0x08, 0x60, 0xf0, 0x2f, 0xe5, 0xc8,
+	0x4d, 0xc3, 0x41, 0x6c, 0xce, 0xc1, 0x13, 0x80, 0xf5, 0xef, 0x78, 0x51, 0x1c, 0xad, 0x37, 0x04,
+	0xb7, 0x14, 0x98, 0xab, 0xb4, 0xbb, 0x21, 0xab, 0x1a, 0x2a, 0xaf, 0x33, 0xed, 0x39, 0xbe, 0xd3,
+	0x50, 0x9b, 0x73, 0x30, 0x03, 0x6a, 0x1e, 0xe2, 0x71, 0xad, 0xf3, 0x23, 0x65, 0x43, 0x70, 0x2d,
+	0xde, 0x20, 0x4f, 0xae, 0xcf, 0xa2, 0xee, 0x21, 0xa3, 0x7b, 0x33, 0x8f, 0x5b, 0x3f, 0x58, 0x76,
+	0x35, 0x0d, 0x31, 0x02, 0x5a, 0x09, 0x99, 0xe5, 0x0b, 0x55, 0x6b, 0x8f, 0xf8, 0xce, 0xaf, 0xbf,
+	0xee, 0x56, 0x58, 0x08, 0xa7, 0xa9, 0xd4, 0xa8, 0xea, 0x8d, 0xf1, 0xa4, 0xd0, 0x5e, 0xcf, 0x77,
+	0x42, 0x1a, 0x1f, 0x8e, 0x6f, 0x07, 0xef, 0xdb, 0x31, 0xf9, 0xd8, 0x8e, 0xc9, 0xe7, 0x76, 0x4c,
+	0x16, 0xae, 0x61, 0xde, 0x7c, 0x05, 0x00, 0x00, 0xff, 0xff, 0x1b, 0x75, 0x31, 0x7a, 0x77, 0x02,
+	0x00, 0x00,
 }

@@ -11,6 +11,10 @@ const (
 
 type EntityTimerID int
 
+func (this EntityTimerID) IsNil() bool {
+	return this == 0
+}
+
 
 type entityTimerInfo struct {
 	FireTime       time.Time
@@ -22,7 +26,25 @@ type entityTimerInfo struct {
 }
 
 
-func (e *Entity) AddTimer(d time.Duration, method string, args ...interface{}) EntityTimerID {
+// CancelTimer cancels the Callback / Timer
+func (e *Entity) CancelTimer(tid EntityTimerID) {
+	if tid.IsNil() {
+		return
+	}
+	timerInfo := e.timers[tid]
+	if timerInfo == nil {
+		return
+	}
+	delete(e.timers, tid)
+	e.cancelRawTimer(timerInfo.rawTimer)
+}
+
+func (e *Entity) cancelRawTimer(t *util.Timer) {
+	delete(e.rawTimers, t)
+	t.Cancel()
+}
+
+func (e *Entity) AddTimer(d time.Duration, repeat bool, method string, args ...interface{}) EntityTimerID {
 	if d < minTimerInterval { // minimal interval for repeat timer
 		d = minTimerInterval
 	}
@@ -33,7 +55,7 @@ func (e *Entity) AddTimer(d time.Duration, method string, args ...interface{}) E
 		RepeatInterval: d,
 		Method:         method,
 		Args:           args,
-		Repeat:         true,
+		Repeat:         repeat,
 	}
 	e.timers[tid] = info
 	info.rawTimer = e.addRawTimer(d, func() {
@@ -42,8 +64,18 @@ func (e *Entity) AddTimer(d time.Duration, method string, args ...interface{}) E
 	return tid
 }
 
+func (e *Entity) clearRawTimers() {
+	for t := range e.rawTimers {
+		t.Cancel()
+	}
+	e.rawTimers = nil
+}
+
 func (e *Entity) triggerTimer(tid EntityTimerID, isRepeat bool) {
 	timerInfo := e.timers[tid] // should never be nil
+	if timerInfo == nil {
+		return
+	}
 	if !timerInfo.Repeat {
 		delete(e.timers, tid)
 	} else {
@@ -52,7 +84,6 @@ func (e *Entity) triggerTimer(tid EntityTimerID, isRepeat bool) {
 				e.triggerTimer(tid, true)
 			})
 		}
-
 		now := time.Now()
 		timerInfo.FireTime = now.Add(timerInfo.RepeatInterval)
 	}

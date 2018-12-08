@@ -4,7 +4,6 @@ package service
 
 import (
 	"aliens/aliensbot/exception"
-	"aliens/aliensbot/log"
 	"aliens/aliensbot/mmo"
 	"aliens/aliensbot/mmo/core"
 	entity2 "aliens/testserver/module/scene/entity"
@@ -15,10 +14,6 @@ import (
 func handleEntityCall(authID int64, gateID string, request *protocol.EntityCall) {
 	entity, err := mmo.RemoteEntityCall(entity2.GetPlayerID(authID), core.EntityID(request.GetEntityID()), request.GetMethod(), request.GetArgs())
 	if entity == nil {
-		exception.GameException(protocol.Code_entityNotFound)
-	}
-	if err != nil {
-		log.Error(err)
-		exception.GameException(protocol.Code_invalidEntityCall)
+		exception.GameException1(protocol.Code_entityNotFound, err)
 	}
 }

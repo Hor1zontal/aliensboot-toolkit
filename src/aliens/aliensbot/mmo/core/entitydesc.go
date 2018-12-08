@@ -104,6 +104,10 @@ func (desc *EntityDesc) DefineAttr(attr string, flag uint) {
 	}
 }
 
+func (desc *EntityDesc) SetPersistInterval(duration time.Duration) {
+	desc.persistInterval = duration
+}
+
 func (desc *EntityDesc) SetUseAOI(useAOI bool, aoiDistance unit.Coord) {
 	if aoiDistance < 0 {
 		log.Panic("aoi distance < 0")

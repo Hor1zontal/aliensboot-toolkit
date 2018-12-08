@@ -40,6 +40,7 @@ type Player struct {
 	mmo.Entity   // Entity type should always inherit entity.Entity
 
 	syncTimerID mmo.EntityTimerID
+	releaseTimerID mmo.EntityTimerID
 
 }
 
@@ -58,33 +59,43 @@ func (player *Player) DescribeEntityType(desc *core.EntityDesc) {
 
 
 func (player *Player) OnMigrateOut() {
-
+	log.Debugf("handler migrateOut %v: %v - %v", player.GetSpaceID(), player.GetUid(), player.GetGateID())
 }
 
 func (player *Player) OnMigrateIn() {
-
+	log.Debugf("handler migrateIn %v: %v - %v", player.GetSpaceID(), player.GetUid(), player.GetGateID())
 	player.onLoad()
+	player.syncTimerID = player.AddTimer(200 * time.Millisecond, true, "SyncData")
 }
-
 
 
 func (player *Player) Login(authID int64, gateID string) {
+	log.Debugf("handler login %v - %v", authID, gateID)
 	player.Set(playerAttrUid, authID)
 	player.Set(playerAttrGateid, gateID)
 
-
 	player.onLoad()
+
+	//取消定时释放
+	player.CancelTimer(player.releaseTimerID)
 	//玩家每100ms同步一次数据
-	player.syncTimerID = player.AddTimer(200 * time.Millisecond, "SyncData")
+	player.syncTimerID = player.AddTimer(200 * time.Millisecond, true, "SyncData")
+}
+
+func (player *Player) Logout() {
+	player.Set(playerAttrGateid, "")
+	player.CancelTimer(player.syncTimerID)
+
+	//开启1分钟释放
+	player.releaseTimerID = player.AddTimer(10 * time.Second, false, "Release")
 }
 
 func (player *Player) onLoad() {
-
-	gateID := player.GetString(playerAttrGateid)
-	authID := player.GetInt64(playerAttrUid)
+	gateID := player.GetGateID()
+	authID := player.GetUid()
 	syncMessage := &protocol.Response{
-		Scene:&protocol.Response_LoginSceneRet{
-			LoginSceneRet:&protocol.LoginSceneRet{
+		Scene:&protocol.Response_ScenePush {
+			ScenePush:&protocol.ScenePush{
 				SpaceID:string(player.GetSpaceID()),
 				Entity:utils.BuildEntity(player.Entity, true),
 			},
@@ -93,29 +104,22 @@ func (player *Player) onLoad() {
 
 	//玩家的消息绑定到当前服务器节点
 	rpc.Gate.BindService1(gateID, authID, conf.GetServiceName())
-
 	rpc.Gate.Push(conf.GetServiceName(), authID, gateID, syncMessage)
 
 }
 
-
-func (player *Player) Logout() {
-	player.Destroy()
-}
-
-
 func (player *Player) Move_Client(x string, y string) {
-	log.Debugf("%v move %v - %v", player.GetID(), x, y)
-
-
 	player.SetPosition(unit.Vector{X:unit.Coord(util.StringToFloat32(x)), Y:unit.Coord(util.StringToFloat32(y)), Z:0})
 }
 
+//释放玩家内存
+func (player *Player) Release() {
+	player.Destroy()
+}
 
 ////sync self 发送自己的玩家数据
 func (player *Player) SyncData() {
-	if !player.IsLogin() {
-		//log.Warnf("player %v is not login", player.GetID())
+	if !player.IsOnline() {
 		return
 	}
 
@@ -136,11 +140,17 @@ func (player *Player) SyncData() {
 		},
 	}
 
-	rpc.Gate.Push(conf.GetServiceName(), player.GetInt64(playerAttrUid), player.GetString(playerAttrGateid), syncMessage)
+	rpc.Gate.Push(conf.GetServiceName(), player.GetUid(), player.GetGateID(), syncMessage)
 }
 
+func (player *Player) IsOnline() bool {
+	return player.GetUid() > 0 && player.GetGateID() != ""
+}
 
+func (player *Player) GetUid() int64 {
+	return player.GetInt64(playerAttrUid)
+}
 
-func (player *Player) IsLogin() bool {
-	return player.GetInt64(playerAttrUid) > 0
+func (player *Player) GetGateID() string {
+	return player.GetString(playerAttrGateid)
 }

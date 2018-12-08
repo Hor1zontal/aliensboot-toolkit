@@ -7,6 +7,7 @@ enum Code {
     ServerException = 2; //服务器处理异常  内部抛异常
     DBExcetpion = 3; //数据库异常
     ConfigException = 4; //配置表异常 未加载到
+    InternalException = 5; //服务内部处理失败
 
     //game
     ValidateException = 9; //验证用户失败、需要重新登录校验

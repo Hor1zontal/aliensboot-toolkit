@@ -17,7 +17,7 @@ type IEntityHandler interface {
 	Save(entityID EntityID, entityType EntityType, data map[string]interface{}, callback func()) error
 
 	//加载entity
-	Load(entityID EntityID) map[string]interface{}
+	Load(entityID EntityID) (map[string]interface{}, error)
 
 	//远程调用entity方法
 	CallRemote(entityID EntityID, method string, args [][]byte) error
@@ -45,6 +45,6 @@ func (*_EmptyHandler) CallRemote(entityID EntityID, method string, args [][]byte
 	return errors.New("not implements")
 }
 
-func (*_EmptyHandler) MigrateRemote(spaceID EntityID, data []byte) error {
+func (*_EmptyHandler) MigrateRemote(spaceID EntityID, entityID EntityID, data []byte) error {
 	return errors.New("not implements")
 }

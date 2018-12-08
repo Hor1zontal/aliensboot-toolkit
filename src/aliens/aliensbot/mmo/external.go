@@ -64,7 +64,7 @@ func GetSpace(id EntityID) *Space {
 }
 
 //entity迁移
-func MigrateOut(spaceID EntityID, entityID EntityID) error {
+func MigrateTo(spaceID EntityID, entityID EntityID) error {
 	return core.EntityManager.MigrateOut(spaceID, entityID)
 }
 
@@ -74,7 +74,7 @@ func MigrateIn(spaceID EntityID, entityID EntityID, data []byte) error {
 	if space == nil {
 		return errors.New(fmt.Sprintf("space %v not found ", spaceID))
 	}
-	core.EntityManager.MigrateIn(entityID, space, data)
+	return core.EntityManager.MigrateIn(entityID, space, data)
 }
 
 //实体登录到场景
@@ -102,24 +102,15 @@ func Call(id EntityID, method string, args ...interface{}) error {
 	entity, err := core.EntityManager.LocalEntityCall(id, method, args)
 	//本地不存在、调用远程对象
 	if entity == nil {
-		return callRemote(id, method, args)
+		argsData := make([][]byte, len(args))
+		for i, arg := range args {
+			data, err := msgpack.Marshal(arg)
+			if err != nil {
+				return err
+			}
+			argsData[i] = data
+		}
+		return core.EntityManager.GetHandler().CallRemote(id, method, argsData)
 	}
 	return err
 }
-
-func callRemote(id EntityID, method string, args []interface{}) error {
-	argsData := make([][]byte, len(args))
-	for i, arg := range args {
-		data, err := msgpack.Marshal(arg)
-		if err != nil {
-			return err
-		}
-		argsData[i] = data
-	}
-	return sender.CallRemote(id, method, argsData)
-}
-
-
-
-
-

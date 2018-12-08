@@ -62,7 +62,7 @@ func (e *Entity) restoreTimers(data []byte) error {
 	if err := msgpack.Unmarshal(data, &timers); err != nil {
 		return err
 	}
-	log.Debug("%s: %d timers restored: %v", e, len(timers), timers)
+	log.Debugf("%s: %d timers restored: %v", e, len(timers), timers)
 	now := time.Now()
 	for _, timer := range timers {
 		tid := e.genTimerId()

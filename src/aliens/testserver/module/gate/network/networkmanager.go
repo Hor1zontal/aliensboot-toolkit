@@ -4,6 +4,7 @@ import (
 	"aliens/aliensbot/cluster/center"
 	"aliens/aliensbot/common/data_structures/set"
 	"aliens/aliensbot/common/util"
+	"aliens/aliensbot/log"
 	modulebase "aliens/aliensbot/module/base"
 	"aliens/aliensbot/protocol/base"
 	"aliens/testserver/dispatch/rpc"
@@ -81,6 +82,7 @@ func (this *networkManager) KickOut(authID int64, kickType protocol.KickType) {
 func (this *networkManager) Push(authID int64, message *base.Any) {
 	auth := this.authNetworks[authID]
 	if auth == nil {
+		log.Debugf("auth network not found %v", authID)
 		return
 	}
 	auth.Push(message)
@@ -103,8 +105,11 @@ func (this *networkManager) AddNetwork(network *Network) {
 func (this *networkManager) RemoveNetwork(network *Network) {
 	network.OnClose()
 	if network.IsAuth() {
-		delete(this.authNetworks, network.authID)
-		cache.GateCache.CleanAuthGateID(network.authID)
+		storeNetwork := this.authNetworks[network.authID]
+		if storeNetwork != nil && storeNetwork == network {
+			delete(this.authNetworks, network.authID)
+			cache.GateCache.CleanAuthGateID(network.authID)
+		}
 	} else {
 		//this.timeWheel.RemoveTimer(network)
 		this.networks.Remove(network)
@@ -130,6 +135,9 @@ func (this *networkManager) auth(authID int64, network *Network) {
 	this.networks.Remove(network)
 
 	oldNetwork, ok := this.authNetworks[authID]
+
+	this.authNetworks[authID] = network
+	cache.GateCache.SetAuthGateID(authID, this.node)
 	//顶号处理
 	if ok {
 		oldNetwork.KickOut(protocol.KickType_OtherSession)
@@ -144,7 +152,7 @@ func (this *networkManager) auth(authID int64, network *Network) {
 			rpc.Gate.KickOut(node, kickMsg)
 		}
 	}
-	cache.GateCache.SetAuthGateID(authID, this.node)
-	this.authNetworks[authID] = network
+
+
 	//cache.ClusterCache.SetAuthGateID(authID, center.ClusterCenter.GetNodeID())
 }

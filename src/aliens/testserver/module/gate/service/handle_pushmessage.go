@@ -24,6 +24,6 @@ func handlePushMessage(request *protocol.PushMessage) {
 	if authID == -1 {
 		network.Manager.Broadcast(msg)
 	} else if authID > 0 {
-		network.Manager.Push(request.GetAuthID(), msg)
+		network.Manager.Push(authID, msg)
 	}
 }

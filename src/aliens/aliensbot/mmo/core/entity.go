@@ -100,6 +100,9 @@ func (e *Entity) GetID() EntityID {
 }
 
 func (e *Entity) GetSpaceID() EntityID {
+	if e.space == nil {
+		return ""
+	}
 	return e.space.id
 }
 
@@ -165,18 +168,18 @@ func (e *Entity) Destroy() {
 }
 
 func (e *Entity) destroyEntity(isMigrate bool) {
-	e.space.leave(e)
 	if !isMigrate {
 		e.I.OnDestroy()
 	} else {
 		e.I.OnMigrateOut()
 	}
-	//if !isMigrate {
-	//	//e.SetClient(nil) // always Set Client to nil before destroy
-	//	//e.Save()
-	//} else {
-	//	//e.assignClient(nil)
-	//}
+
+	e.space.leave(e)
+	e.clearRawTimers()
+
+	if !isMigrate {
+		e.Save()
+	}
 	e.destroyed = true
 	EntityManager.del(e)
 }

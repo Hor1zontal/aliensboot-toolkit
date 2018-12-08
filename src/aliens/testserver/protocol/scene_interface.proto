@@ -37,7 +37,7 @@ message entityCall {
 
 
 //场景变更推送
-message ScenePush {
+message scenePush {
     string spaceID = 1; //玩家所处的空间
     Entity entity = 2; //玩家实体信息
 }

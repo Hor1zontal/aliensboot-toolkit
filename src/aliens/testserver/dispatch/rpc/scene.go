@@ -34,6 +34,15 @@ func (this *sceneRPCHandler) LoginScene(node string, request *protocol.LoginScen
 	return this.Send(node, message)
 }
 
+func (this *sceneRPCHandler) MoveScene(node string, request *protocol.MoveScene) error {
+	message := &protocol.Request{
+		Scene:&protocol.Request_MoveScene{
+			MoveScene:request,
+		},
+	}
+	return this.Send(node, message)
+}
+
 func (this *sceneRPCHandler) MigrateIn(node string, request *protocol.MigrateIn) error {
 	message := &protocol.Request{
 		Scene:&protocol.Request_MigrateIn{

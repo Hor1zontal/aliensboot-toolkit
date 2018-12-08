@@ -13,6 +13,7 @@ import (
 	"aliens/aliensbot/mmo"
 	"aliens/testserver/dispatch/rpc"
 	"aliens/testserver/module/scene/cache"
+	"aliens/testserver/module/scene/conf"
 	"aliens/testserver/module/scene/entity"
 	"aliens/testserver/protocol"
 	"errors"
@@ -30,10 +31,10 @@ func (*AliensEntityHandler) Save(entityID mmo.EntityID, entityType mmo.EntityTyp
 	return nil
 }
 
-func (*AliensEntityHandler) Load(entityID mmo.EntityID) map[string]interface{} {
+func (*AliensEntityHandler) Load(entityID mmo.EntityID) (map[string]interface{}, error) {
 	//data := &db.Entity{ID:entityID}
 	//db.Database.QueryOne()
-	return nil
+	return nil, nil
 }
 
 func (*AliensEntityHandler) CallRemote(entityID mmo.EntityID, method string, args [][]byte) error {
@@ -61,7 +62,8 @@ func (*AliensEntityHandler) MigrateRemote(spaceID mmo.EntityID, entityID mmo.Ent
 	if node == "" {
 		return errors.New(fmt.Sprintf("migrate err, space %v is not found", space))
 	}
-	rpc.Scene.MigrateIn("", &protocol.MigrateIn{
+	
+	rpc.Scene.MigrateIn(node, &protocol.MigrateIn{
 		SpaceID:space,
 		EntityID:string(entityID),
 		Data:data,
@@ -70,12 +72,12 @@ func (*AliensEntityHandler) MigrateRemote(spaceID mmo.EntityID, entityID mmo.Ent
 }
 
 
-func NewSpace() {
-	space, _ := mmo.CreateSpace(entity.TypeGameSpace, "space1")
+func InitSpace() {
+	space, _ := mmo.CreateSpace(entity.TypeGameSpace, mmo.EntityID(conf.Config.Space))
 	cache.Manager.SetSpaceNode(string(space.GetID()))
 
-	space2, _ := mmo.CreateSpace(entity.TypeGameSpace, "space2")
-	cache.Manager.SetSpaceNode(string(space2.GetID()))
+	//space2, _ := mmo.CreateSpace(entity.TypeGameSpace, "space2")
+	//cache.Manager.SetSpaceNode(string(space2.GetID()))
 }
 
 //初始化space
@@ -85,7 +87,7 @@ func Init() {
 	mmo.RegisterEntity(&entity.Monster{})
 	mmo.RegisterEntity(&entity.Player{})
 
-
+	InitSpace()
 
 	//entity := mmo.CreateEntity("Monster", space, unit.Vector{0,0,0})
 	//log.Debugf("entity %v", entity.GetID())

@@ -176,16 +176,15 @@ func (em *_EntityManager) CreateEntity(entityType EntityType, space *Space, pos 
 
 	log.Debugf("Entity %s created.", entity)
 
-	// startup the periodical timer for saving entity
-	if entity.IsPersistent() {
-		entity.setupSaveTimer()
-	}
-
-	//entity.OnCreated()
 	entity.I.OnCreated()
 
 	if space != nil {
 		space.enter(entity, pos)
+	}
+
+	// startup the periodical timer for saving entity
+	if entity.IsPersistent() {
+		entity.setupSaveTimer()
 	}
 
 	return entity, nil
@@ -208,7 +207,6 @@ func (em *_EntityManager) MigrateOut(spaceID EntityID, entityID EntityID) error 
 	}
 	// disable the entity
 	entity.destroyEntity(true)
-
 	em.handler.MigrateRemote(spaceID, entityID, data)
 	return nil
 }
@@ -217,7 +215,7 @@ func (em *_EntityManager) MigrateOut(spaceID EntityID, entityID EntityID) error 
 //
 func (em *_EntityManager) MigrateIn(entityID EntityID, space *Space, data []byte) error {
 	var mData *entityMigrateData
-	err := msgpack.Unmarshal(data, mData)
+	err := msgpack.Unmarshal(data, &mData)
 	if err != nil {
 		return err
 	}
@@ -232,32 +230,34 @@ func (em *_EntityManager) MigrateIn(entityID EntityID, space *Space, data []byte
 	var entityInstance reflect.Value
 
 	entityInstance = reflect.New(entityTypeDesc.entityType)
+
 	entity = reflect.Indirect(entityInstance).FieldByName("Entity").Addr().Interface().(*Entity)
+	entity.desc = entityTypeDesc
 	entity.init(entityID, entityInstance)
 
-	entity.space = space
 	entity.Position = mData.Pos
 	entity.Yaw = mData.Yaw
 
 	em.put(entity)
 	entity.AssignMap(mData.Attrs)
 
-	timerData := mData.TimerData
-	if timerData != nil {
-		entity.restoreTimers(timerData)
+	if space != nil {
+		space.enter(entity, mData.Pos)
 	}
+
+	entity.I.OnAttrsReady()
+	entity.I.OnMigrateIn()
 
 	isPersistent := entity.desc.IsPersistent()
 	if isPersistent { // startup the periodical timer for saving e
 		entity.setupSaveTimer()
 	}
 
-	entity.I.OnAttrsReady()
-	entity.I.OnMigrateIn()
-
-	if space != nil {
-		space.enter(entity, mData.Pos)
+	timerData := mData.TimerData
+	if timerData != nil {
+		entity.restoreTimers(timerData)
 	}
-	entity.I.OnRestored()
+
+
 	return nil
 }

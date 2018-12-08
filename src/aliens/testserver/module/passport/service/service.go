@@ -58,13 +58,6 @@ func handle(request *base.Any) (response *base.Any) {
 
 func handleRequest(request *protocol.Request, response *protocol.Response) int64 {
 	
-	if request.GetTokenLogin() != nil {
-		messageRet := &protocol.TokenLoginRet{}
-		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
-		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
-		return result
-	}
-	
 	if request.GetUserRegister() != nil {
 		messageRet := &protocol.UserRegisterRet{}
 		result := handleUserRegister(request.GetUserRegister(), messageRet)
@@ -76,6 +69,13 @@ func handleRequest(request *protocol.Request, response *protocol.Response) int64
 		messageRet := &protocol.UserLoginRet{}
 		result := handleUserLogin(request.GetUserLogin(), messageRet)
 		response.Passport = &protocol.Response_UserLoginRet{messageRet}
+		return result
+	}
+	
+	if request.GetTokenLogin() != nil {
+		messageRet := &protocol.TokenLoginRet{}
+		result := handleTokenLogin(request.GetTokenLogin(), messageRet)
+		response.Passport = &protocol.Response_TokenLoginRet{messageRet}
 		return result
 	}
 	

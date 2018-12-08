@@ -10,11 +10,13 @@
 package service
 
 import (
+	"aliens/aliensbot/log"
 	"aliens/testserver/module/gate/network"
 	"aliens/testserver/protocol"
 )
 
 //
 func handleBindService(request *protocol.BindService) {
+	log.Debugf("bind : %v - %v", request.GetAuthID(), request.GetBinds())
 	network.Manager.BindService(request.GetAuthID(), request.GetBinds())
 }

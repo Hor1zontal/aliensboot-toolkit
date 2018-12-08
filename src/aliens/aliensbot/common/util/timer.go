@@ -122,7 +122,7 @@ func AddTimer(d time.Duration, callback CallbackFunc) *Timer {
 		repeat:   true,
 	}
 	//timerHeapLock.Lock()
-	t.addSeq = nextAddSeq // set addseq when locked
+	t.addSeq = nextAddSeq
 	nextAddSeq += 1
 
 	heap.Push(&timerHeap, t)
@@ -135,14 +135,12 @@ func Tick() {
 	now := time.Now()
 	//timerHeapLock.Lock()
 	//defer timerHeapLock.Unlock()
-
 	for {
 		if timerHeap.Len() <= 0 {
 			break
 		}
 
 		nextFireTime := timerHeap.timers[0].fireTime
-		//fmt.Printf(">>> nextFireTime %s, now is %s\n", nextFireTime, now)
 		if nextFireTime.After(now) {
 			break
 		}

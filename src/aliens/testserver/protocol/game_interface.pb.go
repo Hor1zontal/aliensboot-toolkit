@@ -90,10 +90,11 @@
 		Record
 		Player
 		LoginScene
+		MoveScene
 		MigrateOut
 		MigrateIn
 		EntityCall
-		LoginSceneRet
+		ScenePush
 		EntityPush
 		Vector
 		Entity

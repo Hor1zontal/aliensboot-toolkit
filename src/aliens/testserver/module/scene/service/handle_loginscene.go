@@ -20,7 +20,10 @@ func handleLoginScene(authID int64, gateID string, request *protocol.LoginScene)
 	//获取空间所在的服务器节点
 	node, err := cache.Manager.GetSpaceNode(request.GetSpaceID())
 	if err != nil {
-		exception.GameException(protocol.Code_DBExcetpion)
+		exception.GameException1(protocol.Code_DBExcetpion, err)
+	}
+	if node == "" {
+		exception.GameException(protocol.Code_entityNotFound)
 	}
 
 	authID = request.GetAuthID()
@@ -29,20 +32,6 @@ func handleLoginScene(authID int64, gateID string, request *protocol.LoginScene)
 	//是当前服务器节点
 	if node == center.ClusterCenter.GetNodeID() {
 		playerID := entity.GetPlayerID(authID)
-
-		//playerNode, err1 := cache.Manager.GetEntityNode(string(playerID)) {
-		//	if err1 != nil {
-		//		log.Errorf("enter space error : %v", err)
-		//		return
-		//	}
-		//}
-		//
-		//
-		////玩家在其他空间上
-		//if playerNode != "" && playerNode != center.ClusterCenter.GetNodeID() {
-		//
-		//}
-
 
 		entity, err := mmo.EnterSpace(
 			mmo.EntityID(request.GetSpaceID()),

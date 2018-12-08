@@ -29,6 +29,7 @@ func Close() {
 func handle(request *base.Any) (response *base.Any) {
 	if request.Id == constant.MsgOffline {
 		handleOffline(request.GetAuthId())
+		return
 	}
 	requestProxy := &protocol.Request{}
 	responseProxy := &protocol.Response{}
@@ -62,6 +63,8 @@ func handle(request *base.Any) (response *base.Any) {
 }
 
 func handleRequest(authID int64, gateID string, request *protocol.Request, response *protocol.Response) bool {
+	
+	
     if request.GetEntityCall() != nil {
     	handleEntityCall(authID, gateID, request.GetEntityCall())
     	return false
@@ -69,6 +72,21 @@ func handleRequest(authID int64, gateID string, request *protocol.Request, respo
     
     if request.GetLoginScene() != nil {
     	handleLoginScene(authID, gateID, request.GetLoginScene())
+    	return false
+    }
+    
+    if request.GetMoveScene() != nil {
+    	handleMoveScene(authID, gateID, request.GetMoveScene())
+    	return false
+    }
+    
+    if request.GetMigrateIn() != nil {
+    	handleMigrateIn(authID, gateID, request.GetMigrateIn())
+    	return false
+    }
+    
+    if request.GetMigrateOut() != nil {
+    	handleMigrateOut(authID, gateID, request.GetMigrateOut())
     	return false
     }
     
