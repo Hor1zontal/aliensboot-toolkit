@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/module/base"
 	"aliens/testserver/module/scene/cache"
 	"aliens/testserver/module/scene/conf"
@@ -27,10 +26,7 @@ func (m *Module) OnInit() {
 	conf.Init()
 	db.Init()
 	cache.Init()
-	handler.Init()
-
-	m.Skeleton.SetTick(util.Tick)
-
+	handler.Init(m.Skeleton)
 	service.Init(m.ChanRPCServer)
 }
 

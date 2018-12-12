@@ -43,6 +43,13 @@ func newEntityManager() *_EntityManager {
 	}
 }
 
+func (em *_EntityManager) addTimer(duration time.Duration, callbackFunc util.CallbackFunc) *util.Timer {
+	return em.handler.GetTimerManager().AddTimer(duration, callbackFunc)
+}
+
+func (em *_EntityManager) addCallback(duration time.Duration, callbackFunc util.CallbackFunc) *util.Timer {
+	return em.handler.GetTimerManager().AddCallback(duration, callbackFunc)
+}
 
 func (em *_EntityManager) put(entity *Entity) {
 	em.entities.Add(entity)

@@ -32,6 +32,7 @@
 		PushMessage
 		BindService
 		BindServiceRet
+		HeartBeat
 		QuickMatch
 		QuickMatchRet
 		UserRegister

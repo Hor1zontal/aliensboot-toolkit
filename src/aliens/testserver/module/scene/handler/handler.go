@@ -10,7 +10,9 @@
 package handler
 
 import (
+	"aliens/aliensbot/common/util"
 	"aliens/aliensbot/mmo"
+	"aliens/aliensbot/module/base"
 	"aliens/testserver/dispatch/rpc"
 	"aliens/testserver/module/scene/cache"
 	"aliens/testserver/module/scene/conf"
@@ -22,7 +24,7 @@ import (
 
 
 type AliensEntityHandler struct {
-
+	timerManager *util.TimerManager
 }
 
 //持久化
@@ -62,13 +64,17 @@ func (*AliensEntityHandler) MigrateRemote(spaceID mmo.EntityID, entityID mmo.Ent
 	if node == "" {
 		return errors.New(fmt.Sprintf("migrate err, space %v is not found", space))
 	}
-	
+
 	rpc.Scene.MigrateIn(node, &protocol.MigrateIn{
 		SpaceID:space,
 		EntityID:string(entityID),
 		Data:data,
 	})
 	return nil
+}
+
+func (handler *AliensEntityHandler) GetTimerManager() *util.TimerManager {
+	return handler.timerManager
 }
 
 
@@ -81,8 +87,12 @@ func InitSpace() {
 }
 
 //初始化space
-func Init() {
-	mmo.RegisterEntityHandler(&AliensEntityHandler{})
+func Init(skeleton *base.Skeleton) {
+
+	timerManager := util.NewTimerManager()
+	skeleton.SetTick(timerManager.Tick)
+
+	mmo.RegisterEntityHandler(&AliensEntityHandler{timerManager:timerManager})
 	mmo.RegisterSpace(&entity.GameSpace{})
 	mmo.RegisterEntity(&entity.Monster{})
 	mmo.RegisterEntity(&entity.Player{})

@@ -92,14 +92,14 @@ func (e *Entity) triggerTimer(tid EntityTimerID, isRepeat bool) {
 }
 
 func (e *Entity) addRawTimer(d time.Duration, cb util.CallbackFunc) *util.Timer {
-	t := util.AddTimer(d, cb)
+	t := EntityManager.addTimer(d, cb)
 	e.rawTimers[t] = struct{}{}
 	return t
 }
 
 func (e *Entity) addRawCallback(d time.Duration, cb util.CallbackFunc) *util.Timer {
 	var t *util.Timer
-	t = util.AddCallback(d, func() {
+	t = EntityManager.addCallback(d, func() {
 		delete(e.rawTimers, t)
 		cb()
 	})

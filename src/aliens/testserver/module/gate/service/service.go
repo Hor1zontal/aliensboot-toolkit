@@ -43,6 +43,11 @@ func handle(request *base.Any) *base.Any {
 
 func handleRequest(request *protocol.Request) {
 	
+	if request.GetHeartBeat() != nil {
+		handleHeartBeat(request.GetHeartBeat())
+		return
+	}
+	
 	
      if request.GetBindService() != nil {
         handleBindService(request.GetBindService())

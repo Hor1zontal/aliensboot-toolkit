@@ -9,7 +9,10 @@
  *******************************************************************************/
 package core
 
-import "errors"
+import (
+	"aliens/aliensbot/common/util"
+	"errors"
+)
 
 type IEntityHandler interface {
 
@@ -24,6 +27,9 @@ type IEntityHandler interface {
 
 	//entity 迁移到远程节点
 	MigrateRemote(spaceID EntityID, entityID EntityID, data []byte) error
+
+	//获取定时器管理对象
+	GetTimerManager() *util.TimerManager
 
 }
 
@@ -47,4 +53,8 @@ func (*_EmptyHandler) CallRemote(entityID EntityID, method string, args [][]byte
 
 func (*_EmptyHandler) MigrateRemote(spaceID EntityID, entityID EntityID, data []byte) error {
 	return errors.New("not implements")
+}
+
+func (*_EmptyHandler) GetTimerManager() *util.TimerManager {
+	return nil
 }

@@ -20,11 +20,14 @@ message Request {
 
     //----------------网关模块接口-----------
     oneof gate {
-        bindService bindService = 5; //绑定服务-定向转发
 
+        heartBeat heartBeat = 8; //心跳消息
+
+        bindService bindService = 9; //绑定服务-定向转发
         //push
-        kick_out kickOut = 10; //T人
-        push_message pushMessage = 11; //推送消息
+        kickOut kickOut = 10; //T人
+
+        pushMessage pushMessage = 11; //推送消息
     }
 
     //-----------------登录模块接口---------------
@@ -96,7 +99,7 @@ message Response {
 
     //-----------------网关模块响应接口---------------
     oneof gate {
-        //bindServiceRet bindServiceRet = 5;
+        heartBeat heartBeat = 8; //心跳消息
 
         //push
         KickType kick = 1005; //T人

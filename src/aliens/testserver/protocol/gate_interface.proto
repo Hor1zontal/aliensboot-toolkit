@@ -3,13 +3,13 @@ package protocol;
 
 import "gate_model.proto";
 
-message kick_out {
+message kickOut {
     int64 authID = 1;
     KickType kickType = 2;
 }
 
 //推送消息
-message push_message {
+message pushMessage {
     int64 authID = 1; //推送的authid -1 代表全服广播
     bytes data = 2;  //推送内容
     string service = 3; //服务名
@@ -23,4 +23,8 @@ message bindService {
 
 message bindServiceRet {
     bool result = 1;
+}
+
+message heartBeat {
+
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
- * All rights reserved.
- * Date:
- *     2018/12/6
- * Contributors:
- *     aliens idea(xiamen) Corporation - initial API and implementation
- *     jialin.he <kylinh@gmail.com>
- *******************************************************************************/
+* Copyright (c) 2015, 2017 aliens idea(xiamen) Corporation and others.
+* All rights reserved.
+* Date:
+*     2018/12/6
+* Contributors:
+*     aliens idea(xiamen) Corporation - initial API and implementation
+*     jialin.he <kylinh@gmail.com>
+*******************************************************************************/
 package util
 
 import (
@@ -21,9 +21,26 @@ const (
 	minInterval = 1 * time.Millisecond
 )
 
-var (
-	nextAddSeq uint = 1
-)
+var DefaultTimerManager *TimerManager = nil
+
+
+func init() {
+	DefaultTimerManager = NewTimerManager()
+}
+
+func NewTimerManager() *TimerManager {
+	var timerHeap = &_TimerHeap{}
+	heap.Init(timerHeap)
+	return &TimerManager{
+		_TimerHeap:timerHeap,
+		nextAddSeq:1,
+	}
+}
+
+type TimerManager struct {
+	*_TimerHeap
+	nextAddSeq uint
+}
 
 type Timer struct {
 	fireTime time.Time
@@ -83,34 +100,24 @@ func (h *_TimerHeap) Pop() (ret interface{}) {
 // Type of callback function
 type CallbackFunc func()
 
-var (
-	timerHeap     _TimerHeap
-	//timerHeapLock sync.Mutex
-)
-
-func init() {
-	heap.Init(&timerHeap)
-}
 
 // Add a callback which will be called after specified duration
-func AddCallback(d time.Duration, callback CallbackFunc) *Timer {
+func (manager *TimerManager) AddCallback(d time.Duration, callback CallbackFunc) *Timer {
 	t := &Timer{
 		fireTime: time.Now().Add(d),
 		interval: d,
 		callback: callback,
 		repeat:   false,
 	}
-	//timerHeapLock.Lock()
-	t.addSeq = nextAddSeq // set addseq when locked
-	nextAddSeq += 1
+	t.addSeq = manager.nextAddSeq // set addseq when locked
+	manager.nextAddSeq += 1
 
-	heap.Push(&timerHeap, t)
-	//timerHeapLock.Unlock()
+	heap.Push(manager._TimerHeap, t)
 	return t
 }
 
 // Add a timer which calls callback periodly
-func AddTimer(d time.Duration, callback CallbackFunc) *Timer {
+func (manager *TimerManager) AddTimer(d time.Duration, callback CallbackFunc) *Timer {
 	if d < minInterval {
 		d = minInterval
 	}
@@ -121,31 +128,29 @@ func AddTimer(d time.Duration, callback CallbackFunc) *Timer {
 		callback: callback,
 		repeat:   true,
 	}
-	//timerHeapLock.Lock()
-	t.addSeq = nextAddSeq
-	nextAddSeq += 1
+	t.addSeq = manager.nextAddSeq
+	manager.nextAddSeq += 1
 
-	heap.Push(&timerHeap, t)
-	//timerHeapLock.Unlock()
+	heap.Push(manager._TimerHeap, t)
 	return t
 }
 
 // Tick once for timers
-func Tick() {
+func (manager *TimerManager) Tick() {
 	now := time.Now()
 	//timerHeapLock.Lock()
 	//defer timerHeapLock.Unlock()
 	for {
-		if timerHeap.Len() <= 0 {
+		if manager.Len() <= 0 {
 			break
 		}
 
-		nextFireTime := timerHeap.timers[0].fireTime
+		nextFireTime := manager.timers[0].fireTime
 		if nextFireTime.After(now) {
 			break
 		}
 
-		t := heap.Pop(&timerHeap).(*Timer)
+		t := heap.Pop(manager._TimerHeap).(*Timer)
 
 		callback := t.callback
 		if callback == nil {
@@ -166,23 +171,23 @@ func Tick() {
 			if !t.fireTime.After(now) { // might happen when interval is very small
 				t.fireTime = now.Add(t.interval)
 			}
-			t.addSeq = nextAddSeq
-			nextAddSeq += 1
-			heap.Push(&timerHeap, t)
+			t.addSeq = manager.nextAddSeq
+			manager.nextAddSeq += 1
+			heap.Push(manager._TimerHeap, t)
 		}
 	}
 
 }
 
 // Start the self-ticking routine, which ticks per tickInterval
-func StartTicks(tickInterval time.Duration) {
-	go selfTickRoutine(tickInterval)
+func (manager *TimerManager) StartTicks(tickInterval time.Duration) {
+	go manager.selfTickRoutine(tickInterval)
 }
 
-func selfTickRoutine(tickInterval time.Duration) {
+func (manager *TimerManager) selfTickRoutine(tickInterval time.Duration) {
 	for {
 		time.Sleep(tickInterval)
-		Tick()
+		manager.Tick()
 	}
 }
 
