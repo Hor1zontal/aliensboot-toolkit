@@ -80,17 +80,19 @@ func convertService(templateContent string, module *Module, split string) string
 	if len(results) == 3 {
 		header = replaceMessage(results[0], module)
 		tailf = replaceMessage(results[2], module)
-		for _, handler := range module.Handlers {
+		module.Foreach(func(handler *ProtoHandler) bool {
 			handleStr := replaceMessage(results[1], module)
 			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
-				continue
+				return true
 			}
 			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
-				continue
+				return true
 			}
 			handleStr = replaceHandle(handleStr, handler)
 			content += handleStr
-		}
+			return true
+		})
+
 	} else {
 		header = replaceMessage(templateContent, module)
 	}
@@ -122,17 +124,19 @@ func convertHandler(templateContent string, module *Module, split string) map[st
 	if len(results) == 3 {
 		header = replaceMessage(results[0], module)
 		tailf = replaceMessage(results[2], module)
-		for _, handler := range module.Handlers {
+
+		module.Foreach(func(handler *ProtoHandler) bool {
 			handleStr := replaceMessage(results[1], module)
 			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
-				continue
+				return true
 			}
 			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
-				continue
+				return true
 			}
 			handleStr = replaceHandle(handleStr, handler)
 			handlers[handler.GetName()] = header + handleStr + tailf
-		}
+			return true
+		})
 	}
 	return handlers
 }
@@ -148,21 +152,27 @@ func convertHandler1(templateContent string, module *Module, split string, handl
 		header = replaceMessage(results[0], module)
 		tailf = replaceMessage(results[2], module)
 
-		for _, handler := range module.Handlers {
+
+		content := ""
+		module.Foreach(func(handler *ProtoHandler) bool {
 			if handlerName != handler.GetName() {
-				continue
+				return true
 			}
 			handleStr := replaceMessage(results[1], module)
 
 			if split == MESSAGE_SPLIT_STR && !handler.IsSession() {
-				continue
+				return true
 			}
 
 			if split == REQUEST_SPLIT_STR && !handler.IsRequest() {
-				continue
+				return true
 			}
 			handleStr = replaceHandle(handleStr, handler)
-			return header + handleStr + tailf
+			content = header + handleStr + tailf
+			return false
+		})
+		if content != "" {
+			return content
 		}
 	} else {
 		header = replaceMessage(templateContent, module)
