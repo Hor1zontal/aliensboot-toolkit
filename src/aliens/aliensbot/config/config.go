@@ -47,7 +47,7 @@ type ClusterConfig struct {
 }
 
 func Init(configPath string) *BaseConfig {
-	dir, _ := filepath.Abs(filepath.Base(configPath))
+	dir, _ := filepath.Abs(configPath)
 	//log.Debugf("configuration path is %v", dir)
 	ModuleConfigRoot = dir + string(filepath.Separator) + "modules" + string(filepath.Separator)
 

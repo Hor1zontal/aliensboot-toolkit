@@ -1,14 +1,14 @@
 #!/bin/sh
-basepath=$(cd `dirname $0`; pwd)
+#basepath=$(cd `dirname $0`; pwd)
+source ./env.sh
 
-
-cd ../src/aliens/testserver/protocol/
+//生成protobuf go协议代码
+cd ${PROJECT_PATH}/src/aliens/testserver/protocol/
 GOGOPATH=${GOPATH}/src; protoc --proto_path=${GOPATH}:${GOGOPATH}:./ --gogofast_out=plugins=grpc:. *.proto
 
 #生成服务代码
-cd $basepath/..
-
-modules=(game gate passport)
+cd ${PROJECT_PATH}
+modules=(game gate passport hall room scene)
 
 for i in "${!modules[@]}"; do
 	aliensbot module gen ${modules[$i]}

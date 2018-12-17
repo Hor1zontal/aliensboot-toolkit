@@ -9,9 +9,16 @@ import (
 	"fmt"
 	"github.com/vmihailenco/msgpack"
 	"reflect"
+	"time"
 	"unsafe"
 )
 
+
+type AI interface {
+
+	OnTick(dt time.Duration)
+
+}
 
 // IEntity declares functions that is defined in Entity
 // These functions are mostly component functions
@@ -28,7 +35,7 @@ type IEntity interface {
 
 	// Migration
 	OnMigrateOut() // Called just before entity is migrating out
-	OnMigrateIn()  // Called just after entity is migrating in
+	OnMigrateIn()  // Called justafter entity is migrating in
 
 	// Space Operations
 	OnEnterSpace()             // Called when entity leaves space
@@ -62,7 +69,11 @@ type entityMigrateData struct {
 
 type Entity struct {
 
-	*MapAttr //属性
+	*MapAttr //属性'
+
+	desc *EntityDesc
+
+	ai AI
 
 	id EntityID
 
@@ -75,8 +86,6 @@ type Entity struct {
 	Position unit.Vector
 
 	Yaw unit.Yaw
-
-	desc *EntityDesc
 
 	space *Space //实体所在的空间
 
@@ -119,8 +128,6 @@ func (e *Entity) IsUseAOI() bool {
 	return e.desc.useAOI
 }
 
-
-
 func (e *Entity) setPositionYaw(pos unit.Vector, yaw unit.Yaw) {
 	space := e.space
 	if space == nil {
@@ -147,6 +154,16 @@ func (e *Entity) init(entityID EntityID, entityInstance reflect.Value) {
 	e.aoi = aoi.NewAOI(e, e.desc.aoiDistance)
 
 	e.I.OnInit()
+}
+
+func (e *Entity) OnTick(duration time.Duration) {
+	if e.ai != nil {
+		e.ai.OnTick(duration)
+	}
+}
+
+func (e *Entity) SetAI(ai AI) {
+	e.ai = ai
 }
 
 func (e *Entity) OnEnterAOI(otherAoi *aoi.AOI) {
@@ -380,9 +397,6 @@ func (e *Entity) OnEnterSpace() {
 
 }
 
-// OnLeaveSpace is called when entity leaves space
-//
-// Can override this function in custom entity type
 func (e *Entity) OnLeaveSpace(space *Space) {
 
 }

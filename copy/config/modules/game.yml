@@ -2,7 +2,7 @@
 #
 service:
   name: game
-  port: 19119
+  port: 19121
   #
   # registered in the service center [zookeepr or etcd], exposed to the
   # external address information

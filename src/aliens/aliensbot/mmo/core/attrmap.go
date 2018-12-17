@@ -236,6 +236,14 @@ func (a *MapAttr) GetInt64(key string) int64 {
 	}
 }
 
+func (a *MapAttr) GetInt32(key string) int32 {
+	if val, ok := a.attrs[key]; ok {
+		return val.(int32)
+	} else {
+		return 0
+	}
+}
+
 // GetString returns the attribute of specified key in MapAttr as string
 func (a *MapAttr) GetString(key string) string {
 	if val, ok := a.attrs[key]; ok {
@@ -249,6 +257,15 @@ func (a *MapAttr) GetString(key string) string {
 func (a *MapAttr) GetFloat(key string) float64 {
 	if val, ok := a.attrs[key]; ok {
 		return val.(float64)
+	} else {
+		return 0
+	}
+}
+
+// GetFloat returns the attribute of specified key in MapAttr as float32
+func (a *MapAttr) GetFloat32(key string) float32 {
+	if val, ok := a.attrs[key]; ok {
+		return val.(float32)
 	} else {
 		return 0
 	}

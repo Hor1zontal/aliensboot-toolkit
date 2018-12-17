@@ -10,9 +10,6 @@ scriptName='protocol'
 packageName='protocol'
 #项目下的路径
 
-
-#destDir = '/Users/hejialin/git/demo_mmorpg/assets/Script/module/'+scriptName+'.js'
-
 srcDir = sys.argv[1]
 destFile = sys.argv[2]
 

@@ -32,9 +32,9 @@ websocket:
   certfile:
   keyfile:
 #http configuration
-http:
-  address: :8712
-  prefix: /aliens
+#http:
+#  address: :8712
+#  prefix: /aliens
 # -------------------------------- Cache ---------------------------
 cache:
   address: 127.0.0.1:6379
@@ -43,7 +43,7 @@ cache:
 #
 # service name - message seq
 #
-routes: {passport: 1, game: 2, scene: 8}
+route: {passport: 1, game: 2, room: 3, hall: 8, scene: 9}
 #
 # ---------------------------------- Auth -----------------------------
 #

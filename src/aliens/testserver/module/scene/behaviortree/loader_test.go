@@ -31,7 +31,7 @@ func (this *LogTest) OnTick(tick *Tick) b3.Status {
 }
 
 func TestLoadTree(t *testing.T) {
-	treeConfig, ok := LoadTreeCfg("tree.json")
+	treeConfig, ok := LoadTreeCfg("mytree.json")
 	if ok {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()
@@ -40,6 +40,7 @@ func TestLoadTree(t *testing.T) {
 		//载入
 		tree := loader.CreateBevTreeFromConfig(treeConfig, maps)
 		tree.Print()
+
 
 		//输入板
 		//board := NewBlackboard()

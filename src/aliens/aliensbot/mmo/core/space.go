@@ -6,6 +6,7 @@ import (
 	"aliens/aliensbot/mmo/config"
 	"aliens/aliensbot/mmo/unit"
 	"fmt"
+	"time"
 )
 
 type ISpace interface {
@@ -31,6 +32,8 @@ type ISpace interface {
 
 const (
 	SpaceAttrType = "spaceType"
+
+	tickInterval = 100 * time.Millisecond
 )
 
 type Space struct {
@@ -53,6 +56,15 @@ func (space *Space) OnInit() {
 	spaceConfig := &config.SpaceConfig{"testSpace",-5000,5000,-5000,5000, 500}
 	space.aoiMgr = aoi.NewTowerAOIManager(spaceConfig.MinX, spaceConfig.MaxX, spaceConfig.MinY, spaceConfig.MaxY, spaceConfig.TowerRange)
 	space.I.OnSpaceInit()
+
+	space.addRawTimer(tickInterval, space.OnTick)
+}
+
+//tick
+func (space *Space) OnTick() {
+	for entity, _  := range space.entities {
+		entity.OnTick(tickInterval)
+	}
 }
 
 func (space *Space) OnCreated() {

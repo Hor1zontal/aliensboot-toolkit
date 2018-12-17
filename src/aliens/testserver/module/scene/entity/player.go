@@ -17,6 +17,7 @@ import (
 	"aliens/aliensbot/mmo/unit"
 	"aliens/testserver/dispatch/rpc"
 	"aliens/testserver/module/scene/conf"
+	"aliens/testserver/module/scene/constant"
 	"aliens/testserver/module/scene/utils"
 	"aliens/testserver/protocol"
 	"time"
@@ -24,9 +25,6 @@ import (
 
 const (
 	TypePlayer mmo.EntityType = "Player"
-
-	playerAttrUid = "uid"
-	playerAttrGateid = "gid"
 
 )
 
@@ -47,13 +45,13 @@ type Player struct {
 func (player *Player) DescribeEntityType(desc *core.EntityDesc) {
 	//视野范围
 	desc.SetUseAOI(true, 500)
-	desc.DefineAttr(playerAttrUid, core.AttrAllClient| core.AttrPersist) //用户id
-	desc.DefineAttr(playerAttrGateid, core.AttrClient)	//网关id
 
-	desc.DefineAttr("lv", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("hp", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("maxHp", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("action", core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrUid, core.AttrAllClient| core.AttrPersist) //用户id
+	desc.DefineAttr(constant.AttrGateid, core.AttrClient)	//网关id
+	desc.DefineAttr(constant.AttrLevel, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrHp, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrMaxHp, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrAction, core.AttrAllClient)
 
 }
 
@@ -71,8 +69,8 @@ func (player *Player) OnMigrateIn() {
 
 func (player *Player) Login(authID int64, gateID string) {
 	log.Debugf("handler login %v - %v", authID, gateID)
-	player.Set(playerAttrUid, authID)
-	player.Set(playerAttrGateid, gateID)
+	player.Set(constant.AttrUid, authID)
+	player.Set(constant.AttrGateid, gateID)
 
 	player.onLoad()
 
@@ -83,7 +81,7 @@ func (player *Player) Login(authID int64, gateID string) {
 }
 
 func (player *Player) Logout() {
-	player.Set(playerAttrGateid, "")
+	player.Set(constant.AttrGateid, "")
 	player.CancelTimer(player.syncTimerID)
 
 	//开启1分钟释放
@@ -148,9 +146,9 @@ func (player *Player) IsOnline() bool {
 }
 
 func (player *Player) GetUid() int64 {
-	return player.GetInt64(playerAttrUid)
+	return player.GetInt64(constant.AttrUid)
 }
 
 func (player *Player) GetGateID() string {
-	return player.GetString(playerAttrGateid)
+	return player.GetString(constant.AttrGateid)
 }

@@ -2,7 +2,7 @@
 #
 service:
   name: passport
-  port: 19118
+  port: 19120
   #
   # registered in the service center [zookeepr or etcd], exposed to the
   # external address information
@@ -11,7 +11,7 @@ service:
   #
   # service lbs strategy options[polling,hashing]
   #
-  lbs: hashing
+  lbs: polling
 # -------------------------------- Database ---------------------------
 database:
   address: 127.0.0.1:27017

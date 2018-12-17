@@ -13,7 +13,7 @@ import (
 	"aliens/aliensbot/log"
 	"aliens/aliensbot/mmo"
 	"aliens/aliensbot/mmo/core"
-	"time"
+	"aliens/testserver/module/scene/constant"
 )
 
 const (
@@ -25,23 +25,42 @@ const (
 type Monster struct {
 	mmo.Entity   // Entity type should always inherit entity.Entity
 
-	movingToTarget  *mmo.Entity
-	attackingTarget *mmo.Entity
+	target *mmo.Entity  //当前锁定的目标
 
-	lastTickTime    time.Time
-	attackCD        time.Duration
-	lastAttackTime  time.Time
 }
 
 func (monster *Monster) DescribeEntityType(desc *core.EntityDesc) {
-	desc.SetUseAOI(true, 100)
-	desc.DefineAttr("lv", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("hp", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("maxHp", core.AttrAllClient| core.AttrPersist)
-	desc.DefineAttr("action", core.AttrAllClient| core.AttrPersist)
-}
+	//monster.SetAI()
 
+	desc.SetUseAOI(true, 100)
+
+	desc.DefineAttr(constant.AttrLevel, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrHp, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrMaxHp, core.AttrAllClient| core.AttrPersist)
+	desc.DefineAttr(constant.AttrAction, core.AttrAllClient)
+}
 
 func (monster *Monster) TestCall(param1 string, param2 int32, param3 []string) {
 	log.Debugf("test call : %v %v %v", param1, param2, param3)
 }
+
+//随机移动
+func (monster *Monster) RandMove() {
+	log.Debugf("test call : %v %v %v", )
+}
+
+func (monster *Monster) Attack() {
+	log.Debugf("test call : %v %v %v", )
+}
+
+//检查范围内是否有目标存在
+func (monster *Monster) FindTarget(targetType mmo.EntityType) *mmo.Entity {
+	interest := monster.GetInterest()
+	for target, _ := range interest {
+		if target.GetType() == targetType {
+			return target
+		}
+	}
+	return nil
+}
+
