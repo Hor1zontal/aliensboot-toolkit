@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 )
 
 const (
@@ -61,7 +62,7 @@ func initProject(homePath string, targetHomePath string, packagePath string) {
 
 	srcCopyPath := getPath(homePath, "copy")
 
-	targetCopyPath := getPath(targetHomePath, ".")
+	targetCopyPath := getPath(targetHomePath, getCurrentPath())
 
 	//srcConfigPath := getPath(homePath, "data", "config")
 	//
@@ -88,4 +89,12 @@ func initProject(homePath string, targetHomePath string, packagePath string) {
 	//util.CopyDir(srcTemplatesPath, targetTemplatesPath, replaceContent)
 	//util.CopyDir(srcToolPath, targetToolPath, replaceContent)
 
+}
+
+func getCurrentPath() string {
+	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return path
 }

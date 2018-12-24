@@ -74,6 +74,7 @@ func CopyDir(srcPath string, destPath string, replaceContent map[string]string) 
 				return nil
 			}
 			path := strings.Replace(path, "\\", "/", -1)
+			srcPath = strings.Replace(srcPath, "\\", "/", -1)
 			destNewPath := strings.Replace(path, srcPath, destPath, -1)
 			//fmt.Println("copy file :" + path + " to " + destNewPath)
 			CopyFile(path, destNewPath, replaceContent)
