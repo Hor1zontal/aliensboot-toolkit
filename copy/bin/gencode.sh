@@ -2,7 +2,7 @@
 #basepath=$(cd `dirname $0`; pwd)
 source ./env.sh
 
-//生成protobuf go协议代码
+#生成protobuf go协议代码
 cd ${PROJECT_PATH}/src/aliens/testserver/protocol/
 GOGOPATH=${GOPATH}/src; protoc --proto_path=${GOPATH}:${GOGOPATH}:./ --gogofast_out=plugins=grpc:. *.proto
 

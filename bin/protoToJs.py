@@ -10,6 +10,8 @@ scriptName='protocol'
 packageName='protocol'
 #项目下的路径
 
+
+homePath = sys.path[0]
 srcDir = sys.argv[1]
 destFile = sys.argv[2]
 
@@ -18,9 +20,9 @@ if __name__ == '__main__':
     cmd = ''
     param = srcDir + '/*.proto -t js -e '+packageName+' -i populateAccessors -m true -o ./'+scriptName+'.js'
     if (system == "Darwin") :
-        cmd = ' ./protobufjsForMac/bin/pbjs ' + param
+        cmd = homePath + '/protobufjsForMac/bin/pbjs ' + param
     else:
-        cmd = '.\protobufjsForWin\pbjs  ' + param
+        cmd = homePath + '\protobufjsForWin\pbjs  ' + param
     print(cmd)
     os.system(cmd)
 
