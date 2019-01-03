@@ -10,8 +10,8 @@
 package template
 
 import (
-	"github.com/KylinHe/aliensboot/common/util"
-	"e.coding.net/aliens/aliensboot_toolkit/protobuf/proto"
+	"github.com/KylinHe/aliensboot-core/common/util"
+	"github.com/KylinHe/aliensboot-toolkit/protobuf/proto"
 	"os"
 	"strings"
 )

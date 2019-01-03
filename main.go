@@ -10,7 +10,7 @@
 package main
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/command"
+	"github.com/KylinHe/aliensboot-toolkit/command"
 )
 
 func main() {

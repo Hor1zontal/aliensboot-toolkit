@@ -11,7 +11,7 @@ package template
 
 import (
 	//"aliens/log"
-	"e.coding.net/aliens/aliensboot_toolkit/protobuf/proto"
+	"github.com/KylinHe/aliensboot-toolkit/protobuf/proto"
 	"fmt"
 	"os"
 )

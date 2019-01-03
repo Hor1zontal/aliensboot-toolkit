@@ -10,8 +10,8 @@
 package command
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/model"
-	"e.coding.net/aliens/aliensboot_toolkit/util"
+	"github.com/KylinHe/aliensboot-toolkit/model"
+	"github.com/KylinHe/aliensboot-toolkit/util"
 	"fmt"
 	"github.com/go-yaml/yaml"
 	"github.com/spf13/cobra"

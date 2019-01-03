@@ -10,7 +10,7 @@
 package command
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/util"
+	"github.com/KylinHe/aliensboot-toolkit/util"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"

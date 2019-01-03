@@ -10,8 +10,8 @@
 package command
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/model"
-	"e.coding.net/aliens/aliensboot_toolkit/util"
+	"github.com/KylinHe/aliensboot-toolkit/model"
+	"github.com/KylinHe/aliensboot-toolkit/util"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	DefaultPackagePath = "e.coding.net/aliens/aliensboot_testserver"
+	DefaultPackagePath = "github.com/KylinHe/aliensboot-server"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func init() {
 }
 
 var initCmd = &cobra.Command{
-	Use:   "init [package path], Ex. aliensbot init e.coding.net/aliens/aliensboot_testserver",
+	Use:   "init [package path], Ex. aliensbot init github.com/KylinHe/aliensboot-server",
 	Short: "initial aliensbot project",
 	Run: func(cmd *cobra.Command, args []string) {
 

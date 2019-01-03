@@ -1,4 +1,4 @@
-module e.coding.net/aliens/aliensboot_toolkit
+module github.com/KylinHe/aliensboot-toolkit
 
 replace (
 	cloud.google.com/go v0.26.0 => github.com/GoogleCloudPlatform/gcloud-golang v0.32.0
@@ -16,22 +16,10 @@ replace (
 )
 
 require (
-	github.com/KylinHe/aliensboot v0.0.1
+	github.com/KylinHe/aliensboot-core v1.0.0
 	github.com/go-yaml/yaml v2.1.0+incompatible
-	github.com/gogo/protobuf v1.2.0
-	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/klauspost/cpuid v1.2.0 // indirect
-	github.com/klauspost/reedsolomon v1.8.0 // indirect
-	github.com/pkg/errors v0.8.0
 	github.com/samuel/go-zookeeper v0.0.0-20180130194729-c4fab1ac1bec
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/pflag v1.0.3 // indirect
-	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
-	github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b // indirect
-	github.com/tjfoc/gmsm v1.0.1 // indirect
-	github.com/urfave/cli v1.20.0
-	github.com/xtaci/kcp-go v5.0.2+incompatible
-	github.com/xtaci/smux v1.1.0
-	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 )

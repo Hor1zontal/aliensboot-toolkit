@@ -10,7 +10,7 @@
 package template
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/model"
+	"github.com/KylinHe/aliensboot-toolkit/model"
 	"fmt"
 	"io/ioutil"
 	"os"

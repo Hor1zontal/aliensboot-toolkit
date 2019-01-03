@@ -10,8 +10,8 @@
 package main
 
 import (
-	"e.coding.net/aliens/aliensboot_toolkit/model"
-	"e.coding.net/aliens/aliensboot_toolkit/protobuf/template"
+	"github.com/KylinHe/aliensboot-toolkit/model"
+	"github.com/KylinHe/aliensboot-toolkit/protobuf/template"
 	"flag"
 	"fmt"
 	"github.com/go-yaml/yaml"

@@ -11,7 +11,7 @@ package main
 
 import (
 	"bufio"
-	"e.coding.net/aliens/aliensboot_toolkit/zookeeper"
+	"github.com/KylinHe/aliensboot-toolkit/zookeeper"
 	"flag"
 	"fmt"
 	"io"
