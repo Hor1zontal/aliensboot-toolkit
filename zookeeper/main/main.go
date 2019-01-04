@@ -11,9 +11,9 @@ package main
 
 import (
 	"bufio"
-	"github.com/KylinHe/aliensboot-toolkit/zookeeper"
 	"flag"
 	"fmt"
+	"github.com/KylinHe/aliensboot-toolkit/zookeeper"
 	"io"
 	"os"
 	"strings"

@@ -18,7 +18,7 @@ func init() {
 }
 
 var moduleCmd = &cobra.Command{
-	Use:   "module [add gen remove]",
+	Use:   "module [add gen]",
 	Short: "operation for module",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

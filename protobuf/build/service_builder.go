@@ -10,10 +10,10 @@
 package main
 
 import (
-	"github.com/KylinHe/aliensboot-toolkit/model"
-	"github.com/KylinHe/aliensboot-toolkit/protobuf/template"
 	"flag"
 	"fmt"
+	"github.com/KylinHe/aliensboot-toolkit/model"
+	"github.com/KylinHe/aliensboot-toolkit/protobuf/template"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
 )

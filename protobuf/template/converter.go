@@ -10,8 +10,8 @@
 package template
 
 import (
-	"github.com/KylinHe/aliensboot-toolkit/model"
 	"fmt"
+	"github.com/KylinHe/aliensboot-toolkit/model"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -30,7 +30,7 @@ func Convert(config *model.CodeGenConfig) {
 	for _, moduleConfig := range config.Modules {
 		module := message.modules[moduleConfig.Name]
 		if module == nil {
-			fmt.Printf("module %v is nou found in proto file %v \n", moduleConfig.Name, config.ProtoPath)
+			fmt.Printf("module %v is not found in proto file %v \n", moduleConfig.Name, config.ProtoPath)
 			continue
 		}
 
@@ -151,7 +151,6 @@ func convertHandler1(templateContent string, module *Module, split string, handl
 	if len(results) == 3 {
 		header = replaceMessage(results[0], module)
 		tailf = replaceMessage(results[2], module)
-
 
 		content := ""
 		module.Foreach(func(handler *ProtoHandler) bool {

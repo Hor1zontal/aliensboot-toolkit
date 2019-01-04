@@ -18,14 +18,14 @@ import (
 	"strings"
 )
 
-var filters = make(map[string]struct{})
+//var filters = make(map[string]struct{})
+//
+//func AddFilter(name string) {
+//	filters[name] = struct{}{}
+//}
 
-func AddFilter(name string) {
-	filters[name] = struct{}{}
-}
-
-func IsFilter(name string) bool {
-	for filter, _ := range filters {
+func IsFilter(name string, filters []string) bool {
+	for _, filter := range filters {
 		if strings.Contains(name, filter) {
 			return true
 		}
@@ -33,7 +33,7 @@ func IsFilter(name string) bool {
 	return false
 }
 
-func CopyDir(srcPath string, destPath string, replaceContent map[string]string) error {
+func CopyDir(srcPath string, destPath string, replaceContent map[string]string, filters ...string) error {
 	//检测目录正确性
 	if srcInfo, err := os.Stat(srcPath); err != nil {
 		fmt.Println(err.Error())
@@ -69,7 +69,7 @@ func CopyDir(srcPath string, destPath string, replaceContent map[string]string) 
 			return err
 		}
 		if !f.IsDir() {
-			if IsFilter(path) {
+			if IsFilter(path, filters) {
 				fmt.Println("filter file :" + path)
 				return nil
 			}

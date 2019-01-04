@@ -110,4 +110,3 @@ func (this *ProtoHandler) GetName() string {
 	}
 	return this.Name
 }
-

@@ -10,9 +10,9 @@
 package command
 
 import (
+	"fmt"
 	"github.com/KylinHe/aliensboot-toolkit/model"
 	"github.com/KylinHe/aliensboot-toolkit/util"
-	"fmt"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
@@ -20,6 +20,7 @@ import (
 
 const (
 	DefaultPackagePath = "github.com/KylinHe/aliensboot-server"
+	ProjectName = "aliensboot-demo"
 )
 
 func init() {
@@ -49,45 +50,29 @@ var initCmd = &cobra.Command{
 }
 
 func initProject(homePath string, targetHomePath string, packagePath string) {
-	util.AddFilter(DefaultModuleName)
+	//util.AddFilter()
 
 	projectConfig := &model.ProjectConfig{
 		Name: packagePath,
 	}
+
 	writeProjectConfig(targetHomePath, projectConfig)
 
-	srcSrcPath := getPath(homePath, "src", "aliens", "testserver")
+	srcSrcPath := getPath(homePath, ProjectName, "src", DefaultPackagePath)
 
 	targetSrcPath := getPath(targetHomePath, "src", packagePath)
 
-	srcCopyPath := getPath(homePath, "copy")
+	srcCopyPath := getPath(homePath, ProjectName)
 
 	targetCopyPath := getPath(targetHomePath, getCurrentPath())
 
-	//srcConfigPath := getPath(homePath, "data", "config")
-	//
-	//targetConfigPath := getPath(targetHomePath, "config")
-	//
-	//
-	//srcTemplatesPath := getPath(homePath, "data", "templates")
-	//
-	//targetTemplatesPath := getPath(targetHomePath,"templates")
-	//
-	//
-	//srcToolPath := getPath(homePath, "data", "tool")
-	//
-	//targetToolPath := getPath(targetHomePath,"tool")
-
 	replaceContent := make(map[string]string)
+
 	replaceContent[DefaultPackagePath] = packagePath
 
-	util.CopyDir(srcSrcPath, targetSrcPath, replaceContent)
+	util.CopyDir(srcSrcPath, targetSrcPath, replaceContent, DefaultModuleName)
 
-	util.CopyDir(srcCopyPath, targetCopyPath, replaceContent)
-
-	//util.CopyDir(srcConfigPath, targetConfigPath, replaceContent)
-	//util.CopyDir(srcTemplatesPath, targetTemplatesPath, replaceContent)
-	//util.CopyDir(srcToolPath, targetToolPath, replaceContent)
+	util.CopyDir(srcCopyPath, targetCopyPath, replaceContent, DefaultModuleName, "src")
 
 }
 

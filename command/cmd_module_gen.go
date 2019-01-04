@@ -10,10 +10,10 @@
 package command
 
 import (
+	"fmt"
 	"github.com/KylinHe/aliensboot-toolkit/model"
 	"github.com/KylinHe/aliensboot-toolkit/protobuf/template"
 	"github.com/KylinHe/aliensboot-toolkit/util"
-	"fmt"
 	"github.com/spf13/cobra"
 	"strings"
 )

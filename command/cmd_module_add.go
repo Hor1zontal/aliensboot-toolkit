@@ -10,8 +10,8 @@
 package command
 
 import (
-	"github.com/KylinHe/aliensboot-toolkit/util"
 	"fmt"
+	"github.com/KylinHe/aliensboot-toolkit/util"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -25,8 +25,8 @@ func init() {
 }
 
 var moduleAddCmd = &cobra.Command{
-	Use:   "create Ex. create %module%",
-	Short: "create initial module code in current path",
+	Use:   "add Ex. add %module%",
+	Short: "add initial module code in current path",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			cmd.Help()
@@ -44,10 +44,15 @@ var moduleAddCmd = &cobra.Command{
 }
 
 func addModule(homePath string, targetHomePath string, packagePath string, moduleName string) {
+	projectPath := getPath(homePath, "aliensboot-demo")
 
-	srcModulePath := getPath(homePath, "src", "aliens", "testserver", "module", DefaultModuleName)
+	sourceSrcPath := getPath(projectPath, "src", DefaultPackagePath)
+	targetSrcPath := getPath(targetHomePath, "src", packagePath)
 
-	targetModulePath := getPath(targetHomePath, "src", packagePath, "module", moduleName)
+
+	srcModulePath := getPath(sourceSrcPath, "module", DefaultModuleName)
+
+	targetModulePath := getPath(targetSrcPath, "module", moduleName)
 
 	srcInfo, err := os.Stat(targetModulePath)
 	if err == nil && srcInfo.IsDir() {
@@ -55,13 +60,13 @@ func addModule(homePath string, targetHomePath string, packagePath string, modul
 		return
 	}
 
-	srcConfigPath := getPath(homePath, "copy", "config", "modules", DefaultModuleName+".yml.bak")
+	srcConfigPath := getPath(projectPath, "config", "modules", DefaultModuleName+".yml.bak")
 
 	targetConfigPath := getPath(targetHomePath, "config", "modules", moduleName+".yml")
 
-	srcPublicPath := getPath(homePath, "src", "aliens", "testserver", "public", DefaultModuleName+".go")
+	srcPublicPath := getPath(sourceSrcPath, "public", DefaultModuleName+".go")
 
-	targetPublicPath := getPath(targetHomePath, "src", packagePath, "public", moduleName+".go")
+	targetPublicPath := getPath(targetSrcPath, "public", moduleName+".go")
 
 	replaceContent := make(map[string]string)
 	replaceContent[DefaultModuleName] = moduleName

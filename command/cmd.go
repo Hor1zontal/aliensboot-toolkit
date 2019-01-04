@@ -10,9 +10,9 @@
 package command
 
 import (
+	"fmt"
 	"github.com/KylinHe/aliensboot-toolkit/model"
 	"github.com/KylinHe/aliensboot-toolkit/util"
-	"fmt"
 	"github.com/go-yaml/yaml"
 	"github.com/spf13/cobra"
 	"os"
@@ -22,7 +22,7 @@ import (
 var projectConfig *model.ProjectConfig
 
 var RootCmd = &cobra.Command{
-	Use: "aliensbot",
+	Use: "aliensboot",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
