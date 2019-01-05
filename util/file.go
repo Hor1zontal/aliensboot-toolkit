@@ -18,14 +18,20 @@ import (
 	"strings"
 )
 
-//var filters = make(map[string]struct{})
+var globalFilters = make(map[string]struct{})
 //
-//func AddFilter(name string) {
-//	filters[name] = struct{}{}
-//}
+func AddFilter(name string) {
+	globalFilters[name] = struct{}{}
+}
 
 func IsFilter(name string, filters []string) bool {
 	for _, filter := range filters {
+		if strings.Contains(name, filter) {
+			return true
+		}
+	}
+
+	for filter, _  := range globalFilters {
 		if strings.Contains(name, filter) {
 			return true
 		}

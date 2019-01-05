@@ -33,8 +33,8 @@ var RootCmd = &cobra.Command{
 }
 
 func Execute() {
+	util.AddFilter(".git")
 	projectConfig = readProjectConfig("")
-
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Errorf("error: %v", err)
 		os.Exit(1)
