@@ -33,7 +33,7 @@ var moduleAddCmd = &cobra.Command{
 			return
 		}
 
-		ALIENSBOTHOME := os.Getenv("ALIENSBOT_HOME")
+		ALIENSBOTHOME := os.Getenv("ALIENSBOOT_HOME")
 		if ALIENSBOTHOME == "" {
 			fmt.Println("can not found env ALENSBOT_HOME")
 			return
